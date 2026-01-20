@@ -1,0 +1,20 @@
+Dashboard classic_bi_tool_ssspf {
+  title: 'Classic BI tool '
+  owner: 'thang.lk@holistics.io'
+  description: 'From Holistic 3.0'
+  interactions: []
+  view: CanvasLayout {
+    label: 'Canvas Layout'
+    width: 20
+    height: 20
+    grid_size: 20
+    auto_expand_vertically: true
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: H.themes.vanilla
+  settings {
+    cache_duration: 1440
+  }
+}
