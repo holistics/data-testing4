@@ -1631,7 +1631,6 @@ abc;;
     viz: DataTable {
       dataset: ticket_23584
       theme {
-
       }
       fields: [
         VizFieldFull {
@@ -1659,6 +1658,31 @@ abc;;
       }
     }
   }
+  block v_do3h: VizBlock {
+    label: 'Untitled Report'
+    viz: DataTable {
+      dataset: movie_ratings_analysis
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(public_movies.title)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   interactions: [
     PopInteraction {
       from: 'p1'
@@ -1673,7 +1697,7 @@ abc;;
   view: CanvasLayout {
     label: 'View 1'
     width: 1540
-    height: 4930
+    height: 5370
     grid_size: 20
     block p1 {
       position: pos(1300, 2860, 220, 60)
@@ -1829,6 +1853,10 @@ abc;;
     block v_ytzb {
       position: pos(440, 4490, 620, 420)
       layer: 4
+    }
+    block v_do3h {
+      position: pos(20, 4930, 620, 420)
+      layer: 5
     }
     mobile {
       mode: 'auto'
