@@ -6,15 +6,44 @@ Dashboard classic_bi_tool_ssspf {
   view: CanvasLayout {
     label: 'Canvas Layout'
     width: 20
-    height: 20
+    height: 40
     grid_size: 20
     auto_expand_vertically: true
     mobile {
       mode: 'auto'
     }
+    block v_yj5b {
+      position: pos(20, 20, -20, 0)
+      layer: 1
+    }
   }
   theme: H.themes.vanilla
   settings {
     cache_duration: 1440
+  }
+  block v_yj5b: VizBlock {
+    label: 'Untitled Report'
+    viz: DataTable {
+      dataset: bikes
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(dim_station.station_name)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
   }
 }
