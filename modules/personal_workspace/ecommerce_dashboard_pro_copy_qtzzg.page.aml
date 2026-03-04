@@ -1108,7 +1108,6 @@ abc;;
     viz: ColumnChart {
       dataset: demo_ecommerce
       theme {
-
       }
       x_axis: VizFieldFull {
         ref: r(ecommerce_users.age_group)
@@ -1627,6 +1626,39 @@ abc;;
       hide_label: true
     }
   }
+  block v_ytzb: VizBlock {
+    label: 'Total Amount and Date Id'
+    viz: DataTable {
+      dataset: ticket_23584
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(ticket_23584.total_amount)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(chinh_dim_date.date_id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   interactions: [
     PopInteraction {
       from: 'p1'
@@ -1641,7 +1673,7 @@ abc;;
   view: CanvasLayout {
     label: 'View 1'
     width: 1540
-    height: 4460
+    height: 4930
     grid_size: 20
     block p1 {
       position: pos(1300, 2860, 220, 60)
@@ -1793,6 +1825,10 @@ abc;;
     block filter_by_age_group_wrapper {
       position: pos(60, 3140, 300, 120)
       layer: -1
+    }
+    block v_ytzb {
+      position: pos(440, 4490, 620, 420)
+      layer: 4
     }
     mobile {
       mode: 'auto'
