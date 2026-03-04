@@ -1663,11 +1663,35 @@ abc;;
     viz: DataTable {
       dataset: movie_ratings_analysis
       theme {
-
       }
       fields: [
         VizFieldFull {
           ref: r(public_movies.title)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_pduo: VizBlock {
+    label: 'Untitled Report'
+    viz: DataTable {
+      dataset: holistics_ai_poc
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(common_payment_transfer.session_id)
           format {
             type: 'text'
           }
@@ -1857,6 +1881,10 @@ abc;;
     block v_do3h {
       position: pos(20, 4930, 620, 420)
       layer: 5
+    }
+    block v_pduo {
+      position: pos(660, 4930, 620, 420)
+      layer: 6
     }
     mobile {
       mode: 'auto'
