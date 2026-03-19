@@ -1,5 +1,5 @@
 Dashboard untitled_qfnkc {
-  title: 'Untitled'
+  title: 'Demo'
   owner: 'tri.dvm@holistics.io'
   block title: TextBlock {
     content: @md # Your title goes here ;;
