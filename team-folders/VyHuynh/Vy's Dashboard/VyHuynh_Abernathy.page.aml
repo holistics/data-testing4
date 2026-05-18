@@ -357,13 +357,16 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         mode: 'auto'
       }
       block v_91yu {
-        position: pos(20, 120, 260, 140)
+        position: pos(40, 100, 260, 140)
       }
       block v_nir7 {
-        position: pos(300, 120, 260, 140)
+        position: pos(320, 100, 160, 140)
       }
       block f_publift_test_data_csv_currency {
         position: pos(40, 20, 300, 80)
+      }
+      block v_15s1 {
+        position: pos(40, 260, 260, 160)
       }
     }
     tab tab_fkvp: CanvasLayout {
@@ -3565,6 +3568,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         data_type: 'text'
       }
       value: VizFieldFull {
+        label: ' '
         ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
         format {
           type: 'text'
@@ -3594,6 +3598,67 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       value: '$H_NIL$'
     }
   }
+  block v_15s1: VizBlock {
+    label: 'Sum of Earning'
+    viz: MarkdownViz {
+      dataset: vyhuynh_ecommerce_dataset
+      values: [
+        VizFieldFull {
+          ref: r(publift_test_data_csv.earning)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+        },
+        VizFieldFull {
+          ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      content: @md <style>
+
+  .kpi-title {
+    margin: 0;
+    color: #8e94a5;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .kpi-value {
+    font-size: 52px;
+    font-weight: 500;
+    color: #5DB88F;
+    line-height: 1;
+  }
+
+  
+</style>
+
+<div>
+  <p class="kpi-title">Sum of Earning</p>
+  <div class="kpi-value">
+    {{ rows[0].values.`Sum of Earning` }}
+    {{ rows[0].values.`Currency Symbol` }}
+  </div>
+
+</div>                ;;
+      settings {
+        show_row_total: true
+        show_column_total: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v2'
@@ -3605,7 +3670,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_nehb',
             'v_8fpj',
             'v_91yu',
-            'v_nir7'
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -3621,7 +3687,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_nehb',
             'v_8fpj',
             'v_91yu',
-            'v_nir7'
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -3637,7 +3704,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_nehb',
             'v_8fpj',
             'v_91yu',
-            'v_nir7'
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -3882,7 +3950,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v4',
             'v_8fpj',
             'v_91yu',
-            'v_nir7'
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -4190,7 +4259,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v4',
             'v_nehb',
             'v_91yu',
-            'v_nir7'
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -4620,6 +4690,21 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     },
     FilterInteraction {
       from: 'f_publift_test_data_csv_currency'
+      to: [
+        CustomMapping {
+          block: [
+            'v2',
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_15s1'
       to: [
         CustomMapping {
           block: [
