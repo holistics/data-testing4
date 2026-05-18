@@ -357,10 +357,13 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         mode: 'auto'
       }
       block v_91yu {
-        position: pos(20, 20, 260, 140)
+        position: pos(20, 120, 260, 140)
       }
       block v_nir7 {
-        position: pos(300, 20, 260, 140)
+        position: pos(300, 120, 260, 140)
+      }
+      block f_publift_test_data_csv_currency {
+        position: pos(40, 20, 300, 80)
       }
     }
     tab tab_fkvp: CanvasLayout {
@@ -3539,7 +3542,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v_nir7: VizBlock {
-    label: 'This month Revenue copy copy'
+    label: 'Currency Symbol'
     viz: MetricKpi {
       dataset: vyhuynh_ecommerce_dataset
       calculation monthly_revenue {
@@ -3562,11 +3565,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         data_type: 'text'
       }
       value: VizFieldFull {
-        ref: r(publift_test_data_csv.earning)
-        aggregation: 'sum'
+        ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
         format {
-          type: 'number'
-          pattern: 'inherited'
+          type: 'text'
         }
       }
       settings {
@@ -3579,6 +3580,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     settings {
       hide_label: true
+    }
+  }
+  block f_publift_test_data_csv_currency: FilterBlock {
+    label: 'Currency'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: vyhuynh_ecommerce_dataset
+      field: r(publift_test_data_csv.currency)
+    }
+    default {
+      operator: 'is'
+      value: '$H_NIL$'
     }
   }
   interactions: [
@@ -4592,6 +4605,21 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     },
     FilterInteraction {
       from: 'v_nir7'
+      to: [
+        CustomMapping {
+          block: [
+            'v2',
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_publift_test_data_csv_currency'
       to: [
         CustomMapping {
           block: [

@@ -34,10 +34,10 @@ Dataset vyhuynh_ecommerce_dataset {
     type: 'text'
     definition: @aql
       case(
-        when: publift_test_data_csv.currency == 'AUD', then: 'A$',
-        when: publift_test_data_csv.currency == 'USD', then: '$',
-        when: publift_test_data_csv.currency == 'EUR', then: '€',
-        when: publift_test_data_csv.currency == 'MYR', then: 'RM',
+        when: max(publift_test_data_csv.currency) == 'AUD', then: 'A$',
+        when: max(publift_test_data_csv.currency) == 'USD', then: '$',
+        when: max(publift_test_data_csv.currency) == 'EUR', then: '€',
+        when: max(publift_test_data_csv.currency) == 'MYR', then: 'RM',
         else: ''
       )
     ;;
