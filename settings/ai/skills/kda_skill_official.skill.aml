@@ -20,6 +20,7 @@ Supports both ratio metrics (close rate, conversion rate) and additive metrics (
 
 This skill must:
 
+0. Resolve base period and comparison period to explicit date literals, show them to the user, and wait for confirmation before any calculation
 1. Enumerate eligible candidate dimensions
 2. Prioritize the top 5 dimensions based on semantic relevance to the target metric
 3. Show the proposed dimensions to the user and ask for confirmation
@@ -72,6 +73,7 @@ Combined contribution of a group of segments = `sum(their delta_values) / overal
 - Never compute `delta_value` from raw nullable values
 - New segment detection: if `base_value_raw IS NULL` and `current_value_raw IS NOT NULL`, the segment is new — flag it in prose
 - Disappeared segment detection: if `base_value_raw IS NOT NULL` and `current_value_raw IS NULL`, the segment disappeared — flag it in prose
+- **Never omit any segment from the table.** Every segment that exists in either the base or comparison period must appear in the output table, regardless of whether its metric value is null, 0, or has data. A null or zero metric in one period is valid data — do not filter it out.
 
 ### 5. Period consistency
 
@@ -97,6 +99,25 @@ If the user answers No at any point, skip remaining dimensions and proceed to th
 ---
 
 ## Computation Method
+
+### Step 0. Resolve and confirm period literals
+
+Before any query:
+
+1. Resolve the user's period descriptions to explicit date literals using these rules:
+   - Two periods stated explicitly (e.g., "Feb to Mar 2021") → base = first period, comparison = second period
+   - Single period stated (e.g., "explain the drop in Mar 2021") → base = stated period, comparison = immediately preceding period of the same granularity (e.g., Feb 2021 for a monthly period)
+   - Relative descriptions (e.g., "last month vs this month") → resolve against today's date
+2. Detect granularity from the user's description and apply the correct `@()` literal format:
+   - "Feb 2021", "February 2021", "last month" → month → `@(YYYY-MM)` e.g. `@(2021-02)`
+   - "Q1 2021", "first quarter" → quarter → `@(YYYY-QN)` e.g. `@(2021-Q1)`
+   - "2021", "last year" → year → `@(YYYY)` e.g. `@(2021)`
+   - "week of Feb 8", "W06 2021" → week → `@(YYYY-WNN)` e.g. `@(2021-W06)`
+   - Specific dates ("Feb 15 2021", "yesterday") → day → `@(YYYY-MM-DD)` e.g. `@(2021-02-15)`
+3. Store as `base_period_literal` and `comparison_period_literal` — these must be used verbatim in every subsequent query
+4. Display to the user and wait for confirmation (see Output Format Section 0)
+
+Do not generate any query until the user confirms.
 
 ### Step 1. Compute overall delta (separate query, no segment grouping)
 
@@ -149,6 +170,19 @@ Set this sort in the DataTable viz settings (see Implementation Notes for exact 
 ---
 
 ## Output Format
+
+### 0. Period Confirmation
+
+Lead with a conversational restatement of the request, then confirm the periods before proceeding:
+
+> You're asking me to explain the [drop/increase] in **[metric]** during **[base_period_literal]** compared to **[comparison_period_literal]**. Before I proceed with any analysis, I'd like to confirm these are the right periods.
+>
+> - Yes — that's correct, proceed
+> - No — I meant a different comparison
+> - Something else: ___
+
+- **Yes** → proceed to dimension prioritization (Section 1)
+- **No** or **Something else** → ask the user to clarify, re-resolve, and re-confirm
 
 ### 1. Dimension Prioritization List
 
@@ -220,12 +254,16 @@ Do not repeat per-dimension bullet details here — this block is for scan-abili
 
 ## Implementation Notes for Holistics / AQL
 
+- `base_period_literal` and `comparison_period_literal` are resolved and confirmed in Step 0 — every query must use these exact values for period filtering, with no exceptions
+- Never use `relative_period()` for period filtering — it does not reliably resolve ratio metrics across all dimensions and can produce NULL measures. Always filter with explicit `where(date_field is @(literal))` using the confirmed literals
+- `@()` literals must match the period granularity: `@(YYYY-MM-DD)` for days, `@(YYYY-WNN)` for weeks, `@(YYYY-MM)` for months, `@(YYYY-QN)` for quarters, `@(YYYY)` for years. Never use a day literal `@(YYYY-MM-DD)` for a month or quarter period — it filters only a 2-day window, not the full period.
 - Before generating any query, define `base_period_name`, `comparison_period_name`, `base_period_literal`, `comparison_period_literal` — reuse these exact aliases throughout
 - Always run the overall delta query first (no segment dimension) — store the scalar result as `overall_delta_value` for use in all subsequent `contribution_pct` calculations
 - Reuse existing dataset metric definitions whenever possible; inspect before deciding how to compute segment values
 - Always wrap `where()` aggregations with `coalesce(..., 0)` — `where()` returns null, not 0, when nothing matches
 - Always wrap ratio metrics with outer `coalesce`: `coalesce(safe_divide(num, den), 0)` — `safe_divide` returns null for any null operand or zero denominator; the outer coalesce is sufficient to guarantee a non-null result
 - `contribution_pct` is computed post-query: divide each segment's `delta_value` (from the result set) by the scalar `overall_delta_value` — do not attempt to express this as a single AQL formula within the segment-grouped query
+- Never apply any filter to the DataTable that excludes null or zero metric values. All segments must be visible in the table regardless of their metric value in either period
 - Run one AQL query per dimension — never union or batch dimensions
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
