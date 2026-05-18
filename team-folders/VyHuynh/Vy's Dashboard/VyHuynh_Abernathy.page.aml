@@ -3595,7 +3595,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     default {
       operator: 'is'
-      value: '$H_NIL$'
+      value: 'USD'
+    }
+    settings {
+      input_type: 'single'
     }
   }
   block v_15s1: VizBlock {
