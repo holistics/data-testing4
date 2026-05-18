@@ -360,7 +360,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(40, 100, 260, 140)
       }
       block v_nir7 {
-        position: pos(320, 100, 160, 140)
+        position: pos(320, 100, 220, 140)
       }
       block f_publift_test_data_csv_currency {
         position: pos(40, 20, 300, 80)
@@ -3568,7 +3568,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         data_type: 'text'
       }
       value: VizFieldFull {
-        label: ' '
+        label: ' Currency Symbol'
         ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
         format {
           type: 'text'
