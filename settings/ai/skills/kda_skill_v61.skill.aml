@@ -107,8 +107,14 @@ Before any query:
    - Two periods stated explicitly (e.g., "Feb to Mar 2021") → base = first period, comparison = second period
    - Single period stated (e.g., "explain the drop in Mar 2021") → base = stated period, comparison = immediately preceding period of the same granularity (e.g., Feb 2021 for a monthly period)
    - Relative descriptions (e.g., "last month vs this month") → resolve against today's date
-2. Store as `base_period_literal` and `comparison_period_literal` — these must be used verbatim in every subsequent query
-3. Display to the user and wait for confirmation (see Output Format Section 0)
+2. Detect granularity from the user's description and apply the correct `@()` literal format:
+   - "Feb 2021", "February 2021", "last month" → month → `@(YYYY-MM)` e.g. `@(2021-02)`
+   - "Q1 2021", "first quarter" → quarter → `@(YYYY-QN)` e.g. `@(2021-Q1)`
+   - "2021", "last year" → year → `@(YYYY)` e.g. `@(2021)`
+   - "week of Feb 8", "W06 2021" → week → `@(YYYY-WNN)` e.g. `@(2021-W06)`
+   - Specific dates ("Feb 15 2021", "yesterday") → day → `@(YYYY-MM-DD)` e.g. `@(2021-02-15)`
+3. Store as `base_period_literal` and `comparison_period_literal` — these must be used verbatim in every subsequent query
+4. Display to the user and wait for confirmation (see Output Format Section 0)
 
 Do not generate any query until the user confirms.
 
@@ -249,6 +255,7 @@ Do not repeat per-dimension bullet details here — this block is for scan-abili
 
 - `base_period_literal` and `comparison_period_literal` are resolved and confirmed in Step 0 — every query must use these exact values for period filtering, with no exceptions
 - Never use `relative_period()` for period filtering — it does not reliably resolve ratio metrics across all dimensions and can produce NULL measures. Always filter with explicit `where(date_field is @(literal))` using the confirmed literals
+- `@()` literals must match the period granularity: `@(YYYY-MM-DD)` for days, `@(YYYY-WNN)` for weeks, `@(YYYY-MM)` for months, `@(YYYY-QN)` for quarters, `@(YYYY)` for years. Never use a day literal `@(YYYY-MM-DD)` for a month or quarter period — it filters only a 2-day window, not the full period.
 - Before generating any query, define `base_period_name`, `comparison_period_name`, `base_period_literal`, `comparison_period_literal` — reuse these exact aliases throughout
 - Always run the overall delta query first (no segment dimension) — store the scalar result as `overall_delta_value` for use in all subsequent `contribution_pct` calculations
 - Reuse existing dataset metric definitions whenever possible; inspect before deciding how to compute segment values
