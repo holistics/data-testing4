@@ -70,6 +70,7 @@ Combined contribution of a group of segments = `sum(their delta_values) / overal
 
 - `where()` in AQL returns null when no rows match — always wrap with `coalesce(..., 0)`
 - `safe_divide` returns null when denominator is zero or either operand is null — always wrap with outer `coalesce(..., 0)`
+- **Coalesce each additive component individually before any arithmetic.** Never add or subtract potentially-null values directly — `1 + null = null`, which silently nullifies the entire expression. For any metric with multiple components (e.g. numerator = A, denominator = A + B), always write `coalesce(A, 0) + coalesce(B, 0)`, not `A + B`. The outer `coalesce(safe_divide(...), 0)` is not sufficient on its own if any component feeding the denominator is null.
 - Never compute `delta_value` from raw nullable values
 - New segment detection: if `base_value_raw IS NULL` and `current_value_raw IS NOT NULL`, the segment is new — flag it in prose
 - Disappeared segment detection: if `base_value_raw IS NOT NULL` and `current_value_raw IS NULL`, the segment disappeared — flag it in prose
@@ -133,8 +134,8 @@ For each segment:
 
 1. Compute raw additive components using `where()` — do not coalesce yet (needed for new/disappeared detection)
 2. Record `base_value_raw` and `current_value_raw`
-3. Apply `coalesce(..., 0)` to additive components
-4. For ratio metrics: `base_value = coalesce(safe_divide(num_base, den_base), 0)` and same for current
+3. Apply `coalesce(..., 0)` to each additive component individually before any arithmetic — e.g. `coalesce(won_base, 0) + coalesce(lost_base, 0)`, never `won_base + lost_base`
+4. For ratio metrics: coalesce each component of the numerator and denominator individually before passing them to `safe_divide` — `base_value = coalesce(safe_divide(coalesce(comp_A_base, 0), coalesce(comp_A_base, 0) + coalesce(comp_B_base, 0) + ...), 0)`. Apply the same pattern regardless of how many components the metric has.
 5. For additive metrics: `base_value = coalesce(base_value_raw, 0)`, `current_value = coalesce(current_value_raw, 0)`
 6. `delta_value = current_value - base_value`
 
