@@ -34,6 +34,7 @@ Dataset vyhuynh_ecommerce_dataset {
     type: 'text'
     definition: @aql
       case(
+        when: count_distinct(publift_test_data_csv.currency) > 1, then: ' ',
         when: max(publift_test_data_csv.currency) == 'AUD', then: 'A$',
         when: max(publift_test_data_csv.currency) == 'USD', then: '$',
         when: max(publift_test_data_csv.currency) == 'EUR', then: '€',
