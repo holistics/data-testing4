@@ -1,5 +1,5 @@
-Skill key_driver {
-  label: 'Key Driver'
+Skill key_driver_v1 {
+  label: 'Key Driver v1'
   description: 'Skill to analyze and explain what drove the change in a metric. Use this only when user asks "Explain this increase / decrease between ... "'
   allow_switching_invocation: true
   content: @md
