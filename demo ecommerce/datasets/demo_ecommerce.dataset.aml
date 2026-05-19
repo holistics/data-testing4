@@ -16,7 +16,7 @@ PreAggregate agg_daily {
 }
 
 Dataset demo_ecommerce {
-  __engine__: 'aql' //turn this Dataset to using AQL Engine
+  __engine__: 'aql' //turn this Dataset to using AQL Engine new
   label: '[Demo] Ecommerce (Official)'
   description: "Official dataset for demoing E-commerce use cases test"
   owner: 'ha.pham+demo4@holistics.io'

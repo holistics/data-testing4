@@ -46,12 +46,20 @@ Model reporting_issues {
     definition: @sql {{ #SOURCE.creator_id }};;
   }
   dimension status {
-    label: 'Status'
-    description: ''
-    type: 'text'
-    hidden: false
-    definition: @sql {{ #SOURCE.status }};;
-  }
+  label: 'Status'
+  description: ''
+  type: 'text'
+  hidden: false
+  definition: @sql CASE
+      WHEN {{ #SOURCE.status }} = 'in_progress' THEN 'In Progress'
+      WHEN {{ #SOURCE.status }} = 'pr_review' THEN 'PR Review'
+      WHEN {{ #SOURCE.status }} = 'merged' THEN 'Merged'
+      WHEN {{ #SOURCE.status }} = 'deployed_to_staging' THEN 'Deployed to Staging'
+      WHEN {{ #SOURCE.status }} = 'tested_on_staging' THEN 'Tested on Staging'
+      WHEN {{ #SOURCE.status }} = 'deployed' THEN 'Deployed'
+    ELSE 'Other'
+  END;;
+}
   dimension priority {
     label: 'Priority'
     description: ''
@@ -64,7 +72,14 @@ Model reporting_issues {
     description: ''
     type: 'text'
     hidden: false
-    definition: @sql {{ #SOURCE.label }};;
+    definition: @sql CASE
+    WHEN {{ #SOURCE.label }} ='bug' THEN 'Bug'
+    WHEN {{ #SOURCE.label }} ='tech_debt' THEN 'Tech Debt'
+    WHEN {{ #SOURCE.label }} ='improvement' THEN 'Improvement'
+    WHEN {{ #SOURCE.label }} ='feature' THEN 'Feature'
+    WHEN {{ #SOURCE.label }} ='chore' THEN 'Chore'
+    ELSE 'Other'
+  END;;
   }
   dimension estimate {
     label: 'Estimate'
@@ -105,8 +120,8 @@ Model reporting_issues {
   import_source: ImportSource {
     type: 'csv'
     original_file_name: 'issues.csv'
-    uploaded_at: '2026-03-06 05:15:40'
-    hash: '51c656b0c185757586e81a133e3f8ad26d5e70726e21d8f21646104978d4b64e'
+    uploaded_at: '2026-03-07 03:49:36'
+    hash: 'a16492e35106d89f985607bc226c6cfbe5fa46666d20c188c47c89852a5e48ce'
     column_configs: [
       H.imports.column_config("id", "id", "number"),
       H.imports.column_config("title", "title", "text"),

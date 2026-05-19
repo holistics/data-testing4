@@ -20,7 +20,7 @@ Dashboard ecommerce_dashboard_amyra {
       compare_value: VizPopSettings {
         field: r(order_master.order_created_at)
         value: RelativePopValue {
-          duration: 1
+          duration: 2
           granularity: 'year'
         }
       }

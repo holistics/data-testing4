@@ -63,7 +63,7 @@ Dashboard thong_do_drill_through {
     }
     default {
       operator: 'is'
-      value: []
+      value: 'delivered'
     }
     settings {
       drillthrough: Drillthrough {

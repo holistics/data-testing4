@@ -68,8 +68,6 @@ Dashboard ecommerce_dashboard {
       position: pos(30, 40, 90, 130)
     }
   }
-
-  // Visualization
   block v1: VizBlock {
     label: 'Gross Merchandise Value'
     viz: MetricKpi {
@@ -460,11 +458,11 @@ Dashboard ecommerce_dashboard {
     type: 'field'
     source: FieldFilterSource {
       dataset: demo_ecommerce
-      field: ref('ecommerce_countries', 'continent_name')
+      field: r(ecommerce_countries.continent_name)
     }
     default {
       operator: 'is'
-      value: 'America'
+      value: []
     }
   }
   block d1: DateDrillBlock {
@@ -487,8 +485,6 @@ Dashboard ecommerce_dashboard {
       input_type: 'nullable-single'
     }
   }
-
-  // Text
   block t1: TextBlock {
     content: @md
     <div style="width: 300px; height: 1090px; 

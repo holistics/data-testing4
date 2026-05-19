@@ -1,0 +1,136 @@
+Dataset vy_kaggle_ecomm {
+  label: 'vy_kaggle_ecomm'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    vy_kaggle_orders,
+    vy_kaggle_sellers,
+    vy_kaggle_order_reviews,
+    vy_kaggle_order_items,
+    vy_kaggle_order_payment,
+    vy_kaggle_product,
+    vy_kaggle_product_category_name_translation,
+    vy_kaggle_customers_dataset,
+    vy_kaggle_geolocation_dataset
+  ]
+  relationships: [
+    relationship(vy_kaggle_order_payment.order_id - vy_kaggle_orders.order_id, true),
+    relationship(vy_kaggle_order_items.product_id > vy_kaggle_product.product_id, true),
+    relationship(vy_kaggle_order_reviews.order_id > vy_kaggle_orders.order_id, true),
+    relationship(vy_kaggle_order_items.order_id > vy_kaggle_orders.order_id, true),
+    relationship(vy_kaggle_order_items.seller_id > vy_kaggle_sellers.seller_id, true),
+    relationship(vy_kaggle_orders.customer_id > vy_kaggle_customers_dataset.customer_id, true),
+    relationship(vy_kaggle_sellers.seller_zip_code_prefix > vy_kaggle_geolocation_dataset.geolocation_zip_code_prefix, true),
+    relationship(vy_kaggle_customers_dataset.customer_zip_code_prefix > vy_kaggle_geolocation_dataset.geolocation_zip_code_prefix, true),
+    relationship(vy_kaggle_product.product_category_name > vy_kaggle_product_category_name_translation.product_category_name, true)
+  ]
+  metric order_revenue {
+    label: 'Order Revenue'
+    type: 'number'
+    definition: @aql (vy_kaggle_order_items | sum(vy_kaggle_order_items.price + vy_kaggle_order_items.freight_value)) | where(vy_kaggle_orders.order_status == 'delivered');;
+    format: '[\$\$]#,###0.00'
+    description: 'Sum of item price and freight value for delivered orders only.'
+  }
+
+  metric total_orders {
+    label: 'Total Orders'
+    type: 'number'
+    definition: @aql vy_kaggle_orders | count(vy_kaggle_orders.order_id);;
+    format: '#,###0'
+    description: 'Total number of orders.'
+  }
+
+  metric delivered_orders {
+    label: 'Delivered Orders'
+    type: 'number'
+    definition: @aql total_orders | where(vy_kaggle_orders.order_status == 'delivered');;
+    format: '#,###0'
+    description: 'Total number of delivered orders.'
+  }
+
+  metric aov {
+    label: 'AOV'
+    type: 'number'
+    definition: @aql safe_divide(order_revenue, delivered_orders);;
+    format: '[\$\$]#,###0.00'
+    description: 'Average order value calculated as delivered order revenue divided by delivered orders.'
+  }
+
+  metric avg_delivery_time {
+    label: 'Avg Delivery Time'
+    type: 'number'
+    definition: @aql vy_kaggle_orders | where(vy_kaggle_orders.order_delivered_customer_date is not null) | avg(date_diff('day', vy_kaggle_orders.order_purchase_timestamp, vy_kaggle_orders.order_delivered_customer_date));;
+    format: '#,###0.00'
+    description: 'Average number of days from purchase to customer delivery for delivered-date available orders.'
+  }
+
+  metric late_delivery_rate {
+    label: 'Late Delivery Rate'
+    type: 'number'
+    definition: @aql safe_divide(
+      vy_kaggle_orders
+      | where(vy_kaggle_orders.order_status == 'delivered')
+      | where(vy_kaggle_orders.order_delivered_customer_date is not null)
+      | where(vy_kaggle_orders.order_estimated_delivery_date is not null)
+      | count_if(vy_kaggle_orders.order_delivered_customer_date > vy_kaggle_orders.order_estimated_delivery_date),
+      vy_kaggle_orders
+      | where(vy_kaggle_orders.order_status == 'delivered')
+      | where(vy_kaggle_orders.order_delivered_customer_date is not null)
+      | where(vy_kaggle_orders.order_estimated_delivery_date is not null)
+      | count(vy_kaggle_orders.order_id)
+    ) ;;
+    format: '#,###0.00%'
+    description: 'Share of delivered orders that arrived later than the estimated delivery date.'
+  }
+
+  metric avg_review_score {
+    label: 'Avg Review Score'
+    type: 'number'
+    definition: @aql vy_kaggle_order_reviews | avg(vy_kaggle_order_reviews.review_score);;
+    format: '#,###0.00'
+    description: 'Average customer review score across all reviews.'
+  }
+
+  metric repeat_customer_rate {
+    label: 'Repeat Customer Rate'
+    type: 'number'
+    definition: @aql safe_divide(
+      unique(vy_kaggle_customers_dataset.customer_unique_id)
+      | filter(vy_kaggle_orders | count_distinct(vy_kaggle_orders.order_id) > 1)
+      | count(),
+      vy_kaggle_customers_dataset | count_distinct(vy_kaggle_customers_dataset.customer_unique_id)
+    ) ;;
+    format: '#,###0.00%'
+    description: 'Share of distinct customers with more than one distinct order.'
+  }
+
+  metric items_per_order {
+    label: 'Items Per Order'
+    type: 'number'
+    definition: @aql safe_divide(vy_kaggle_order_items | count(vy_kaggle_order_items.order_item_id), total_orders);;
+    format: '#,###0.00'
+    description: 'Average number of order items per order.'
+  }
+
+  metric cancellation_rate {
+    label: 'Cancellation Rate'
+    type: 'number'
+    definition: @aql safe_divide(
+      total_orders | where(vy_kaggle_orders.order_status == 'canceled'),
+      total_orders
+    ) ;;
+    format: '#,###0.00%'
+    description: 'Share of total orders with status canceled.'
+  }
+
+  metric non_delivered_rate {
+    label: 'Non-Delivered Rate'
+    type: 'number'
+    definition: @aql safe_divide(
+      total_orders | where(vy_kaggle_orders.order_status != 'delivered'),
+      total_orders
+    ) ;;
+    format: '#,###0.00%'
+    description: 'Share of total orders that were not delivered.'
+  }
+}

@@ -1,6 +1,15 @@
-use datasets.test {ecommerce_test_modules}
-use models {users, cities, countries, orders, order_items, products}
 
-Dataset prod_ecommerce = ecommerce_test_modules.extend({
-  label: 'Prod Ecommerce (Module)'
-})
+// Comment since it has an AML bug that breaks deployment
+//
+// use datasets.test {ecommerce_test_modules}
+// use models {users, cities, countries, orders, order_items, products}
+
+// Dataset prod_ecommerce = ecommerce_test_modules.extend({
+//   label: 'Prod Ecommerce (Module)'
+// })
+
+Dataset prod_2 {
+  data_source_name: 'demodb'
+  models: []
+  relationships: []
+}

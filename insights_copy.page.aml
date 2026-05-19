@@ -1,0 +1,65 @@
+Dashboard insights_copy {
+  title: 'Insights (copy)'
+  owner: 'tai.nguyen@holistics.io'
+  interactions: [
+    FilterInteraction {
+      from: 'f_airbnb_listings_id'
+      to: [
+        CustomMapping {
+          block: 'f_airbnb_listings_id_vuz1'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_airbnb_listings_id_vuz1'
+      to: [
+        CustomMapping {
+          block: 'f_airbnb_listings_id'
+          disabled: true
+        }
+      ]
+    }
+  ]
+  view: TabLayout {
+    label: 'View 1'
+    tab tab1: CanvasLayout {
+      label: 'Overview'
+      width: 1700
+      height: 2840
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      default_zoom: 'fit_to_width'
+    }
+    tab tab2: CanvasLayout {
+      label: 'Games'
+      width: 1700
+      height: 540
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      default_zoom: 'fit_to_width'
+    }
+    tab tab_l4op: CanvasLayout {
+      label: 'Players'
+      width: 1700
+      height: 1560
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      default_zoom: 'fit_to_width'
+    }
+  }
+  settings {
+    timezone: 'Etc/UTC'
+    allow_timezone_change: true
+    cache_duration: 1440
+  }
+}

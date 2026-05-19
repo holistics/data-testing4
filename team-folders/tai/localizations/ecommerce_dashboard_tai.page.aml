@@ -1,0 +1,101 @@
+Dashboard ecommerce_dashboard_tai {
+  title: dict('dashboard_title')('eng')
+  owner: 'hien.nt@holistics.io'
+  block v_l8pg: VizBlock {
+    label: dict('gmv_block_label')('eng')
+    viz: MetricKpi {
+      dataset: demo_ecommerce_internal_training
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2023'
+      }
+      value: VizFieldFull {
+        label: dict('gmv_field_label')('eng')
+        ref: r(order_master.gmv)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      compare_value: VizPopSettings {
+        field: r(order_master.order_created_at)
+        value: RelativePopValue {
+          duration: 2
+          granularity: 'year'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+  }
+  block v_cbn7: VizBlock {
+    label: dict('total_users_label')('eng')
+    viz: MetricKpi {
+      dataset: demo_ecommerce_internal_training
+      calculation target_users {
+        label: 'Target Users'
+        formula: @aql ecommerce_users.users_signed_up_count * 1.38;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      value: VizFieldFull {
+        label: dict('target_users_calculation')('eng')
+        ref: r(ecommerce_users.total_users)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      compare_value: VizFieldFull {
+        ref: 'target_users'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        display_mode: 'progress'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+  }
+  block t_gtay: TextBlock {
+    content: @md <h1 style =" font-size:40px; color: #022658;padding-bottom:24px;border-bottom: 1px solid #022658" id="overview">Hello</h1>;;
+  }
+  view: CanvasLayout {
+    label: 'Canvas Layout'
+    width: 1220
+    height: 2720
+    grid_size: 20
+    auto_expand_vertically: true
+    block t_gtay {
+      position: pos(20, 20, 1180, 80)
+      layer: 1
+    }
+    block v_cbn7 {
+      position: pos(20, 320, 500, 180)
+      layer: 1
+    }
+    block v_l8pg {
+      position: pos(20, 120, 500, 180)
+      layer: 1
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: H.themes.vanilla
+  settings {
+    cache_duration: 1440
+  }
+}
