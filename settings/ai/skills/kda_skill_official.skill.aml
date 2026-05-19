@@ -182,8 +182,14 @@ Lead with a conversational restatement of the request, then confirm the periods 
 > - No — I meant a different comparison
 > - Something else: ___
 
-- **Yes** → proceed to dimension prioritization (Section 1)
+- **Yes** → run overall delta query → display overview sentence (see below) → proceed to dimension proposal (Section 1)
 - **No** or **Something else** → ask the user to clarify, re-resolve, and re-confirm
+
+**Overview sentence** (display immediately after user confirms period, before any dimension proposal):
+
+> [Metric] [dropped/increased] from [base_value] to [current_value] ([±delta]) between [base period] and [comparison period].
+>
+> Now I'll break down [metric] by the most relevant dimensions to find where the [drop/increase] came from. Here are my top [N] proposed dimensions:
 
 ### 1. Dimension Prioritization List
 
@@ -191,12 +197,9 @@ Two parts, clearly separated:
 
 **Part A — Informational preview** (display-only, not interactive)
 
-Short 2–3 sentence intro, then list each proposed dimension on its own line with a blank line between items. Never combine dimensions into a single paragraph.
+The overview sentence (Section 0) already establishes context. Follow it immediately with the dimension list — no additional intro paragraph. List each proposed dimension on its own line with a blank line between items. Never combine dimensions into a single paragraph.
 
-_Intro template (adapt — do not copy verbatim):_
-> "To explain the [drop/increase] in [metric] from [base period] to [comparison period], I'll analyze which segments drove the change. I'll work through the most relevant dimensions one at a time. Here are the [N] dimensions I propose to analyze, in priority order:"
-
-_Dimension list template:_
+_Dimension list template (follows directly after the overview sentence):_
 > **1. Dimension Name** — one sentence reason.
 >
 > **2. Dimension Name** — one sentence reason.
@@ -206,7 +209,7 @@ _Dimension list template:_
 **Part B — Confirmation prompt** (the only interactive element)
 
 Single yes/no question — never a list of choices:
-> "Shall I proceed with all [N] dimensions in the order above?"
+> "Shall I proceed with these [N] dimensions in the order above?"
 
 ### 2. User Confirmation Checkpoint
 
