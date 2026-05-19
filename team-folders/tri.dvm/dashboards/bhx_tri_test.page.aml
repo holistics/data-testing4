@@ -1,5 +1,5 @@
 Dashboard tri_test {
-  title: 'Tri Test'
+  title: 'BHX Tri Test'
   description: ''''''
 
   view: CanvasLayout {
@@ -672,4 +672,7 @@ Dashboard tri_test {
       ]
     }
   ]
+  settings {
+    autorun_on_open: true
+  }
 }
