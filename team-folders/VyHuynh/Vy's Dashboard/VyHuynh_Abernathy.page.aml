@@ -302,35 +302,35 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab_yzia: CanvasLayout {
       label: 'Key Driver'
       width: 1300
-      height: 2520
+      height: 2480
       grid_size: 20
       auto_expand_vertically: true
       block v_bj6j {
-        position: pos(20, 620, 620, 420)
+        position: pos(20, 580, 620, 420)
       }
       block v_segi {
-        position: pos(660, 1060, 620, 420)
+        position: pos(660, 1020, 620, 420)
       }
       block v_c1ru {
-        position: pos(20, 1060, 620, 420)
+        position: pos(20, 1020, 620, 420)
       }
       block v_3pqe {
-        position: pos(20, 1500, 620, 420)
+        position: pos(20, 1460, 620, 420)
       }
       block v_p9dt {
-        position: pos(660, 620, 620, 420)
+        position: pos(660, 580, 620, 420)
       }
       block t_uje2 {
-        position: pos(20, 2000, 520, 60)
+        position: pos(20, 1960, 520, 60)
       }
       block v_d9k9 {
-        position: pos(20, 2080, 620, 420)
+        position: pos(20, 2040, 620, 420)
       }
       block v_zspi {
-        position: pos(660, 2080, 620, 420)
+        position: pos(660, 2040, 620, 420)
       }
       block t_io0f {
-        position: pos(20, 540, 520, 60)
+        position: pos(20, 500, 520, 60)
       }
       block t_wymk {
         position: pos(20, 20, 520, 60)
@@ -367,26 +367,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
       block v_15s1 {
         position: pos(40, 260, 260, 160)
-      }
-    }
-    tab tab_fkvp: CanvasLayout {
-      label: 'Untitled'
-      width: 1300
-      height: 800
-      grid_size: 20
-      auto_expand_vertically: true
-      mobile {
-        mode: 'auto'
-      }
-    }
-    tab tab_5dru: CanvasLayout {
-      label: 'Untitled'
-      width: 1300
-      height: 800
-      grid_size: 20
-      auto_expand_vertically: true
-      mobile {
-        mode: 'auto'
       }
     }
   }
