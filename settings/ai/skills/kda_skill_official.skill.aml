@@ -56,8 +56,8 @@ Rank segments by `delta_value` — not by `abs(delta_value)`. For a drop, sort a
 
 ### 3. Contribution percentage
 
-- `delta_value = current_value - base_value` for each segment
-- `overall_delta_value = overall_current_value - overall_base_value` (computed without segment grouping)
+- `delta_value = comparison_value - base_value` for each segment
+- `overall_delta_value = overall_comparison_value - overall_base_value` (computed without segment grouping)
 - `contribution_pct = delta_value / overall_delta_value × 100`
 
 Driver segments (moving in same direction as overall) produce a positive `contribution_pct`. Offset segments (moving against overall) produce a negative `contribution_pct`.
@@ -72,8 +72,8 @@ Combined contribution of a group of segments = `sum(their delta_values) / overal
 - `safe_divide` returns null when denominator is zero or either operand is null — always wrap with outer `coalesce(..., 0)`
 - **Coalesce each additive component individually before any arithmetic.** Never add or subtract potentially-null values directly — `1 + null = null`, which silently nullifies the entire expression. For any metric with multiple components (e.g. numerator = A, denominator = A + B), always write `coalesce(A, 0) + coalesce(B, 0)`, not `A + B`. The outer `coalesce(safe_divide(...), 0)` is not sufficient on its own if any component feeding the denominator is null.
 - Never compute `delta_value` from raw nullable values
-- New segment detection: if `base_value_raw IS NULL` and `current_value_raw IS NOT NULL`, the segment is new — flag it in prose
-- Disappeared segment detection: if `base_value_raw IS NOT NULL` and `current_value_raw IS NULL`, the segment disappeared — flag it in prose
+- New segment detection: if `base_value_raw IS NULL` and `comparison_value_raw IS NOT NULL`, the segment is new — flag it in prose
+- Disappeared segment detection: if `base_value_raw IS NOT NULL` and `comparison_value_raw IS NULL`, the segment disappeared — flag it in prose
 - **Never omit any segment from the table.** Every segment that exists in either the base or comparison period must appear in the output table, regardless of whether its metric value is null, 0, or has data. A null or zero metric in one period is valid data — do not filter it out.
 
 ### 5. Period consistency
@@ -122,9 +122,10 @@ Do not generate any query until the user confirms.
 
 ### Step 1. Compute overall delta (separate query, no segment grouping)
 
-- `overall_base_value = coalesce(metric in base period, 0)`
-- `overall_current_value = coalesce(metric in comparison period, 0)`
-- `overall_delta_value = overall_current_value - overall_base_value`
+- `overall_base_value = coalesce(metric in base_period_literal, 0)`
+- `overall_comparison_value = coalesce(metric in comparison_period_literal, 0)`
+- `overall_delta_value = overall_comparison_value - overall_base_value`
+- `pct_change = coalesce(safe_divide(abs(overall_delta_value), overall_comparison_value), 0) × 100` — percentage change relative to the comparison period value
 
 If `overall_delta_value = 0`: stop. Inform the user the metric did not change net between the two periods.
 
@@ -133,11 +134,11 @@ If `overall_delta_value = 0`: stop. Inform the user the metric did not change ne
 For each segment:
 
 1. Compute raw additive components using `where()` — do not coalesce yet (needed for new/disappeared detection)
-2. Record `base_value_raw` and `current_value_raw`
+2. Record `base_value_raw` and `comparison_value_raw`
 3. Apply `coalesce(..., 0)` to each additive component individually before any arithmetic — e.g. `coalesce(won_base, 0) + coalesce(lost_base, 0)`, never `won_base + lost_base`
 4. For ratio metrics: coalesce each component of the numerator and denominator individually before passing them to `safe_divide` — `base_value = coalesce(safe_divide(coalesce(comp_A_base, 0), coalesce(comp_A_base, 0) + coalesce(comp_B_base, 0) + ...), 0)`. Apply the same pattern regardless of how many components the metric has.
-5. For additive metrics: `base_value = coalesce(base_value_raw, 0)`, `current_value = coalesce(current_value_raw, 0)`
-6. `delta_value = current_value - base_value`
+5. For additive metrics: `base_value = coalesce(base_value_raw, 0)`, `comparison_value = coalesce(comparison_value_raw, 0)`
+6. `delta_value = comparison_value - base_value`
 
 ### Step 3. Classify and compute contribution (post-query, from result set)
 
@@ -187,7 +188,7 @@ Lead with a conversational restatement of the request, then confirm the periods 
 
 **Overview sentence** (display immediately after user confirms period, before any dimension proposal):
 
-> [Metric] [dropped/increased] from [base_value] to [current_value] ([±delta]) between [base period] and [comparison period].
+> [Metric] [dropped/increased] from [comparison_value] to [base_value] ([±abs(delta)], [pct_change]%) between [comparison period] and [base period].
 >
 > Now I'll break down [metric] by the most relevant dimensions to find where the [drop/increase] came from. Here are my top [N] proposed dimensions:
 
@@ -225,15 +226,15 @@ Produce text only — no table.
 1. Header: `**[Dimension Name]** — [N] segments`
 2. Lead sentence: `"[Segment A]" and "[Segment B]" changed the most out of [N] segments. These [count] account for [X]% of the total [drop/increase].`
 3. One bullet per top 2–3 driver segments:
-   `- **[Segment]**: [base_value] → [current_value] ([±delta: X pp for ratios, +X/−X for additive]) — [contribution_pct]% of total [drop/increase]`
+   `- **[Segment]**: [comparison_value] → [base_value] ([±delta: X pp for ratios, +X/−X for additive]) — [contribution_pct]% of total [drop/increase]`
 4. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
 
 **Conditionally include** (only when applicable):
 
-- Offset segments exist → `Bucking the trend: "[Segment]" ([base] → [current], [±delta])`
+- Offset segments exist → `Bucking the trend: "[Segment]" ([comparison] → [base], [±delta])`
 - No segment > 10% contribution → `The [drop/increase] in this dimension is spread broadly — no single segment dominates.`
 - New segment (base_value_raw IS NULL) → `"[Segment]" was not present in [base period] — its contribution reflects entry into the data, not a rate change.`
-- Disappeared segment (current_value_raw IS NULL) → `"[Segment]" was absent in [comparison period] — its contribution reflects exit from the data.`
+- Disappeared segment (comparison_value_raw IS NULL) → `"[Segment]" was absent in [comparison period] — its contribution reflects exit from the data.`
 
 ### 4. Final Overview Text
 
@@ -242,7 +243,7 @@ Produced after all confirmed dimensions are complete (or user stops early).
 **Always include:**
 
 Opening line:
-> [Metric] [dropped/increased] from [base_value] to [current_value] ([±delta]) between [base period] and [comparison period].
+> [Metric] [dropped/increased] from [comparison_value] to [base_value] ([±abs(delta)], [pct_change]%) between [comparison period] and [base period].
 
 One line per analyzed dimension, **sorted by `dimension_driver_pct` descending**:
 > - **[Dimension]** ([dimension_driver_pct]% of total [drop/increase]): [top segment] had the largest individual [drop/increase]. Other movers: [segment list, or "No other major contributors."]

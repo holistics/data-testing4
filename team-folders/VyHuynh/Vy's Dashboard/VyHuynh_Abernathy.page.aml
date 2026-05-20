@@ -3582,6 +3582,16 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v_15s1: VizBlock {
+    theme: BlockTheme {
+      background {
+        bg_color: 'transparent'
+      }
+      border {
+        border_width: 0
+        border_color: 'transparent'
+      }
+      shadow: 'none'
+    }
     label: 'Sum of Earning'
     viz: MarkdownViz {
       dataset: vyhuynh_ecommerce_dataset
