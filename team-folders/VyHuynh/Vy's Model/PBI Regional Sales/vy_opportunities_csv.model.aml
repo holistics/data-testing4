@@ -118,9 +118,9 @@ Model vy_opportunities_csv {
   dimension campaign_seq {
     label: 'Campaign seq'
     description: ''
-    type: 'text'
+    type: 'number'
     hidden: false
-    definition: @sql {{ #SOURCE.campaign_seq }};;
+    definition: @sql CAST({{ #SOURCE.campaign_seq }} AS numeric);;
   }
   dimension blank {
     label: 'Blank'
@@ -180,7 +180,7 @@ Model vy_opportunities_csv {
       H.imports.column_config("opportunity_seq", "opportunity_seq", "number"),
       H.imports.column_config("product_seq", "product_seq", "number"),
       H.imports.column_config("system_user_seq", "system_user_seq", "number"),
-      H.imports.column_config("campaign_seq", "campaign_seq", "text"),
+      H.imports.column_config("campaign_seq", "campaign_seq", "number"),
       H.imports.column_config("blank", "blank", "text"),
       H.imports.column_config("date_diff_days", "date_diff_days", "number"),
       H.imports.column_config("opportunity_created_on", "opportunity_created_on", "datetime"),
