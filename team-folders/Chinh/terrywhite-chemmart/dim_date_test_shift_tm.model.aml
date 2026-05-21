@@ -1,0 +1,25 @@
+Model dim_date_test_shift_tm {
+  type: 'table'
+  label: 'Dim date test shift tm'
+  description: ''
+  data_source_name: 'demodb'
+  dimension date {
+    label: 'Date'
+    description: ''
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'dim_date.csv'
+    uploaded_at: '2026-05-21 08:04:03'
+    hash: '1c39b9b583e163008f2556291057511c0addb4f0bc7f26d090c8a0c766245fbd'
+    column_configs: [
+      H.imports.column_config("date", "date", "date")
+    ]
+  }
+  owner: 'chinh.dm@holistics.io'
+  table_name: '"persisted_models"."holistics_dim_date_test_4d08c_202605210804"'
+}

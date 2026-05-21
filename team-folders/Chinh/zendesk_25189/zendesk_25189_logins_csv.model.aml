@@ -1,25 +1,22 @@
 Model zendesk_25189_logins_csv {
   type: 'table'
   label: 'Zendesk 25189 logins csv'
-  description: 'Synthetic logins data to test whether running_total(approx_count_distinct(user_id)) is date-aware'
-  data_source_name: 'demodb'
-
+  description: ''
+  data_source_name: 'data_staging'
   dimension login_id {
-    label: 'Login id'
+    label: 'Login'
     description: ''
     type: 'number'
     hidden: false
     definition: @sql {{ #SOURCE.login_id }};;
   }
-
   dimension user_id {
-    label: 'User id'
+    label: 'User'
     description: ''
     type: 'number'
     hidden: false
     definition: @sql {{ #SOURCE.user_id }};;
   }
-
   dimension login_date {
     label: 'Login date'
     description: ''
@@ -31,8 +28,8 @@ Model zendesk_25189_logins_csv {
   import_source: ImportSource {
     type: 'csv'
     original_file_name: 'logins.csv'
-    uploaded_at: '2026-05-06 10:00:00'
-    hash: 'PLACEHOLDER_REGENERATED_ON_UPLOAD'
+    uploaded_at: '2026-05-06 04:02:41'
+    hash: '46410bb76c93a37846f013cb9b3c715599c71300b3520e481f7cd15f135c640e'
     column_configs: [
       H.imports.column_config("login_id", "login_id", "number"),
       H.imports.column_config("user_id", "user_id", "number"),
@@ -40,5 +37,5 @@ Model zendesk_25189_logins_csv {
     ]
   }
   owner: 'chinh.dm@holistics.io'
-  table_name: '"persisted_models"."holistics_zendesk_25189_logins_PLACEHOLDER"'
+  table_name: '`tmp2`.`holistics_zendesk_25189_760a6_202605060402`'
 }

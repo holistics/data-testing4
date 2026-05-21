@@ -1,10 +1,12 @@
 Dataset zendesk_25189_dataset {
   label: 'zendesk_25189_dataset'
   description: 'Test dataset to validate whether running_total(approx_count_distinct(user_id)) is date-aware (cumulative distinct) vs. simply summing per-period distinct counts.'
-  data_source_name: 'demodb'
+  data_source_name: 'data_staging'
+
   models: [
     zendesk_25189_logins_csv
   ]
+
   relationships: []
 
   // Per-period distinct active users (baseline).

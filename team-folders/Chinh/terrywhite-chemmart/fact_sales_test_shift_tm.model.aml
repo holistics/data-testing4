@@ -1,0 +1,41 @@
+Model fact_sales_test_shift_tm {
+  type: 'table'
+  label: 'Fact sales test shift tm'
+  description: ''
+  data_source_name: 'demodb'
+
+  dimension date {
+    label: 'Date'
+    description: ''
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date }};;
+  }
+  dimension sales_amount {
+    label: 'Sales amount'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales_amount }};;
+  }
+  measure fact_sales_total_sales_amount {
+    label: "Sales \$"
+    type: "number"
+    hidden: true
+    definition: @sql {{ sales_amount }};;
+    aggregation_type: "sum"
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'fact_sales.csv'
+    uploaded_at: '2026-05-21 08:05:20'
+    hash: 'e80504a09bef4833232f369f0341d41750647511a60f3988335a993655a06150'
+    column_configs: [
+      H.imports.column_config("date", "date", "date"),
+      H.imports.column_config("sales_amount", "sales_amount", "number")
+    ]
+  }
+  owner: 'chinh.dm@holistics.io'
+  table_name: '"persisted_models"."holistics_fact_sales_te_db470_202605210805"'
+}
