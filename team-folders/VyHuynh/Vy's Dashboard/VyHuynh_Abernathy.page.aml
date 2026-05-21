@@ -3647,9 +3647,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       calculation condition_formatting {
         label: 'condition formatting'
         formula: @aql case(
-  when: and(pop_comparison_of_completed_issue_dec_2025 < 0, _duration_day_lm < 0),
+  when: or(pop_comparison_of_completed_issue_dec_2025 < 0, _duration_day_lm < 0),
   then: "negative",
-  when: and(pop_comparison_of_completed_issue_dec_2025 > 0, _duration_day_lm > 0),
+  when: or(pop_comparison_of_completed_issue_dec_2025 > 0, _duration_day_lm > 0),
   then: "positive",
   else: "neutral"
 );;
@@ -3726,9 +3726,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     border-bottom: 2px solid #e5e7eb;
     white-space: nowrap;
   }
-  .pm-table th.col-project {
-    text-align: left;
-  }
   .pm-table td {
     padding: 8px 10px;
     border-bottom: 1px solid #e5e7eb;
@@ -3741,15 +3738,44 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     font-weight: 500;
     color: #1a202c;
   }
-  
+
+  /* --- Global Conditional Formatting (Applied dynamically by JS) --- */
+  .pm-table td.negative {
+    color: #b91c1c;
+    background-color: #fee2e2;
+    font-weight: 600;
+  }
+  .pm-table td.positive {
+    color: #15803d;
+    background-color: #dcfce7;
+    font-weight: 600;
+  }
+
+  /* --- Global SVG Icon Setup --- */
+  .pm-table td.positive::before,
+  .pm-table td.negative::before {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    vertical-align: -1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    content: "";
+  }
+  .pm-table td.positive::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315803d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5'/%3E%3Cpath d='M5 12l7-7 7 7'/%3E%3C/svg%3E");
+  }
+  .pm-table td.negative::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b91c1c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='M19 12l-7 7-7-7'/%3E%3C/svg%3E");
+  }
 </style>
 
 <table class="pm-table">
   <thead>
     <tr>
       <th class="col-project">Project Name</th>
-      <th>Completed Issues (Dec 25)</th>
-      <th>% Completed Issues (Compared to Nov 25)</th>
       <th>Duration Day (Dec 2025)</th>
       <th>Duration Day (Compared to Nov 25)</th>
     </tr>
@@ -3758,16 +3784,13 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   <tbody>
   {% map(rows) %}
   <tr>
-    <td class="col-project">{{`Project Name` }}</td>
-    <td>{{ values.`Completed Issue Dec 2025` }}</td>
-    <td>{{ values.`% Completed Issue Dec 2025` }}</td>
+    <td class="col-project">{{ `Project Name` }}</td>    
     <td>{{ values.`Duration Day Dec 2025` }}</td>
-    <td>{{ values.`% Duration day LM` }}</td>
+    <td class="format-me" data-raw="{{ values.`% Duration day LM`.raw }}">{{ values.`% Duration day LM`.formatted }}</td>
   </tr>
   {% end %}
   </tbody>
-
-</table>      ;;
+</table> ;;
       settings {
         aggregate_awareness {
           enabled: true
