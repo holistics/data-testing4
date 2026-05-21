@@ -1,4 +1,5 @@
 # [Automatically managed by the Looker extension]
 .looker_skills_manifest.json
 lookml-modeling-guidelines/
-# [/Automatically managed by the Looker extension]
+
+.envrc
