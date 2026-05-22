@@ -188,9 +188,13 @@ Lead with a conversational restatement of the request, then confirm the periods 
 
 **Overview sentence** (display immediately after user confirms period, before any dimension proposal):
 
+<<<<<<< local:settings/ai/skills/kda_skill_official.skill.aml
+> [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
+=======
 > [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
+>>>>>>> backend:settings/ai/skills/kda_skill_official.skill.aml
 >
-> Now I'll break down [metric] by the most relevant dimensions to find where the [drop/increase] came from. Here are my top [N] proposed dimensions:
+> There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most. Here are my top [N] proposed dimensions:
 
 ### 1. Dimension Prioritization List
 
@@ -242,7 +246,9 @@ Produced after all confirmed dimensions are complete (or user stops early).
 
 **Always include:**
 
-Opening line:
+Opening heading and line:
+> # Summary
+>
 > [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
 
 One line per analyzed dimension, **sorted by `dimension_driver_pct` descending**:

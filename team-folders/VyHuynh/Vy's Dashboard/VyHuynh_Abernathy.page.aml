@@ -115,7 +115,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 13
       }
       block v_c0sc {
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+        position: pos(20, 200, 1160, 180)
+=======
         position: pos(20, 200, 1160, 220)
+>>>>>>> backend:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
         layer: 1
       }
       mobile {
@@ -3632,12 +3636,23 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         calc_type: 'measure'
         data_type: 'number'
       }
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+      calculation duration_day_nov {
+        label: 'Duration Day Nov 2025'
+        formula: @aql duration_day | exact_period(reporting_issues.completed_at, @2025-11-01 - 2025-12-01);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+=======
+>>>>>>> backend:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       calculation pop_comparison_of_completed_issue_dec_2025 {
         label: '% Completed Issue Dec 2025'
         formula: @aql safe_divide(completed_issue_dec, completed_issue_dec | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
         calc_type: 'measure'
         data_type: 'number'
       }
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+=======
       calculation _duration_day_lm {
         label: '% Duration day LM'
         formula: @aql safe_divide(duration_day_dec, duration_day_dec | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
@@ -3656,6 +3671,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         calc_type: 'measure'
         data_type: 'text'
       }
+>>>>>>> backend:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       rows: [
         VizFieldFull {
           label: 'Project Name'
@@ -3695,6 +3711,12 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           }
         },
         VizFieldFull {
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+          ref: 'duration_day_nov'
+          format {
+            type: 'number'
+            pattern: '#,##0.0'
+=======
           ref: '_duration_day_lm'
           format {
             type: 'number'
@@ -3705,6 +3727,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           ref: 'condition_formatting'
           format {
             type: 'text'
+>>>>>>> backend:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
           }
         }
       ]
@@ -3726,6 +3749,12 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     border-bottom: 2px solid #e5e7eb;
     white-space: nowrap;
   }
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+  .pm-table th.col-project {
+    text-align: left;
+  }
+=======
+>>>>>>> backend:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
   .pm-table td {
     padding: 8px 10px;
     border-bottom: 1px solid #e5e7eb;
@@ -3738,6 +3767,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     font-weight: 500;
     color: #1a202c;
   }
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+=======
 
   /* --- Global Conditional Formatting (Applied dynamically by JS) --- */
   .pm-table td.negative {
@@ -3770,20 +3801,40 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   .pm-table td.negative::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b91c1c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='M19 12l-7 7-7-7'/%3E%3C/svg%3E");
   }
+>>>>>>> backend:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
 </style>
 
 <table class="pm-table">
   <thead>
     <tr>
       <th class="col-project">Project Name</th>
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+      <th>Completed Issues (Dec 25)</th>
+      <th>Completed Issues (Nov 25)</th>
+      <th>Duration Day (Dec 2025)</th>
+      <th>Duration Day (Nov 2025)</th>
+=======
       <th>Duration Day (Dec 2025)</th>
       <th>Duration Day (Compared to Nov 25)</th>
+>>>>>>> backend:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
     </tr>
   </thead>
 
   <tbody>
   {% map(rows) %}
   <tr>
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+    <td class="col-project">{{`Project Name` }}</td>
+    <td>{{ values.`Completed Issue Dec 2025` }}</td>
+    <td>{{ values.`Completed Issue Nov 2025` }}</td>
+    <td>{{ values.`Duration Day Dec 2025` }}</td>
+    <td>{{ values.`Duration Day Nov 2025` }}</td>
+  </tr>
+  {% end %}
+  </tbody>
+
+</table>   ;;
+=======
     <td class="col-project">{{ `Project Name` }}</td>    
     <td>{{ values.`Duration Day Dec 2025` }}</td>
     <td class="format-me" data-raw="{{ values.`% Duration day LM`.raw }}">{{ values.`% Duration day LM`.formatted }}</td>
@@ -3791,6 +3842,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   {% end %}
   </tbody>
 </table> ;;
+>>>>>>> backend:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       settings {
         aggregate_awareness {
           enabled: true
