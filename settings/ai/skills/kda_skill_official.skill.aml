@@ -106,9 +106,9 @@ If the user answers No at any point, skip remaining dimensions and proceed to th
 Before any query:
 
 1. Resolve the user's period descriptions to explicit date literals using these rules:
-   - Two periods stated explicitly (e.g., "Feb to Mar 2021") → base = first period, comparison = second period
-   - Single period stated (e.g., "explain the drop in Mar 2021") → base = stated period, comparison = immediately preceding period of the same granularity (e.g., Feb 2021 for a monthly period)
-   - Relative descriptions (e.g., "last month vs this month") → resolve against today's date
+   - Single period stated (e.g., "explain the drop in Mar 2021") → base = Mar 2021, comparison = immediately preceding period (Feb 2021)
+   - Two explicit periods stated (e.g., "increased from Dec to Jan", "from X to Y") → base = the FROM/starting period (Dec), comparison = the TO/ending period (Jan)
+   - Relative descriptions (e.g., "last month vs this month") → base = the earlier/from period (last month), comparison = the later/to period (this month)
 2. Detect granularity from the user's description and apply the correct `@()` literal format:
    - "Feb 2021", "February 2021", "last month" → month → `@(YYYY-MM)` e.g. `@(2021-02)`
    - "Q1 2021", "first quarter" → quarter → `@(YYYY-QN)` e.g. `@(2021-Q1)`
@@ -177,7 +177,7 @@ Set this sort in the DataTable viz settings (see Implementation Notes for exact 
 
 Lead with a conversational restatement of the request, then confirm the periods before proceeding:
 
-> You're asking me to explain the [drop/increase] in **[metric]** during **[base_period_literal]** compared to **[comparison_period_literal]**. Before I proceed with any analysis, I'd like to confirm these are the right periods.
+> You're asking me to explain the [drop/increase] in **[metric]** in **[base_period_literal]** (stated period) compared to **[comparison_period_literal]** (comparison period). Before I proceed with any analysis, I'd like to confirm these are the right periods.
 >
 > - Yes — that's correct, proceed
 > - No — I meant a different comparison
@@ -188,7 +188,7 @@ Lead with a conversational restatement of the request, then confirm the periods 
 
 **Overview sentence** (display immediately after user confirms period, before any dimension proposal):
 
-> [Metric] [dropped/increased] from [comparison_value] to [base_value] ([±abs(delta)], [pct_change]%) between [comparison period] and [base period].
+> [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
 >
 > Now I'll break down [metric] by the most relevant dimensions to find where the [drop/increase] came from. Here are my top [N] proposed dimensions:
 
@@ -243,7 +243,7 @@ Produced after all confirmed dimensions are complete (or user stops early).
 **Always include:**
 
 Opening line:
-> [Metric] [dropped/increased] from [comparison_value] to [base_value] ([±abs(delta)], [pct_change]%) between [comparison period] and [base period].
+> [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
 
 One line per analyzed dimension, **sorted by `dimension_driver_pct` descending**:
 > - **[Dimension]** ([dimension_driver_pct]% of total [drop/increase]): [top segment] had the largest individual [drop/increase]. Other movers: [segment list, or "No other major contributors."]
