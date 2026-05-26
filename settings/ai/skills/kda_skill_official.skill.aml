@@ -188,8 +188,10 @@ Lead with a conversational restatement of the request, then confirm the periods 
 
 **Overview sentence** (display immediately after user confirms period, before any dimension proposal):
 
-> [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
+**MUST be displayed verbatim — do not paraphrase, skip, or merge with other text:**
 
+> [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
+>
 > There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most. Here are my top [N] proposed dimensions:
 
 ### 1. Dimension Prioritization List
@@ -198,7 +200,7 @@ Two parts, clearly separated:
 
 **Part A — Informational preview** (display-only, not interactive)
 
-The overview sentence (Section 0) already establishes context. Follow it immediately with the dimension list — no additional intro paragraph. List each proposed dimension on its own line with a blank line between items. Never combine dimensions into a single paragraph.
+The overview sentence (Section 0) above — including the "There are multiple ways..." line — MUST always be displayed in full before the dimension list. Do not skip or shorten it. List each proposed dimension on its own line with a blank line between items. Never combine dimensions into a single paragraph.
 
 **ALWAYS include a one-sentence reason for every dimension — never list dimension names without reasons.** The reason must appear on the same line as the dimension name, separated by an em dash. Omitting the reason is not allowed under any circumstances.
 
