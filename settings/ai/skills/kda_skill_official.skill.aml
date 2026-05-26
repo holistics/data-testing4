@@ -188,12 +188,8 @@ Lead with a conversational restatement of the request, then confirm the periods 
 
 **Overview sentence** (display immediately after user confirms period, before any dimension proposal):
 
-<<<<<<< local:settings/ai/skills/kda_skill_official.skill.aml
 > [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
-=======
-> [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
->>>>>>> backend:settings/ai/skills/kda_skill_official.skill.aml
->
+
 > There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most. Here are my top [N] proposed dimensions:
 
 ### 1. Dimension Prioritization List
@@ -223,22 +219,23 @@ Single yes/no question — never a list of choices:
 
 ### 3. Per-Dimension Text Output
 
-Produce text only — no table.
-
 **Always include:**
 
 1. Header: `**[Dimension Name]** — [N] segments`
-2. Lead sentence: `"[Segment A]" and "[Segment B]" changed the most out of [N] segments. These [count] account for [X]% of the total [drop/increase].`
-3. One bullet per top 2–3 driver segments:
-   `- **[Segment]**: [comparison_value] → [base_value] ([±delta: X pp for ratios, +X/−X for additive]) — [contribution_pct]% of total [drop/increase]`
-4. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
+2. Compact table of all segments, sorted by Δ (most negative first for a drop, most positive first for an increase):
 
-**Conditionally include** (only when applicable):
+| Segment | Base | Comp | Δ | Contribution% |
+|---------|------|------|---|---------------|
+| Segment A | x% | y% | −Z pp | XX% |
+| … | | | | |
 
-- Offset segments exist → `Bucking the trend: "[Segment]" ([comparison] → [base], [±delta])`
-- No segment > 10% contribution → `The [drop/increase] in this dimension is spread broadly — no single segment dominates.`
-- New segment (base_value_raw IS NULL) → `"[Segment]" was not present in [base period] — its contribution reflects entry into the data, not a rate change.`
-- Disappeared segment (comparison_value_raw IS NULL) → `"[Segment]" was absent in [comparison period] — its contribution reflects exit from the data.`
+3. One sentence interpreting the table: what it means for the metric change.
+4. Conditional flags — one line each, only when applicable:
+   - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
+   - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
+   - New segment (base_value_raw IS NULL) → `⚠ [Segment] is new in [comp period] — not a rate change.`
+   - Disappeared segment (comparison_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
+5. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
 
 ### 4. Final Overview Text
 
@@ -246,20 +243,30 @@ Produced after all confirmed dimensions are complete (or user stops early).
 
 **Always include:**
 
-Opening heading and line:
+<<<<<<< local:settings/ai/skills/kda_skill_official.skill.aml
+Opening heading and summary line:
 > # Summary
 >
 > [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
 
-One line per analyzed dimension, **sorted by `dimension_driver_pct` descending**:
-> - **[Dimension]** ([dimension_driver_pct]% of total [drop/increase]): [top segment] had the largest individual [drop/increase]. Other movers: [segment list, or "No other major contributors."]
+Ranked table of analyzed dimensions, sorted by `dimension_driver_pct` descending:
 
-**Conditionally include:**
 
-- Dimension with no dominant segment → `**[Dimension]** ([dimension_driver_pct]% of total): No dominant segment — change was spread across segments.`
+| Dimension | Driver% | Top Segment | Δ |
+|-----------|---------|-------------|---|
+| … | | | |
+
+**Conditionally include (one line each):**
+
+- Dimension with no dominant segment → add note in Top Segment cell: `spread across segments`
 - Unanalyzed dimensions → `Note: [Dimension list] were not analyzed.`
 
-Do not repeat per-dimension bullet details here — this block is for scan-ability only.
+**Always include at the end:**
+
+> **You might want to:**
+> - [suggestion 1]
+> - [suggestion 2]
+> - [suggestion 3]
 
 ---
 
