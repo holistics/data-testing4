@@ -1,6 +1,6 @@
-Skill key_driver_v51 {
+Skill key_driver_v7 {
 
-label: 'Key Driver Skill v51'
+label: 'Key Driver Skill v7'
 
 description: 'Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting. Trigger on: "Why did close rate drop from Feb to Mar?", "Explain the increase in conversion between Q1 and Q2", "What drove the revenue decline last month?", "Break down the change in win rate between these two periods." Do not trigger for forecasts, general metric exploration, or comparisons without a directional change to explain.'
 
@@ -42,8 +42,8 @@ Rank segments by `delta_value` — not by `abs(delta_value)`. For a drop, sort a
 
 ### 3. Contribution percentage
 
-- `delta_value = base_value - comparison_value` for each segment
-- `overall_delta_value = overall_base_value - overall_comparison_value` (computed without segment grouping)
+- `delta_value = comparison_value - base_value` for each segment
+- `overall_delta_value = overall_comparison_value - overall_base_value` (computed without segment grouping)
 - `contribution_pct = delta_value / overall_delta_value × 100`
 
 Driver segments (moving in same direction as overall) produce a positive `contribution_pct`. Offset segments (moving against overall) produce a negative `contribution_pct`.
@@ -58,8 +58,8 @@ Combined contribution of a group of segments = `sum(their delta_values) / overal
 - `safe_divide` returns null when denominator is zero or either operand is null — always wrap with outer `coalesce(..., 0)`
 - **Coalesce each additive component individually before any arithmetic.** Never add or subtract potentially-null values directly — `1 + null = null`, which silently nullifies the entire expression. For any metric with multiple components (e.g. numerator = A, denominator = A + B), always write `coalesce(A, 0) + coalesce(B, 0)`, not `A + B`. The outer `coalesce(safe_divide(...), 0)` is not sufficient on its own if any component feeding the denominator is null.
 - Never compute `delta_value` from raw nullable values
-- New segment detection: if `comparison_value_raw IS NULL` and `base_value_raw IS NOT NULL`, the segment is new in the base period — flag it in prose
-- Disappeared segment detection: if `base_value_raw IS NULL` and `comparison_value_raw IS NOT NULL`, the segment disappeared in the base period — flag it in prose
+- New segment detection: if `base_value_raw IS NULL` and `comparison_value_raw IS NOT NULL`, the segment is new — flag it in prose
+- Disappeared segment detection: if `base_value_raw IS NOT NULL` and `comparison_value_raw IS NULL`, the segment disappeared — flag it in prose
 - **Never omit any segment from the output.** Every segment that exists in either the base or comparison period must appear in the output (chart or table), regardless of whether its metric value is null, 0, or has data. A null or zero metric in one period is valid data — do not filter it out.
 
 ### 5. Period consistency
@@ -94,8 +94,8 @@ Follow these phases in strict order. Each phase defines exactly what to compute 
 
 Resolve the user's period descriptions to explicit date literals:
 - Single period stated (e.g., "explain the drop in Mar 2021") → base = Mar 2021, comparison = immediately preceding period (Feb 2021)
-- Two explicit periods stated (e.g., "increased from Dec to Jan", "from X to Y") → base = the TO/ending period being analyzed (Jan), comparison = the FROM/starting period (Dec)
-- Relative descriptions (e.g., "last month vs this month") → base = the later/stated period (this month), comparison = the earlier/preceding period (last month)
+- Two explicit periods stated (e.g., "increased from Dec to Jan", "from X to Y") → base = the FROM/starting period (Dec), comparison = the TO/ending period (Jan)
+- Relative descriptions (e.g., "last month vs this month") → base = the earlier/from period (last month), comparison = the later/to period (this month)
 
 Detect granularity and apply the correct `@()` literal format:
 - "Feb 2021", "February 2021", "last month" → month → `@(YYYY-MM)` e.g. `@(2021-02)`
@@ -131,7 +131,7 @@ Options:
 Run the overall delta query (no segment grouping):
 - `overall_base_value = coalesce(metric in base_period_literal, 0)`
 - `overall_comparison_value = coalesce(metric in comparison_period_literal, 0)`
-- `overall_delta_value = overall_base_value - overall_comparison_value`
+- `overall_delta_value = overall_comparison_value - overall_base_value`
 - `pct_change = coalesce(safe_divide(abs(overall_delta_value), overall_comparison_value), 0) × 100`
 
 If `overall_delta_value = 0`: stop. Inform the user the metric did not change net between the two periods. Do not proceed further.
@@ -175,8 +175,8 @@ Execute this phase once per dimension, in confirmed order. Complete the full pha
    - `base_value`, `comparison_value` — coalesced per null safety rules (Core Rule 4)
    - For ratio metrics: coalesce each component of numerator and denominator individually before `safe_divide` — `base_value = coalesce(safe_divide(coalesce(comp_A_base, 0), coalesce(comp_A_base, 0) + coalesce(comp_B_base, 0) + ...), 0)`
    - For additive metrics: `base_value = coalesce(base_value_raw, 0)`, `comparison_value = coalesce(comparison_value_raw, 0)`
-   - `delta_value = base_value - comparison_value`
-   - `pct_delta = coalesce(safe_divide(delta_value, comparison_value), 0) * 100`
+   - `delta_value = comparison_value - base_value`
+   - `pct_delta = coalesce(safe_divide(delta_value, base_value), 0) * 100`
 
 2. Pass the AQL to `generate_viz` to produce the grouped ColumnChart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
 
@@ -202,8 +202,8 @@ Execute this phase once per dimension, in confirmed order. Complete the full pha
 4. Conditional flags — one line each, only when applicable:
    - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
    - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
-   - New segment (comparison_value_raw IS NULL) → `⚠ [Segment] is new in [base period] — not a rate change.`
-   - Disappeared segment (base_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
+   - New segment (base_value_raw IS NULL) → `⚠ [Segment] is new in [comp period] — not a rate change.`
+   - Disappeared segment (comparison_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
 5. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
 
 **Wait for user response before proceeding.**
