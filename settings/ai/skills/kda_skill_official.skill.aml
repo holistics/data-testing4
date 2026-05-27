@@ -227,7 +227,11 @@ Single yes/no question — never a list of choices:
 **Always include:**
 
 1. Header: `**[Dimension Name]** — [N] segments`
+<<<<<<< local:settings/ai/skills/kda_skill_official.skill.aml
+2. Grouped ColumnChart viz comparing base vs comparison period per segment — all segments, no row limit, sorted by contribution_pct descending. Generate using `generate_viz` with the per-dimension AQL and this natural language query: `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ'), pct_delta (labeled '% Change'), and contribution_pct (labeled 'Contribution %') to tooltip. Sort by contribution_pct descending."`
+=======
 2. Grouped ColumnChart viz comparing base vs comparison period per segment — all segments, no row limit, sorted by % delta change descending. Generate using `generate_viz` with the per-dimension AQL and this natural language query: `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ') and pct_delta (labeled '% Change') to tooltip. Sort by pct_delta descending."`
+>>>>>>> backend:settings/ai/skills/kda_skill_official.skill.aml
 3. One sentence interpreting the table: what it means for the metric change.
 4. Conditional flags — one line each, only when applicable:
    - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
@@ -297,14 +301,22 @@ DataTable {
 }
 ```
 
+<<<<<<< local:settings/ai/skills/kda_skill_official.skill.aml
+- When generating the ColumnChart viz for each dimension, call `generate_viz` with the same per-dimension AQL (which must include `delta_value`, `pct_delta`, and `contribution_pct` as computed fields). Pass `row_limit: 5000` in settings to ensure all segments are shown. The chart must use `base_value` and `comparison_value` as the two y-axis series, labeled with `base_period_name` and `comparison_period_name` respectively, and the segment field as x-axis. The chart type must be grouped (not stacked). Add `delta_value` (labeled `Δ`), `pct_delta` (labeled `% Change`), and `contribution_pct` (labeled `Contribution %`) as tooltip fields. Always sort by `contribution_pct` descending:
+=======
 - When generating the ColumnChart viz for each dimension, call `generate_viz` with the same per-dimension AQL (which must include `delta_value` and `pct_delta` as computed fields). Pass `row_limit: 5000` in settings to ensure all segments are shown. The chart must use `base_value` and `comparison_value` as the two y-axis series, labeled with `base_period_name` and `comparison_period_name` respectively, and the segment field as x-axis. The chart type must be grouped (not stacked). Add `delta_value` (labeled `Δ`) and `pct_delta` (labeled `% Change`) as tooltip fields. Always sort by `pct_delta` descending:
+>>>>>>> backend:settings/ai/skills/kda_skill_official.skill.aml
 
 ```
 ColumnChart {
   ...
   settings {
     sort {
+<<<<<<< local:settings/ai/skills/kda_skill_official.skill.aml
+      field: contribution_pct
+=======
       field: pct_delta
+>>>>>>> backend:settings/ai/skills/kda_skill_official.skill.aml
       direction: 'desc'
     }
   }
