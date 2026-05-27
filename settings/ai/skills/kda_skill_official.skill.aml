@@ -1,6 +1,6 @@
-Skill key_driver_official {
+Skill key_driver_v51 {
 
-label: 'Key Driver Official Skill'
+label: 'Key Driver Skill v51'
 
 description: 'Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting. Trigger on: "Why did close rate drop from Feb to Mar?", "Explain the increase in conversion between Q1 and Q2", "What drove the revenue decline last month?", "Break down the change in win rate between these two periods." Do not trigger for forecasts, general metric exploration, or comparisons without a directional change to explain.'
 
@@ -13,20 +13,6 @@ content: @md
 Identify which segments within each dimension changed the most between two periods, and how much of the total metric change each segment accounts for. Ranking is by raw delta only — no volume weighting. A segment's rank is determined solely by how much its metric value changed. A segment's contribution is its delta as a share of the overall metric delta.
 
 Supports both ratio metrics (close rate, conversion rate) and additive metrics (revenue, won count, sessions). Use when the user asks to explain an increase or decrease between two periods.
-
----
-
-## Goal
-
-This skill must:
-
-0. Resolve base period and comparison period to explicit date literals, show them to the user, and wait for confirmation before any calculation
-1. Enumerate eligible candidate dimensions
-2. Prioritize the top 5 dimensions based on semantic relevance to the target metric
-3. Show the proposed dimensions to the user and ask for confirmation
-4. Analyze dimensions one at a time in priority order
-5. For each dimension: rank segments by absolute delta, compute each segment's contribution % of total metric change, produce a short text output, then pause for user confirmation to continue
-6. After all confirmed dimensions, produce a final overview text across all analyzed dimensions
 
 ---
 
@@ -82,153 +68,137 @@ All period-specific fields, labels, and filters must refer consistently to the s
 
 ### 6. Prioritize top 5 dimensions before analysis
 
-Before any calculation:
-
 1. Enumerate eligible low-to-medium cardinality, business-relevant dimensions from the dataset schema
 2. Rank by semantic relevance to the target metric — prefer dimensions where the metric is likely to vary meaningfully, prefer business-actionable dimensions, avoid high-cardinality or technical fields
 3. Select top 5 (or all if fewer exist) — do not pad with weak dimensions
-4. Return the prioritization list with intro (see Output Format Section 1) and stop
 
 Do not ask the user to pick dimensions before the list is shown.
 
 ### 7. Sequential execution — one dimension at a time
 
-Analyze one dimension per step. Return text output for that dimension, then display the continuation prompt and wait. Do not batch or union multiple dimensions in one query.
+Analyze one dimension per step. Show output for that dimension, then wait for user confirmation before continuing. Do not batch or union multiple dimensions in one query.
 
-If the user answers No at any point, skip remaining dimensions and proceed to the final overview from completed dimensions only.
-
----
-
-## Computation Method
-
-### Step 0. Resolve and confirm period literals
-
-Before any query:
-
-1. Resolve the user's period descriptions to explicit date literals using these rules:
-   - Single period stated (e.g., "explain the drop in Mar 2021") → base = Mar 2021, comparison = immediately preceding period (Feb 2021)
-   - Two explicit periods stated (e.g., "increased from Dec to Jan", "from X to Y") → base = the FROM/starting period (Dec), comparison = the TO/ending period (Jan)
-   - Relative descriptions (e.g., "last month vs this month") → base = the earlier/from period (last month), comparison = the later/to period (this month)
-2. Detect granularity from the user's description and apply the correct `@()` literal format:
-   - "Feb 2021", "February 2021", "last month" → month → `@(YYYY-MM)` e.g. `@(2021-02)`
-   - "Q1 2021", "first quarter" → quarter → `@(YYYY-QN)` e.g. `@(2021-Q1)`
-   - "2021", "last year" → year → `@(YYYY)` e.g. `@(2021)`
-   - "week of Feb 8", "W06 2021" → week → `@(YYYY-WNN)` e.g. `@(2021-W06)`
-   - Specific dates ("Feb 15 2021", "yesterday") → day → `@(YYYY-MM-DD)` e.g. `@(2021-02-15)`
-3. Store as `base_period_literal` and `comparison_period_literal` — these must be used verbatim in every subsequent query
-4. Display to the user and wait for confirmation (see Output Format Section 0)
-
-Do not generate any query until the user confirms.
-
-### Step 1. Compute overall delta (separate query, no segment grouping)
-
-- `overall_base_value = coalesce(metric in base_period_literal, 0)`
-- `overall_comparison_value = coalesce(metric in comparison_period_literal, 0)`
-- `overall_delta_value = overall_comparison_value - overall_base_value`
-- `pct_change = coalesce(safe_divide(abs(overall_delta_value), overall_comparison_value), 0) × 100` — percentage change relative to the comparison period value
-
-If `overall_delta_value = 0`: stop. Inform the user the metric did not change net between the two periods.
-
-### Step 2. Compute segment deltas (one query per dimension, grouped by segment)
-
-For each segment:
-
-1. Compute raw additive components using `where()` — do not coalesce yet (needed for new/disappeared detection)
-2. Record `base_value_raw` and `comparison_value_raw`
-3. Apply `coalesce(..., 0)` to each additive component individually before any arithmetic — e.g. `coalesce(won_base, 0) + coalesce(lost_base, 0)`, never `won_base + lost_base`
-4. For ratio metrics: coalesce each component of the numerator and denominator individually before passing them to `safe_divide` — `base_value = coalesce(safe_divide(coalesce(comp_A_base, 0), coalesce(comp_A_base, 0) + coalesce(comp_B_base, 0) + ...), 0)`. Apply the same pattern regardless of how many components the metric has.
-5. For additive metrics: `base_value = coalesce(base_value_raw, 0)`, `comparison_value = coalesce(comparison_value_raw, 0)`
-6. `delta_value = comparison_value - base_value`
-7. `pct_delta = coalesce(safe_divide(delta_value, base_value), 0) * 100` — percentage change of the metric for this segment relative to its base period value
-
-### Step 3. Classify and compute contribution (post-query, from result set)
-
-Classify each segment's `impact_direction`:
-
-- `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
-- `overall_delta_value < 0` and `delta_value > 0` → offset_to_change
-- `overall_delta_value > 0` and `delta_value > 0` → driver_of_change
-- `overall_delta_value > 0` and `delta_value < 0` → offset_to_change
-- `delta_value = 0` → neutral
-
-Compute `contribution_pct = delta_value / overall_delta_value × 100` for each segment using the scalar `overall_delta_value` from Step 1.
-
-After computing all segment `contribution_pct` values, compute one summary number for the dimension:
-
-- `dimension_driver_pct = sum(delta_value for all driver_of_change segments) / overall_delta_value × 100`
-
-This represents how much of the total metric change the driver segments in this dimension collectively account for. Store it — it is used to rank dimensions in the final overview.
-
-### Step 4. Rank
-
-**Within each dimension**: sort all segments by `delta_value` — not by `abs(delta_value)`:
-
-- For a drop (overall_delta < 0): sort ascending — most negative delta at top, most positive at bottom. This naturally surfaces the biggest fallers first and pushes segments bucking the trend to the end.
-- For an increase (overall_delta > 0): sort descending — most positive delta at top, most negative at bottom.
-
-For the per-dimension ColumnChart, set this sort in the ColumnChart viz settings. For the final overview DataTable vizes (Section 4 only), set this sort in the DataTable viz settings (see Implementation Notes for exact AML syntax). Do not rely on AQL query output order — Holistics does not guarantee query order matches display order.
-
-**Across dimensions** (for the final overview): sort analyzed dimensions by `dimension_driver_pct` descending — the dimension whose driver segments collectively explain the most of the total change appears first.
+If the user answers No at any point, skip remaining dimensions and proceed to Phase 4 using completed dimensions only.
 
 ---
 
-## Output Format
+## Execution Phases
 
-### 0. Period Confirmation
+Follow these phases in strict order. Each phase defines exactly what to compute and what to show before moving on. Do not skip ahead or batch phases together.
 
-Lead with a conversational restatement of the request, then confirm the periods before proceeding:
+---
 
-> You're asking me to explain the [drop/increase] in **[metric]** in **[base_period_literal]** (stated period) compared to **[comparison_period_literal]** (comparison period). Before I proceed with any analysis, I'd like to confirm these are the right periods.
->
+### Phase 1 — Resolve periods and confirm with user
+
+**Compute:**
+
+Resolve the user's period descriptions to explicit date literals:
+- Single period stated (e.g., "explain the drop in Mar 2021") → base = Mar 2021, comparison = immediately preceding period (Feb 2021)
+- Two explicit periods stated (e.g., "increased from Dec to Jan", "from X to Y") → base = the FROM/starting period (Dec), comparison = the TO/ending period (Jan)
+- Relative descriptions (e.g., "last month vs this month") → base = the earlier/from period (last month), comparison = the later/to period (this month)
+
+Detect granularity and apply the correct `@()` literal format:
+- "Feb 2021", "February 2021", "last month" → month → `@(YYYY-MM)` e.g. `@(2021-02)`
+- "Q1 2021", "first quarter" → quarter → `@(YYYY-QN)` e.g. `@(2021-Q1)`
+- "2021", "last year" → year → `@(YYYY)` e.g. `@(2021)`
+- "week of Feb 8", "W06 2021" → week → `@(YYYY-WNN)` e.g. `@(2021-W06)`
+- Specific dates ("Feb 15 2021", "yesterday") → day → `@(YYYY-MM-DD)` e.g. `@(2021-02-15)`
+
+Store as `base_period_literal` and `comparison_period_literal` — these must be used verbatim in every subsequent query. Do not generate any query yet.
+
+**Show:**
+
+Use `ask_user`. The question title **must be this exact sentence** — fill in the bracketed values, do not paraphrase, shorten, or substitute any other wording:
+
+> You're asking me to analyze the [drop/increase] in **[metric]** between **[comparison_period_literal]** (comparison period) and **[base_period_literal]** (base period). Please confirm these periods before I proceed.
+
+Options:
 > - Yes — that's correct, proceed
 > - No — I meant a different comparison
 > - Something else: ___
 
-- **Yes** → run overall delta query → display overview sentence (see below) → proceed to dimension proposal (Section 1)
-- **No** or **Something else** → ask the user to clarify, re-resolve, and re-confirm
+**Wait for user response before proceeding.**
 
-**Overview sentence** (display immediately after user confirms period, before any dimension proposal):
+- **Yes** → proceed to Phase 2
+- **No** or **Something else** → re-resolve periods, re-show confirmation, wait again
 
-**MUST be displayed verbatim — do not paraphrase, skip, or merge with other text:**
+---
+
+### Phase 2 — Compute overall delta, show overview, propose dimensions, confirm
+
+**Compute:**
+
+Run the overall delta query (no segment grouping):
+- `overall_base_value = coalesce(metric in base_period_literal, 0)`
+- `overall_comparison_value = coalesce(metric in comparison_period_literal, 0)`
+- `overall_delta_value = overall_comparison_value - overall_base_value`
+- `pct_change = coalesce(safe_divide(abs(overall_delta_value), overall_comparison_value), 0) × 100`
+
+If `overall_delta_value = 0`: stop. Inform the user the metric did not change net between the two periods. Do not proceed further.
+
+Then inspect the dataset schema and select top 5 dimensions per Core Rule 6.
+
+**Show:**
+
+Display the overview sentence immediately — **verbatim, do not paraphrase, skip, or merge with other text**:
 
 > [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
 >
 > There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most. Here are my top [N] proposed dimensions:
 
-### 1. Dimension Prioritization List
+**You MUST output the full numbered list in text before calling `ask_user`.** Do not call `ask_user` without first displaying this list. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
 
-Two parts, clearly separated:
-
-**Part A — Informational preview** (display-only, not interactive)
-
-The overview sentence (Section 0) above — including the "There are multiple ways..." line — MUST always be displayed in full before the dimension list. Do not skip or shorten it. List each proposed dimension on its own line with a blank line between items. Never combine dimensions into a single paragraph.
-
-**ALWAYS include a one-sentence reason for every dimension — never list dimension names without reasons.** The reason must appear on the same line as the dimension name, separated by an em dash. Omitting the reason is not allowed under any circumstances.
-
-_Dimension list template (follows directly after the overview sentence):_
 > **1. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 >
 > **2. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 >
 > **3. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 
-**Part B — Confirmation prompt** (the only interactive element)
-
-Single yes/no question — never a list of choices:
+Only after displaying that full list, call `ask_user` with a single yes/no question:
 > "Shall I proceed with these [N] dimensions in the order above?"
 
-### 2. User Confirmation Checkpoint
+**Wait for user response before proceeding.**
 
-- **Yes** → begin dimension #1 immediately
-- **No** → ask what to change (add, remove, reorder), re-show updated list, prompt again
+- **Yes** → proceed to Phase 3 with dimension #1
+- **No** → ask what to change (add, remove, reorder), re-show updated list, ask again
 
-### 3. Per-Dimension Text Output
+---
 
-**Always include:**
+### Phase 3 — Analyze one dimension (repeat for each confirmed dimension)
+
+Execute this phase once per dimension, in confirmed order. Complete the full phase — compute, show, wait — before moving to the next dimension.
+
+**Compute:**
+
+1. Write the per-dimension AQL grouped by the dimension's segment field. Include these computed fields:
+   - `base_value_raw`, `comparison_value_raw` — raw, uncoalesced (needed for new/disappeared detection)
+   - `base_value`, `comparison_value` — coalesced per null safety rules (Core Rule 4)
+   - For ratio metrics: coalesce each component of numerator and denominator individually before `safe_divide` — `base_value = coalesce(safe_divide(coalesce(comp_A_base, 0), coalesce(comp_A_base, 0) + coalesce(comp_B_base, 0) + ...), 0)`
+   - For additive metrics: `base_value = coalesce(base_value_raw, 0)`, `comparison_value = coalesce(comparison_value_raw, 0)`
+   - `delta_value = comparison_value - base_value`
+   - `pct_delta = coalesce(safe_divide(delta_value, base_value), 0) * 100`
+
+2. Pass the AQL to `generate_viz` to produce the grouped ColumnChart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
+
+   Natural language query for `generate_viz`:
+   `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ'), pct_delta (labeled '% Change'), and contribution_pct (labeled 'Contribution %') to tooltip. Sort by contribution_pct descending."`
+
+3. From the chart result data, classify each segment's `impact_direction` (post-query):
+   - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
+   - `overall_delta_value < 0` and `delta_value > 0` → offset_to_change
+   - `overall_delta_value > 0` and `delta_value > 0` → driver_of_change
+   - `overall_delta_value > 0` and `delta_value < 0` → offset_to_change
+   - `delta_value = 0` → neutral
+
+4. Compute `contribution_pct = delta_value / overall_delta_value × 100` for each segment using the scalar `overall_delta_value` from Phase 2.
+
+5. Compute and store `dimension_driver_pct = sum(delta_value for all driver_of_change segments) / overall_delta_value × 100` — used to rank dimensions in Phase 4.
+
+**Show:**
 
 1. Header: `**[Dimension Name]** — [N] segments`
-2. Grouped ColumnChart viz comparing base vs comparison period per segment — all segments, no row limit, sorted by contribution_pct descending. Generate using `generate_viz` with the per-dimension AQL and this natural language query: `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ'), pct_delta (labeled '% Change'), and contribution_pct (labeled 'Contribution %') to tooltip. Sort by contribution_pct descending."`
-3. One sentence interpreting the chart: what it means for the metric change.
+2. The grouped ColumnChart generated above — **this is the only viz output at this step, no DataTable**
+3. One sentence interpreting the chart: what it means for the metric change
 4. Conditional flags — one line each, only when applicable:
    - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
    - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
@@ -236,16 +206,18 @@ Single yes/no question — never a list of choices:
    - Disappeared segment (comparison_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
 5. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
 
-**Do not generate a DataTable for this dimension — the ColumnChart is the only viz output at this step.**
+**Wait for user response before proceeding.**
 
-**Do not call `execute_aql` directly during per-dimension steps.** Calling `execute_aql` renders a raw result table to the user, which violates this rule even if no formal DataTable viz is generated. The per-dimension AQL must be passed to `generate_viz` only — `generate_viz` executes the query internally without exposing a table.
+- **Yes** → repeat Phase 3 for the next dimension
+- **No** → skip remaining dimensions and proceed to Phase 4 immediately
 
+---
 
-### 4. Final Overview Text
+### Phase 4 — Final overview
 
-Produced after all confirmed dimensions are complete (or user stops early).
+Produced after all confirmed dimensions are complete, or after the user stops early.
 
-**Always include:**
+**Show:**
 
 Opening heading and summary line:
 > # Summary
@@ -254,12 +226,14 @@ Opening heading and summary line:
 
 Ranked table of analyzed dimensions, sorted by `dimension_driver_pct` descending:
 
-
 | Dimension | Driver% | Top Segment | Δ |
 |-----------|---------|-------------|---|
 | … | | | |
 
-Then, for each analyzed dimension in the same ranked order, output a DataTable viz showing all segments with their base value, comparison value, delta, % change, and contribution %. Generate using `generate_viz` with the per-dimension AQL, one table per dimension. Label each table with the dimension name as a heading. Sort by `delta_value` ascending for a drop, descending for an increase.
+Then, for each analyzed dimension in the same ranked order:
+- Display the dimension name as a heading
+- Generate a DataTable viz via `generate_viz` showing all segments with: segment, base_value, comparison_value, delta_value, pct_delta, contribution_pct
+- Sort by `delta_value` ascending for a drop, descending for an increase
 
 **Conditionally include (one line each):**
 
@@ -277,34 +251,20 @@ Then, for each analyzed dimension in the same ranked order, output a DataTable v
 
 ## Implementation Notes for Holistics / AQL
 
-- `base_period_literal` and `comparison_period_literal` are resolved and confirmed in Step 0 — every query must use these exact values for period filtering, with no exceptions
+- `base_period_literal` and `comparison_period_literal` are resolved and confirmed in Phase 1 — every query must use these exact values for period filtering, with no exceptions
 - Never use `relative_period()` for period filtering — it does not reliably resolve ratio metrics across all dimensions and can produce NULL measures. Always filter with explicit `where(date_field is @(literal))` using the confirmed literals
 - `@()` literals must match the period granularity: `@(YYYY-MM-DD)` for days, `@(YYYY-WNN)` for weeks, `@(YYYY-MM)` for months, `@(YYYY-QN)` for quarters, `@(YYYY)` for years. Never use a day literal `@(YYYY-MM-DD)` for a month or quarter period — it filters only a 2-day window, not the full period.
 - Before generating any query, define `base_period_name`, `comparison_period_name`, `base_period_literal`, `comparison_period_literal` — reuse these exact aliases throughout
-- Always run the overall delta query first (no segment dimension) — store the scalar result as `overall_delta_value` for use in all subsequent `contribution_pct` calculations
 - Reuse existing dataset metric definitions whenever possible; inspect before deciding how to compute segment values
 - Always wrap `where()` aggregations with `coalesce(..., 0)` — `where()` returns null, not 0, when nothing matches
 - Always wrap ratio metrics with outer `coalesce`: `coalesce(safe_divide(num, den), 0)` — `safe_divide` returns null for any null operand or zero denominator; the outer coalesce is sufficient to guarantee a non-null result
-- `contribution_pct` is computed post-query: divide each segment's `delta_value` (from the result set) by the scalar `overall_delta_value` — do not attempt to express this as a single AQL formula within the segment-grouped query
-- Never apply any filter to the DataTable that excludes null or zero metric values. All segments must be visible in the table regardless of their metric value in either period
+- `contribution_pct` is computed post-query from chart result data: divide each segment's `delta_value` by the scalar `overall_delta_value` — do not attempt to express this as a single AQL formula within the segment-grouped query
+- Never apply any filter that excludes null or zero metric values. All segments must be visible regardless of their metric value in either period
 - Run one AQL query per dimension — never union or batch dimensions
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
-- DataTable vizes are only generated in the final overview (Section 4), not during per-dimension steps. Never call `execute_aql` during per-dimension steps — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only. When generating each DataTable in the final output, always set the sort on the `change` column (field_index 3, assuming columns are: segment=0, base_period=1, comparison_period=2, change=3, pct=4). Use `direction: 'asc'` for a drop and `direction: 'desc'` for an increase:
-
-```
-DataTable {
-  ...
-  settings {
-    sort {
-      field_index: 3
-      direction: 'asc' // use 'desc' if overall change is an increase
-    }
-  }
-}
-```
-
-- When generating the ColumnChart viz for each dimension, call `generate_viz` with the same per-dimension AQL (which must include `delta_value`, `pct_delta`, and `contribution_pct` as computed fields). Pass `row_limit: 5000` in settings to ensure all segments are shown. The chart must use `base_value` and `comparison_value` as the two y-axis series, labeled with `base_period_name` and `comparison_period_name` respectively, and the segment field as x-axis. The chart type must be grouped (not stacked). Add `delta_value` (labeled `Δ`), `pct_delta` (labeled `% Change`), and `contribution_pct` (labeled `Contribution %`) as tooltip fields. Always sort by `contribution_pct` descending:
+- Never call `execute_aql` during Phase 3 — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only.
+- When generating the ColumnChart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Sort by `contribution_pct` descending:
 
 ```
 ColumnChart {
@@ -313,6 +273,20 @@ ColumnChart {
     sort {
       field: contribution_pct
       direction: 'desc'
+    }
+  }
+}
+```
+
+- When generating DataTable vizes (Phase 4 only), sort on the `change` column (field_index 3, assuming columns are: segment=0, base_period=1, comparison_period=2, change=3, pct=4). Use `direction: 'asc'` for a drop and `direction: 'desc'` for an increase:
+
+```
+DataTable {
+  ...
+  settings {
+    sort {
+      field_index: 3
+      direction: 'asc' // use 'desc' if overall change is an increase
     }
   }
 }
