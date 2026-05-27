@@ -228,13 +228,15 @@ Single yes/no question — never a list of choices:
 
 1. Header: `**[Dimension Name]** — [N] segments`
 2. Grouped ColumnChart viz comparing base vs comparison period per segment — all segments, no row limit, sorted by contribution_pct descending. Generate using `generate_viz` with the per-dimension AQL and this natural language query: `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ'), pct_delta (labeled '% Change'), and contribution_pct (labeled 'Contribution %') to tooltip. Sort by contribution_pct descending."`
-3. One sentence interpreting the table: what it means for the metric change.
+3. One sentence interpreting the chart: what it means for the metric change.
 4. Conditional flags — one line each, only when applicable:
    - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
    - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
    - New segment (base_value_raw IS NULL) → `⚠ [Segment] is new in [comp period] — not a rate change.`
    - Disappeared segment (comparison_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
 5. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
+
+**Do not generate a DataTable for this dimension — the ColumnChart is the only viz output at this step.**
 
 ### 4. Final Overview Text
 
@@ -253,6 +255,8 @@ Ranked table of analyzed dimensions, sorted by `dimension_driver_pct` descending
 | Dimension | Driver% | Top Segment | Δ |
 |-----------|---------|-------------|---|
 | … | | | |
+
+Then, for each analyzed dimension in the same ranked order, output a DataTable viz showing all segments with their base value, comparison value, delta, % change, and contribution %. Generate using `generate_viz` with the per-dimension AQL, one table per dimension. Label each table with the dimension name as a heading. Sort by `delta_value` ascending for a drop, descending for an increase.
 
 **Conditionally include (one line each):**
 
@@ -283,7 +287,7 @@ Ranked table of analyzed dimensions, sorted by `dimension_driver_pct` descending
 - Run one AQL query per dimension — never union or batch dimensions
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
-- When generating the DataTable viz for each dimension, always set the sort on the `change` column (field_index 3, assuming columns are: segment=0, base_period=1, comparison_period=2, change=3, pct=4). Use `direction: 'asc'` for a drop and `direction: 'desc'` for an increase:
+- DataTable vizes are only generated in the final overview (Section 4), not during per-dimension steps. When generating each DataTable in the final output, always set the sort on the `change` column (field_index 3, assuming columns are: segment=0, base_period=1, comparison_period=2, change=3, pct=4). Use `direction: 'asc'` for a drop and `direction: 'desc'` for an increase:
 
 ```
 DataTable {
