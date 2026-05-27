@@ -1,6 +1,6 @@
-Skill key_driver_v51 {
+Skill key_driver_official {
 
-label: 'Key Driver Skill v51'
+label: 'Key Driver Skill'
 
 description: 'Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting. Trigger on: "Why did close rate drop from Feb to Mar?", "Explain the increase in conversion between Q1 and Q2", "What drove the revenue decline last month?", "Break down the change in win rate between these two periods." Do not trigger for forecasts, general metric exploration, or comparisons without a directional change to explain.'
 
