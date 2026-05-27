@@ -238,6 +238,11 @@ Single yes/no question — never a list of choices:
 
 **Do not generate a DataTable for this dimension — the ColumnChart is the only viz output at this step.**
 
+<<<<<<< local:settings/ai/skills/kda_skill_official.skill.aml
+**Do not call `execute_aql` directly during per-dimension steps.** Calling `execute_aql` renders a raw result table to the user, which violates this rule even if no formal DataTable viz is generated. The per-dimension AQL must be passed to `generate_viz` only — `generate_viz` executes the query internally without exposing a table.
+
+=======
+>>>>>>> backend:settings/ai/skills/kda_skill_official.skill.aml
 ### 4. Final Overview Text
 
 Produced after all confirmed dimensions are complete (or user stops early).
@@ -287,7 +292,11 @@ Then, for each analyzed dimension in the same ranked order, output a DataTable v
 - Run one AQL query per dimension — never union or batch dimensions
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
+<<<<<<< local:settings/ai/skills/kda_skill_official.skill.aml
+- DataTable vizes are only generated in the final overview (Section 4), not during per-dimension steps. Never call `execute_aql` during per-dimension steps — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only. When generating each DataTable in the final output, always set the sort on the `change` column (field_index 3, assuming columns are: segment=0, base_period=1, comparison_period=2, change=3, pct=4). Use `direction: 'asc'` for a drop and `direction: 'desc'` for an increase:
+=======
 - DataTable vizes are only generated in the final overview (Section 4), not during per-dimension steps. When generating each DataTable in the final output, always set the sort on the `change` column (field_index 3, assuming columns are: segment=0, base_period=1, comparison_period=2, change=3, pct=4). Use `direction: 'asc'` for a drop and `direction: 'desc'` for an increase:
+>>>>>>> backend:settings/ai/skills/kda_skill_official.skill.aml
 
 ```
 DataTable {
