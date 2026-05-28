@@ -4,6 +4,83 @@ Dashboard sonp_tucak {
   block title: TextBlock {
     content: @md # Your title goes here ;;
   }
+  block v_gng2: VizBlock {
+    label: '''Campaign Revenue Won This Month vs Last Month
+'''
+    viz: DataTable {
+      dataset: vy_pbi_dts
+      calculation revenue_won_last_month {
+        label: 'Revenue Won Last Month'
+        formula: @aql revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation revenue_won_percent_change {
+        label: 'Revenue Won Percent Change'
+        formula: @aql safe_divide(revenue_won - revenue_won_last_month, revenue_won_last_month) * 100.0;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(vy_opportunities_csv.close_date)
+        operator: 'matches'
+        value: 'this month'
+      }
+      fields: [
+        VizFieldFull {
+          label: 'Campaign'
+          ref: r(vy_campaigns_csv.campaign)
+          format {
+            type: 'text'
+          }
+          uname: 'campaign'
+        },
+        VizFieldFull {
+          label: 'Revenue Won Current Month'
+          ref: r(vy_pbi_dts.revenue_won)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'revenue_won_current_month'
+        },
+        VizFieldFull {
+          label: 'Revenue Won Last Month'
+          ref: 'revenue_won_last_month'
+          format {
+            type: 'number'
+            pattern: '[$]#,##0.0'
+          }
+          uname: 'revenue_won_last_month'
+        },
+        VizFieldFull {
+          label: 'Percent Change vs Last Month'
+          ref: 'revenue_won_percent_change'
+          format {
+            type: 'number'
+            pattern: '#,##0.0\\%'
+          }
+          uname: 'revenue_won_percent_change'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        wrap_header_text: true
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'revenue_won_current_month'
+            direction: 'desc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        single_cell_display: 'normal'
+      }
+    }
+  }
   interactions: []
   view: CanvasLayout {
     label: 'View 1'
@@ -13,6 +90,10 @@ Dashboard sonp_tucak {
     auto_expand_vertically: true
     block title {
       position: pos(20, 20, 1260, 60)
+    }
+    block v_gng2 {
+      position: pos(20, 100, 620, 420)
+      layer: 1
     }
     mobile {
       mode: 'auto'
