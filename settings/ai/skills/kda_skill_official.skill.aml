@@ -181,7 +181,7 @@ Execute this phase once per dimension, in confirmed order. Complete the full pha
 2. Pass the AQL to `generate_viz` to produce the grouped ColumnChart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
 
    Natural language query for `generate_viz`:
-   `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ'), pct_delta (labeled '% Change'), and contribution_pct (labeled 'Contribution %') to tooltip. Sort by contribution_pct descending."`
+   `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ') and pct_delta (labeled '% Change') to tooltip. Sort by contribution_pct descending."`
 
 3. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
@@ -204,6 +204,7 @@ Execute this phase once per dimension, in confirmed order. Complete the full pha
    - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
    - New segment (comparison_value_raw IS NULL) → `⚠ [Segment] is new in [base period] — not a rate change.`
    - Disappeared segment (base_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
+   - Any segment has `|contribution_pct| > 100%` → identify the top outlier(s) and flag: `⚠ [Segment] moved [N]× the net change. The overall change is small, but that's because large drops in some segments were offset by large gains in others — not because things were stable.`
 5. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
 
 **Wait for user response before proceeding.**
