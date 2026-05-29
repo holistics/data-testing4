@@ -1,0 +1,21 @@
+Dashboard ecommerce_dashboard_tai_spanish= ecommerce_dashboard_tai.extend({
+  title: dict('dashboard_title')('spa')
+  owner: 'hien.nt@holistics.io'
+
+  block v_l8pg: VizBlock {
+    label: dict('gmv_block_label')('spa')
+    viz: MetricKpi {
+      value: VizFieldFull {
+        label: dict('gmv_field_label')('spa')
+      }
+    }
+  }
+  block v_cbn7: VizBlock {
+    label: dict('total_users_label')('spa')
+    viz: MetricKpi {
+      value: VizFieldFull {
+        label: dict('target_users_calculation')('spa')
+      }
+    }
+  }
+})

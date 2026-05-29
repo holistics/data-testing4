@@ -46,12 +46,20 @@ Model reporting_issues {
     definition: @sql {{ #SOURCE.creator_id }};;
   }
   dimension status {
-    label: 'Status'
-    description: ''
-    type: 'text'
-    hidden: false
-    definition: @sql {{ #SOURCE.status }};;
-  }
+  label: 'Status'
+  description: ''
+  type: 'text'
+  hidden: false
+  definition: @sql CASE
+      WHEN {{ #SOURCE.status }} = 'in_progress' THEN 'In Progress'
+      WHEN {{ #SOURCE.status }} = 'pr_review' THEN 'PR Review'
+      WHEN {{ #SOURCE.status }} = 'merged' THEN 'Merged'
+      WHEN {{ #SOURCE.status }} = 'deployed_to_staging' THEN 'Deployed to Staging'
+      WHEN {{ #SOURCE.status }} = 'tested_on_staging' THEN 'Tested on Staging'
+      WHEN {{ #SOURCE.status }} = 'deployed' THEN 'Deployed'
+    ELSE 'Other'
+  END;;
+}
   dimension priority {
     label: 'Priority'
     description: ''
@@ -64,7 +72,14 @@ Model reporting_issues {
     description: ''
     type: 'text'
     hidden: false
-    definition: @sql {{ #SOURCE.label }};;
+    definition: @sql CASE
+    WHEN {{ #SOURCE.label }} ='bug' THEN 'Bug'
+    WHEN {{ #SOURCE.label }} ='tech_debt' THEN 'Tech Debt'
+    WHEN {{ #SOURCE.label }} ='improvement' THEN 'Improvement'
+    WHEN {{ #SOURCE.label }} ='feature' THEN 'Feature'
+    WHEN {{ #SOURCE.label }} ='chore' THEN 'Chore'
+    ELSE 'Other'
+  END;;
   }
   dimension estimate {
     label: 'Estimate'
@@ -76,37 +91,37 @@ Model reporting_issues {
   dimension created_at {
     label: 'Created at'
     description: ''
-    type: 'datetime'
+    type: 'date'
     hidden: false
     definition: @sql {{ #SOURCE.created_at }};;
   }
   dimension started_at {
     label: 'Started at'
     description: ''
-    type: 'datetime'
+    type: 'date'
     hidden: false
     definition: @sql {{ #SOURCE.started_at }};;
   }
   dimension completed_at {
     label: 'Completed at'
     description: ''
-    type: 'datetime'
+    type: 'date'
     hidden: false
     definition: @sql {{ #SOURCE.completed_at }};;
   }
   dimension cycle_time_hours {
     label: 'Cycle time hours'
     description: ''
-    type: 'datetime'
+    type: 'number'
     hidden: false
     definition: @sql {{ #SOURCE.cycle_time_hours }};;
   }
 
   import_source: ImportSource {
     type: 'csv'
-    original_file_name: 'issues_1.csv'
-    uploaded_at: '2026-03-05 03:50:41'
-    hash: '8449dd003576c6a22aae979e690889d1938a7179160ae9fd0afb1345c8585244'
+    original_file_name: 'issues.csv'
+    uploaded_at: '2026-03-07 03:49:36'
+    hash: 'a16492e35106d89f985607bc226c6cfbe5fa46666d20c188c47c89852a5e48ce'
     column_configs: [
       H.imports.column_config("id", "id", "number"),
       H.imports.column_config("title", "title", "text"),
@@ -118,10 +133,10 @@ Model reporting_issues {
       H.imports.column_config("priority", "priority", "text"),
       H.imports.column_config("label", "label", "text"),
       H.imports.column_config("estimate", "estimate", "number"),
-      H.imports.column_config("created_at", "created_at", "datetime"),
-      H.imports.column_config("started_at", "started_at", "datetime"),
-      H.imports.column_config("completed_at", "completed_at", "datetime"),
-      H.imports.column_config("cycle_time_hours", "cycle_time_hours", "datetime")
+      H.imports.column_config("created_at", "created_at", "date"),
+      H.imports.column_config("started_at", "started_at", "date"),
+      H.imports.column_config("completed_at", "completed_at", "date"),
+      H.imports.column_config("cycle_time_hours", "cycle_time_hours", "number")
     ]
   }
   owner: 'vy.ht@holistics.io'

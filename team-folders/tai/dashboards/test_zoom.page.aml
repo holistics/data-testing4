@@ -1,3 +1,195 @@
+const dark_background_color = '#0b1117'    // Deep dark blue-black
+const dark_surface_color = '#111a21'       // Slightly lighter navy for cards
+const dark_border_color = '#2d3748'        // Subtle dark slate for dividers/borders
+const dark_text_color = '#ffffff'          // Pure white for headers and large metrics
+const dark_muted_color = '#94a3b8'         // Soft blue-gray for labels and axis text
+const dark_placeholder_color = '#4a5568'   // Muted gray for input placeholders
+const dark_active_background_color = '#10b981' // The vibrant mint/green used for accents
+const dark_active_text_color = '#000000'    // Black (used on the white/bright active cards)
+
+//  ${dark_background_color}         main panel / canvas bg
+//  ${dark_surface_color}             NEW — input/dropdown bg  (slightly lighter than main bg)
+//  ${dark_border_color}              NEW — dividers & borders
+//  ${dark_text_color}                primary text
+//  ${dark_muted_color}               NEW — secondary/empty-state text
+//  ${dark_placeholder_color}         input placeholders
+//  ${dark_active_background_color}   hover / active states
+
+const squad_dark_pro_max = squad_dark.extend(
+  {
+    custom_css: @css 
+    /* ---- Top header rows ---------------------------------------- */
+  .dac-metadata,
+  .h-dac-toolbar,
+  .h-dac-toolbar-left,
+  .h-dac-toolbar-right,
+  .h-tabs-switch {
+    background: ${dark_background_color} !important;
+    color: ${dark_text_color} !important;
+    border-color: ${dark_border_color} !important;
+  }
+ 
+  .dac-metadata *,
+  .dac-metadata [data-ci="ci-dashboard-title"] {
+    color: ${dark_text_color} !important;
+  }
+ 
+  .dac-metadata svg,
+  .dac-metadata .h-icon,
+  .h-dac-toolbar svg,
+  .h-dac-toolbar .h-icon {
+    color: ${dark_text_color} !important;
+    fill: currentColor !important;
+  }
+ 
+ 
+  /* ---- Tabs: Overview / Games / Players ----------------------- */
+  .h-tab-page {
+    color: ${dark_text_color} !important;
+    background: transparent !important;
+  }
+  .h-tab-page:hover,
+  .h-tab-page.active,
+  .h-tab-page.active.bg-gray-100 {
+    background: ${dark_active_background_color} !important;
+    color: ${dark_text_color} !important;
+  }
+ 
+ 
+  /* ---- Toolbar buttons: Controls toggle + timezone ------------ */
+  .h-dac-toolbar .hui-btn,
+  .h-dac-toolbar .hui-btn-light {
+    background: transparent !important;
+    color: ${dark_text_color} !important;
+    border-color: ${dark_border_color} !important;
+  }
+  .h-dac-toolbar .hui-btn:hover,
+  .h-dac-toolbar .hui-btn-light:hover {
+    background: ${dark_active_background_color} !important;
+  }
+ 
+ 
+  /* ---- Right Controls panel ----------------------------------- */
+  [data-ci="ci-controls-panel-content"],
+  [data-ci*="controls-panel"] {
+    background: ${dark_background_color} !important;
+    color: ${dark_text_color} !important;
+    border-color: ${dark_border_color} !important;
+  }
+ 
+  /* ---- Accordion sections ("In this tab", "From other tabs") --
+     Styled like the top tabs: transparent bg, white text,
+     accent on hover. Text color is forced on ALL descendants
+     so utility classes like text-gray-* can't override. */
+  .h-controls-accordion,
+  .h-controls-accordion [data-hui-section="header"],
+  .h-controls-accordion [data-hui-section="body"] {
+    background: transparent !important;
+    border-color: ${dark_border_color} !important;
+  }
+  .h-controls-accordion [data-hui-section="header"],
+  .h-controls-accordion [data-hui-section="header"] *,
+  .h-controls-accordion [data-hui-section="body"],
+  .h-controls-accordion [data-hui-section="body"] * {
+    color: ${dark_text_color} !important;
+  }
+  .h-controls-accordion [data-hui-section="header"]:hover {
+    background: ${dark_active_background_color} !important;
+  }
+  .h-controls-accordion svg,
+  .h-controls-accordion .h-icon {
+    color: ${dark_text_color} !important;
+    fill: currentColor !important;
+  }
+ 
+  /* Inputs + operator select inside the panel */
+  [data-ci*="controls-panel"] input,
+  [data-ci*="controls-panel"] .operator-select,
+  [data-ci*="controls-panel"] .hui-select,
+  [data-ci*="controls-panel"] .hui-select-trigger,
+  [data-ci*="controls-panel"] .filter-select,
+  [data-ci*="controls-panel"] .filter-select-control {
+    background: ${dark_background_color} !important;
+    color: ${dark_text_color} !important;
+    border-color: ${dark_border_color} !important;
+  }
+  [data-ci*="controls-panel"] input::placeholder {
+    color: ${dark_placeholder_color} !important;
+  }
+ 
+  /* Icon buttons in panel header: Reset, visibility, close */
+  [data-ci*="controls-panel"] .hui-btn,
+  [data-ci*="controls-panel"] button {
+    color: ${dark_text_color} !important;
+    background: transparent !important;
+  }
+  [data-ci*="controls-panel"] .hui-btn:hover,
+  [data-ci*="controls-panel"] button:hover {
+    background: ${dark_active_background_color} !important;
+  }
+ 
+ 
+  /* ---- Zoom trigger (bottom-right "46% ▼") -------------------- */
+  [data-ci="ci-zoom-dropdown"] {
+    background: ${dark_background_color} !important;
+    color: ${dark_text_color} !important;
+    border-color: ${dark_border_color} !important;
+  }
+  [data-ci="ci-zoom-dropdown"]:hover {
+    border-color: ${dark_active_background_color} !important;
+  }
+ 
+ 
+  /* ---- Scrollbars (scoped to real scroll containers) ---------- */
+  .dac-canvas-layout::-webkit-scrollbar,
+  .dac-body::-webkit-scrollbar,
+  .dac-body-content::-webkit-scrollbar,
+  [data-ci*="controls-panel"]::-webkit-scrollbar,
+  [data-ci*="controls-panel"] *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .dac-canvas-layout::-webkit-scrollbar-track,
+  .dac-body::-webkit-scrollbar-track,
+  .dac-body-content::-webkit-scrollbar-track,
+  [data-ci*="controls-panel"]::-webkit-scrollbar-track,
+  [data-ci*="controls-panel"] *::-webkit-scrollbar-track {
+    background: ${dark_background_color};
+  }
+  .dac-canvas-layout::-webkit-scrollbar-thumb,
+  .dac-body::-webkit-scrollbar-thumb,
+  .dac-body-content::-webkit-scrollbar-thumb,
+  [data-ci*="controls-panel"]::-webkit-scrollbar-thumb,
+  [data-ci*="controls-panel"] *::-webkit-scrollbar-thumb {
+    background: ${dark_border_color};
+    border-radius: 5px;
+    border: 2px solid ${dark_background_color};
+  }
+  .dac-canvas-layout::-webkit-scrollbar-thumb:hover,
+  .dac-body::-webkit-scrollbar-thumb:hover,
+  .dac-body-content::-webkit-scrollbar-thumb:hover,
+  [data-ci*="controls-panel"]::-webkit-scrollbar-thumb:hover,
+  [data-ci*="controls-panel"] *::-webkit-scrollbar-thumb:hover {
+    background: ${dark_active_background_color};
+  }
+  .dac-canvas-layout,
+  .dac-body,
+  .dac-body-content,
+  [data-ci*="controls-panel"],
+  [data-ci*="controls-panel"] * {
+    scrollbar-color: ${dark_border_color} ${dark_background_color};
+    scrollbar-width: thin;
+  }
+ 
+ 
+  /* ---- Catch-all .bg-white override --------------------------- */
+  .bg-white:not(.dac-canvas):not(.dac-canvas *):not(.feat-fca) {
+    background: ${dark_background_color} !important;
+  }
+  ;;
+  }
+)
+
 Dashboard test_zoom {
   title: 'Insights'
   description: ''
@@ -11,9 +203,15 @@ Dashboard test_zoom {
       height: 2840
       grid_size: 20
       auto_expand_vertically: true
-     
+
       mobile {
         mode: 'auto'
+      }
+      block f_airbnb_listings_id {
+        position: pos(920, 640, 300, 80)
+      }
+      block f_airbnb_listings_id_vuz1 {
+        position: pos(540, 600, 300, 80)
       }
     }
     tab tab2: CanvasLayout {
@@ -44,5 +242,49 @@ Dashboard test_zoom {
     allow_timezone_change: true
     cache_duration: 1440
   }
- 
+  theme: squad_dark_pro_max
+  block f_airbnb_listings_id: FilterBlock {
+    label: 'Airbnb Listings Id'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: airbnb_data
+      field: r(ecommerce_demo_pointmap_airbnb.id)
+    }
+    default {
+      operator: 'is'
+      value: '$H_NIL$'
+    }
+  }
+  block f_airbnb_listings_id_vuz1: FilterBlock {
+    label: 'Airbnb Listings Id'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: airbnb_data
+      field: r(ecommerce_demo_pointmap_airbnb.id)
+    }
+    default {
+      operator: 'is'
+      value: '$H_NIL$'
+    }
+  }
+  interactions: [
+    FilterInteraction {
+      from: 'f_airbnb_listings_id'
+      to: [
+        CustomMapping {
+          block: 'f_airbnb_listings_id_vuz1'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_airbnb_listings_id_vuz1'
+      to: [
+        CustomMapping {
+          block: 'f_airbnb_listings_id'
+          disabled: true
+        }
+      ]
+    }
+  ]
 }

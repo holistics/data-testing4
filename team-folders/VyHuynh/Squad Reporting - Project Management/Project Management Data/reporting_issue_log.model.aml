@@ -34,7 +34,7 @@ Model reporting_issues_log {
   dimension transitioned_at {
     label: 'Transitioned at'
     description: ''
-    type: 'datetime'
+    type: 'date'
     hidden: false
     definition: @sql {{ #SOURCE.transitioned_at }};;
   }
@@ -48,18 +48,18 @@ Model reporting_issues_log {
 
   import_source: ImportSource {
     type: 'csv'
-    original_file_name: 'issue_status_transitions_1.csv'
-    uploaded_at: '2026-03-05 03:51:10'
-    hash: '8b8f1c8e8b7ffd0084850cb45db8372527efe8d9e83431e4cf5779a99272992b'
+    original_file_name: 'issue_status_transitions_complete_iso8601.csv'
+    uploaded_at: '2026-03-07 16:47:53'
+    hash: 'd129f72a4df5876ac06498ff57293e4e2deb31a6d8c3e87a94d8a743d912230a'
     column_configs: [
       H.imports.column_config("id", "id", "number"),
       H.imports.column_config("issue_id", "issue_id", "number"),
       H.imports.column_config("from_status", "from_status", "text"),
       H.imports.column_config("to_status", "to_status", "text"),
-      H.imports.column_config("transitioned_at", "transitioned_at", "datetime"),
+      H.imports.column_config("transitioned_at", "transitioned_at", "date"),
       H.imports.column_config("transitioned_by", "transitioned_by", "number")
     ]
   }
   owner: 'vy.ht@holistics.io'
-  table_name: '"dbt_khai"."holistics_reporting_iss_21547_202603050351"'
+  table_name: '"dbt_khai"."holistics_reporting_iss_1d114_202603070832"'
 }

@@ -1,0 +1,137 @@
+Model vy_opportunity_calendar_csv {
+  type: 'table'
+  label: 'Opportunity calendar'
+  description: ''
+  data_source_name: 'demodb'
+  dimension date {
+    label: 'Date'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.date }};;
+  }
+  dimension month {
+    label: 'Month'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.month }};;
+  }
+  dimension relative_07_day_period {
+    label: 'Relative 07 day period'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.relative_07_day_period }};;
+  }
+  dimension relative_30_day_period {
+    label: 'Relative 30 day period'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.relative_30_day_period }};;
+  }
+  dimension relative_day {
+    label: 'Relative day'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.relative_day }};;
+  }
+  dimension relative_month {
+    label: 'Relative month'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.relative_month }};;
+  }
+  dimension relative_week {
+    label: 'Relative week'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.relative_week }};;
+  }
+  dimension week {
+    label: 'Week'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.week }};;
+  }
+  dimension year {
+    label: 'Year'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.year }};;
+  }
+  dimension year_month {
+    label: 'Year month'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.year_month }};;
+  }
+  dimension year_week {
+    label: 'Year week'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.year_week }};;
+  }
+  dimension day {
+    label: 'Day'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.day }};;
+  }
+  dimension day_seq {
+    label: 'Day seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.day_seq }};;
+  }
+  dimension month_number {
+    label: 'Month number'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.month_number }};;
+  }
+  dimension year_month_number {
+    label: 'Year month number'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.year_month_number }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'opportunity_calendar.csv'
+    uploaded_at: '2026-05-05 15:28:58'
+    hash: 'd40d1aa46552aad8ae54f6a64f1847d525d03ea9ad5bdea90d0ae33f41605b45'
+    column_configs: [
+      H.imports.column_config("date", "date", "datetime"),
+      H.imports.column_config("month", "month", "text"),
+      H.imports.column_config("relative_07_day_period", "relative_07_day_period", "number"),
+      H.imports.column_config("relative_30_day_period", "relative_30_day_period", "number"),
+      H.imports.column_config("relative_day", "relative_day", "datetime"),
+      H.imports.column_config("relative_month", "relative_month", "number"),
+      H.imports.column_config("relative_week", "relative_week", "number"),
+      H.imports.column_config("week", "week", "datetime"),
+      H.imports.column_config("year", "year", "number"),
+      H.imports.column_config("year_month", "year_month", "datetime"),
+      H.imports.column_config("year_week", "year_week", "text"),
+      H.imports.column_config("day", "day", "datetime"),
+      H.imports.column_config("day_seq", "day_seq", "number"),
+      H.imports.column_config("month_number", "month_number", "number"),
+      H.imports.column_config("year_month_number", "year_month_number", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_opportunit_0e35d_202605051528"'
+}

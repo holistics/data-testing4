@@ -1,0 +1,124 @@
+// ============================================================
+// FILE: themes/squad_light.aml
+// Clean, professional light theme for the squad dashboard
+// ============================================================
+
+const squad_bg       = '#f7f8fa'
+const squad_surface  = '#ffffff'
+const squad_border   = '#e2e5ec'
+const squad_text     = '#1a1f36'
+const squad_muted    = '#6b7280'
+const squad_accent   = '#3b6de0'
+const squad_green    = '#059669'
+const squad_red      = '#dc2626'
+const squad_amber    = '#d97706'
+const squad_font     = 'Inter'
+const squad_mono     = 'JetBrains Mono'
+
+PageTheme squad_light {
+  background {
+    bg_color: squad_bg
+  }
+
+  canvas {
+    background {
+      bg_color: squad_bg
+    }
+    border {
+      border_width: 0
+      border_radius: 0
+      border_color: squad_border
+      border_style: 'none'
+    }
+    shadow: 'none'
+    opacity: 1
+  }
+
+  block {
+    label {
+      font_family: squad_font
+      font_size: 14
+      font_color: squad_text
+      font_weight: 'semibold'
+      font_style: 'normal'
+    }
+    text {
+      font_family: squad_font
+      font_size: 12
+      font_color: squad_muted
+      font_weight: 'normal'
+      font_style: 'normal'
+    }
+    border {
+      border_width: 1
+      border_radius: 12
+      border_color: squad_border
+      border_style: 'solid'
+    }
+    background {
+      bg_color: squad_surface
+    }
+    padding: 16
+    shadow: 'sm'
+    opacity: 1
+  }
+
+  viz {
+    table {
+      general {
+        bg_color: squad_surface
+        hover_color: '#f0f4ff'
+        banding_color: '#f9fafb'
+        font_size: 12
+        font_color: '#374151'
+        font_family: squad_font
+        border_color: squad_border
+        border_width: 1
+        grid_color: '#e5e7eb'
+      }
+      header {
+        bg_color: '#f3f4f6'
+        font_size: 12
+        font_color: squad_text
+        font_weight: 'semibold'
+      }
+      sub_header {
+        bg_color: '#f9fafb'
+        font_size: 11
+        font_color: squad_muted
+        font_weight: 'medium'
+      }
+      sub_title {
+        font_size: 11
+        font_color: squad_muted
+        font_weight: 'medium'
+      }
+    }
+  }
+
+  custom_css: @css
+    /* ---- Squad Command Center (Light) ---- */
+
+    /* Tab bar styling */
+    .tab-bar { background: #ffffff !important; border-bottom: 1px solid #e2e5ec !important; }
+    .tab-bar .tab-item { color: #6b7280 !important; font-family: 'Inter', sans-serif !important; font-size: 13px !important; }
+    .tab-bar .tab-item.active { color: #3b6de0 !important; border-bottom: 2px solid #3b6de0 !important; }
+
+    /* Metric sheet overrides */
+    .metric-sheet .metric-value { font-family: 'JetBrains Mono', monospace !important; font-size: 28px !important; font-weight: 700 !important; color: #1a1f36 !important; }
+    .metric-sheet .metric-label { font-family: 'Inter', sans-serif !important; font-size: 11px !important; color: #6b7280 !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; }
+
+    /* Chart axis and legend */
+    .recharts-cartesian-axis-tick-value { fill: #6b7280 !important; font-size: 10px !important; }
+    .recharts-legend-item-text { color: #6b7280 !important; font-size: 11px !important; }
+    .recharts-cartesian-grid line { stroke: #e5e7eb !important; }
+
+    /* Tooltip */
+    .recharts-tooltip-wrapper .recharts-default-tooltip { background: #ffffff !important; border: 1px solid #e2e5ec !important; border-radius: 8px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #f7f8fa; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+  ;;
+}
