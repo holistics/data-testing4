@@ -3784,7 +3784,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   <tbody>
   {% map(rows) %}
   <tr>
-    <td class="col-project">{{ `Project Name` }}</td>    
+    <td class="col-project">{{ `Project Name` }}</td>
     <td>{{ values.`Duration Day Dec 2025` }}</td>
     <td class="format-me" data-raw="{{ values.`% Duration day LM`.raw }}">{{ values.`% Duration day LM`.formatted }}</td>
   </tr>
