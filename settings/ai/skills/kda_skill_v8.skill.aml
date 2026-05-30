@@ -178,6 +178,8 @@ Only after displaying that full list, call `ask_user` with a single yes/no quest
 
 **Compute (silently — no output shown yet):**
 
+**STRICT RULE: Never call `execute_aql` or `execute_viz` anywhere in this phase.** Both functions render visible output to the user. All segment data needed for classification and contribution calculations (steps 3–5) must be read from the `generate_viz` result — never from a separate `execute_aql` call.
+
 For each confirmed dimension, in order:
 
 1. Write the per-dimension AQL grouped by the dimension's segment field. Include these computed fields:
@@ -278,8 +280,8 @@ Skip failed dimensions entirely — no chart, no header, no flags.
 - Run one AQL query per dimension — never union or batch dimensions
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
-- Never call `execute_aql` during Phase 3 silent computation — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only.
-- Never call `execute_viz` during Phase 3 — it renders the chart visibly to the user. `execute_viz` must only be called in Phase 4, after the user confirms they want to see the breakdown charts.
+- **Phase 3 hard rule: never call `execute_aql` or `execute_viz` anywhere in Phase 3.** `execute_aql` renders a visible result table; `execute_viz` renders a visible chart. Both are forbidden in Phase 3. Use only `generate_viz` — it runs the query and prepares the chart internally without any visible output. All segment data for classification and contribution calculations must come from the `generate_viz` result, not from a separate `execute_aql` call.
+- `execute_viz` must only be called in Phase 4, after the user confirms they want to see the breakdown charts.
 - When generating the ColumnChart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. The chart is rendered in Phase 4. Sort by `contribution_pct` descending:
 
 ```
