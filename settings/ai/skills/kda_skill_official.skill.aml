@@ -108,7 +108,17 @@ Store as `base_period_literal` and `comparison_period_literal` — these must be
 
 **Show:**
 
-Use `ask_user`. The question title **must be this exact sentence** — fill in the bracketed values, do not paraphrase, shorten, or substitute any other wording:
+Determine whether confirmation is required before proceeding:
+
+- **Skip confirmation and proceed to Phase 2 directly** when:
+  - The user provided **both periods explicitly and unambiguously** (e.g. "between 10/24 and 11/24", "Q1 vs Q2 2024", "from Jan 2024 to Mar 2024"), **or**
+  - The user provided **two relative but fully resolvable periods** (e.g. "this month vs last month", "last quarter vs the one before") — resolve them to absolute date literals using today's date, then proceed without asking
+
+- **Show confirmation** (using `ask_user`) when:
+  - Only **one period is stated** and the comparison period is inferred, **or**
+  - The period format is **ambiguous** (e.g. "10/24" could mean October 2024 or day 10 of a month)
+
+When confirmation is required, use `ask_user`. The question title **must be this exact sentence** — fill in the bracketed values, do not paraphrase, shorten, or substitute any other wording:
 
 > You're asking me to analyze the [drop/increase] in **[metric]** between **[comparison_period_literal]** (comparison period) and **[base_period_literal]** (base period). Please confirm these periods before I proceed.
 
