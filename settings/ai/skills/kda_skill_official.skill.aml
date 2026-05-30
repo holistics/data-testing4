@@ -178,6 +178,17 @@ Only after displaying that full list, call `ask_user` with a single yes/no quest
 
 Execute this phase once per dimension, in confirmed order. Complete the full phase — compute, show, wait — before moving to the next dimension.
 
+**Show (once, before starting any dimension analysis):**
+
+Display the confirmed dimension list as a section header so the user can see exactly what will be analyzed:
+
+> # Dimensions to analyze
+> 1. [dim1]
+> 2. [dim2]
+> 3. [dim3]
+
+Always show this, even when the user accepted the proposed list without changes.
+
 **Compute:**
 
 1. Write the per-dimension AQL grouped by the dimension's segment field. Include these computed fields:
@@ -206,7 +217,7 @@ Execute this phase once per dimension, in confirmed order. Complete the full pha
 
 **Show:**
 
-1. Header: `**[Dimension Name]** — [N] segments`
+1. Header: `# [Metric] breakdown by [Dimension Name] — [N] segments`
 2. The grouped ColumnChart generated above — **this is the only viz output at this step, no DataTable**
 3. One sentence interpreting the chart: what it means for the metric change
 4. Conditional flags — one line each, only when applicable:
@@ -234,14 +245,14 @@ Opening heading and summary line:
 
 Ranked table of all confirmed dimensions, sorted by `dimension_driver_pct` descending. Successfully analyzed dimensions appear first; failed dimensions appear at the bottom:
 
-| Dimension | Driver% | Top Segment | Δ |
-|-----------|---------|-------------|---|
+| Dimension | Top Segment | Contribution to change | Δ |
+|-----------|-------------|------------------------|---|
 | … | | | |
 
 **Conditionally include (one line each):**
 
 - Dimension with no dominant segment → add note in Top Segment cell: `spread across segments`
-- Failed dimension → set Driver% to `—`, Top Segment to `Failed to analyze: [reason]`, Δ to `—`
+- Failed dimension → set Top Segment to `Failed to analyze: [reason]`, Contribution to change to `—`, Δ to `—`
 
 **Always include at the end:**
 
