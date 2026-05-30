@@ -213,15 +213,15 @@ Opening heading and summary line:
 >
 > [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
 
-Ranked table of successfully analyzed dimensions, sorted by `dimension_driver_pct` descending. Include failed dimensions as rows with `—` for Driver% and Δ:
+Ranked table of successfully analyzed dimensions, sorted by `dimension_driver_pct` descending. Include failed dimensions as rows:
 
-| Dimension | Driver% | Top Segment | Δ |
-|-----------|---------|-------------|---|
+| Dimension | Top Segment | Contribution to Change | Δ |
+|-----------|-------------|------------------------|---|
 | … | | | |
 
 Rules for table cells:
 - Dimension with no single segment > 10% contribution → Top Segment cell: `spread across segments`
-- Failed dimension → Driver% cell: `—`, Top Segment cell: `⚠ Failed to analyze — [brief reason]`, Δ cell: `—`
+- Failed dimension → Top Segment cell: `⚠ Failed to analyze — [brief reason]`, Contribution to Change cell: `—`, Δ cell: `—`
 
 Then show the transition sentence:
 > Here are the **[metric]** breakdown by **[dim1]**, **[dim2]**, **[dim3]** between **[comparison period]** and **[base period]**.
