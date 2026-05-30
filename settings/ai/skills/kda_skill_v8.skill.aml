@@ -174,13 +174,11 @@ Only after displaying that full list, call `ask_user` with a single yes/no quest
 
 ---
 
-### Phase 3 — Silent computation + Summary
-
-**Compute (silently — no output shown yet):**
-
-**STRICT RULE: Never call `execute_aql` or `execute_viz` anywhere in this phase.** Both functions render visible output to the user. All segment data needed for classification and contribution calculations (steps 3–5) must be read from the `generate_viz` result — never from a separate `execute_aql` call.
+### Phase 3 — Dimension charts, then Summary
 
 For each confirmed dimension, in order:
+
+**Compute and show (per dimension):**
 
 1. Write the per-dimension AQL grouped by the dimension's segment field. Include these computed fields:
    - `base_value_raw`, `comparison_value_raw` — raw, uncoalesced (needed for new/disappeared detection)
@@ -190,25 +188,42 @@ For each confirmed dimension, in order:
    - `delta_value = base_value - comparison_value`
    - `pct_delta = coalesce(safe_divide(delta_value, comparison_value), 0) * 100`
 
-2. Pass the AQL to `generate_viz` to produce the grouped ColumnChart. **Do NOT call `execute_aql` — it renders a visible result table to the user. Do NOT call `execute_viz` — it renders the chart visibly to the user.** `generate_viz` only prepares the chart internally; the chart will be rendered in Phase 4.
+2. Call `generate_viz` to produce the grouped ColumnChart Viz AML.
 
    Natural language query for `generate_viz`:
-   `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ') and pct_delta (labeled '% Change') to tooltip. Sort by contribution_pct descending."`
+   `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ') and pct_delta (labeled '% Change') to tooltip. Sort by delta_value descending for increases, ascending for drops."`
 
-3. From the chart result data, classify each segment's `impact_direction` (post-query):
+3. Call `execute_viz` with the generated Viz AML. This renders the chart to the user **and** returns `result_data` containing the segment rows.
+
+4. From the `result_data` returned by `execute_viz`, read each segment's `base_value`, `comparison_value`, `delta_value`, `base_value_raw`, `comparison_value_raw`.
+
+5. Classify each segment's `impact_direction`:
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
    - `overall_delta_value < 0` and `delta_value > 0` → offset_to_change
    - `overall_delta_value > 0` and `delta_value > 0` → driver_of_change
    - `overall_delta_value > 0` and `delta_value < 0` → offset_to_change
    - `delta_value = 0` → neutral
 
-4. Compute `contribution_pct = delta_value / overall_delta_value × 100` for each segment using the scalar `overall_delta_value` from Phase 2.
+6. Compute `contribution_pct = delta_value / overall_delta_value × 100` for each segment using the scalar `overall_delta_value` from Phase 2.
 
-5. Compute and store `dimension_driver_pct = sum(delta_value for all driver_of_change segments) / overall_delta_value × 100` — used to rank dimensions in the summary table.
+7. Compute `dimension_driver_pct = sum(delta_value for all driver_of_change segments) / overall_delta_value × 100` for this dimension — used to rank dimensions in the summary table.
 
-**If a dimension query or viz fails:** record the dimension name and a brief error reason, skip it, and continue to the next dimension. Do not stop execution.
+8. Show the dimension header and conditional flags immediately after the chart:
 
-**Show (after all dimensions have been computed):**
+   - Header: `**[Dimension Name]** — [N] segments`
+   - One sentence interpreting the chart: what it means for the metric change
+   - Conditional flags — one line each, only when applicable:
+     - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
+     - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
+     - New segment (comparison_value_raw IS NULL) → `⚠ [Segment] is new in [base period] — not a rate change.`
+     - Disappeared segment (base_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
+     - Any segment has `|contribution_pct| > 100%` → identify the top outlier(s) and flag: `⚠ [Segment] moved [N]× the net change. The overall change is small, but that's because large drops in some segments were offset by large gains in others — not because things were stable.`
+
+**If a dimension query or viz fails:** record the dimension name and a brief error reason, skip it, and continue to the next dimension. Failed dimensions are noted in the summary table but do not stop execution.
+
+---
+
+**Show (after all dimensions have been processed):**
 
 Opening heading and summary line:
 > # Summary
@@ -228,41 +243,9 @@ Rules for table cells:
 Then show:
 
 > **You might want to:**
-> - See detailed breakdown by **[dim1]**, **[dim2]**, **[dim3]**
+> - [suggestion 1]
 > - [suggestion 2]
 > - [suggestion 3]
-
-Then call `ask_user`:
-> "Would you like to see the detailed breakdown charts by each dimension?"
-
-Options:
-> - Yes — show me the charts
-> - No — the summary is enough
-
-**Wait for user response before proceeding.**
-
-- **Yes** → proceed to Phase 4
-- **No** → end here
-
----
-
-### Phase 4 — Dimension charts
-
-For each successfully analyzed dimension, in the same order as the summary table:
-
-**Show:**
-
-1. Header: `**[Dimension Name]** — [N] segments`
-2. Call `execute_viz` with the chart prepared in Phase 3 to render it — **this is the only viz output at this step, no DataTable**
-3. One sentence interpreting the chart: what it means for the metric change
-4. Conditional flags — one line each, only when applicable:
-   - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
-   - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
-   - New segment (comparison_value_raw IS NULL) → `⚠ [Segment] is new in [base period] — not a rate change.`
-   - Disappeared segment (base_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
-   - Any segment has `|contribution_pct| > 100%` → identify the top outlier(s) and flag: `⚠ [Segment] moved [N]× the net change. The overall change is small, but that's because large drops in some segments were offset by large gains in others — not because things were stable.`
-
-Skip failed dimensions entirely — no chart, no header, no flags.
 
 ---
 
@@ -275,21 +258,20 @@ Skip failed dimensions entirely — no chart, no header, no flags.
 - Reuse existing dataset metric definitions whenever possible; inspect before deciding how to compute segment values. Exception: for ratio metrics, do not reference the pre-built ratio field directly in the query — pre-built ratios often lack per-component null handling and will silently return null when any component is null. Instead, inspect the metric definition to identify its numerator and denominator components, then rebuild the formula inline using `coalesce(safe_divide(coalesce(num_component, 0), coalesce(den_A, 0) + coalesce(den_B, 0) + ...), 0)`
 - Always wrap `where()` aggregations with `coalesce(..., 0)` — `where()` returns null, not 0, when nothing matches
 - Always wrap ratio metrics with outer `coalesce`: `coalesce(safe_divide(num, den), 0)` — `safe_divide` returns null for any null operand or zero denominator; the outer coalesce is sufficient to guarantee a non-null result
-- `contribution_pct` is computed post-query from chart result data: divide each segment's `delta_value` by the scalar `overall_delta_value` — do not attempt to express this as a single AQL formula within the segment-grouped query
+- `contribution_pct` is computed post-query from `execute_viz` result_data: divide each segment's `delta_value` by the scalar `overall_delta_value` — do not attempt to express this as a single AQL formula within the segment-grouped query
 - Never apply any filter that excludes null or zero metric values. All segments must be visible regardless of their metric value in either period
 - Run one AQL query per dimension — never union or batch dimensions
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
-- **Phase 3 hard rule: never call `execute_aql` or `execute_viz` anywhere in Phase 3.** `execute_aql` renders a visible result table; `execute_viz` renders a visible chart. Both are forbidden in Phase 3. Use only `generate_viz` — it runs the query and prepares the chart internally without any visible output. All segment data for classification and contribution calculations must come from the `generate_viz` result, not from a separate `execute_aql` call.
-- `execute_viz` must only be called in Phase 4, after the user confirms they want to see the breakdown charts.
-- When generating the ColumnChart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. The chart is rendered in Phase 4. Sort by `contribution_pct` descending:
+- **Phase 3 workflow per dimension: `generate_viz` → `execute_viz` → read `result_data` → classify segments → show flags.** `execute_viz` both renders the chart to the user and returns row data in `result_data`. All segment classification and contribution calculations must use the `result_data` returned by `execute_viz`. Never call `execute_aql` for segment data.
+- When generating the ColumnChart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Sort by `delta_value` (available in AQL result) rather than `contribution_pct` (post-query computed):
 
 ```
 ColumnChart {
   ...
   settings {
     sort {
-      field: contribution_pct
+      field: delta_value
       direction: 'desc'
     }
   }

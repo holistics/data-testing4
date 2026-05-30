@@ -66,19 +66,19 @@ Combined contribution of a group of segments = `sum(their delta_values) / overal
 
 All period-specific fields, labels, and filters must refer consistently to the same period throughout.
 
-### 6. Prioritize top 5 dimensions before analysis
+### 6. Prioritize top 3 dimensions before analysis
 
 1. Enumerate eligible low-to-medium cardinality, business-relevant dimensions from the dataset schema
 2. Rank by semantic relevance to the target metric — prefer dimensions where the metric is likely to vary meaningfully, prefer business-actionable dimensions, avoid high-cardinality or technical fields
-3. Select top 5 (or all if fewer exist) — do not pad with weak dimensions
+3. Select top 3 (or all if fewer exist) — do not pad with weak dimensions
 
 Do not ask the user to pick dimensions before the list is shown.
 
 ### 7. Sequential execution — one dimension at a time
 
-Analyze one dimension per step. Show output for that dimension, then wait for user confirmation before continuing. Do not batch or union multiple dimensions in one query.
+Analyze one dimension per step. Show output for that dimension, then immediately proceed to the next confirmed dimension. Do not batch or union multiple dimensions in one query.
 
-If the user answers No at any point, skip remaining dimensions and proceed to Phase 4 using completed dimensions only.
+If a dimension fails (query error, no data, schema mismatch, or any other issue), skip it silently and continue to the next dimension. Record the failure reason for the Phase 4 summary table.
 
 ---
 
@@ -146,7 +146,7 @@ Run the overall delta query (no segment grouping):
 
 If `overall_delta_value = 0`: stop. Inform the user the metric did not change net between the two periods. Do not proceed further.
 
-Then inspect the dataset schema and select top 5 dimensions per Core Rule 6.
+Then inspect the dataset schema and select top 3 dimensions per Core Rule 6.
 
 **Show:**
 
@@ -215,12 +215,9 @@ Execute this phase once per dimension, in confirmed order. Complete the full pha
    - New segment (comparison_value_raw IS NULL) → `⚠ [Segment] is new in [base period] — not a rate change.`
    - Disappeared segment (base_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
    - Any segment has `|contribution_pct| > 100%` → identify the top outlier(s) and flag: `⚠ [Segment] moved [N]× the net change. The overall change is small, but that's because large drops in some segments were offset by large gains in others — not because things were stable.`
-5. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
+5. After displaying output, immediately proceed to the next confirmed dimension without prompting. After all dimensions are complete, proceed to Phase 4.
 
-**Wait for user response before proceeding.**
-
-- **Yes** → repeat Phase 3 for the next dimension
-- **No** → skip remaining dimensions and proceed to Phase 4 immediately
+If the dimension fails at any point (query error, empty result, schema issue, etc.), skip it silently and continue to the next. Record the dimension name and failure reason for the Phase 4 summary table.
 
 ---
 
@@ -235,7 +232,7 @@ Opening heading and summary line:
 >
 > [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
 
-Ranked table of analyzed dimensions, sorted by `dimension_driver_pct` descending:
+Ranked table of all confirmed dimensions, sorted by `dimension_driver_pct` descending. Successfully analyzed dimensions appear first; failed dimensions appear at the bottom:
 
 | Dimension | Driver% | Top Segment | Δ |
 |-----------|---------|-------------|---|
@@ -244,7 +241,7 @@ Ranked table of analyzed dimensions, sorted by `dimension_driver_pct` descending
 **Conditionally include (one line each):**
 
 - Dimension with no dominant segment → add note in Top Segment cell: `spread across segments`
-- Unanalyzed dimensions → `Note: [Dimension list] were not analyzed.`
+- Failed dimension → set Driver% to `—`, Top Segment to `Failed to analyze: [reason]`, Δ to `—`
 
 **Always include at the end:**
 
