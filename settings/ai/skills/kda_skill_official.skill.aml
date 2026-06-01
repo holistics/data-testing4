@@ -225,13 +225,17 @@ Always show this, even when the user accepted the proposed list without changes.
 
    **Drivers** (segments moving in the same direction as the overall change):
    - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - …
+   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
+   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
+   - *+ [N] more drivers accounting for [X]% of the net change.*
 
    **Offsets** (segments moving against the overall change):
    - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - …
+   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
+   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
+   - *+ [N] more offsets accounting for [X]% of the net change.*
 
-   Omit the Offsets section entirely if there are none. Show all segments that have a meaningful contribution (> ~5%); collapse the remainder into a single note if many are near-zero.
+   Show the top 3 drivers and top 3 offsets by absolute contribution. If there are fewer than 3, show all. Collapse any remainder into the summary line above. Omit the Offsets section entirely if there are none. Omit the summary line if there is no remainder.
 
 5. Conditional flags — each as its own bullet, only when applicable:
    - `↑ [Segment] bucked the trend ([comparison_value] → [base_value], [±delta]).`
