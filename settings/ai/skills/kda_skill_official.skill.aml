@@ -154,7 +154,7 @@ Display the overview sentence immediately — **verbatim, do not paraphrase, ski
 
 > [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
 >
-> There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most. Here are my top [N] proposed dimensions:
+> **There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most.** Here are my top [N] proposed dimensions:
 
 **You MUST output the full numbered list in text before calling `ask_user`.** Do not call `ask_user` without first displaying this list. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
 
@@ -170,7 +170,7 @@ Only after displaying that full list, call `ask_user` with a single yes/no quest
 **Wait for user response before proceeding.**
 
 - **Yes** → proceed to Phase 3 with dimension #1
-- **No** → ask what to change (add, remove, reorder), re-show updated list, ask again
+- **No** → ask what to change (add, remove, reorder), update the list internally, ask again
 
 ---
 
@@ -219,20 +219,34 @@ Always show this, even when the user accepted the proposed list without changes.
 
 1. Header: `# [Metric] breakdown by [Dimension Name] — [N] segments`
 2. The grouped ColumnChart generated above — **this is the only viz output at this step, no DataTable**
-3. One sentence interpreting the chart: what it means for the metric change
-4. Conditional flags — one line each, only when applicable:
-   - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
-   - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
-   - New segment (comparison_value_raw IS NULL) → `⚠ [Segment] is new in [base period] — not a rate change.`
-   - Disappeared segment (base_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
-   - Any segment has `|contribution_pct| > 100%` → identify the top outlier(s) and flag: `⚠ [Segment] moved [N]× the net change. The overall change is small, but that's because large drops in some segments were offset by large gains in others — not because things were stable.`
-5. After displaying output, immediately proceed to the next confirmed dimension without prompting. After all dimensions are complete, proceed to Phase 4.
+3. One sentence summarizing the overall picture for this dimension (e.g. which direction most segments moved, whether the change was concentrated or spread).
+
+4. Segment breakdown in bullet points — list drivers first, then offsets. Each bullet must include the segment name, its values in both periods, delta, and contribution %:
+
+   **Drivers** (segments moving in the same direction as the overall change):
+   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
+   - …
+
+   **Offsets** (segments moving against the overall change):
+   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
+   - …
+
+   Omit the Offsets section entirely if there are none. Show all segments that have a meaningful contribution (> ~5%); collapse the remainder into a single note if many are near-zero.
+
+5. Conditional flags — each as its own bullet, only when applicable:
+   - `↑ [Segment] bucked the trend ([comparison_value] → [base_value], [±delta]).`
+   - `Change is spread broadly — no single segment dominates.`
+   - `⚠ [Segment] is new in [base period] — not a rate change.`
+   - `⚠ [Segment] absent in [base period] — reflects exit from data.`
+   - `⚠ [Segment] moved [N]× the net change. The overall change is small, but that's because large drops in some segments were offset by large gains in others — not because things were stable.`
+6. After displaying output, immediately proceed to the next confirmed dimension without prompting. After all dimensions are complete, proceed to Phase 4.
 
 If the dimension fails at any point (query error, empty result, schema issue, etc.), skip it silently and continue to the next. Record the dimension name and failure reason for the Phase 4 summary table.
 
 ---
 
 ### Phase 4 — Final overview
+
 
 Produced after all confirmed dimensions are complete, or after the user stops early.
 
