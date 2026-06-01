@@ -170,22 +170,23 @@ Only after displaying that full list, call `ask_user` with a single yes/no quest
 **Wait for user response before proceeding.**
 
 - **Yes** → output the Stage 1 Summary Block (format below), then STOP. Do not proceed to Phase 3 in this run.
-- **No** → ask what to change (add, remove, reorder), update the list internally, ask again
+- **No** → ask what to change (add, remove, reorder), update the list internally, then output the Stage 1 Summary Block directly. Do not ask for re-confirmation.
 
-**Stage 1 Summary Block** — output this verbatim after the user confirms dimensions:
+**Stage 1 Summary Block** — output this after dimensions are confirmed (from "Yes" or after the user updates the list):
 
 > ---
-> **Stage 1 complete.**
+> Here's a summary of what we're going to analyze:
+>
 > - **Metric**: [metric name]
 > - **Comparison period**: [comparison_period_literal] ([comparison_period_name])
 > - **Base period**: [base_period_literal] ([base_period_name])
 > - **Overall change**: [metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] (Δ [±overall_delta_value])
-> - **Confirmed dimensions**:
+> - **Dimensions**:
 >   1. [dim1]
 >   2. [dim2]
 >   3. [dim3]
 >
-> Reply to start the dimension analysis.
+> Shall I proceed to break down **[metric]** by each of these dimensions to see where the [drop/increase] happened the most?
 > ---
 
 ---
@@ -211,7 +212,7 @@ Execute this phase once per dimension, in confirmed order. Complete the full pha
 
 Display the confirmed dimension list as a section header so the user can see exactly what will be analyzed:
 
-> # Dimensions to analyze
+> # Analyzing these dimensions
 > 1. [dim1]
 > 2. [dim2]
 > 3. [dim3]
