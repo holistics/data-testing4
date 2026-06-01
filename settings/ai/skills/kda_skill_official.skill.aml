@@ -156,7 +156,9 @@ Display the overview sentence immediately — **verbatim, do not paraphrase, ski
 >
 > **There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most.** Here are my top [N] proposed dimensions:
 
-**You MUST output the full numbered list in text before calling `ask_user`.** Do not call `ask_user` without first displaying this list. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
+Follow these two steps in strict order — do NOT combine them:
+
+**Step 1 — Output the dimension list as plain text.** This is a text output step, not a tool call. Write the numbered list directly in your response. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
 
 > **1. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 >
@@ -164,8 +166,10 @@ Display the overview sentence immediately — **verbatim, do not paraphrase, ski
 >
 > **3. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 
-Only after displaying that full list, call `ask_user` with a single yes/no question:
+**Step 2 — Only after the list is written, call `ask_user`** with a single yes/no question:
 > "Shall I proceed with these [N] dimensions in the order above?"
+
+**The `ask_user` call must contain only this question. Do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
 
 **Wait for user response before proceeding.**
 
