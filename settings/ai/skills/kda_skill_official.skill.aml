@@ -1,6 +1,6 @@
-Skill key_driver_official {
+Skill key_driver {
 
-label: 'Key Driver Skill'
+label: 'Key Driver'
 
 description: 'Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting. Trigger on: "Why did close rate drop from Feb to Mar?", "Explain the increase in conversion between Q1 and Q2", "What drove the revenue decline last month?", "Break down the change in win rate between these two periods." Do not trigger for forecasts, general metric exploration, or comparisons without a directional change to explain.'
 
@@ -169,8 +169,38 @@ Only after displaying that full list, call `ask_user` with a single yes/no quest
 
 **Wait for user response before proceeding.**
 
-- **Yes** → proceed to Phase 3 with dimension #1
-- **No** → ask what to change (add, remove, reorder), update the list internally, ask again
+- **Yes** → output the Stage 1 Summary Block (format below), then STOP. Do not proceed to Phase 3 in this run.
+- **No** → ask what to change (add, remove, reorder), update the list internally, then output the Stage 1 Summary Block directly. Do not ask for re-confirmation.
+
+**Stage 1 Summary Block** — output this after dimensions are confirmed (from "Yes" or after the user updates the list):
+
+> ---
+> Here's a summary of what we're going to analyze:
+>
+> - **Metric**: [metric name]
+> - **Comparison period**: [comparison_period_literal] ([comparison_period_name])
+> - **Base period**: [base_period_literal] ([base_period_name])
+> - **Overall change**: [metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] (Δ [±overall_delta_value])
+> - **Dimensions**:
+>   1. [dim1]
+>   2. [dim2]
+>   3. [dim3]
+>
+> Shall I proceed to break down **[metric]** by each of these dimensions to see where the [drop/increase] happened the most?
+> ---
+
+---
+
+### Stage 2 Detection — check before Phase 3
+
+Before running Phase 3, check the conversation history:
+
+- **If a Stage 1 Summary Block is present** (contains confirmed metric, periods, overall delta, and dimension list): this is a Stage 2 invocation.
+  - Load metric, `base_period_literal`, `comparison_period_literal`, `overall_delta_value`, and confirmed dimension list directly from the Stage 1 Summary Block in conversation context.
+  - Do NOT re-run Phases 1 or 2. Do NOT call `fetch_dataset` or `generate_aql` for setup. Do NOT re-confirm periods or dimensions.
+  - Proceed directly to Phase 3 with dimension #1.
+
+- **If no Stage 1 Summary Block is present**: this is a fresh invocation — run from Phase 1.
 
 ---
 
@@ -182,7 +212,7 @@ Execute this phase once per dimension, in confirmed order. Complete the full pha
 
 Display the confirmed dimension list as a section header so the user can see exactly what will be analyzed:
 
-> # Dimensions to analyze
+> # Analyzing these dimensions
 > 1. [dim1]
 > 2. [dim2]
 > 3. [dim3]
