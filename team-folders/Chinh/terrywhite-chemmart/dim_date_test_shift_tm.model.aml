@@ -3,6 +3,7 @@ Model dim_date_test_shift_tm {
   label: 'Dim date test shift tm'
   description: ''
   data_source_name: 'demodb'
+
   dimension date {
     label: 'Date'
     description: ''
@@ -11,15 +12,90 @@ Model dim_date_test_shift_tm {
     definition: @sql {{ #SOURCE.date }};;
   }
 
+  dimension day_of_month {
+    label: 'Day of Month'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql EXTRACT(DAY FROM {{ date }})::int ;;
+  }
+
+  dimension fy_number {
+    label: 'FY Number'
+    description: 'AU financial year end-year (FY26 = Jul 2025 - Jun 2026)'
+    type: 'number'
+    hidden: false
+    definition: @sql
+      CASE
+        WHEN EXTRACT(MONTH FROM {{ date }}) >= 7
+          THEN EXTRACT(YEAR FROM {{ date }})::int + 1
+        ELSE EXTRACT(YEAR FROM {{ date }})::int
+      END
+    ;;
+  }
+
+  dimension fy_start_date {
+    label: 'FY Start Date'
+    description: 'Jul 1 of FY containing the row'
+    type: 'date'
+    hidden: false
+    definition: @sql MAKE_DATE({{ fy_number }} - 1, 7, 1) ;;
+  }
+
+  dimension fy_end_date {
+    label: 'FY End Date'
+    description: 'Jun 30 of FY containing the row'
+    type: 'date'
+    hidden: false
+    definition: @sql MAKE_DATE({{ fy_number }}, 6, 30) ;;
+  }
+
+  dimension fy_month_number {
+    label: 'FY Month Number'
+    description: 'Month within FY (Jul=1, Jun=12)'
+    type: 'number'
+    hidden: false
+    definition: @sql ((EXTRACT(MONTH FROM {{ date }})::int + 5) % 12) + 1 ;;
+  }
+
+  dimension fy_quarter {
+    label: 'FY Quarter'
+    description: 'Quarter within FY (Jul-Sep=1, ..., Apr-Jun=4)'
+    type: 'number'
+    hidden: false
+    definition: @sql (({{ fy_month_number }} - 1) / 3) + 1 ;;
+  }
+
+  dimension day_of_fy {
+    label: 'Day of FY'
+    description: 'Day number within the FY (1-366)'
+    type: 'number'
+    hidden: false
+    definition: @sql ({{ date }} - {{ fy_start_date }})::int + 1 ;;
+  }
+
+  dimension fy_label {
+    label: 'FY Label'
+    description: 'Display label (e.g. FY26)'
+    type: 'text'
+    hidden: false
+    definition: @sql 'FY' || RIGHT({{ fy_number }}::text, 2) ;;
+  }
+
+  param dim_date_filter_param {
+    label: "Date Filter Parameter"
+    type: "date"
+  }
+
   import_source: ImportSource {
     type: 'csv'
     original_file_name: 'dim_date.csv'
-    uploaded_at: '2026-05-21 08:04:03'
-    hash: '1c39b9b583e163008f2556291057511c0addb4f0bc7f26d090c8a0c766245fbd'
+    uploaded_at: '2026-05-27 08:20:52'
+    hash: '5e43061604c5f2f85e7bba29c98ecdbc8a80762a6159d37cc9e70a58bf3d871a'
     column_configs: [
       H.imports.column_config("date", "date", "date")
     ]
   }
   owner: 'chinh.dm@holistics.io'
-  table_name: '"persisted_models"."holistics_dim_date_test_4d08c_202605210804"'
+  table_name: '"persisted_models"."holistics_dim_date_test_4d08c_202605270820"'
 }
