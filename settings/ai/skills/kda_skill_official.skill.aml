@@ -181,10 +181,9 @@ Only after displaying that full list, call `ask_user` with a single yes/no quest
 > - **Comparison period**: [comparison_period_literal] ([comparison_period_name])
 > - **Base period**: [base_period_literal] ([base_period_name])
 > - **Overall change**: [metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] (Δ [±overall_delta_value])
-> - **Dimensions**:
->   1. [dim1]
->   2. [dim2]
->   3. [dim3]
+> - **Dimension 1**: [dim1]
+> - **Dimension 2**: [dim2]
+> - **Dimension 3**: [dim3]
 >
 > Shall I proceed to break down **[metric]** by each of these dimensions to see where the [drop/increase] happened the most?
 > ---
