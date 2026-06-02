@@ -53,7 +53,7 @@ Skill change_analysis {
 
     ### Step 2 — Run the anomaly check
 
-    Announce what you're doing, then immediately call `load_skill("anomaly_investigate")`:
+    Announce what you're doing, then immediately call `load_skill("anomaly_detection")`:
 
     > "Before we look at what drove this, let me first check whether this [drop/increase] in
     > **[metric]** is actually unusual — or just normal variation. Running the anomaly check
@@ -64,38 +64,34 @@ Skill change_analysis {
 
     ### Step 3 — Output the Stage 1 Summary Block
 
-    **Wait for `anomaly_investigate` to fully complete before doing anything in this step.**
-    The sub-skill is done when its summary prose verdict is visible in the conversation — the
-    sentence that says whether the value is anomalous or within the normal range. Do not
-    proceed while the sub-skill is still running or while only the chart has appeared. Do not
-    call `ask_user` or output the Stage 1 Summary Block until the sub-skill's verdict text is
-    present.
+    **Do NOT use `ask_user` anywhere in this step.** All output here must be plain text.
 
-    Once the sub-skill's verdict text is visible, read it. The anomaly sub-skill's output is
-    often technical (z-scores, baselines, statistical ranges) — your job here is to translate
-    it into a plain verdict the user can act on immediately.
+    Wait for `anomaly_investigate` to fully complete. The sub-skill is done when it has
+    output its summary prose — the sentence that states whether the value is anomalous or
+    within the normal range. Do not proceed while only the chart has appeared. Do not proceed
+    while the sub-skill is still mid-run.
 
-    First, output a single plain-language verdict sentence:
+    Once the sub-skill's prose verdict is visible, output the following as plain text in this
+    exact order — do not merge, skip, or replace any part with an `ask_user` call:
 
-    - If **anomalous**:
-      > "**The [drop/increase] in [metric] [time_reference] is abnormal.**"
+    **1. Plain-language verdict sentence** (bold):
 
-    - If **within normal range**:
-      > "**The [drop/increase] in [metric] [time_reference] is normal.**"
+    - If anomalous:
+      `**The [drop/increase] in [metric] [time_reference] is abnormal.**`
 
-    Then follow with one sentence of context adapted to the verdict:
+    - If within normal range:
+      `**The [drop/increase] in [metric] [time_reference] is normal.**`
 
-    - If **anomalous**:
-      > "This is outside what we'd expect based on historical patterns — it's a real signal
-      > worth investigating."
+    **2. One sentence of plain-text context:**
 
-    - If **within normal range**:
-      > "This falls within the expected range based on historical patterns — it may just be
-      > regular variation, so there may not be much to act on."
+    - If anomalous:
+      `This is outside what we'd expect based on historical patterns — it's a real signal worth investigating.`
 
-    Then output the Stage 1 Summary Block — this is the handoff marker for Stage 2:
+    - If within normal range:
+      `This falls within the expected range based on historical patterns — it may just be regular variation, so there may not be much to act on.`
 
-    ```
+    **3. The Stage 1 Summary Block as plain markdown** — this is the handoff marker for Stage 2:
+
     ---
     **Change Analysis — Stage 1 complete**
     - **Metric**: [metric]
@@ -103,14 +99,11 @@ Skill change_analysis {
     - **Anomaly verdict**: [Anomalous / Within normal range]
 
     How would you like to proceed?
-    1. **Break down by dimensions** — find which segments (e.g., region, plan, product,
-       channel) drove the [drop/increase] the most
-    2. **Decompose the metric** *(coming soon)* — split the metric into its components to
-       see which part shifted
+    1. **Break down by dimensions** — find which segments (e.g., region, plan, product, channel) drove the [drop/increase] the most
+    2. **Decompose the metric** *(coming soon)* — split the metric into its components to see which part shifted
     ---
-    ```
 
-    **Stop here.** Wait for the user to reply before proceeding.
+    **Stop here.** Wait for the user to reply in natural language before proceeding to Stage 2.
 
     ---
 
