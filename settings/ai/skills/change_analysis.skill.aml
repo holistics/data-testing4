@@ -64,10 +64,16 @@ Skill change_analysis {
 
     ### Step 3 — Output the Stage 1 Summary Block
 
-    Once the anomaly investigation output appears in the conversation, read the verdict from
-    its summary prose. The anomaly sub-skill's output is often technical (z-scores, baselines,
-    statistical ranges) — your job here is to translate it into a plain verdict the user can
-    act on immediately.
+    **Wait for `anomaly_investigate` to fully complete before doing anything in this step.**
+    The sub-skill is done when its summary prose verdict is visible in the conversation — the
+    sentence that says whether the value is anomalous or within the normal range. Do not
+    proceed while the sub-skill is still running or while only the chart has appeared. Do not
+    call `ask_user` or output the Stage 1 Summary Block until the sub-skill's verdict text is
+    present.
+
+    Once the sub-skill's verdict text is visible, read it. The anomaly sub-skill's output is
+    often technical (z-scores, baselines, statistical ranges) — your job here is to translate
+    it into a plain verdict the user can act on immediately.
 
     First, output a single plain-language verdict sentence:
 
