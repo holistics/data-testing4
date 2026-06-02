@@ -1,499 +1,302 @@
-Skill anomaly_investigate {
-  label: "Investigate anomaly"
-  invocation: "manual"
+Skill anomaly_detection {
+  label: "Anomaly detection"
+  invocation: "auto"
   description: '''
-    Investigates whether a specific metric value at a specific time point is statistically
-    unusual given its history.
+    Detect anomalies across a metric's history and visualize them — unusual spikes, drops,
+    and deviations flagged against an expected range built from the metric's recent history.
 
-    Use when the user has a metric in mind and a suspicious time point, e.g.:
-      • "Is revenue on Jan 15 unusual?"
-      • "Daily signups dropped on Tuesday — investigate"
-      • "/anomaly_investigate" with no args (skill will ask for the metric + date)
+    Auto-trigger whenever the user wants to find or check for unusual values in a metric —
+    words like anomaly, unusual, spike, drop, dip, outlier, "out of the ordinary", "anything
+    weird". A specific date is OPTIONAL; the skill always scans the whole series. Typical
+    phrasings:
+      • "Detect anomalies in revenue" / "Any outliers in daily signups?"
+      • "Has anything looked unusual in MRR lately?"
+      • "Were there spikes or drops in active users this quarter?"
+      • "Is revenue on May 20 unusual?" (focus date — still scans the full series)
+      • "/anomaly_detection" with no args (the skill asks for the metric)
 
-    Out of scope: scanning for anomalies across many metrics, ongoing monitoring,
-    dimensional attribution (what drove the anomaly), or speculation on causes.
+    Do NOT trigger for: dimensional attribution (which segment/dimension drove an anomaly),
+    explaining the business cause, or ongoing/scheduled monitoring & alerting. This skill
+    flags which points are statistically unusual and shows them; it does not explain why.
   '''
   content: @md
-    # Anomaly Investigation Playbook
+    # Anomaly Detection Playbook
 
-    You are running a manually-invoked anomaly investigation. The user has named a metric
-    and a suspicious time point, and wants to know: **is this value unusual?**
+    The user wants to know which values in a metric are **statistically unusual given the
+    metric's own recent history**, and to see them. Build an expected range from recent
+    history, flag points outside it, and visualize the result.
 
-    Run two stages: **Establish Expectation**, then **Confirm Anomaly**. Do NOT speculate
-    on causes or attempt to identify which dimension drove the anomaly — those require
-    deeper investigation outside this skill.
+    Do NOT speculate on causes or identify which dimension drove an anomaly — that is
+    outside this skill. Deflect such asks (see Reference → Edge cases).
 
-    ## Tool rule — never replace the user's canvas; emit only inline artifacts
+    ## Output contract
 
-    The user may already be viewing a chart on the canvas (a dashboard tile, an exploration,
-    a saved view). This skill must never overwrite or rerender it. Every artifact this skill
-    surfaces — chart, table, anything visible — MUST appear as a fresh inline artifact in
-    the chat, alongside the user's existing canvas state, never in its place.
+    This skill produces **one artifact: a single `CombinationChart`** (Step 3). Executing it
+    both draws the chart and returns the per-bucket numbers; read those numbers to write the
+    summary, and never echo them back as a separate table.
 
-    - **Use:** `execute_viz` — renders a new chat-inline viz. Leaves canvas alone.
-    - **Use:** `execute_aql` — returns data to this conversation; treat the result as
-      internal state for narrative computation. Do not promote it into a user-facing table.
-    - **Never use:** `execute_viz_block` or any other `_block` / canvas-targeting variant
-      — these rerender an existing tile in place and will replace whatever the user is
-      currently viewing.
+    **Performance — author, never regenerate.** The chart AML is given in full below; fill its
+    placeholders and call `execute_viz` **once**. Do NOT route through `generate_viz` /
+    `generate_aql` — regenerating this composed, multi-calculation viz is the slow step that
+    times out. If `execute_viz` is slow or errors, retry at most once (see Step 3), then
+    summarize from whatever data you have rather than looping on generation.
 
-    **Intermediate AQL results are internal, not output.** The history series (Establish
-    Expectation Step 1) and the classified series (Step 4) are state the skill computes
-    over. Do **not** echo them back to the user as a table or a chart. The only artifacts
-    the user sees from this skill are the final chart and the final summary prose, both
-    defined in the Output Format section.
+    ## Workflow
 
-    This rule holds even when the user's current chart shows the same metric, dataset, or
-    time range as the investigation. It holds even when the user explicitly says "update the
-    chart", "refresh it", or "just show me the data" — in this skill, those still mean a
-    new chat-inline artifact, never a tile rerender or canvas replacement. There is no
-    exception.
+    Four steps, in order.
 
-    ## Tool invocation conventions
+    ### Step 1 — Parse inputs
 
-    These conventions apply to every Holistics MCP call the skill makes.
-
-    ### Titles for chat-inline artifacts
-
-    `execute_aql` and `execute_viz` both require a `title` parameter — this is the label
-    users see on the chat-inline artifact. Use these patterns (keep under ~60 characters):
-
-    | Call site | Title pattern |
-    |---|---|
-    | Timeframe data-extent probe `execute_aql` | `<metric> data extent` |
-    | Step 1 history-series `execute_aql` | `<metric> history (<resolved timeframe>)` |
-    | Step 4 classified-series `execute_aql` | `<metric> baseline check (<resolved timeframe>)` |
-    | Output-format chart `execute_viz` | `Anomaly check: <metric> on <resolved time_point>` |
-
-    Avoid generic titles like "query 1" or "untitled" — the artifact remains in the user's
-    chat history.
-
-    ### Validate before executing
-
-    For each AQL query composed via `generate_aql`, call `validate_aql` immediately before
-    `execute_aql`. This catches syntax and semantic errors cheaply — critical for the Step 4
-    query, which uses window functions, partitions, and computed columns.
-
-    If `validate_aql` returns errors:
-
-    1. Regenerate by calling `generate_aql` again with refinement context (see below).
-    2. Re-validate the regenerated AQL.
-    3. If it still fails after one retry, fall back to the AQL-fallback escape hatch
-       described in Step 4, or stop with a clear error message naming the failed stage.
-
-    ### Refinement context on regeneration
-
-    When regenerating AQL or a viz after a failure or refinement request, always pass the
-    previous attempt as context — the generation tools rely on these fields to learn what
-    didn't work:
-
-    - `generate_aql`: pass `current_aql=<previous AQL>` and `current_result=<previous
-      result or validation/execution error text, including row limits>`.
-    - `generate_viz`: pass `current_viz=<previous viz>` and `current_result=<previous
-      result or error text>`.
-
-    ### Handling truncated results
-
-    Holistics MCP may return `@TruncatedContext:<chunk_id>` placeholders inside a large
-    result instead of inlining the full data. When this happens, call
-    `fetch_context(chunk_id=<id>)` for each placeholder to retrieve the full chunk before
-    reasoning over the data. Daily metrics over multi-year timeframes are the typical
-    trigger.
-
-    ## Inputs to extract
-
-    Parse the user's invocation message for these four fields:
+    Parse the user's message for these fields:
 
     | Field | Required | Examples | If missing |
     |---|---|---|---|
     | `metric` | **Yes** | `revenue`, `signups`, `MRR`, `daily_active_users` | **Ask the user. Do not guess.** |
-    | `time_point` | **Yes** | `Jan 15`, `last Tuesday`, `2026-01-15`, `week of Feb 3` | **Ask the user. Do not guess.** |
-    | `granularity` | Inferred | `day`, `week`, `month`, `quarter` | Derive from `time_point` phrasing combined with the dataset's time dimension. If still ambiguous, ask. |
-    | `filters` | No | `Region=West`, `Plan=Pro`, `Country=US` | Optional. If present, propagate to **every** AQL call. |
-    | `timeframe` | No | `last 90 days`, `last 6 months`, `since Jan 2025`, `last 1 year` | Optional. Default by granularity: `day` → 90 days, `week` → 26 weeks, `month` → 24 months, `quarter` → 12 quarters. The timeframe is the **historical window** the skill compares `time_point` against — ends one bucket before `time_point`. |
+    | `focus_date` | No | `May 20`, `last Tuesday`, `2026-05-20` | Optional. Changes only the closing prose (Step 4), never the detection or chart. |
+    | `granularity` | Inferred | `day`, `week`, `month`, `quarter` | Derive from the metric's time dimension and any date phrasing. If ambiguous, ask. |
+    | `filters` | No | `Region=West`, `Plan=Pro` | Optional. If present, add them to the chart's `filters`. |
+    | `timeframe` | No | `last 90 days`, `last 6 months`, `this quarter` | Optional. Default by granularity: `day` → 90 days, `week` → 26 weeks, `month` → 24 months, `quarter` → 12 quarters. Treat these as **performance-first defaults**, not business limits: use them unless the user explicitly asks for full history or the shorter range is insufficient for anomaly classification. |
 
-    Echo the extracted values back to the user before proceeding so they can correct any mis-parses. Always show the **resolved timeframe** as an absolute date range (e.g., *"Timeframe: Aug 19, 2025 – Jan 14, 2026"*), even when the user didn't specify one — the default was applied.
+    Echo the extracted values back, including the **resolved timeframe** as an absolute date
+    range (e.g., *"Aug 19, 2025 – May 29, 2026"*), so the user can correct any mis-parse.
 
-    ## Dataset resolution
+    ### Step 2 — Resolve the dataset
 
-    Anchor the investigation to **one** dataset per invocation. Resolve it as follows:
+    Anchor to **one** dataset per invocation:
 
-    1. **If the user named a dataset** (e.g., `…in the sales dataset…`) → call `fetch_dataset(dataset_uname=<the user's name>)` and proceed.
-    2. **Else:**
-       a. Call `list_datasets()`.
-       b. Rank candidates by how well the user's metric name matches each dataset's measures,
-          labels, and descriptions. Prefer matches in measures over matches in dataset names.
-       c. Call `fetch_dataset(dataset_uname=<top candidate>)` to inspect its measures.
-       d. **Confirm with the user before proceeding**, e.g.:
-          *"I'll use the `sales_orders` dataset (has measure `total_revenue`). Confirm,
-          or name a different dataset."*
-       e. Wait for the user's confirmation. Do NOT continue investigation until they confirm.
-    3. **Fallback** — if `list_datasets()` returns an error (e.g., "not supported in
-       development mode"), ask the user to name the dataset explicitly.
+    1. **If the user named a dataset** → `fetch_dataset(dataset_uname=<name>)` and proceed.
+    2. **Else:** `list_datasets()`, rank candidates by how well the metric name matches each
+       dataset's measures/labels/descriptions (prefer measure matches), `fetch_dataset` the
+       top candidate, then **confirm with the user before proceeding** (*"I'll use
+       `sales_orders` (has measure `total_revenue`). Confirm, or name another."*). Wait for
+       confirmation.
+    3. **Fallback** — if `list_datasets()` errors (e.g., "not supported in development
+       mode"), ask the user to name the dataset explicitly.
 
-    ### Validate the metric
+    **Validate the metric.** Confirm `metric` exists as a measure. If not, show the top-3
+    closest measure names (with descriptions) and ask which to use.
 
-    Once a dataset is resolved, confirm the named `metric` exists as a measure in the dataset's
-    measures list. If not:
-    - Show the top-3 closest measure names by string similarity, with their descriptions.
-    - Ask the user which to use, or to rename the metric.
+    **Bind the time axis.** Find the dataset's date/timestamp dimension. If multiple exist,
+    prefer: (a) the one tagged primary in metadata; (b) the one most referenced by the
+    metric's definition; (c) a dimension named `event_date`, `created_at`, `date`, or
+    `timestamp` (in that order). If still ambiguous, ask. Resolve any relative `focus_date`
+    in the dataset's stated timezone and echo the absolute date back.
 
-    ### Bind the time axis
+    ### Step 3 — Build and run the anomaly chart
 
-    Find the dataset's date/timestamp dimension. If multiple exist, prefer in order:
-    a. the dimension already tagged as primary in the dataset metadata
-    b. the one most commonly referenced by the metric's measure definition
-    c. a dimension named `event_date`, `created_at`, `date`, or `timestamp` (in that order)
+    **All the math lives in one `CombinationChart`.** Its `calculation` blocks compute the
+    rolling band and the `is_anomaly` flag; executing the chart both draws it and returns the
+    per-bucket numbers Step 4 reads. One artifact — no separate scan query, no model field.
+    The calcs **compose**: `actual` is defined once and the rest reference it by name (this is
+    why everything sits in viz calculations, not an ad-hoc `explore` — window functions and
+    measure-to-measure references are reliable in viz calcs, not in a bare explore).
 
-    If none of these rules picks a unique dimension, ask the user which to use.
+    **Why a chart — not model fields, not a pivot.** The rolling stats are window calculations
+    over the *ordered, already-aggregated* result; they are not row-level model fields (defining
+    `dimension <model>.is_anomaly = …` evaluates them in the wrong semantic layer — valid-looking
+    but wrong). And never use a `PivotTable` or group rows by an anomaly label.
 
-    Resolve relative time references (e.g., `last Tuesday`) in the dataset's stated timezone.
-    Echo the resolved absolute date back to the user before proceeding.
+    **Method / parameters.** Expected range = trailing moving average ± `k`·stddev over a window
+    that **excludes the current bucket** (so a spike can't inflate its own band). Threshold
+    **`k = 3`** (≈1 false flag per 370 normal points), inlined as `3` in the bounds and
+    `is_anomaly` (three spots — change all three to retune; lower toward 2 to flag more).
+    Trailing window `W` by granularity:
 
-    ### Resolve the timeframe
-
-    Resolve the `timeframe` field into an absolute date range:
-
-    - If the user supplied a timeframe, parse it (relative phrases like *"last 6 months"*
-      and *"since Jan 2025"* allowed) in the dataset's stated timezone, anchored to
-      `time_point`. The range ends **one bucket before** `time_point`.
-    - If the user did NOT supply a timeframe, apply the granularity default from the
-      Inputs table.
-
-    Validate the resolved range against the dataset's data extent — optionally via a small
-    `min(bucket), max(bucket)` probe AQL on the bound time axis with the user's filters
-    applied. If the requested timeframe extends earlier than `min(bucket)`, clamp to
-    `min(bucket)` and tell the user the actual range used. If the resulting range yields
-    fewer than 10 buckets, treat as the `n_points < 10` degrade case and stop.
-
-    Echo the resolved timeframe back to the user as an absolute date range alongside the
-    other extracted inputs, so the user can correct any mis-parses or extend the timeframe
-    before the skill commits to AQL work.
-
-    ## Establish Expectation
-
-    Goal: produce an `expected_value` and `spread` (σ-equivalent) for the user's
-    `time_point`, plus the confidence range.
-
-    ### Step 1 — Probe history
-
-    Call `generate_aql` to construct a query that returns the metric, grouped by the bound
-    time axis, at the user's granularity, with the user's filters applied, over the
-    **resolved timeframe** (from the dataset-resolution stage). The timeframe deliberately
-    ends one bucket before `time_point` so the suspect value never contaminates the
-    baseline — `time_point` itself is added to the classified series in Step 4, not here.
-
-    Then `validate_aql` the generated query (see Tool invocation conventions). Once
-    validation passes, call `execute_aql` with `title="<metric> history (<resolved
-    timeframe>)"` to retrieve the series. Call this the **history series**.
-
-    The history series is **internal state**, not user-facing output. Do not render it as
-    a table, chart, or any other artifact to the user. Do not include rows or summaries of
-    it in the conversation. It exists only to feed the Step 2 inspection and the Step 4
-    AQL query. The user's first visible artifact from this skill is the final chart in the
-    Output Format section.
-
-    ### Step 2 — Inspect the series
-
-    Compute three properties:
-
-    - `n_points` — the count of non-null values in the history series
-    - `weekday_pattern_score` (daily granularity only) —
-      `stdev(mean_per_weekday) / mean(stdev_within_weekday)`
-      Ratio of between-weekday variability to within-weekday variability. A value `> 1.5`
-      indicates the day-of-week effect dominates random noise.
-    - `noise_ratio` = `MAD(series) / median(series)` — relative variability
-
-    Do these arithmetically in narrative reasoning over the series returned by `execute_aql`.
-    No second AQL call needed.
-
-    **Degrade check:** if `n_points < 10`, stop now and report *"Not enough history (n=X).
-    Need ≥10 comparable points to compute a baseline."* End the investigation.
-
-    ### Step 3 — Offer the user a baseline method
-
-    Present the **eligible** baseline methods to the user with a short rationale per method,
-    and let them choose. Eligibility depends on the data characteristics from Step 2 — only
-    list methods that are eligible.
-
-    **Naming.** Every method has a friendly name (what the user sees) and a short internal id
-    (what the skill stores in the classified-series record and uses in the AQL formula table):
-
-    | User-facing name | Internal id | What it does |
-    |---|---|---|
-    | **All time** | `mad` | Compares to the typical historical value. Best for stable metrics or short history. |
-    | **Weekly basis** | `sdow` | Compares this `<weekday name>` to recent `<weekday name>s`. Best when there's a clear day-of-week pattern. |
-    | **Yearly basis** | `yoy` | Compares to the same period last year, adjusted for recent growth. Best for monthly metrics with annual patterns. |
-    | **Rolling basis** | `rolling` | Averages the most recent comparable periods. Best for metrics that drift gradually without a strong cycle. |
-
-    Always use the **user-facing name** in messages to the user (prompts, announcements,
-    summary prose). Use the **internal id** in the classified-series state record and in
-    AQL-formula bindings.
-
-    Build a prompt like this:
-
-    > "Over **<resolved timeframe as date range>**, I have **<n_points>** data points for
-    > `<metric>` at **<granularity>** granularity.
-    > Inspection: <plain-language summary, see translation rules below>.
-    >
-    > How should I set the expected range?
-    >
-    > 1. **Let me pick** (recommended) — I'll choose based on the data.
-    > 2. **All time** — compares to the typical historical value. Best for stable metrics or short history.
-    > 3. **Weekly basis** — compares this <weekday name> to recent <weekday name>s. Best when there's a clear day-of-week pattern.
-    > 4. **Yearly basis** — compares to the same period last year, adjusted for recent growth. Best for monthly metrics with annual patterns.
-    > 5. **Rolling basis** — averages the most recent comparable periods. Best for steadily trending metrics with no strong cycle.
-    >
-    > Reply with the number or the name."
-
-    **Plain-language inspection summary.** When filling the `Inspection:` line, translate
-    the numeric properties from Step 2 into everyday wording — never surface the raw
-    `weekday_pattern_score` or `noise_ratio` numbers to the user.
-
-    - `weekday_pattern_score` (daily granularity only): `> 1.5` → "strong weekly pattern";
-      `1.0–1.5` → "moderate weekly pattern"; `< 1.0` → "no clear weekly pattern". Skip
-      this clause entirely if granularity ≠ day.
-    - `noise_ratio`: `< 0.05` → "very stable values"; `0.05–0.15` → "low variability";
-      `0.15–0.30` → "noisy"; `> 0.30` → "very noisy".
-
-    Combine into one comma-separated clause. Example for a daily metric:
-    *"strong weekly pattern, low variability."*
-
-    **Accept user replies in any reasonable phrasing** — the number, the full friendly name,
-    a partial name, or older technical aliases ("MAD", "SDOW", "YoY", "rolling window").
-    If the reply is ambiguous, ask once to disambiguate.
-
-    **Eligibility rules — only show methods that are eligible.** Eligibility is evaluated
-    against the **resolved timeframe** — `n_points` is the count of non-null buckets the
-    timeframe returns.
-
-    | Option | Eligible when |
+    | Granularity | Window `W` |
     |---|---|
-    | 1. Let me pick | Always |
-    | 2. All time (`mad`) | `n_points ≥ 10` |
-    | 3. Weekly basis (`sdow`) | `granularity == day` AND timeframe contains ≥ 8 prior same-weekday observations |
-    | 4. Yearly basis (`yoy`) | `granularity == month` AND `n_points ≥ 24` |
-    | 5. Rolling basis (`rolling`) | `n_points ≥ 12` |
+    | day | 28 (4 weeks) |
+    | week | 13 (a quarter) |
+    | month | 12 (a year) |
+    | quarter | 8 (two years) |
 
-    If the user picks a method that the timeframe doesn't cover (e.g., picks **Yearly
-    basis** with a 30-day timeframe), tell them the gap and offer to either extend the
-    timeframe to satisfy the method or pick a different method.
+    The window range is `-W..-1`. The first `W` buckets have no full window → `rolling_*` and
+    `z_score` come back null (shown as gaps, never flagged). If the series is shorter than
+    `W + 1` points, shrink `W` to about half the available history (minimum 4) and say so. With
+    fewer than 8 points total, stop: *"Not enough history (n=X) to detect anomalies."*
 
-    **If the user picks option 1 (let me pick)**, apply this decision tree internally
-    (first match wins) and announce the choice back:
+    **The chart.** Author the AML below **directly** (do NOT call `generate_viz`). Adapt
+    `<dataset>`, metric `M` (e.g. `mou_monthly_mrr.sum_total_mrr`, or an aggregation like
+    `<model> | max(<field>)`), time dim `T`, window `W`; apply the user's filters/timeframe.
+    Each `formula:` is an `@aql` heredoc that **must be closed with the usual double-semicolon
+    terminator** — those are omitted below only so this example stays inside the skill's own
+    heredoc, so add them back.
 
-    | # | Condition | Method (internal id) |
-    |---|---|---|
-    | 1 | `10 ≤ n_points < 30` | All time (`mad`) |
-    | 2 | daily granularity AND `weekday_pattern_score > 1.5` | Weekly basis (`sdow`) |
-    | 3 | monthly granularity AND `n_points ≥ 24` | Yearly basis (`yoy`) |
-    | 4 | otherwise | Rolling basis (`rolling`) |
-
-    Announce with the **user-facing name** and a plain-language reason, e.g.,
-    *"Using **Weekly basis** because the metric has a strong weekly pattern."* — never
-    *"Picking sdow because weekday_pattern_score is 2.1."*
-
-    ### Step 4 — Compute the classified series in ONE AQL query
-
-    The goal is a per-bucket expectation **and** classification, so the chart in the Output
-    Format can mark anomalies directly from the AQL result and the prose can read the
-    investigated bucket's status directly from the same record. No re-classification in
-    narrative reasoning later.
-
-    Generate ONE AQL query that returns, for each bucket in the look-back window **and** the
-    `time_point` bucket, these columns:
-
-    | Column | Description |
-    |---|---|
-    | `bucket` | The time bucket (date / week / month / quarter), ascending |
-    | `actual` | The metric value at that bucket, with user's filters applied |
-    | `expected` | The baseline-method's expected value, computed from **preceding** buckets only |
-    | `spread` | The baseline-method's σ-equivalent, computed from the same preceding buckets |
-    | `expected_lower` | `expected − 2 × spread` |
-    | `expected_upper` | `expected + 2 × spread` |
-    | `z` | `abs(actual − expected) / spread` (null when `spread` is null) |
-    | `direction` | `'above'` when `actual > expected`, `'below'` when `actual < expected` |
-    | `anomaly_label` | `'Anomaly'` when `expected` and `spread` are non-null AND `z ≥ 2`; `'Normal'` when both are non-null and `z < 2`; otherwise `null` (insufficient preceding history) |
-
-    Apply the method's formula using AQL window functions over the bucket ordering. Row
-    labels here are the **internal id** from the Step 3 naming table; bind to whichever id
-    is recorded in the classified-series record's `method` field.
-
-    | Method (internal id → user-facing name) | `expected` per bucket | `spread` per bucket |
-    |---|---|---|
-    | `mad` (**All time**) | `median(history)` — constant across all rows | `1.4826 × MAD(history)` — constant |
-    | `sdow` (**Weekly basis**) | `mean(actual) OVER (PARTITION BY weekday ORDER BY bucket ROWS BETWEEN 8 PRECEDING AND 1 PRECEDING)` | `stdev(actual) OVER (...same partition/window)` |
-    | `yoy` (**Yearly basis**) | `LAG(actual, 12) OVER (ORDER BY bucket) × growth_factor`, where `growth_factor = mean(last 12 months) / mean(prior 12 months)` (constant) | `stdev` of the last 12 months — constant |
-    | `rolling` (**Rolling basis**) | `mean(actual) OVER (ORDER BY bucket ROWS BETWEEN 12 PRECEDING AND 1 PRECEDING)` | `stdev(actual) OVER (...same window)` |
-
-    Compute `expected_lower`, `expected_upper`, `z`, `direction`, and `anomaly_label` as
-    derived expressions in the same query (e.g., a `CASE` over `z` for `anomaly_label`).
-
-    Call `generate_aql` to compose this query. Run `validate_aql` on the result — this query
-    is the riskiest in the skill because of the window functions, partitions, and computed
-    columns. If validation fails, regenerate once with refinement context; if it still fails,
-    invoke the AQL-fallback escape hatch below. Once validation passes, call `execute_aql`
-    with `title="<metric> baseline check (<resolved timeframe>)"` to run the query. Call the
-    result the **classified series**.
-
-    Like the history series in Step 1, the classified series is **internal state**, not
-    user-facing output. Do not render it as a table or any intermediate chart. It feeds the
-    final chart in the Output Format section, which is the user's first and only viz from
-    this skill.
-
-    For early rows where there aren't enough preceding buckets (e.g., the first 12 rows under
-    rolling window), `expected`, `spread`, and dependent columns will be `null`. That's
-    expected — those rows simply produce no marker on the chart.
-
-    **AQL-fallback escape hatch.** If AQL window functions are insufficient for the chosen
-    method in this workspace, compute `expected`, `spread`, `expected_lower`, `expected_upper`,
-    `z`, `direction`, and `anomaly_label` arithmetically in narrative reasoning over the
-    history series from Step 1 instead, and surface a brief notice to the user that fallback
-    was used. Output structure (chart + prose) is unchanged.
-
-    ### Step 5 — Emit the classified-series record
-
-    Internal-state record (do **not** show to the user yet):
-
-    ```
-    {
-      method:            "<mad | sdow | yoy | rolling>",   // internal id from Step 3
-      n_used:            <int — number of points used by the method>,
-      classified_series: [
-        { bucket, actual, expected, spread, expected_lower, expected_upper,
-          z, direction, anomaly_label }
-      ],
-      time_point_row:    <the entry whose bucket == time_point>
+    ```aml
+    CombinationChart {
+      dataset: <dataset>
+      calculation actual {
+        label: 'Actual'
+        formula: @aql M
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation rolling_mean {
+        label: 'Rolling Mean'
+        formula: @aql window_avg(actual, -W..-1, order: T | asc(), partition: [])
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation rolling_stddev {
+        label: 'Rolling Stddev'
+        formula: @aql window_stdev(actual, -W..-1, order: T | asc(), partition: [])
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation lower_bound {
+        label: 'Lower Bound'
+        formula: @aql rolling_mean - 3 * rolling_stddev
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation upper_bound {
+        label: 'Upper Bound'
+        formula: @aql rolling_mean + 3 * rolling_stddev
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation z_score {
+        label: 'Z Score'
+        formula: @aql safe_divide(actual - rolling_mean, rolling_stddev)
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_anomaly {
+        label: 'Is Anomaly'
+        formula: @aql case(when: abs(z_score) > 3, then: 1, else: 0)
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull { ref: r(T) label: 'Period' format { type: 'date' pattern: 'LLL yyyy' } }
+      // Left axis: metric (blue solid) + band (grey dashed). The `[$$]#,###0` pattern is for a
+      // currency metric — use `#,###0` for counts, `#,##0.00%` for rates (Reference -> Numeric formatting).
+      y_axis {
+        label: '<metric label>'
+        settings { alignment: 'left' }
+        series { mark_type: 'line' field: VizFieldFull { ref: 'actual' label: 'Actual' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#2563EB' line_style: 'solid' } }
+        series { mark_type: 'line' field: VizFieldFull { ref: 'lower_bound' label: 'Lower Bound' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#9CA3AF' line_style: 'dashed' } }
+        series { mark_type: 'line' field: VizFieldFull { ref: 'upper_bound' label: 'Upper Bound' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#6B7280' line_style: 'dashed' } }
+      }
+      // Right axis (fixed 0..1): is_anomaly as faint-red columns (~30% opacity) — a bar per flagged bucket.
+      y_axis {
+        label: 'Anomaly'
+        settings { alignment: 'right' axis_min: 0 axis_max: 1 }
+        series { mark_type: 'column' field: VizFieldFull { ref: 'is_anomaly' label: 'Is Anomaly' } settings { color: '#DC26264D' } }
+      }
+      tooltips: [
+        VizTooltip { field: VizFieldFull { ref: 'actual' label: 'Actual' format { type: 'number' pattern: '[$$]#,###0' } } }
+        VizTooltip { field: VizFieldFull { ref: 'rolling_mean' label: 'Rolling Mean' format { type: 'number' pattern: '[$$]#,###0' } } }
+        VizTooltip { field: VizFieldFull { ref: 'z_score' label: 'Z Score' format { type: 'number' pattern: '0.0' } } }
+        VizTooltip { field: VizFieldFull { ref: 'is_anomaly' label: 'Is Anomaly' } }
+      ]
+      settings {
+        show_data_points: false
+        connect_discontinuous_points: false
+        sort: LineFamilySort { type: 'xaxis' direction: 'asc' }
+      }
     }
     ```
 
-    `classified_series` covers the look-back window AND the `time_point` row. The last row
-    is the `time_point` bucket. The `2 × spread` threshold corresponds to a fixed 2σ
-    sensitivity. Do not expose sensitivity tuning to the user in this version.
+    Notes: `actual` plots solid blue; `lower_bound` / `upper_bound` are **dashed grey paired
+    lines** (Holistics can't shade a filled band). `is_anomaly` is numeric (1 / 0) and plots as
+    **faint-red columns (~30% opacity, `#DC26264D`) on a fixed 0..1 right axis**, so a bar
+    appears only at flagged buckets without distorting the left-axis scale. `safe_divide` keeps
+    `z_score` null (not an error) when `rolling_stddev` is null or 0;
+    `connect_discontinuous_points: false` keeps honest gaps where the early band is null.
 
-    ## Confirm Anomaly
+    **Run it.** `execute_viz` with `title="Anomaly scan: <metric> (<resolved timeframe>)"`.
+    Executing returns the per-bucket rows (`bucket`, `actual`, `rolling_mean`, `rolling_stddev`,
+    `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`) — the input to Step 4. If `execute_viz`
+    is slow or errors, retry **at most once** (you may pass the AML + error to `generate_viz`
+    for that one retry). If it still fails, stop retrying and summarize in prose from any rows
+    you obtained, noting the chart didn't render.
 
-    Classification was already produced in the AQL of Establish Expectation Step 4. This
-    stage only reads the result and handles missing-data edge cases.
+    ### Step 4 — Summarize
 
-    ### Step 1 — Read the `time_point` row
+    Read the per-bucket rows the chart returned (no extra query). Each bucket is:
 
-    The headline finding is `time_point_row.anomaly_label` from the classified-series record.
+    - **Anomaly** when `is_anomaly = 1` (equivalently `|z_score| >` the threshold). Direction
+      is *above* when `actual > rolling_mean`, else *below*.
+    - **Normal** when `is_anomaly = 0` and `z_score` is non-null.
+    - **Unclassifiable** when `z_score` is null — a first-`W` bucket with no band yet (`is_anomaly`
+      reads 0 there too, so use `z_score` null, not the flag, to tell these apart).
 
-    Stop conditions:
+    Use the numeric formatting in Reference.
 
-    - If `time_point_row.actual` is `null` (no data at that bucket): stop and report
-      *"No data found for `<metric>` on `<date>` with filters `<filters>`. Is the date in
-      the future, or do filters exclude all data?"*
-    - If `time_point_row.anomaly_label` is `null` (insufficient preceding history at the
-      `time_point` bucket itself to classify it): stop and report *"Couldn't classify
-      `<date>` — insufficient preceding history within the look-back window. Try a longer
-      look-back or a different time point."*
+    **No focus date (primary path):**
 
-    Otherwise, `time_point_row.anomaly_label` is `'Normal'` or `'Anomaly'`, and the
-    Output Format section uses it to shape the summary prose.
+    > Found **<N>** anomalies in **<metric label>** over **<resolved timeframe>**:
+    > - **<date>** — <value>, **<z>σ <above|below>** expected (<lower_bound>–<upper_bound>)
+    > - … one bullet per flagged bucket, chronological
 
-    The classification is **binary**. There is no severity tier, no multiple-comparisons
-    correction. The user's hypothesis is specifically about `time_point`.
+    If `N = 0`: *"No anomalies detected in `<metric label>` over `<resolved timeframe>` —
+    every value stayed within its expected range."*
 
-    ## Output Format
+    **Focus date given:** lead with the verdict on that bucket, then the same list.
 
-    Two parts: **chart**, then **summary prose**. Both always appear. **No table.** Only the
-    prose text adjusts to `time_point_row.anomaly_label`.
+    - Anomaly: *"**<metric label> on <date> = <value>** is anomalous: **<z>σ <above|below>**
+      the expected range of <lower_bound>–<upper_bound>."*
+    - Normal: *"**<metric label> on <date> = <value>** is within the expected range of
+      <lower_bound>–<upper_bound> (z=<z>) — not anomalous."*
+    - `actual` null at that bucket: *"No data for `<metric label>` on `<date>` with filters
+      `<filters>`."*
+    - bucket within the first `W` (no band): *"Can't classify `<date>` — it falls in the
+      first <W> buckets, before there's enough preceding history; it's shown on the chart
+      without a band."*
 
-    ### 1. Chart (always — first in the response)
+    Then: *"Across the full <resolved timeframe>, found <N> anomalies:"* + the list.
 
-    Call `generate_viz` to compose a multi-line chart over the `bucket`s in
-    `classified_series` (look-back window + `time_point`), with **four lines** plotted on
-    the same axis:
+    **Closing pointer (when N ≥ 1, both modes):** *why* an anomaly happened or *which
+    dimension* drove it is out of this skill — invite the user to investigate via a
+    dimensional breakdown and business context (marketing calendar, CRM, recent news).
 
-    - `actual` — primary line, solid and prominent (the metric trajectory)
-    - `expected` — secondary line through the baseline's central tendency, dashed or
-      lighter weight so it reads as context, not as a competing signal
-    - `expected_upper` — upper boundary of the expected range, dashed/light, same muted
-      color as `expected_lower`
-    - `expected_lower` — lower boundary of the expected range, dashed/light, paired with
-      `expected_upper` so the two together visually delimit the tolerance band
+    **Post-run override (always offer last):** *"Want me to re-run at higher sensitivity (k=2,
+    flags more), lower sensitivity (k=4, only the most extreme), or with a seasonality-aware
+    method (decomposition) that fits a curved weekly/annual expected line?"* (Default is k=3.)
+    This is the only way to change method or sensitivity — never asked upfront. If the user
+    accepts, re-run Steps 3–4 with the new threshold (the inlined `3`) / method.
 
-    Plus markers (e.g., red dots) on every row where `anomaly_label = 'Anomaly'`, rendered
-    so they remain visible against the lines. No special emphasis on the `time_point` row
-    beyond its anomaly marker (if any).
+    ## Reference
 
-    Rows where `expected`, `expected_lower`, or `expected_upper` are `null` (early buckets
-    with insufficient preceding history) produce gaps in those three lines — that's correct
-    behavior; do not interpolate across them. The `actual` line stays continuous.
+    ### Tool-call conventions
 
-    Note: Holistics charts do not render shaded confidence bands — use paired upper/lower
-    lines as above, not a filled area.
+    These apply to every Holistics MCP call the skill makes.
 
-    Then call `execute_viz` with `title="Anomaly check: <metric> on <resolved time_point>"`
-    to render it as a fresh ad-hoc viz inline in the chat. See the top-of-skill **Tool rule
-    — never replace the user's canvas**: `execute_viz_block` is forbidden in this skill, no
-    exceptions. If the user is currently viewing a chart on the canvas (any tile,
-    exploration, or saved view), the investigation's chart must appear as a new chat
-    artifact alongside it — never in its place.
+    **Author, don't regenerate.** The chart is given here as exact code — substitute the
+    placeholders and call `execute_viz` directly. Do NOT route through `generate_aql` /
+    `generate_viz` on the happy path; regenerating this composed viz is slow and is the main
+    cause of timeouts. Reserve `generate_viz` for the single Step 3 error-recovery retry only.
 
-    ### 2. Summary prose (always — immediately after the chart)
+    **Titles.** `execute_viz` requires a `title` (keep under ~60 chars; avoid "query 1"/"untitled"):
 
-    Read directly from `time_point_row`. Do not recompute. Two templates only:
+    | Call site | Title pattern |
+    |---|---|
+    | Step 3 chart `execute_viz` | `Anomaly scan: <metric> (<resolved timeframe>)` |
 
-    Use the **user-facing name** of the baseline method (from the Step 3 naming table) —
-    never the internal id. Translate the raw `z` value into a "Nx the typical fluctuation"
-    phrase so the user doesn't have to interpret a z-score.
+    **Handling truncated results.** If the MCP returns `@TruncatedContext:<chunk_id>`
+    placeholders, call `fetch_context(chunk_id=<id>)` for each before reasoning over the data.
+    Daily metrics over multi-year timeframes are the typical trigger.
 
-    - **Normal** (`anomaly_label = 'Normal'`) — *"**<Metric label> on <resolved date> =
-      <actual>** sits within the expected range of <expected_lower>–<expected_upper>, so
-      it's not anomalous. (Baseline: **<user-facing method name>**.)"*
+    ### Edge cases
 
-    - **Anomaly** (`anomaly_label = 'Anomaly'`) — *"**<Metric label> on <resolved date> =
-      <actual>** is anomalous: <|actual − expected|> <direction> the expected range of
-      <expected_lower>–<expected_upper> — about **<z>× the typical <period> fluctuation**
-      (where `<period>` is "day-to-day", "week-to-week", "month-to-month", or
-      "quarter-to-quarter" depending on the bound granularity). (Baseline:
-      **<user-facing method name>**.) To find the driver, break `<metric>` down by relevant
-      dimensions (region, plan, channel, product…) for `<resolved date>` and compare each
-      segment's actual vs. its historical share."*
-
-    **If `classified_series` contains OTHER rows with `anomaly_label = 'Anomaly'`** (any
-    historical row besides `time_point`), append one sentence: *"Note: <N> other anomalies
-    detected in the look-back window — see the red markers on the chart."*
-
-    ### Numeric formatting
-
-    - Currency-like measures (anything whose label or measure name contains `revenue`,
-      `cost`, `price`, `arr`, `mrr`, `gmv`, `amount`): format with `$` prefix and short
-      suffix (`$500K`, `$1.2M`). Use the dataset's stated currency symbol if metadata
-      provides it.
-    - Counts and rate measures: format with thousands separators (`1,234`) and two
-      significant decimals for rates (`3.42%`).
-    - z-scores: one decimal place (`11.4`).
-
-    ## Edge Cases & Graceful Degradation
-
-    Apply these rules at the stage where they apply. If multiple rules match, the earlier
-    rule wins.
+    In-flow stop conditions live at their step (insufficient history → Step 3; no data /
+    unclassifiable `focus_date` → Step 4). The cases below are cross-cutting:
 
     | Situation | Behavior |
     |---|---|
-    | `list_datasets()` returns an error (e.g., "not supported in development mode") | Ask the user to name the dataset explicitly. Do not proceed. |
-    | Metric name doesn't match any measure in the resolved dataset | Show the top-3 closest measure names with descriptions; ask the user. |
-    | Time point parses ambiguously (e.g., "last Tuesday" near a weekend boundary, timezone shift) | Echo the resolved absolute date back to the user before any AQL call. |
-    | `n_points < 10` after pulling history | Stop. Report "Not enough history (n=X). Need ≥10 comparable points." |
-    | The `time_point` row's `actual` is null in `classified_series` (no data at that bucket) | Stop. Report "No data found for `<metric>` on `<date>` with filters `<filters>`. Is the date in the future, or do filters exclude all data?" |
-    | The `time_point` row's `anomaly_label` is null (insufficient preceding history at the `time_point` bucket itself) | Stop. Report "Couldn't classify `<date>` — insufficient preceding history within the look-back window. Try a longer look-back or a different time point." |
-    | User filter context narrows the history series to `< 10` points | Treat as the `n_points < 10` case. |
-    | User picks a method that turns out to be uncomputable (e.g., too few same-weekday observations) | Tell the user and offer to fall back to the next-most-eligible method. |
-    | AQL window functions are insufficient for the chosen method in this workspace | Fall back to narrative computation over the Step 1 history series for `expected`, `spread`, `expected_lower`, `expected_upper`, `z`, `direction`, `anomaly_label`. Surface a brief notice that fallback was used. Output structure unchanged. |
-    | `execute_aql` errors mid-investigation | Stop. Report which stage failed and surface the AQL error message. Do not pretend the investigation completed. |
-    | User asks "why did this happen?" or "what dimension drove it?" | Reply: "I can confirm whether the value is statistically anomalous, but identifying which dimension drove it — or what business event caused it — is outside this skill. Break the metric down by relevant dimensions in a dashboard, or check your marketing calendar / CRM / news for that window." |
-    | User asks to "update the chart", "refresh the tile", or otherwise points at an existing chart on the canvas | Do not rerender their tile. Emit the investigation's chart as a fresh ad-hoc viz via `execute_viz` (never `execute_viz_block`). Tell the user the new chart is alongside their existing one, not a replacement. |
-    | User asks to "show the raw numbers", "give me the data", or otherwise requests a table of the history or classified series | Do not dump those internal series wholesale. If a table is genuinely useful, render it inline — either via `execute_viz` with a `DataTable { ... }` AML viz (preferred, native Holistics inline table) or as a plain markdown table in the chat reply. Both keep the artifact in chat. Never use `execute_viz_block` or any other dashboard-targeting tool, and never replace the user's current chart with a table. |
+    | `list_datasets()` errors (e.g., "not supported in development mode") | Ask the user to name the dataset explicitly. Do not proceed. |
+    | Metric name matches no measure | Show top-3 closest measure names with descriptions; ask the user. |
+    | Chart is slow or errors | Retry at most once, then stop. Summarize the anomalies in prose from any rows obtained and note the chart didn't render — don't keep retrying generation. |
+    | User asks "why did this happen?" or "what dimension drove it?" | Reply: "I can flag which points are statistically unusual, but identifying which dimension drove an anomaly — or its business cause — is outside this skill. Break the metric down by relevant dimensions in a dashboard, or check your marketing calendar / CRM / news for that window." |
+    | User asks to "show the raw numbers" or wants the per-bucket table | Render an `execute_viz` `DataTable { ... }` (preferred) or a markdown table — one row per `bucket` with `actual`, `rolling_mean`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly` as columns. Never group/pivot rows by `is_anomaly`. |
+    | Tempted to persist `rolling_mean` / `z` / `is_anomaly` as a `dimension` or `measure` on the model | Don't. They depend on windowed (post-aggregation) results; as model fields they evaluate in the wrong semantic layer. Keep them in the chart's `calculation` blocks. |
 
-    ## Closing reminder
+    ### Numeric formatting
 
-    This skill confirms or denies that a value is statistically anomalous given its history.
-    It does NOT identify which dimension drove the anomaly, nor speculate on causes. End the
-    response by inviting the user to investigate further with dimensional breakdowns and
-    business context (marketing calendar, CRM, recent news / competitor activity).
+    - Currency-like measures (label/name contains `revenue`, `cost`, `price`, `arr`, `mrr`,
+      `gmv`, `amount`): `$` prefix, short suffix (`$500K`, `$1.2M`); use the dataset's stated
+      currency symbol if metadata provides it.
+    - Counts and rates: thousands separators (`1,234`); rates to two significant decimals
+      (`3.42%`).
+    - z-scores: one decimal place (`11.4`).
   ;;
 }
