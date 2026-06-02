@@ -1,6 +1,6 @@
-Skill key_driver {
+Skill key_driver_original {
 
-label: 'Key Driver'
+label: 'Key Driver Original'
 
 description: 'Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting. Trigger on: "Why did close rate drop from Feb to Mar?", "Explain the increase in conversion between Q1 and Q2", "What drove the revenue decline last month?", "Break down the change in win rate between these two periods." Do not trigger for forecasts, general metric exploration, or comparisons without a directional change to explain.'
 
@@ -79,26 +79,6 @@ Do not ask the user to pick dimensions before the list is shown.
 Analyze one dimension per step. Show output for that dimension, then immediately proceed to the next confirmed dimension. Do not batch or union multiple dimensions in one query.
 
 If a dimension fails (query error, no data, schema mismatch, or any other issue), skip it silently and continue to the next dimension. Record the failure reason for the Phase 4 summary table.
-
----
-
-## change_analysis Context Detection
-
-Before running any phase, check the conversation history for a **Change Analysis — Stage 1 complete** block.
-
-**If found** — this skill was triggered from the `change_analysis` orchestrator:
-- Load `metric`, `direction`, `time_reference`, and `anomaly_verdict` from the block.
-- In Phase 1: use the loaded `metric` directly — do not re-ask for it. Treat `time_reference`
-  as the user's stated period and proceed with normal period resolution (single period stated →
-  base = `time_reference`, comparison = immediately preceding period). Still show the Phase 1
-  confirmation prompt if the period is ambiguous; skip it if unambiguous.
-- In Phase 2: prepend one sentence before the standard overview, referencing the anomaly verdict:
-  - If `anomaly_verdict` = Anomalous → *"The anomaly check confirmed this [drop/increase] is
-    unusual. Let's find what drove it."*
-  - If `anomaly_verdict` = Within normal range → *"Note: the anomaly check found this
-    [drop/increase] is within the normal range. Here's the breakdown for reference:"*
-
-**If not found** — manual invocation. Run all phases as normal with no changes.
 
 ---
 
