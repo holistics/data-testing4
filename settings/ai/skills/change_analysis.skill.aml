@@ -1,0 +1,96 @@
+Skill change_analysis {
+  label: "Change Analysis"
+  invocation: "auto"
+  description: '''
+    Orchestrates a guided investigation when the user sees a metric change (drop or increase)
+    and wants to understand it. Suggests an anomaly check first, then offers dimensional
+    breakdown (key driver) or metric decomposition.
+
+    Auto-trigger on open-ended "why did X change" questions:
+      • "Why do we see the drop in revenue in 2026?"
+      • "What's causing the decline in signups last quarter?"
+      • "Why did our close rate go up in March?"
+      • "Explain the decrease in MRR this month"
+      • "What happened to conversions last week?"
+
+    Do NOT trigger for:
+      • Direct dimension breakdown requests ("break revenue down by region") — key_driver handles those
+      • Anomaly scanning with no specific change in mind ("detect anomalies in revenue") — anomaly_detection handles those
+      • Forecasts or future projections
+  '''
+  content: @md
+    # Change Analysis Orchestrator
+
+    You are guiding the user through a structured investigation of a metric change. Work
+    through these steps in order. Do not skip ahead or merge steps.
+
+    ## Step 1 — Confirm the metric
+
+    Parse the user's message for:
+    - `metric` — the metric that changed (e.g., "revenue", "close rate", "daily signups")
+    - `direction` — drop or increase
+    - `time_reference` — when the change occurred (e.g., "in 2026", "last quarter", "since January")
+
+    If `metric` is not clearly named, ask before proceeding:
+    > "Which metric are you looking at?"
+
+    Once the metric is confirmed, echo a one-line summary:
+    > "Got it — you're seeing a [drop/increase] in **[metric]** [time_reference]."
+
+    ## Step 2 — Run anomaly check automatically
+
+    Before investigating the cause, always check whether the change is statistically unusual
+    first. Announce this to the user, then immediately call `load_skill("anomaly_investigate")`:
+
+    > "Before we look at what drove this, let me first check whether this [drop/increase] in
+    > **[metric]** is actually unusual — or just normal variation. Running the anomaly check
+    > now..."
+
+    The sub-skill handles everything else: dataset resolution, time point confirmation,
+    baseline method selection, and chart output. Do not interrupt its flow.
+
+    ## Step 3 — Contextualize the anomaly result and offer next steps
+
+    Once the anomaly investigation output appears in the conversation, read the verdict from
+    its summary prose, then contextualize it before moving forward:
+
+    - If the value was found **anomalous**:
+      > "This [drop/increase] in **[metric]** is outside the normal range — it's a real signal
+      > worth investigating. Let's dig into what drove it."
+
+    - If the value was found **within normal range**:
+      > "This [drop/increase] in **[metric]** is within the expected range — it's likely normal
+      > variation, not a signal to act on. That said, if you'd still like to understand what
+      > shifted, here's how we can go deeper:"
+
+    In both cases, proceed to Step 4.
+
+    ## Step 4 — Offer investigation paths
+
+    Present two options:
+
+    > **How would you like to investigate the [drop/increase] in [metric]?**
+    >
+    > 1. **Break down by dimensions** — identify which segments (e.g., region, plan, product,
+    >    channel) drove the [drop/increase] the most
+    > 2. **Decompose the metric** *(coming soon)* — split the metric into its components to
+    >    see which part shifted
+
+    Wait for user choice.
+
+    If the user picks option 2, respond:
+    > "Metric decomposition isn't supported yet — it's coming soon! Would you like to
+    > break down by dimensions in the meantime?"
+    Then re-offer option 1.
+
+    ## Step 5 — Dimensional breakdown (if user picks option 1)
+
+    Call `load_skill("key_driver")`.
+
+    Announce the confirmed metric and time reference:
+    > "Analyzing what drove the [drop/increase] in **[metric]** [time_reference]..."
+
+    The sub-skill handles period resolution, dimension selection, and analysis independently.
+    Do not interrupt its flow.
+  ;;
+}
