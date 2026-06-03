@@ -16,7 +16,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
       width: 1220
-      height: 4580
+      height: 5000
       grid_size: 20
       block v3 {
         position: pos(20, 1760, 1160, 460)
@@ -117,6 +117,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       block v_c0sc {
         position: pos(20, 200, 1160, 220)
         layer: 1
+      }
+      block v_fb2g {
+        position: pos(20, 4580, 580, 400)
+        layer: 14
       }
       mobile {
         mode: 'auto'
@@ -3800,6 +3804,115 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     settings {
       hide_label: true
+    }
+  }
+  block v_fb2g: VizBlock {
+    label: 'Campaign, Revenue Won and 2 more'
+    viz: DataTable {
+      dataset: vy_pbi_dts
+      calculation revenue_won_mar_2021 {
+        label: 'Revenue Won Mar 2021'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(2021-03));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation revenue_won_apr_2021 {
+        label: 'Revenue Won Apr 2021'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(2021-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql coalesce(revenue_won_mar_2021, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql coalesce(revenue_won_apr_2021, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Delta Value'
+        formula: @aql comparison_value - base_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation campaigns_in_either_month {
+        label: 'Campaigns In Either Month'
+        formula: @aql unique(vy_campaigns_csv.campaign)
+  | filter(revenue_won_mar_2021 is not null or revenue_won_apr_2021 is not null);;
+        calc_type: 'measure'
+        data_type: 'json'
+      }
+      calculation lm_revenue_won {
+        label: 'LM Revenue Won'
+        formula: @aql revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation _lm_revenue_won {
+        label: '% LM Revenue Won'
+        formula: @aql safe_divide(revenue_won, revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+        format {
+          type: 'number'
+          pattern: '#,###0.00%'
+        }
+      }
+      filter {
+        field: r(vy_opportunities_csv.close_date)
+        operator: 'matches'
+        value: 'april 2021'
+      }
+      fields: [
+        VizFieldFull {
+          label: 'Campaign'
+          ref: r(vy_campaigns_csv.campaign)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(vy_pbi_dts.revenue_won)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: 'lm_revenue_won'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: '_lm_revenue_won'
+          format {
+            type: 'number'
+            pattern: '#,###0.00%'
+          }
+          uname: 'custom__lm_revenue_won_1'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'custom__lm_revenue_won_1'
+            direction: 'desc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
     }
   }
   interactions: [
