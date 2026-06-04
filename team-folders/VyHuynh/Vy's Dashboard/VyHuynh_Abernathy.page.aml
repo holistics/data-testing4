@@ -122,6 +122,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(20, 4580, 580, 400)
         layer: 14
       }
+      block v_wxn2 {
+        position: pos(620, 4580, 580, 400)
+        layer: 15
+      }
       mobile {
         mode: 'auto'
       }
@@ -3915,6 +3919,150 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block v_wxn2: VizBlock {
+    label: 'Jan 2021, Dec 2020 and 2 more by Product Category'
+    viz: ColumnChart {
+      dataset: vy_pbi_dts
+      calculation base_won_count {
+        label: 'Base Won Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') | where(vy_opportunity_calendar_csv.year_month is @(2021-01)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_lost_count {
+        label: 'Base Lost Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') | where(vy_opportunity_calendar_csv.year_month is @(2021-01)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_won_count {
+        label: 'Comparison Won Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') | where(vy_opportunity_calendar_csv.year_month is @(2020-12)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_lost_count {
+        label: 'Comparison Lost Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') | where(vy_opportunity_calendar_csv.year_month is @(2020-12)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value_raw {
+        label: 'Base Value Raw'
+        formula: @aql safe_divide(base_won_count, base_won_count + base_lost_count);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_raw {
+        label: 'Comparison Value Raw'
+        formula: @aql safe_divide(comparison_won_count, comparison_won_count + comparison_lost_count);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql coalesce(base_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql coalesce(comparison_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Delta Value'
+        formula: @aql base_value - comparison_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation pct_delta {
+        label: 'Pct Delta'
+        formula: @aql safe_divide(delta_value, comparison_value) * 100.0;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(vy_opportunity_calendar_csv.year_month)
+        operator: 'matches'
+        value: '2020-12 - 2021-01'
+      }
+      x_axis: VizFieldFull {
+        label: 'Product Category'
+        ref: r(vy_products_csv.product_category)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Close %'
+        series {
+          field: VizFieldFull {
+            label: 'Jan 2021'
+            ref: 'base_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#0891F2'
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Dec 2020'
+            ref: 'comparison_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#F1434B'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Δ'
+            ref: 'delta_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: '% Change'
+            ref: 'pct_delta'
+            format {
+              type: 'number'
+              pattern: '#,###0.0\\%'
+            }
+          }
+        }
+      ]
+      settings {
+        show_rows_with_no_data: true
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'tooltip'
+        }
+        x_axis_label: 'Product Category'
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v3'
@@ -4307,11 +4455,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v4',
             'v_nehb'
           ]
-          field: r(vyht_ecommerce_orders_1.created_at)
+          field: ref('vyht_ecommerce_orders_1', 'created_at')
         },
         CustomMapping {
           block: 'v_cii9'
-          field: r(bq_fct_order_items.created_at)
+          field: ref('bq_fct_order_items', 'created_at')
         }
       ]
     },
@@ -4898,6 +5046,24 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
     },
     FilterInteraction {
+      from: 'v_qpsb'
+      to: [
+        CustomMapping {
+          block: 'v_wxn2'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_j070'
+      to: [
+        CustomMapping {
+          block: 'v_wxn2'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
       from: 'v_91yu'
       to: [
         CustomMapping {
@@ -4969,6 +5135,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
     },
     FilterInteraction {
+      from: 'v_wxn2'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
       from: 'f_countries_continent_name'
       to: [
         CustomMapping {
@@ -4977,7 +5155,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_3mef',
             'v_ck6w'
           ]
-          field: r(ecommerce_countries.continent_name)
+          field: ref('ecommerce_countries', 'continent_name')
         }
       ]
     }
