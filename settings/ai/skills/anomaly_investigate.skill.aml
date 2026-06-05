@@ -1,0 +1,302 @@
+Skill anomaly_detection {
+  label: "Anomaly detection"
+  invocation: "auto"
+  description: '''
+    Detect anomalies across a metric's history and visualize them — unusual spikes, drops,
+    and deviations flagged against an expected range built from the metric's recent history.
+
+    Auto-trigger whenever the user wants to find or check for unusual values in a metric —
+    words like anomaly, unusual, spike, drop, dip, outlier, "out of the ordinary", "anything
+    weird". A specific date is OPTIONAL; the skill always scans the whole series. Typical
+    phrasings:
+      • "Detect anomalies in revenue" / "Any outliers in daily signups?"
+      • "Has anything looked unusual in MRR lately?"
+      • "Were there spikes or drops in active users this quarter?"
+      • "Is revenue on May 20 unusual?" (focus date — still scans the full series)
+      • "/anomaly_detection" with no args (the skill asks for the metric)
+
+    Do NOT trigger for: dimensional attribution (which segment/dimension drove an anomaly),
+    explaining the business cause, or ongoing/scheduled monitoring & alerting. This skill
+    flags which points are statistically unusual and shows them; it does not explain why.
+  '''
+  content: @md
+    # Anomaly Detection Playbook
+
+    The user wants to know which values in a metric are **statistically unusual given the
+    metric's own recent history**, and to see them. Build an expected range from recent
+    history, flag points outside it, and visualize the result.
+
+    Do NOT speculate on causes or identify which dimension drove an anomaly — that is
+    outside this skill. Deflect such asks (see Reference → Edge cases).
+
+    ## Output contract
+
+    This skill produces **one artifact: a single `CombinationChart`** (Step 3). Executing it
+    both draws the chart and returns the per-bucket numbers; read those numbers to write the
+    summary, and never echo them back as a separate table.
+
+    **Performance — author, never regenerate.** The chart AML is given in full below; fill its
+    placeholders and call `execute_viz` **once**. Do NOT route through `generate_viz` /
+    `generate_aql` — regenerating this composed, multi-calculation viz is the slow step that
+    times out. If `execute_viz` is slow or errors, retry at most once (see Step 3), then
+    summarize from whatever data you have rather than looping on generation.
+
+    ## Workflow
+
+    Four steps, in order.
+
+    ### Step 1 — Parse inputs
+
+    Parse the user's message for these fields:
+
+    | Field | Required | Examples | If missing |
+    |---|---|---|---|
+    | `metric` | **Yes** | `revenue`, `signups`, `MRR`, `daily_active_users` | **Ask the user. Do not guess.** |
+    | `focus_date` | No | `May 20`, `last Tuesday`, `2026-05-20` | Optional. Changes only the closing prose (Step 4), never the detection or chart. |
+    | `granularity` | Inferred | `day`, `week`, `month`, `quarter` | Derive from the metric's time dimension and any date phrasing. If ambiguous, ask. |
+    | `filters` | No | `Region=West`, `Plan=Pro` | Optional. If present, add them to the chart's `filters`. |
+    | `timeframe` | No | `last 90 days`, `last 6 months`, `this quarter` | Optional. Default by granularity: `day` → 90 days, `week` → 26 weeks, `month` → 24 months, `quarter` → 12 quarters. Treat these as **performance-first defaults**, not business limits: use them unless the user explicitly asks for full history or the shorter range is insufficient for anomaly classification. |
+
+    Echo the extracted values back, including the **resolved timeframe** as an absolute date
+    range (e.g., *"Aug 19, 2025 – May 29, 2026"*), so the user can correct any mis-parse.
+
+    ### Step 2 — Resolve the dataset
+
+    Anchor to **one** dataset per invocation:
+
+    1. **If the user named a dataset** → `fetch_dataset(dataset_uname=<name>)` and proceed.
+    2. **Else:** `list_datasets()`, rank candidates by how well the metric name matches each
+       dataset's measures/labels/descriptions (prefer measure matches), `fetch_dataset` the
+       top candidate, then **confirm with the user before proceeding** (*"I'll use
+       `sales_orders` (has measure `total_revenue`). Confirm, or name another."*). Wait for
+       confirmation.
+    3. **Fallback** — if `list_datasets()` errors (e.g., "not supported in development
+       mode"), ask the user to name the dataset explicitly.
+
+    **Validate the metric.** Confirm `metric` exists as a measure. If not, show the top-3
+    closest measure names (with descriptions) and ask which to use.
+
+    **Bind the time axis.** Find the dataset's date/timestamp dimension. If multiple exist,
+    prefer: (a) the one tagged primary in metadata; (b) the one most referenced by the
+    metric's definition; (c) a dimension named `event_date`, `created_at`, `date`, or
+    `timestamp` (in that order). If still ambiguous, ask. Resolve any relative `focus_date`
+    in the dataset's stated timezone and echo the absolute date back.
+
+    ### Step 3 — Build and run the anomaly chart
+
+    **All the math lives in one `CombinationChart`.** Its `calculation` blocks compute the
+    rolling band and the `is_anomaly` flag; executing the chart both draws it and returns the
+    per-bucket numbers Step 4 reads. One artifact — no separate scan query, no model field.
+    The calcs **compose**: `actual` is defined once and the rest reference it by name (this is
+    why everything sits in viz calculations, not an ad-hoc `explore` — window functions and
+    measure-to-measure references are reliable in viz calcs, not in a bare explore).
+
+    **Why a chart — not model fields, not a pivot.** The rolling stats are window calculations
+    over the *ordered, already-aggregated* result; they are not row-level model fields (defining
+    `dimension <model>.is_anomaly = …` evaluates them in the wrong semantic layer — valid-looking
+    but wrong). And never use a `PivotTable` or group rows by an anomaly label.
+
+    **Method / parameters.** Expected range = trailing moving average ± `k`·stddev over a window
+    that **excludes the current bucket** (so a spike can't inflate its own band). Threshold
+    **`k = 3`** (≈1 false flag per 370 normal points), inlined as `3` in the bounds and
+    `is_anomaly` (three spots — change all three to retune; lower toward 2 to flag more).
+    Trailing window `W` by granularity:
+
+    | Granularity | Window `W` |
+    |---|---|
+    | day | 28 (4 weeks) |
+    | week | 13 (a quarter) |
+    | month | 12 (a year) |
+    | quarter | 8 (two years) |
+
+    The window range is `-W..-1`. The first `W` buckets have no full window → `rolling_*` and
+    `z_score` come back null (shown as gaps, never flagged). If the series is shorter than
+    `W + 1` points, shrink `W` to about half the available history (minimum 4) and say so. With
+    fewer than 8 points total, stop: *"Not enough history (n=X) to detect anomalies."*
+
+    **The chart.** Author the AML below **directly** (do NOT call `generate_viz`). Adapt
+    `<dataset>`, metric `M` (e.g. `mou_monthly_mrr.sum_total_mrr`, or an aggregation like
+    `<model> | max(<field>)`), time dim `T`, window `W`; apply the user's filters/timeframe.
+    Each `formula:` is an `@aql` heredoc that **must be closed with the usual double-semicolon
+    terminator** — those are omitted below only so this example stays inside the skill's own
+    heredoc, so add them back.
+
+    ```aml
+    CombinationChart {
+      dataset: <dataset>
+      calculation actual {
+        label: 'Actual'
+        formula: @aql M
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation rolling_mean {
+        label: 'Rolling Mean'
+        formula: @aql window_avg(actual, -W..-1, order: T | asc(), partition: [])
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation rolling_stddev {
+        label: 'Rolling Stddev'
+        formula: @aql window_stdev(actual, -W..-1, order: T | asc(), partition: [])
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation lower_bound {
+        label: 'Lower Bound'
+        formula: @aql rolling_mean - 3 * rolling_stddev
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation upper_bound {
+        label: 'Upper Bound'
+        formula: @aql rolling_mean + 3 * rolling_stddev
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation z_score {
+        label: 'Z Score'
+        formula: @aql safe_divide(actual - rolling_mean, rolling_stddev)
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_anomaly {
+        label: 'Is Anomaly'
+        formula: @aql case(when: abs(z_score) > 3, then: 1, else: 0)
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull { ref: r(T) label: 'Period' format { type: 'date' pattern: 'LLL yyyy' } }
+      // Left axis: metric (blue solid) + band (grey dashed). The `[$$]#,###0` pattern is for a
+      // currency metric — use `#,###0` for counts, `#,##0.00%` for rates (Reference -> Numeric formatting).
+      y_axis {
+        label: '<metric label>'
+        settings { alignment: 'left' }
+        series { mark_type: 'line' field: VizFieldFull { ref: 'actual' label: 'Actual' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#2563EB' line_style: 'solid' } }
+        series { mark_type: 'line' field: VizFieldFull { ref: 'lower_bound' label: 'Lower Bound' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#9CA3AF' line_style: 'dashed' } }
+        series { mark_type: 'line' field: VizFieldFull { ref: 'upper_bound' label: 'Upper Bound' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#6B7280' line_style: 'dashed' } }
+      }
+      // Right axis (fixed 0..1): is_anomaly as faint-red columns (~30% opacity) — a bar per flagged bucket.
+      y_axis {
+        label: 'Anomaly'
+        settings { alignment: 'right' axis_min: 0 axis_max: 1 }
+        series { mark_type: 'column' field: VizFieldFull { ref: 'is_anomaly' label: 'Is Anomaly' } settings { color: '#DC26264D' } }
+      }
+      tooltips: [
+        VizTooltip { field: VizFieldFull { ref: 'actual' label: 'Actual' format { type: 'number' pattern: '[$$]#,###0' } } }
+        VizTooltip { field: VizFieldFull { ref: 'rolling_mean' label: 'Rolling Mean' format { type: 'number' pattern: '[$$]#,###0' } } }
+        VizTooltip { field: VizFieldFull { ref: 'z_score' label: 'Z Score' format { type: 'number' pattern: '0.0' } } }
+        VizTooltip { field: VizFieldFull { ref: 'is_anomaly' label: 'Is Anomaly' } }
+      ]
+      settings {
+        show_data_points: false
+        connect_discontinuous_points: false
+        sort: LineFamilySort { type: 'xaxis' direction: 'asc' }
+      }
+    }
+    ```
+
+    Notes: `actual` plots solid blue; `lower_bound` / `upper_bound` are **dashed grey paired
+    lines** (Holistics can't shade a filled band). `is_anomaly` is numeric (1 / 0) and plots as
+    **faint-red columns (~30% opacity, `#DC26264D`) on a fixed 0..1 right axis**, so a bar
+    appears only at flagged buckets without distorting the left-axis scale. `safe_divide` keeps
+    `z_score` null (not an error) when `rolling_stddev` is null or 0;
+    `connect_discontinuous_points: false` keeps honest gaps where the early band is null.
+
+    **Run it.** `execute_viz` with `title="Anomaly scan: <metric> (<resolved timeframe>)"`.
+    Executing returns the per-bucket rows (`bucket`, `actual`, `rolling_mean`, `rolling_stddev`,
+    `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`) — the input to Step 4. If `execute_viz`
+    is slow or errors, retry **at most once** (you may pass the AML + error to `generate_viz`
+    for that one retry). If it still fails, stop retrying and summarize in prose from any rows
+    you obtained, noting the chart didn't render.
+
+    ### Step 4 — Summarize
+
+    Read the per-bucket rows the chart returned (no extra query). Each bucket is:
+
+    - **Anomaly** when `is_anomaly = 1` (equivalently `|z_score| >` the threshold). Direction
+      is *above* when `actual > rolling_mean`, else *below*.
+    - **Normal** when `is_anomaly = 0` and `z_score` is non-null.
+    - **Unclassifiable** when `z_score` is null — a first-`W` bucket with no band yet (`is_anomaly`
+      reads 0 there too, so use `z_score` null, not the flag, to tell these apart).
+
+    Use the numeric formatting in Reference.
+
+    **No focus date (primary path):**
+
+    > Found **<N>** anomalies in **<metric label>** over **<resolved timeframe>**:
+    > - **<date>** — <value>, **<z>σ <above|below>** expected (<lower_bound>–<upper_bound>)
+    > - … one bullet per flagged bucket, chronological
+
+    If `N = 0`: *"No anomalies detected in `<metric label>` over `<resolved timeframe>` —
+    every value stayed within its expected range."*
+
+    **Focus date given:** lead with the verdict on that bucket, then the same list.
+
+    - Anomaly: *"**<metric label> on <date> = <value>** is anomalous: **<z>σ <above|below>**
+      the expected range of <lower_bound>–<upper_bound>."*
+    - Normal: *"**<metric label> on <date> = <value>** is within the expected range of
+      <lower_bound>–<upper_bound> (z=<z>) — not anomalous."*
+    - `actual` null at that bucket: *"No data for `<metric label>` on `<date>` with filters
+      `<filters>`."*
+    - bucket within the first `W` (no band): *"Can't classify `<date>` — it falls in the
+      first <W> buckets, before there's enough preceding history; it's shown on the chart
+      without a band."*
+
+    Then: *"Across the full <resolved timeframe>, found <N> anomalies:"* + the list.
+
+    **Closing pointer (when N ≥ 1, both modes):** *why* an anomaly happened or *which
+    dimension* drove it is out of this skill — invite the user to investigate via a
+    dimensional breakdown and business context (marketing calendar, CRM, recent news).
+
+    **Post-run override (always offer last):** *"Want me to re-run at higher sensitivity (k=2,
+    flags more), lower sensitivity (k=4, only the most extreme), or with a seasonality-aware
+    method (decomposition) that fits a curved weekly/annual expected line?"* (Default is k=3.)
+    This is the only way to change method or sensitivity — never asked upfront. If the user
+    accepts, re-run Steps 3–4 with the new threshold (the inlined `3`) / method.
+
+    ## Reference
+
+    ### Tool-call conventions
+
+    These apply to every Holistics MCP call the skill makes.
+
+    **Author, don't regenerate.** The chart is given here as exact code — substitute the
+    placeholders and call `execute_viz` directly. Do NOT route through `generate_aql` /
+    `generate_viz` on the happy path; regenerating this composed viz is slow and is the main
+    cause of timeouts. Reserve `generate_viz` for the single Step 3 error-recovery retry only.
+
+    **Titles.** `execute_viz` requires a `title` (keep under ~60 chars; avoid "query 1"/"untitled"):
+
+    | Call site | Title pattern |
+    |---|---|
+    | Step 3 chart `execute_viz` | `Anomaly scan: <metric> (<resolved timeframe>)` |
+
+    **Handling truncated results.** If the MCP returns `@TruncatedContext:<chunk_id>`
+    placeholders, call `fetch_context(chunk_id=<id>)` for each before reasoning over the data.
+    Daily metrics over multi-year timeframes are the typical trigger.
+
+    ### Edge cases
+
+    In-flow stop conditions live at their step (insufficient history → Step 3; no data /
+    unclassifiable `focus_date` → Step 4). The cases below are cross-cutting:
+
+    | Situation | Behavior |
+    |---|---|
+    | `list_datasets()` errors (e.g., "not supported in development mode") | Ask the user to name the dataset explicitly. Do not proceed. |
+    | Metric name matches no measure | Show top-3 closest measure names with descriptions; ask the user. |
+    | Chart is slow or errors | Retry at most once, then stop. Summarize the anomalies in prose from any rows obtained and note the chart didn't render — don't keep retrying generation. |
+    | User asks "why did this happen?" or "what dimension drove it?" | Reply: "I can flag which points are statistically unusual, but identifying which dimension drove an anomaly — or its business cause — is outside this skill. Break the metric down by relevant dimensions in a dashboard, or check your marketing calendar / CRM / news for that window." |
+    | User asks to "show the raw numbers" or wants the per-bucket table | Render an `execute_viz` `DataTable { ... }` (preferred) or a markdown table — one row per `bucket` with `actual`, `rolling_mean`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly` as columns. Never group/pivot rows by `is_anomaly`. |
+    | Tempted to persist `rolling_mean` / `z` / `is_anomaly` as a `dimension` or `measure` on the model | Don't. They depend on windowed (post-aggregation) results; as model fields they evaluate in the wrong semantic layer. Keep them in the chart's `calculation` blocks. |
+
+    ### Numeric formatting
+
+    - Currency-like measures (label/name contains `revenue`, `cost`, `price`, `arr`, `mrr`,
+      `gmv`, `amount`): `$` prefix, short suffix (`$500K`, `$1.2M`); use the dataset's stated
+      currency symbol if metadata provides it.
+    - Counts and rates: thousands separators (`1,234`); rates to two significant decimals
+      (`3.42%`).
+    - z-scores: one decimal place (`11.4`).
+  ;;
+}

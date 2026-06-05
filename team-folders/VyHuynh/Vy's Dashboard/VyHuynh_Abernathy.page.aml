@@ -16,14 +16,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
       width: 1220
-      height: 4380
+      height: 5000
       grid_size: 20
       block v3 {
-        position: pos(20, 1560, 1160, 460)
+        position: pos(20, 1760, 1160, 460)
         layer: 3
       }
       block v4 {
-        position: pos(700, 540, 260, 140)
+        position: pos(700, 740, 260, 140)
         layer: 2
       }
       block t3 {
@@ -63,19 +63,19 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 9
       }
       block v8 {
-        position: pos(20, 960, 1160, 580)
+        position: pos(20, 1160, 1160, 580)
         layer: 1
       }
       block v_711g {
-        position: pos(20, 540, 640, 400)
+        position: pos(20, 740, 640, 400)
         layer: 1
       }
       block v_nehb {
-        position: pos(20, 2640, 540, 460)
+        position: pos(20, 2840, 540, 460)
         layer: 1
       }
       block v_cii9 {
-        position: pos(20, 3120, 1160, 400)
+        position: pos(20, 3320, 1160, 400)
         layer: 10
       }
       block t_4ttu {
@@ -95,34 +95,36 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 4
       }
       block v_qj0m {
-        position: pos(20, 3540, 1160, 400)
+        position: pos(20, 3740, 1160, 400)
         layer: 11
       }
       block v_lpgt {
-        position: pos(20, 3960, 580, 400)
+        position: pos(20, 4160, 580, 400)
         layer: 12
       }
       block v_5zcz {
-        position: pos(20, 2040, 1160, 580)
+        position: pos(20, 2240, 1160, 580)
         layer: 1
       }
       block v_jbl8 {
-        position: pos(620, 3960, 560, 400)
+        position: pos(620, 4160, 560, 400)
         layer: 3
       }
       block v_96z3 {
-        position: pos(580, 2640, 580, 400)
+        position: pos(580, 2840, 580, 400)
         layer: 13
       }
       block v_c0sc {
-        position: pos(20, 220, 240, 160)
+        position: pos(20, 200, 1160, 220)
         layer: 1
       }
-      block v_3vr6 {
-        position: pos(280, 220, 260, 160)
+      block v_fb2g {
+        position: pos(20, 4580, 580, 400)
+        layer: 14
       }
-      block v_cijs {
-        position: pos(840, 220, 260, 160)
+      block v_wxn2 {
+        position: pos(620, 4580, 580, 400)
+        layer: 15
       }
       mobile {
         mode: 'auto'
@@ -3617,306 +3619,187 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v_c0sc: VizBlock {
-    settings {
-      hide_label: true
-    }
-    label: 'Completed issue (Last 30D), %LM - Completed issue and 2 more copy'
+    label: 'Project Management - Dec vs Nov 2025'
     viz: MarkdownViz {
       dataset: reporting_project_management
-      calculation lm_completed_issue {
-        label: '%LM - Completed issue'
-        formula: @aql safe_divide(completed_issue, completed_issue | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
+      calculation completed_issue_dec {
+        label: 'Completed Issue Dec 2025'
+        formula: @aql completed_issue | exact_period(reporting_issues.completed_at, @2025-12-01 - 2026-01-01);;
         calc_type: 'measure'
         data_type: 'number'
       }
-      calculation completed_issue_color {
-        label: 'Completed Issue Color'
+      calculation completed_issue_nov {
+        label: 'Completed Issue Nov 2025'
+        formula: @aql completed_issue | exact_period(reporting_issues.completed_at, @(2025-11-01 - 2025-12-01));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation duration_day_dec {
+        label: 'Duration Day Dec 2025'
+        formula: @aql duration_day | exact_period(reporting_issues.completed_at, @2025-12-01 - 2026-01-01);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation pop_comparison_of_completed_issue_dec_2025 {
+        label: '% Completed Issue Dec 2025'
+        formula: @aql safe_divide(completed_issue_dec, completed_issue_dec | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation _duration_day_lm {
+        label: '% Duration day LM'
+        formula: @aql safe_divide(duration_day_dec, duration_day_dec | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation condition_formatting {
+        label: 'condition formatting'
         formula: @aql case(
-  when: lm_completed_issue < 0,
-  then: "rgb(248, 113, 113)",
-  else: "#5DB88F"
+  when: or(pop_comparison_of_completed_issue_dec_2025 < 0, _duration_day_lm < 0),
+  then: "negative",
+  when: or(pop_comparison_of_completed_issue_dec_2025 > 0, _duration_day_lm > 0),
+  then: "positive",
+  else: "neutral"
 );;
         calc_type: 'measure'
         data_type: 'text'
       }
-      calculation completed_issue_icon {
-        label: 'Completed Issue Icon'
-        formula: @aql 
-case(
-      when: lm_completed_issue < 0,
-      then: "▼",
-      else: "▲"
-    );;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      filter {
-        field: r(reporting_issues.completed_at)
-        operator: 'matches'
-        value: '2026-02-01 - 2026-02-28'
-      }
-      values: [
+      rows: [
         VizFieldFull {
-          label: 'Completed issue (Last 30D)'
-          ref: r(reporting_project_management.completed_issue)
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-        },
-        VizFieldFull {
-          ref: 'lm_completed_issue'
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-        },
-        VizFieldFull {
-          ref: 'completed_issue_color'
-          format {
-            type: 'text'
-          }
-        },
-        VizFieldFull {
-          ref: 'completed_issue_icon'
+          label: 'Project Name'
+          ref: r(reporting_project.name)
           format {
             type: 'text'
           }
         }
       ]
-      content: @md <style>
-
-  .kpi-title {
-    margin: 0;
-    color: #8e94a5;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .kpi-main {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-top: 12px;
-  }
-  .kpi-shipped-value {
-    font-size: 52px;
-    font-weight: 500;
-    color: #5DB88F;
-    line-height: 1;
-  }
-  .kpi-percent {
-    font-weight: 700;
-    font-size: 20px;
-  }
-  .kpi-footer {
-    margin: 12px 0 0 0;
-    font-size: 15px;
-    color: #525866;
-  }
-  .kpi-shipped-compare {
-    color: {{ rows[0].values.`Completed Issue Color` }};
-    font-weight: 500
-  }
-  
-</style>
-
-<div>
-  <p class="kpi-title">Shipped (30D)</p>
-  <span class="kpi-shipped-value">
-    {{ rows[0].values.`Completed issue (Last 30D)` }}
-  </span>
-
-  <div class="kpi-shipped-compare" style="margin-top: 8px">
-      {{ rows[0].values.`Completed Issue Icon` }}
-      {{ rows[0].values.`%LM - Completed issue` }}
-  <span style="color: #525866;">
-      vs last month</span>
-  </div>
-
-</div>               ;;
-      settings {
-        show_row_total: true
-        show_column_total: true
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-      }
-    }
-  }
-  block v_3vr6: VizBlock {
-    label: 'Avg Cycle Time (30D) copy'
-    viz: MarkdownViz {
-      dataset: reporting_project_management
-      calculation metric_e98dbc4 {
-        label: 'LM - Completed issue'
-        formula: @aql metric_63f4786 | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true);;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation metric_abbd5a2 {
-        label: '%LM - Completed issue'
-        formula: @aql safe_divide(metric_63f4786, metric_63f4786 | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation color_condition {
-        label: 'Completed issue - Color Condition'
-        formula: @aql case(
-  when: metric_abbd5a2 < 0,
-  then: "red",
-  else: "green"
-);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation icon_condition {
-        label: 'Completed issue - Icon Condition'
-        formula: @aql case(
-  when: metric_abbd5a2 < 0,
-  then: "▾",
-  else: "▴"
-);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation metric_02fef53 {
-        label: 'Cycle Time - Color Condition'
-        formula: @aql case(
-  when: avg_cycle_time < 0,
-  then: "green",
-  else: "red"
-);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation metric_8cf2423 {
-        label: 'Cycle Time - Icon Condition'
-        formula: @aql case(
-  when: avg_cycle_time < 0,
-  then: "▾",
-  else: "▴"
-);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation avg_cycle_time {
-        label: '%LM - Avg Cycle Time'
-        formula: @aql safe_divide(avg(reporting_issues, reporting_issues.cycle_time_hours), avg(reporting_issues, reporting_issues.cycle_time_hours) | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation avg_cycle_time_color {
-        label: 'Avg Cycle Time Color'
-        formula: @aql case(
-      when: percent_lm_avg_cycle_time > 0,
-      then: "rgb(248, 113, 113)",
-      else: "#4ade80"
-    );;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation avg_cycle_time_icon {
-        label: 'Avg Cycle Time Icon'
-        formula: @aql case(
-      when:  percent_lm_avg_cycle_time < 0,
-      then: "▼",
-      else: "▲"
-    );;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      filter {
-        field: r(reporting_issues.completed_at)
-        operator: 'matches'
-        value: '2026-02-01 - 2026-02-28'
-      }
       values: [
         VizFieldFull {
-          label: 'Avg Cycle Time'
-          ref: r(reporting_issues.cycle_time_hours)
-          aggregation: 'avg'
+          ref: 'completed_issue_dec'
           format {
             type: 'number'
             pattern: '#,###'
           }
         },
         VizFieldFull {
-          ref: 'avg_cycle_time'
+          ref: 'completed_issue_nov'
           format {
             type: 'number'
-            pattern: '#,###%'
+            pattern: '#,###'
           }
         },
         VizFieldFull {
-          ref: 'avg_cycle_time_icon'
+          ref: 'pop_comparison_of_completed_issue_dec_2025'
           format {
-            type: 'text'
+            type: 'number'
+            pattern: '#,###0.00%'
           }
         },
         VizFieldFull {
-          ref: 'avg_cycle_time_color'
+          ref: 'duration_day_dec'
+          format {
+            type: 'number'
+            pattern: '#,##0.0'
+          }
+        },
+        VizFieldFull {
+          ref: '_duration_day_lm'
+          format {
+            type: 'number'
+            pattern: '#,###0.00%'
+          }
+        },
+        VizFieldFull {
+          ref: 'condition_formatting'
           format {
             type: 'text'
           }
         }
       ]
       content: @md <style>
-  .kpi-title {
-    margin: 0;
+  .pm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: inherit;
+    font-size: 12px;
+  }
+  .pm-table th {
+    background: #f3f4f6;
     color: #8e94a5;
-    font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 2px solid #e5e7eb;
+    white-space: nowrap;
   }
-  .kpi-main {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-top: 12px;
-  }
-  .kpi-cycle-value {
-    font-size: 52px;
-    font-weight: 500;
-    color: #206bc4;
-    line-height: 1;
-  }
-  .kpi-percent {
-    font-weight: 700;
-    font-size: 20px;
-  }
-  .kpi-footer {
-    margin: 12px 0 0 0;
-    font-size: 15px;
+  .pm-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e5e7eb;
     color: #525866;
+    text-align: center;
+    vertical-align: middle;
   }
-  .kpi-cycle-compare {
-    color: {{ rows[0].values.`Avg Cycle Time Color` }};
+  .pm-table td.col-project {
+    text-align: left;
     font-weight: 500;
+    color: #1a202c;
   }
-  
+
+  /* --- Global Conditional Formatting (Applied dynamically by JS) --- */
+  .pm-table td.negative {
+    color: #b91c1c;
+    background-color: #fee2e2;
+    font-weight: 600;
+  }
+  .pm-table td.positive {
+    color: #15803d;
+    background-color: #dcfce7;
+    font-weight: 600;
+  }
+
+  /* --- Global SVG Icon Setup --- */
+  .pm-table td.positive::before,
+  .pm-table td.negative::before {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    vertical-align: -1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    content: "";
+  }
+  .pm-table td.positive::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315803d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5'/%3E%3Cpath d='M5 12l7-7 7 7'/%3E%3C/svg%3E");
+  }
+  .pm-table td.negative::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b91c1c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='M19 12l-7 7-7-7'/%3E%3C/svg%3E");
+  }
 </style>
 
-<div>
-  <p class="kpi-title">Avg Cycle Time (30D)</p>
-  <span class="kpi-cycle-value">
-    {{ rows[0].values.`Avg Cycle Time` }}h
-  </span>
+<table class="pm-table">
+  <thead>
+    <tr>
+      <th class="col-project">Project Name</th>
+      <th>Duration Day (Dec 2025)</th>
+      <th>Duration Day (Compared to Nov 25)</th>
+    </tr>
+  </thead>
 
-  <div class="kpi-cycle-compare" style="margin-top: 8px">
-      {{ rows[0].values.`Avg Cycle Time Icon` }}
-      {{ rows[0].values.`%LM - Avg Cycle Time` }}
-  <span style="color: #525866;">
-      vs last month</span>
-  </div>
-
-</div>           ;;
+  <tbody>
+  {% map(rows) %}
+  <tr>
+    <td class="col-project">{{ `Project Name` }}</td>
+    <td>{{ values.`Duration Day Dec 2025` }}</td>
+    <td class="format-me" data-raw="{{ values.`% Duration day LM`.raw }}">{{ values.`% Duration day LM`.formatted }}</td>
+  </tr>
+  {% end %}
+  </tbody>
+</table> ;;
       settings {
-        show_row_total: true
-        show_column_total: true
         aggregate_awareness {
           enabled: true
           debug_comments: true
@@ -3927,208 +3810,257 @@ case(
       hide_label: true
     }
   }
-  block v_cijs: VizBlock {
-    label: 'Avg Cycle Time (30D) copy copy'
-    viz: MarkdownViz {
-      dataset: reporting_project_management
-      calculation metric_e98dbc4 {
-        label: 'LM - Completed issue'
-        formula: @aql metric_63f4786 | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true);;
+  block v_fb2g: VizBlock {
+    label: 'Campaign, Revenue Won and 2 more'
+    viz: DataTable {
+      dataset: vy_pbi_dts
+      calculation revenue_won_mar_2021 {
+        label: 'Revenue Won Mar 2021'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(2021-03));;
         calc_type: 'measure'
         data_type: 'number'
       }
-      calculation metric_abbd5a2 {
-        label: '%LM - Completed issue'
-        formula: @aql safe_divide(metric_63f4786, metric_63f4786 | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
+      calculation revenue_won_apr_2021 {
+        label: 'Revenue Won Apr 2021'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(2021-04));;
         calc_type: 'measure'
         data_type: 'number'
       }
-      calculation color_condition {
-        label: 'Completed issue - Color Condition'
-        formula: @aql case(
-  when: metric_abbd5a2 < 0,
-  then: "red",
-  else: "green"
-);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation icon_condition {
-        label: 'Completed issue - Icon Condition'
-        formula: @aql case(
-  when: metric_abbd5a2 < 0,
-  then: "▾",
-  else: "▴"
-);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation metric_02fef53 {
-        label: 'Cycle Time - Color Condition'
-        formula: @aql case(
-  when: avg_cycle_time < 0,
-  then: "green",
-  else: "red"
-);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation metric_8cf2423 {
-        label: 'Cycle Time - Icon Condition'
-        formula: @aql case(
-  when: avg_cycle_time < 0,
-  then: "▾",
-  else: "▴"
-);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation avg_cycle_time {
-        label: '%LM - Avg Cycle Time'
-        formula: @aql safe_divide(avg(reporting_issues, reporting_issues.cycle_time_hours), avg(reporting_issues, reporting_issues.cycle_time_hours) | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql coalesce(revenue_won_mar_2021, 0);;
         calc_type: 'measure'
         data_type: 'number'
       }
-      calculation percent_issue_completion {
-        label: '% Issue Completion'
-        formula: @aql completed_issue / count_distinct(reporting_issues.id);;
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql coalesce(revenue_won_apr_2021, 0);;
         calc_type: 'measure'
         data_type: 'number'
       }
-      calculation delta_percent_issue_completion {
-        label: 'Delta - % Issue Completion'
-        formula: @aql percent_issue_completion - lm_percent_issue_completion;;
+      calculation delta_value {
+        label: 'Delta Value'
+        formula: @aql comparison_value - base_value;;
         calc_type: 'measure'
         data_type: 'number'
       }
-      calculation delta_percent_issue_completion_color {
-        label: 'Delta - % Issue Completion Color'
-        formula: @aql case(
-  when: delta_percent_issue_completion < 0,
-  then: "rgb(248, 113, 113)",
-  else: "#5DB88F"
-);;
+      calculation campaigns_in_either_month {
+        label: 'Campaigns In Either Month'
+        formula: @aql unique(vy_campaigns_csv.campaign)
+  | filter(revenue_won_mar_2021 is not null or revenue_won_apr_2021 is not null);;
         calc_type: 'measure'
-        data_type: 'text'
+        data_type: 'json'
       }
-      calculation delta_percent_issue_completion_icon {
-        label: 'Delta- % Issue Completion Icon'
-        formula: @aql case(
-      when: delta_percent_issue_completion < 0,
-      then: "▼",
-      else: "▲"
-    );;
+      calculation lm_revenue_won {
+        label: 'LM Revenue Won'
+        formula: @aql revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month), strict: true);;
         calc_type: 'measure'
-        data_type: 'text'
+        data_type: 'number'
       }
-      calculation lm_percent_issue_completion {
-        label: 'LM - % Issue Completion'
-        formula: @aql percent_issue_completion | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true);;
+      calculation _lm_revenue_won {
+        label: '% LM Revenue Won'
+        formula: @aql safe_divide(revenue_won, revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+        format {
+          type: 'number'
+          pattern: '#,###0.00%'
+        }
+      }
+      filter {
+        field: r(vy_opportunities_csv.close_date)
+        operator: 'matches'
+        value: 'april 2021'
+      }
+      fields: [
+        VizFieldFull {
+          label: 'Campaign'
+          ref: r(vy_campaigns_csv.campaign)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(vy_pbi_dts.revenue_won)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: 'lm_revenue_won'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: '_lm_revenue_won'
+          format {
+            type: 'number'
+            pattern: '#,###0.00%'
+          }
+          uname: 'custom__lm_revenue_won_1'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'custom__lm_revenue_won_1'
+            direction: 'desc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_wxn2: VizBlock {
+    label: 'Jan 2021, Dec 2020 and 2 more by Product Category'
+    viz: ColumnChart {
+      dataset: vy_pbi_dts
+      calculation base_won_count {
+        label: 'Base Won Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') | where(vy_opportunity_calendar_csv.year_month is @(2021-01)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_lost_count {
+        label: 'Base Lost Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') | where(vy_opportunity_calendar_csv.year_month is @(2021-01)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_won_count {
+        label: 'Comparison Won Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') | where(vy_opportunity_calendar_csv.year_month is @(2020-12)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_lost_count {
+        label: 'Comparison Lost Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') | where(vy_opportunity_calendar_csv.year_month is @(2020-12)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value_raw {
+        label: 'Base Value Raw'
+        formula: @aql safe_divide(base_won_count, base_won_count + base_lost_count);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_raw {
+        label: 'Comparison Value Raw'
+        formula: @aql safe_divide(comparison_won_count, comparison_won_count + comparison_lost_count);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql coalesce(base_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql coalesce(comparison_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Delta Value'
+        formula: @aql base_value - comparison_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation pct_delta {
+        label: 'Pct Delta'
+        formula: @aql safe_divide(delta_value, comparison_value) * 100.0;;
         calc_type: 'measure'
         data_type: 'number'
       }
       filter {
-        field: r(reporting_issues.completed_at)
+        field: r(vy_opportunity_calendar_csv.year_month)
         operator: 'matches'
-        value: '2026-02-14 - 2026-02-28'
+        value: '2020-12 - 2021-01'
       }
-      values: [
-        VizFieldFull {
-          ref: 'percent_issue_completion'
-          format {
-            type: 'number'
-            pattern: '#,###%'
+      x_axis: VizFieldFull {
+        label: 'Product Category'
+        ref: r(vy_products_csv.product_category)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Close %'
+        series {
+          field: VizFieldFull {
+            label: 'Jan 2021'
+            ref: 'base_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#0891F2'
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Dec 2020'
+            ref: 'comparison_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#F1434B'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Δ'
+            ref: 'delta_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
           }
         },
-        VizFieldFull {
-          ref: 'lm_percent_issue_completion'
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-        },
-        VizFieldFull {
-          ref: 'delta_percent_issue_completion'
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-        },
-        VizFieldFull {
-          ref: 'delta_percent_issue_completion_color'
-          format {
-            type: 'text'
-          }
-        },
-        VizFieldFull {
-          ref: 'delta_percent_issue_completion_icon'
-          format {
-            type: 'text'
+        VizTooltip {
+          field: VizFieldFull {
+            label: '% Change'
+            ref: 'pct_delta'
+            format {
+              type: 'number'
+              pattern: '#,###0.0\\%'
+            }
           }
         }
       ]
-      content: @md <style>
-  .kpi-title {
-    margin: 0;
-    color: #8e94a5;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .kpi-main {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-top: 12px;
-  }
-  .kpi-completion-value {
-    font-size: 52px;
-    font-weight: 500;
-    color: #5DB88F;
-    line-height: 1;
-  }
-  .kpi-percent {
-    font-weight: 700;
-    font-size: 20px;
-  }
-  .kpi-footer {
-    margin: 12px 0 0 0;
-    font-size: 15px;
-    color: #525866;
-  }
-  .kpi-completion-compare {
-    color: {{ rows[0].values.`Delta - % Issue Completion Color` }};
-    font-weight: 500;
-  }
-  
-</style>
-
-<div>
-  <p class="kpi-title">Completion (14D)</p>
-  <span class="kpi-completion-value">
-    {{ rows[0].values.`% Issue Completion` }}
-  </span>
-
-  <div class="kpi-completion-compare" style="margin-top: 8px">
-      {{ rows[0].values.`Delta- % Issue Completion Icon` }}
-      {{ rows[0].values.`Delta - % Issue Completion` }}
-  <span style="color: #525866;">
-      vs last month</span>
-  </div>
-
-</div>          ;;
       settings {
-        show_row_total: true
-        show_column_total: true
+        show_rows_with_no_data: true
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'tooltip'
+        }
+        x_axis_label: 'Product Category'
+        x_axis_show_null_datetime: true
         aggregate_awareness {
           enabled: true
           debug_comments: true
         }
       }
-    }
-    settings {
-      hide_label: true
     }
   }
   interactions: [
@@ -4523,11 +4455,11 @@ case(
             'v4',
             'v_nehb'
           ]
-          field: r(vyht_ecommerce_orders_1.created_at)
+          field: ref('vyht_ecommerce_orders_1', 'created_at')
         },
         CustomMapping {
           block: 'v_cii9'
-          field: r(bq_fct_order_items.created_at)
+          field: ref('bq_fct_order_items', 'created_at')
         }
       ]
     },
@@ -5054,9 +4986,7 @@ case(
             'v_9oui',
             'v_lrzt',
             'v_02lk',
-            'v_c0sc',
-            'v_3vr6',
-            'v_cijs'
+            'v_c0sc'
           ]
           disabled: true
         }
@@ -5070,9 +5000,7 @@ case(
             'v_9oui',
             'v_lrzt',
             'v_02lk',
-            'v_c0sc',
-            'v_3vr6',
-            'v_cijs'
+            'v_c0sc'
           ]
           disabled: true
         }
@@ -5085,9 +5013,7 @@ case(
           block: [
             'v_d9k9',
             'v_zspi',
-            'v_c0sc',
-            'v_3vr6',
-            'v_cijs'
+            'v_c0sc'
           ]
           disabled: true
         }
@@ -5100,9 +5026,7 @@ case(
           block: [
             'v_d9k9',
             'v_zspi',
-            'v_c0sc',
-            'v_3vr6',
-            'v_cijs'
+            'v_c0sc'
           ]
           disabled: true
         }
@@ -5115,10 +5039,26 @@ case(
           block: [
             'v_d9k9',
             'v_zspi',
-            'v_c0sc',
-            'v_3vr6',
-            'v_cijs'
+            'v_c0sc'
           ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_qpsb'
+      to: [
+        CustomMapping {
+          block: 'v_wxn2'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_j070'
+      to: [
+        CustomMapping {
+          block: 'v_wxn2'
           disabled: true
         }
       ]
@@ -5195,30 +5135,12 @@ case(
       ]
     },
     FilterInteraction {
-      from: 'v_3vr6'
+      from: 'v_wxn2'
       to: [
         CustomMapping {
           block: [
-            'v_d9k9',
-            'v_zspi',
-            'v_9oui',
-            'v_lrzt',
-            'v_02lk'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_cijs'
-      to: [
-        CustomMapping {
-          block: [
-            'v_d9k9',
-            'v_zspi',
-            'v_9oui',
-            'v_lrzt',
-            'v_02lk'
+            'v_qpsb',
+            'v_j070'
           ]
           disabled: true
         }
@@ -5233,7 +5155,7 @@ case(
             'v_3mef',
             'v_ck6w'
           ]
-          field: r(ecommerce_countries.continent_name)
+          field: ref('ecommerce_countries', 'continent_name')
         }
       ]
     }

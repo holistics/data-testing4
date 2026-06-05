@@ -1,5 +1,5 @@
 Dataset vyhuynh_ecommerce_dataset {
-  label: 'VyHuynh Ecommerce Dataset'
+  label: 'Ecommerce Dataset'
   description: ''
   data_source_name: 'demodb'
   models: [
