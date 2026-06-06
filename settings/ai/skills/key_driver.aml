@@ -88,10 +88,17 @@ Before running any phase, check the conversation history for a **Change Analysis
 
 **If found** — this skill was triggered from the `change_analysis` orchestrator:
 - Load `metric`, `direction`, `time_reference`, and `anomaly_verdict` from the block.
-- In Phase 1: use the loaded `metric` directly — do not re-ask for it. Treat `time_reference`
-  as the user's stated period and proceed with normal period resolution (single period stated →
-  base = `time_reference`, comparison = immediately preceding period). Still show the Phase 1
-  confirmation prompt if the period is ambiguous; skip it if unambiguous.
+- In Phase 1:
+  - Assign periods as follows (this logic applies only in the change_analysis flow):
+    - `base_period` = `time_reference` from the Stage 1 block (the period the user referred to)
+    - `comparison_period` = the immediately preceding period at the same granularity
+      (e.g., April 2021 → March 2021, Q2 2021 → Q1 2021, 2021 → 2020)
+  - **Do not call `ask_user` for period confirmation.** Skip the Phase 1 confirmation prompt entirely.
+  - Instead, output this plain-text announcement before proceeding to Phase 2:
+    > "You're asking me to break down **[metric]** by dimensions to see where the [drop/increase]
+    > happened the most. In this analysis, I'll compare **[comparison_period_name]** with
+    > **[base_period_name]** to see which dimensions changed the most between those periods."
+  - Then proceed directly to Phase 2.
 - In Phase 2: prepend one sentence before the standard overview, referencing the anomaly verdict:
   - If `anomaly_verdict` = Anomalous → *"The anomaly check confirmed this [drop/increase] is
     unusual. Let's find what drove it."*
