@@ -177,10 +177,20 @@ Then inspect the dataset schema and select top 3 dimensions per Core Rule 6.
 
 **Show:**
 
-Display the overview sentence immediately — **verbatim, do not paraphrase, skip, or merge with other text**:
+Execute these steps in the exact order below. Do not reorder, skip, or batch steps.
+
+**Step 1 — Output the overview sentence as plain text:**
 
 > [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
->
+
+**Step 2 — Render the overall metric change table by calling `execute_aql`** with the overall delta query from the Compute step. This table must appear immediately after the overview sentence, before any other text. Title it:
+
+> Overall [Metric] Change: [base_period_name] vs [comparison_period_name]
+
+The table must include these columns: Comparison Value, Base Value, Delta Value, Pct Change.
+
+**Step 3 — Output the transition sentence and dimension list as plain text:**
+
 > **There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most.** Here are my top [N] proposed dimensions:
 
 Follow these two steps in strict order — do NOT combine them:
