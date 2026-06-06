@@ -38,6 +38,12 @@ Skill change_analysis {
 
     Work through Steps 1–3 in order. Do not skip ahead.
 
+    **Stage 1 constraints — enforced until the Stage 1 Summary Block is output:**
+    - Do NOT call `search_viz_blocks`, `search_dashboards`, or any tool that searches for existing visualizations.
+    - Do NOT execute or reuse any existing visualization artifact, even if one appears relevant.
+    - Do NOT run a dimensional breakdown or load `key_driver` — that belongs to Stage 2 only.
+    - The only permitted path forward is Steps 1–3 below: confirm the metric, call `load_skill("detect_anomaly")`, and output the Stage 1 Summary Block.
+
     ### Step 1 — Confirm the metric
 
     Parse the user's message for:
