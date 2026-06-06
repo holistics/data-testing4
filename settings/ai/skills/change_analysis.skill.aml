@@ -15,7 +15,7 @@ Skill change_analysis {
 
     Do NOT trigger for:
       • Direct dimension breakdown requests ("break revenue down by region") — key_driver handles those
-      • Anomaly scanning with no specific change in mind ("detect anomalies in revenue") — anomaly_detection handles those
+      • Anomaly scanning with no specific change in mind ("detect anomalies in revenue") — detect_anomaly handles those
       • Forecasts or future projections
   '''
   content: @md
@@ -53,7 +53,7 @@ Skill change_analysis {
 
     ### Step 2 — Run the anomaly check
 
-    Announce what you're doing, then immediately call `load_skill("anomaly_detection")`:
+    Announce what you're doing, then immediately call `load_skill("detect_anomaly")`:
 
     > "Before we look at what drove this, let me first check whether this [drop/increase] in
     > **[metric]** is actually unusual — or just normal variation. Running the anomaly check
@@ -66,7 +66,7 @@ Skill change_analysis {
 
     **Do NOT use `ask_user` anywhere in this step.** All output here must be plain text.
 
-    Wait for `anomaly_investigate` to fully complete. The sub-skill is done when it has
+    Wait for skill `detect_anomaly` to fully complete. The sub-skill is done when it has
     output its summary prose — the sentence that states whether the value is anomalous or
     within the normal range. Do not proceed while only the chart has appeared. Do not proceed
     while the sub-skill is still mid-run.
