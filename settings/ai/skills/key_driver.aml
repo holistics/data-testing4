@@ -147,7 +147,7 @@ Determine whether confirmation is required before proceeding:
 
 When confirmation is required, use `ask_user`. The question title **must be this exact sentence** — fill in the bracketed values, do not paraphrase, shorten, or substitute any other wording:
 
-> You're asking me to analyze the [drop/increase] in **[metric]** between **[comparison_period_literal]** (comparison period) and **[base_period_literal]** (base period). Please confirm these periods before I proceed.
+> You're asking me to analyze the [drop/increase] in **[metric]** between **[comparison_period_literal]** and **[base_period_literal]**. Please confirm these periods before I proceed.
 
 Options:
 > - Yes — that's correct, proceed
@@ -196,7 +196,7 @@ Follow these two steps in strict order — do NOT combine them:
 **Step 2 — Only after the list is written, call `ask_user`** with a single yes/no question:
 > "Shall I proceed with these [N] dimensions in the order above?"
 
-**The `ask_user` call must contain only this question. Do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
+**CRITICAL: Do NOT call `ask_user` before the overview sentence and the complete dimension list have been written as plain text. Calling `ask_user` before Step 1 is complete is a hard error. The `ask_user` call must contain only this question. Do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
 
 **Wait for user response before proceeding.**
 
