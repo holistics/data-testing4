@@ -94,15 +94,12 @@ Skill change_analysis {
 
     ### Step 3 — Output the Stage 1 Summary Block
 
-    **Do NOT use `ask_user` anywhere in this step.** All output here must be plain text.
-
     Wait for `detect_anomaly` to fully complete. The sub-skill is done when it has
     output its summary prose — the sentence that states whether the value is anomalous or
     within the normal range. Do not proceed while only the chart has appeared. Do not proceed
     while the sub-skill is still mid-run.
 
-    Once the sub-skill's prose verdict is visible, output the following as plain text in this
-    exact order — do not merge, skip, or replace any part with an `ask_user` call:
+    Once the sub-skill's prose verdict is visible, output the following in this exact order:
 
     **1. Plain-language verdict sentence** (bold):
 
@@ -120,20 +117,23 @@ Skill change_analysis {
     - If within normal range:
       `This falls within the expected range based on historical patterns — it may just be regular variation, so there may not be much to act on.`
 
-    **3. The Stage 1 Summary Block as plain markdown** — this is the handoff marker for Stage 2:
+    **3. The Stage 1 Summary Block as plain markdown** — output these fields as plain text (this is the handoff marker for Stage 2 detection):
 
     ---
     **Change Analysis — Stage 1 complete**
     - **Metric**: [metric]
     - **Change**: [drop/increase] [time_reference]
     - **Anomaly verdict**: [Anomalous / Within normal range]
-
-    How would you like to proceed?
-    1. **Break down by dimensions** — find which segments (e.g., region, plan, product, channel) drove the [drop/increase] the most
-    2. **Decompose the metric** *(coming soon)* — split the metric into its components to see which part shifted
     ---
 
-    **Stop here.** Wait for the user to reply in natural language before proceeding to Stage 2.
+    **4. Call `ask_user`** to present the next-step choices:
+
+    - message: `"How would you like to proceed?"`
+    - options:
+      - `"Break down by dimensions — find which segments (e.g., region, plan, product, channel) drove the [drop/increase] the most"`
+      - `"Decompose the metric (coming soon) — split the metric into its components to see which part shifted"`
+
+    **Stop here.** Wait for the user's selection before proceeding to Stage 2.
 
     ---
 
