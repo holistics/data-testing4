@@ -2,7 +2,13 @@ Skill key_driver {
 
 label: 'Key Driver'
 
-description: 'Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting. Trigger on: "Why did close rate drop from Feb to Mar?", "Explain the increase in conversion between Q1 and Q2", "What drove the revenue decline last month?", "Break down the change in win rate between these two periods." Do not trigger for forecasts, general metric exploration, or comparisons without a directional change to explain.'
+description: '''Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting.
+Trigger on:
+- "Why did close rate drop from Feb to Mar?",
+- "Explain the increase in conversion between Q1 and Q2",
+- "What drove the revenue decline last month?",
+- "Break down the change in win rate between these two periods."
+Do not trigger for forecasts, general metric exploration, or comparisons without a directional change to explain.'''
 
 allow_switching_invocation: true
 
@@ -177,25 +183,23 @@ Then inspect the dataset schema and select top 3 dimensions per Core Rule 6.
 
 **Show:**
 
-Execute these steps in the exact order below. Do not reorder, skip, or batch steps.
+Execute these five steps in the exact order below. Do not reorder, skip, or batch any step.
 
 **Step 1 — Output the overview sentence as plain text:**
 
 > [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
 
-**Step 2 — Render the overall metric change table by calling `execute_aql`** with the overall delta query from the Compute step. This table must appear immediately after the overview sentence, before any other text. Title it:
+**Step 2 — Call `execute_aql`** with the overall delta query from the Compute step. This renders the overall metric change table immediately after the overview sentence. Title it:
 
 > Overall [Metric] Change: [base_period_name] vs [comparison_period_name]
 
 The table must include these columns: Comparison Value, Base Value, Delta Value, Pct Change.
 
-**Step 3 — Output the transition sentence and dimension list as plain text:**
+**Step 3 — Output the transition sentence as plain text:**
 
 > **There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most.** Here are my top [N] proposed dimensions:
 
-Follow these two steps in strict order — do NOT combine them:
-
-**Step 1 — Output the dimension list as plain text.** This is a text output step, not a tool call. Write the numbered list directly in your response. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
+**Step 4 — Output the dimension list as plain text.** This is a text output step, not a tool call. Write the numbered list directly in your response. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
 
 > **1. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 >
@@ -203,10 +207,10 @@ Follow these two steps in strict order — do NOT combine them:
 >
 > **3. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 
-**Step 2 — Only after the list is written, call `ask_user`** with a single yes/no question:
+**Step 5 — Call `ask_user`** with a single yes/no question:
 > "Shall I proceed with these [N] dimensions in the order above?"
 
-**CRITICAL: Do NOT call `ask_user` before the overview sentence and the complete dimension list have been written as plain text. Calling `ask_user` before Step 1 is complete is a hard error. The `ask_user` call must contain only this question. Do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
+**CRITICAL: Steps 1–4 must all be complete before calling `ask_user` in Step 5. Do NOT call `ask_user` earlier. The `ask_user` call must contain only this question — do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
 
 **Wait for user response before proceeding.**
 
