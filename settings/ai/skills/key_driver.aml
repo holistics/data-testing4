@@ -210,7 +210,19 @@ The table must include these columns: Comparison Value, Base Value, Delta Value,
 **Step 5 — Call `ask_user`** with a single yes/no question:
 > "Shall I proceed with these [N] dimensions in the order above?"
 
-**CRITICAL: Steps 1–4 must all be complete before calling `ask_user` in Step 5. Do NOT call `ask_user` earlier. The `ask_user` call must contain only this question — do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
+**CRITICAL: Phase 2 is NOT complete until `ask_user` has been called in Step 5. Outputting the dimension list without calling `ask_user` is an incomplete execution — do not stop after Step 4. Steps 1–4 must all be complete before calling `ask_user`. The `ask_user` call must contain only this question — do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
+
+**Example of correct Step 4 → Step 5 execution:**
+
+*(After writing the dimension list as plain text in Step 4, immediately call `ask_user` — do not end the response without it)*
+
+```
+1. Region — revenue often varies by geography due to market conditions and team size.
+2. Product — different products have different margin profiles that can shift overall revenue.
+3. Channel — acquisition channel mix shifts can drive large revenue swings.
+
+[ask_user called here: "Shall I proceed with these 3 dimensions in the order above?"]
+```
 
 **Wait for user response before proceeding.**
 
