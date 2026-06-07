@@ -24,6 +24,8 @@ Skill change_analysis {
     This skill runs in two stages. Check for a Stage 1 Summary Block in the conversation
     history before doing anything else.
 
+    **No-switch guardrail:** Once this skill is loaded, Stage 1 must complete exactly as written before any metric decomposition, dimensional breakdown, existing-viz reuse, or shortcut analysis is performed. If a faster explanation appears to be available, complete Stage 1 first — then present that explanation as a follow-up option after the Stage 1 Summary Block is output.
+
     ## Stage 2 Detection
 
     Scan the conversation history for a **Change Analysis — Stage 1 complete** block.
@@ -31,6 +33,26 @@ Skill change_analysis {
     - **If found**: this is a Stage 2 invocation. Load `metric`, `direction`, `time_reference`,
       and `anomaly_verdict` directly from that block. Skip to **Stage 2** below.
     - **If not found**: this is a fresh invocation. Run **Stage 1** from the top.
+
+    ---
+
+    ## Skip Check — fresh invocations only
+
+    Before running Stage 1, check whether the user's message already establishes the change as clearly real. If so, skip the anomaly check and go directly to dimensional breakdown — the check adds no value when the signal is already evident.
+
+    **Skip Stage 1 if either of these is true:**
+
+    1. **Magnitude is stated**: the user gives a specific number or fraction for the change — e.g., "dropped 40%", "fell by $200K", "down by half", "lost 30% of users".
+    2. **Business cause is named**: the user identifies a specific event as context — e.g., "after we lost our biggest client", "since the price increase", "following the outage last week".
+
+    **If a skip condition is met:**
+
+    Announce it:
+    > "Since [reason — e.g., 'the 40% drop you mentioned makes it clear this is a real change'], I'll skip the anomaly check and go straight to finding what drove it."
+
+    Then call `load_skill("key_driver")` directly. Do not output a Stage 1 Summary Block.
+
+    **If no skip condition is met** (open-ended "why did X drop?" with no magnitude or named cause): proceed with Stage 1 as written below.
 
     ---
 
@@ -42,6 +64,9 @@ Skill change_analysis {
     - Do NOT call `search_viz_blocks`, `search_dashboards`, or any tool that searches for existing visualizations.
     - Do NOT execute or reuse any existing visualization artifact, even if one appears relevant.
     - Do NOT run a dimensional breakdown or load `key_driver` — that belongs to Stage 2 only.
+    - Do NOT perform metric decomposition — even when the metric formula is obvious or available in the dataset. Decomposition belongs after the anomaly verdict or after the user explicitly chooses that path.
+    - Do NOT give any direct explanation, analysis, or conclusion about why the metric changed — that belongs to Stage 2.
+    - Existing or pinned viz data may be used only to identify `metric`, `direction`, and `time_reference`. It must not replace the required anomaly check.
     - The only permitted path forward is Steps 1–3 below: confirm the metric, call `load_skill("detect_anomaly")`, and output the Stage 1 Summary Block.
 
     ### Step 1 — Confirm the metric
@@ -65,8 +90,7 @@ Skill change_analysis {
     > **[metric]** is actually unusual — or just normal variation. Running the anomaly check
     > now..."
 
-    The sub-skill handles everything else: dataset resolution, time point confirmation,
-    baseline method selection, and chart output. Do not interrupt its flow.
+    `load_skill("detect_anomaly")` means: **fully execute detect_anomaly's entire workflow — all five steps — before returning to this skill.** Do NOT summarize, explain, or draw conclusions from the metric context while detect_anomaly is running. The sub-skill is not complete until its Step 5 prose verdict is visible in the conversation.
 
     ### Step 3 — Output the Stage 1 Summary Block
 

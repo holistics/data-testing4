@@ -291,21 +291,20 @@ Always show this, even when the user accepted the proposed list without changes.
 2. The grouped ColumnChart generated above — **this is the only viz output at this step, no DataTable**
 3. One sentence summarizing the overall picture for this dimension (e.g. which direction most segments moved, whether the change was concentrated or spread).
 
-4. Segment breakdown in bullet points — list drivers first, then offsets. Each bullet must include the segment name, its values in both periods, delta, and contribution %:
+4. Segment breakdown in bullet points — list drivers first, then offsets. Show top 3 of each. If fewer than 3 exist, show all. Do not add a summary line for the remainder.
 
    **Drivers** (segments moving in the same direction as the overall change):
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - *+ [N] more drivers accounting for [X]% of the net change.*
 
-   **Offsets** (segments moving against the overall change):
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - *+ [N] more offsets accounting for [X]% of the net change.*
+   For each driver, apply the contribution % display rule:
+   - If `|contribution_pct| ≤ 100%`: `**[Segment]**: [comparison_value] → [base_value] (Δ [±delta], [contribution_pct]% of net change)`
+   - If `|contribution_pct| > 100%`: `**[Segment]**: [comparison_value] → [base_value] (Δ [±delta], [N]× the net change)` where [N] = round(|contribution_pct| / 100, 1)
 
-   Show the top 3 drivers and top 3 offsets by absolute contribution. If there are fewer than 3, show all. Collapse any remainder into the summary line above. Omit the Offsets section entirely if there are none. Omit the summary line if there is no remainder.
+   **Segments moving against the overall change:**
+
+   Do not display contribution % for these segments. Format each as:
+   - `**[Segment]**: [comparison_value] → [base_value] (Δ [±delta])`
+
+   Omit this section entirely if there are none.
 
 5. Conditional flags — each as its own bullet, only when applicable:
    - `↑ [Segment] bucked the trend ([comparison_value] → [base_value], [±delta]).`
@@ -336,6 +335,10 @@ Ranked table of all confirmed dimensions, sorted by `dimension_driver_pct` desce
 | Dimension | Top Segment | Contribution to change | Δ |
 |-----------|-------------|------------------------|---|
 | … | | | |
+
+For the **Contribution to change** column, apply the same threshold rule as the per-segment display:
+- If `|dimension_driver_pct| ≤ 100%`: show `[dimension_driver_pct]%`
+- If `|dimension_driver_pct| > 100%`: show `[N]× the net change` where [N] = round(|dimension_driver_pct| / 100, 1)
 
 **Conditionally include (one line each):**
 
