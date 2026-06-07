@@ -229,9 +229,19 @@ The table must include these columns: Comparison Value, Base Value, Delta Value,
 > - **Dimension 1**: [dim1]
 > - **Dimension 2**: [dim2]
 > - **Dimension 3**: [dim3]
->
-> Shall I proceed to break down **[metric]** by each of these dimensions to see where the [drop/increase] happened the most?
 > ---
+
+Then immediately call `ask_user`:
+> "Shall I proceed to break down **[metric]** by each of these dimensions to see where the [drop/increase] happened the most?"
+
+Options:
+> - Yes — proceed
+> - No — I want to change something
+
+**Wait for user response before proceeding.**
+
+- **Yes** → STOP this run. Stage 2 Detection will pick up on the next invocation.
+- **No** → ask what to change, update the list, re-output the Stage 1 Summary Block, and call `ask_user` again.
 
 ---
 
