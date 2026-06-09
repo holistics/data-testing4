@@ -199,13 +199,13 @@ The table must include these columns: Comparison Value, Base Value, Delta Value,
 
 > **There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most.** Here are my top [N] proposed dimensions:
 
-**Step 4 — Output the dimension list as plain text.** This is a text output step, not a tool call. Write the numbered list directly in your response. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
+**Step 4 — Output the dimension list as plain text.** This is a text output step, not a tool call. Write the numbered list directly in your response. Each item must include a short reason — **5–8 words max, business-focused, no technical jargon**:
 
-> **1. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
+> **1. Dimension Name** — short business reason (e.g. "varies most by sales team", "differs by product line")
 >
-> **2. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
+> **2. Dimension Name** — short business reason
 >
-> **3. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
+> **3. Dimension Name** — short business reason
 
 **Step 5 — Call `ask_user`** with a single yes/no question:
 > "Shall I proceed with these [N] dimensions in the order above?"

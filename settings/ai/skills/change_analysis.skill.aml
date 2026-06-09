@@ -38,21 +38,37 @@ Skill change_analysis {
 
     ## Skip Check — fresh invocations only
 
-    Before running Stage 1, check whether the user's message already establishes the change as clearly real. If so, skip the anomaly check and go directly to dimensional breakdown — the check adds no value when the signal is already evident.
+    Before running Stage 1, check whether the user's message already establishes
+    the change as clearly real. If so, skip the anomaly check and go directly to
+    dimensional breakdown — the check adds no value when the signal is already evident.
 
-    **Skip Stage 1 if either of these is true:**
+    **Anti-skip override — checked FIRST:**
 
-    1. **Magnitude is stated**: the user gives a specific number or fraction for the change — e.g., "dropped 40%", "fell by $200K", "down by half", "lost 30% of users".
-    2. **Business cause is named**: the user identifies a specific event as context — e.g., "after we lost our biggest client", "since the price increase", "following the outage last week".
+    If any of these are present, DO NOT skip Stage 1 regardless of other conditions:
+    - Uncertainty hedging: "seems", "appears to", "looks like", "I think", "might have"
+    - Explicit normality question: "is this normal", "should I be worried",
+      "is this expected", "is this unusual", "is that a lot"
+    - Vague magnitude: "a bit", "slightly", "somewhat", "a little"
 
-    **If a skip condition is met:**
+    These signals mean the user wants validation — which is exactly what Stage 1 provides.
 
-    Announce it:
-    > "Since [reason — e.g., 'the 40% drop you mentioned makes it clear this is a real change'], I'll skip the anomaly check and go straight to finding what drove it."
+    **Skip Stage 1 if no anti-skip signal is present AND any of these is true:**
 
-    Then call `load_skill("key_driver")` directly. Do not output a Stage 1 Summary Block.
+    1. **Large magnitude is stated**: the user gives a specific number that is
+      unambiguously significant — e.g., "dropped 40%", "fell by $200K", "down by half".
+      Small or ambiguous magnitudes ("dipped 3%", "down slightly") do not qualify
+      unless paired with confident, action-oriented language.
 
-    **If no skip condition is met** (open-ended "why did X drop?" with no magnitude or named cause): proceed with Stage 1 as written below.
+    2. **A specific, non-recurring business event is named**: the user identifies a
+      discrete action or incident as context — e.g., "after we lost our biggest client",
+      "since the price increase", "following the outage". Seasonal or cyclical references
+      ("after the holidays", "end of quarter", "summer slowdown") do NOT qualify —
+      these are what the anomaly check contextualizes.
+
+    3. **Decomposition intent is explicit**: the user's phrasing requests a breakdown
+      or attribution rather than an explanation — e.g., "which regions drove it",
+      "where did the drop come from", "was it churn or contraction",
+      "is it Enterprise or SMB".
 
     ---
 
