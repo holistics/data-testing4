@@ -142,21 +142,13 @@ Skill change_analysis {
     - **Anomaly verdict**: [Anomalous / Within normal range]
     ---
 
-    **4. Call `ask_user`** to present the next-step choices.
+    **4. Output the proceed question as plain text** — do NOT call `ask_user` or format options as markdown links. Output this immediately after the Stage 1 Summary Block:
 
-    **GATE — do not call `ask_user` until ALL of the following are true:**
-    1. detect_anomaly's Step 5 closing prose is physically present in the conversation above — the sentence starting "Found N unusual…" or "No unusual values in…"
-    2. The Stage 1 Summary Block (`---` delimited block above) has been output as plain text
+    How would you like to proceed?
+    1. Break down by dimensions — find which segments (e.g., region, plan, product, channel) drove the [drop/increase] the most
+    2. Decompose the metric *(coming soon)* — split the metric into its components to see which part shifted
 
-    If either condition is not yet met, wait — do not call `ask_user` and do not proceed.
-
-    Once both conditions are confirmed, call `ask_user` with:
-    - message: `"How would you like to proceed?"`
-    - options:
-      - `"Break down by dimensions — find which segments (e.g., region, plan, product, channel) drove the [drop/increase] the most"`
-      - `"Decompose the metric (coming soon) — split the metric into its components to see which part shifted"`
-
-    **Stop here.** Wait for the user's selection before proceeding to Stage 2.
+    **Stop here.** Stage 1 is complete. Wait for the user to reply in the chat — Stage 2 Detection will handle their response on the next invocation.
 
     ---
 

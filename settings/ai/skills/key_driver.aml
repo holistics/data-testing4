@@ -207,25 +207,7 @@ The table must include these columns: Comparison Value, Base Value, Delta Value,
 >
 > **3. Dimension Name** — short business reason
 
-**Step 5 — Call `ask_user`** with a single yes/no question:
-> "Shall I proceed with these [N] dimensions in the order above?"
-
-**Before calling `ask_user` in Step 5, verify all of the following have been output in this response:**
-- [ ] Overview sentence (Step 1) — plain text, visible in the response
-- [ ] Overall metric change table (Step 2) — rendered via `execute_aql`
-- [ ] Transition sentence (Step 3) — plain text, visible in the response
-- [ ] Numbered dimension list with one-sentence reasons (Step 4) — plain text, visible in the response
-
-**If any item above is missing, complete it before proceeding. Only once all four are present in the response may `ask_user` be called.**
-
-**The `ask_user` call must contain only this question — do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
-
-**Wait for user response before proceeding.**
-
-- **Yes** → output the Stage 1 Summary Block (format below), then STOP. Do not proceed to Phase 3 in this run.
-- **No** → ask what to change (add, remove, reorder), update the list internally, then output the Stage 1 Summary Block directly. Do not ask for re-confirmation.
-
-**Stage 1 Summary Block** — output this after dimensions are confirmed (from "Yes" or after the user updates the list):
+**Step 5 — Output the Stage 1 Summary Block as plain text, then STOP:**
 
 > ---
 > Here's a summary of what we're going to analyze:
@@ -237,19 +219,11 @@ The table must include these columns: Comparison Value, Base Value, Delta Value,
 > - **Dimension 1**: [dim1]
 > - **Dimension 2**: [dim2]
 > - **Dimension 3**: [dim3]
+>
+> Shall I proceed to break down **[metric]** by each of these dimensions to see where the [drop/increase] happened the most?
 > ---
 
-Then immediately call `ask_user`:
-> "Shall I proceed to break down **[metric]** by each of these dimensions to see where the [drop/increase] happened the most?"
-
-Options:
-> - Yes — proceed
-> - No — I want to change something
-
-**Wait for user response before proceeding.**
-
-- **Yes** → STOP this run. Stage 2 Detection will pick up on the next invocation.
-- **No** → ask what to change, update the list, re-output the Stage 1 Summary Block, and call `ask_user` again.
+**Do NOT call `ask_user` here.** Stop after outputting this block and wait for the user to reply in the chat.
 
 ---
 
@@ -257,10 +231,10 @@ Options:
 
 Before running Phase 3, check the conversation history:
 
-- **If a Stage 1 Summary Block is present** (contains confirmed metric, periods, overall delta, and dimension list): this is a Stage 2 invocation.
-  - Load metric, `base_period_literal`, `comparison_period_literal`, `overall_delta_value`, and confirmed dimension list directly from the Stage 1 Summary Block in conversation context.
-  - Do NOT re-run Phases 1 or 2. Do NOT call `fetch_dataset` or `generate_aql` for setup. Do NOT re-confirm periods or dimensions.
-  - Proceed directly to Phase 3 with dimension #1.
+- **If a Stage 1 Summary Block is present** (contains confirmed metric, periods, overall delta, and dimension list):
+  - Check the user's most recent reply:
+    - **Affirmative** (e.g. "yes", "proceed", "go ahead", "sure", "looks good") → load metric, `base_period_literal`, `comparison_period_literal`, `overall_delta_value`, and confirmed dimension list from the block. Do NOT re-run Phases 1 or 2. Proceed directly to Phase 3 with dimension #1.
+    - **Requests changes** (e.g. "remove X", "swap Y for Z", "reorder") → update the dimension list based on the feedback, output a new Stage 1 Summary Block with the updated list, and STOP. Do not proceed to Phase 3.
 
 - **If no Stage 1 Summary Block is present**: this is a fresh invocation — run from Phase 1.
 
