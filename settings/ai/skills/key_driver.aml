@@ -228,7 +228,7 @@ Before running Phase 3, check the conversation history:
 - **If a Stage 1 Summary Block is present** (contains confirmed metric, periods, overall delta, and dimension list):
   - Check the user's most recent reply:
     - **Affirmative** (e.g. "yes", "proceed", "go ahead", "sure", "looks good") → load metric, `base_period_literal`, `comparison_period_literal`, `overall_delta_value`, and confirmed dimension list from the block. Do NOT re-run Phases 1 or 2. Proceed directly to Phase 3 with dimension #1.
-    - **Requests changes** (e.g. "remove X", "swap Y for Z", "reorder") → update the dimension list based on the feedback, output a new Stage 1 Summary Block with the updated list, and STOP. Do not proceed to Phase 3.
+    - **Requests changes** (e.g. "remove X", "swap Y for Z", "add Y", "use X instead") → update the dimension list based on the feedback, output a new Stage 1 Summary Block with the updated list, then proceed directly to Phase 3. Do not stop for another confirmation.
 
 - **If no Stage 1 Summary Block is present**: this is a fresh invocation — run from Phase 1.
 
