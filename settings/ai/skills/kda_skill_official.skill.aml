@@ -1,6 +1,6 @@
-Skill key_driver {
+Skill key_driver_official {
 
-label: 'Key Driver'
+label: 'Key Driver Skill'
 
 description: 'Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting. Trigger on: "Why did close rate drop from Feb to Mar?", "Explain the increase in conversion between Q1 and Q2", "What drove the revenue decline last month?", "Break down the change in win rate between these two periods." Do not trigger for forecasts, general metric exploration, or comparisons without a directional change to explain.'
 
@@ -66,19 +66,19 @@ Combined contribution of a group of segments = `sum(their delta_values) / overal
 
 All period-specific fields, labels, and filters must refer consistently to the same period throughout.
 
-### 6. Prioritize top 3 dimensions before analysis
+### 6. Prioritize top 5 dimensions before analysis
 
 1. Enumerate eligible low-to-medium cardinality, business-relevant dimensions from the dataset schema
 2. Rank by semantic relevance to the target metric — prefer dimensions where the metric is likely to vary meaningfully, prefer business-actionable dimensions, avoid high-cardinality or technical fields
-3. Select top 3 (or all if fewer exist) — do not pad with weak dimensions
+3. Select top 5 (or all if fewer exist) — do not pad with weak dimensions
 
 Do not ask the user to pick dimensions before the list is shown.
 
 ### 7. Sequential execution — one dimension at a time
 
-Analyze one dimension per step. Show output for that dimension, then immediately proceed to the next confirmed dimension. Do not batch or union multiple dimensions in one query.
+Analyze one dimension per step. Show output for that dimension, then wait for user confirmation before continuing. Do not batch or union multiple dimensions in one query.
 
-If a dimension fails (query error, no data, schema mismatch, or any other issue), skip it silently and continue to the next dimension. Record the failure reason for the Phase 4 summary table.
+If the user answers No at any point, skip remaining dimensions and proceed to Phase 4 using completed dimensions only.
 
 ---
 
@@ -108,17 +108,7 @@ Store as `base_period_literal` and `comparison_period_literal` — these must be
 
 **Show:**
 
-Determine whether confirmation is required before proceeding:
-
-- **Skip confirmation and proceed to Phase 2 directly** when:
-  - The user provided **both periods explicitly and unambiguously** (e.g. "between 10/24 and 11/24", "Q1 vs Q2 2024", "from Jan 2024 to Mar 2024"), **or**
-  - The user provided **two relative but fully resolvable periods** (e.g. "this month vs last month", "last quarter vs the one before") — resolve them to absolute date literals using today's date, then proceed without asking
-
-- **Show confirmation** (using `ask_user`) when:
-  - Only **one period is stated** and the comparison period is inferred, **or**
-  - The period format is **ambiguous** (e.g. "10/24" could mean October 2024 or day 10 of a month)
-
-When confirmation is required, use `ask_user`. The question title **must be this exact sentence** — fill in the bracketed values, do not paraphrase, shorten, or substitute any other wording:
+Use `ask_user`. The question title **must be this exact sentence** — fill in the bracketed values, do not paraphrase, shorten, or substitute any other wording:
 
 > You're asking me to analyze the [drop/increase] in **[metric]** between **[comparison_period_literal]** (comparison period) and **[base_period_literal]** (base period). Please confirm these periods before I proceed.
 
@@ -146,7 +136,7 @@ Run the overall delta query (no segment grouping):
 
 If `overall_delta_value = 0`: stop. Inform the user the metric did not change net between the two periods. Do not proceed further.
 
-Then inspect the dataset schema and select top 3 dimensions per Core Rule 6.
+Then inspect the dataset schema and select top 5 dimensions per Core Rule 6.
 
 **Show:**
 
@@ -154,11 +144,9 @@ Display the overview sentence immediately — **verbatim, do not paraphrase, ski
 
 > [Metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] between [comparison period] and [base period].
 >
-> **There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most.** Here are my top [N] proposed dimensions:
+> There are multiple ways to explain what drove this change. In this analysis, I'll break it down by dimensions to identify which segments moved the most. Here are my top [N] proposed dimensions:
 
-Follow these two steps in strict order — do NOT combine them:
-
-**Step 1 — Output the dimension list as plain text.** This is a text output step, not a tool call. Write the numbered list directly in your response. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
+**You MUST output the full numbered list in text before calling `ask_user`.** Do not call `ask_user` without first displaying this list. Each item must include a one-sentence reason — **never list dimension names alone without reasons**:
 
 > **1. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 >
@@ -166,61 +154,19 @@ Follow these two steps in strict order — do NOT combine them:
 >
 > **3. Dimension Name** — one sentence reason why this dimension is relevant to the metric change.
 
-**Step 2 — Only after the list is written, call `ask_user`** with a single yes/no question:
+Only after displaying that full list, call `ask_user` with a single yes/no question:
 > "Shall I proceed with these [N] dimensions in the order above?"
-
-**The `ask_user` call must contain only this question. Do NOT embed dimension names, reasons, or any list content in the ask_user options or description.**
 
 **Wait for user response before proceeding.**
 
-- **Yes** → output the Stage 1 Summary Block (format below), then STOP. Do not proceed to Phase 3 in this run.
-- **No** → ask what to change (add, remove, reorder), update the list internally, then output the Stage 1 Summary Block directly. Do not ask for re-confirmation.
-
-**Stage 1 Summary Block** — output this after dimensions are confirmed (from "Yes" or after the user updates the list):
-
-> ---
-> Here's a summary of what we're going to analyze:
->
-> - **Metric**: [metric name]
-> - **Comparison period**: [comparison_period_literal] ([comparison_period_name])
-> - **Base period**: [base_period_literal] ([base_period_name])
-> - **Overall change**: [metric] [dropped/increased] [pct_change]%, from [comparison_value] to [base_value] (Δ [±overall_delta_value])
-> - **Dimension 1**: [dim1]
-> - **Dimension 2**: [dim2]
-> - **Dimension 3**: [dim3]
->
-> Shall I proceed to break down **[metric]** by each of these dimensions to see where the [drop/increase] happened the most?
-> ---
-
----
-
-### Stage 2 Detection — check before Phase 3
-
-Before running Phase 3, check the conversation history:
-
-- **If a Stage 1 Summary Block is present** (contains confirmed metric, periods, overall delta, and dimension list): this is a Stage 2 invocation.
-  - Load metric, `base_period_literal`, `comparison_period_literal`, `overall_delta_value`, and confirmed dimension list directly from the Stage 1 Summary Block in conversation context.
-  - Do NOT re-run Phases 1 or 2. Do NOT call `fetch_dataset` or `generate_aql` for setup. Do NOT re-confirm periods or dimensions.
-  - Proceed directly to Phase 3 with dimension #1.
-
-- **If no Stage 1 Summary Block is present**: this is a fresh invocation — run from Phase 1.
+- **Yes** → proceed to Phase 3 with dimension #1
+- **No** → ask what to change (add, remove, reorder), re-show updated list, ask again
 
 ---
 
 ### Phase 3 — Analyze one dimension (repeat for each confirmed dimension)
 
 Execute this phase once per dimension, in confirmed order. Complete the full phase — compute, show, wait — before moving to the next dimension.
-
-**Show (once, before starting any dimension analysis):**
-
-Display the confirmed dimension list as a section header so the user can see exactly what will be analyzed:
-
-> # Analyzing these dimensions
-> 1. [dim1]
-> 2. [dim2]
-> 3. [dim3]
-
-Always show this, even when the user accepted the proposed list without changes.
 
 **Compute:**
 
@@ -250,40 +196,25 @@ Always show this, even when the user accepted the proposed list without changes.
 
 **Show:**
 
-1. Header: `# [Metric] breakdown by [Dimension Name] — [N] segments`
+1. Header: `**[Dimension Name]** — [N] segments`
 2. The grouped ColumnChart generated above — **this is the only viz output at this step, no DataTable**
-3. One sentence summarizing the overall picture for this dimension (e.g. which direction most segments moved, whether the change was concentrated or spread).
+3. One sentence interpreting the chart: what it means for the metric change
+4. Conditional flags — one line each, only when applicable:
+   - Offset segment(s) exist → `↑ [Segment] bucked the trend ([base] → [comp], [±delta]).`
+   - No segment > 10% contribution → `Change is spread broadly — no single segment dominates.`
+   - New segment (comparison_value_raw IS NULL) → `⚠ [Segment] is new in [base period] — not a rate change.`
+   - Disappeared segment (base_value_raw IS NULL) → `⚠ [Segment] absent in [base period] — reflects exit from data.`
+   - Any segment has `|contribution_pct| > 100%` → identify the top outlier(s) and flag: `⚠ [Segment] moved [N]× the net change. The overall change is small, but that's because large drops in some segments were offset by large gains in others — not because things were stable.`
+5. Continuation prompt: `**Dimension N of M complete.** Continue to the next dimension (**[next dimension name]**)? (Yes / No)`
 
-4. Segment breakdown in bullet points — list drivers first, then offsets. Each bullet must include the segment name, its values in both periods, delta, and contribution %:
+**Wait for user response before proceeding.**
 
-   **Drivers** (segments moving in the same direction as the overall change):
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - *+ [N] more drivers accounting for [X]% of the net change.*
-
-   **Offsets** (segments moving against the overall change):
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - **[Segment]**: [comparison_value] → [base_value] ([±delta], [contribution_pct]% of net change)
-   - *+ [N] more offsets accounting for [X]% of the net change.*
-
-   Show the top 3 drivers and top 3 offsets by absolute contribution. If there are fewer than 3, show all. Collapse any remainder into the summary line above. Omit the Offsets section entirely if there are none. Omit the summary line if there is no remainder.
-
-5. Conditional flags — each as its own bullet, only when applicable:
-   - `↑ [Segment] bucked the trend ([comparison_value] → [base_value], [±delta]).`
-   - `Change is spread broadly — no single segment dominates.`
-   - `⚠ [Segment] is new in [base period] — not a rate change.`
-   - `⚠ [Segment] absent in [base period] — reflects exit from data.`
-   - `⚠ [Segment] moved [N]× the net change. The overall change is small, but that's because large drops in some segments were offset by large gains in others — not because things were stable.`
-6. After displaying output, immediately proceed to the next confirmed dimension without prompting. After all dimensions are complete, proceed to Phase 4.
-
-If the dimension fails at any point (query error, empty result, schema issue, etc.), skip it silently and continue to the next. Record the dimension name and failure reason for the Phase 4 summary table.
+- **Yes** → repeat Phase 3 for the next dimension
+- **No** → skip remaining dimensions and proceed to Phase 4 immediately
 
 ---
 
 ### Phase 4 — Final overview
-
 
 Produced after all confirmed dimensions are complete, or after the user stops early.
 
@@ -294,16 +225,16 @@ Opening heading and summary line:
 >
 > [Metric] [dropped/increased] by [pct_change]% (from [comparison_value] to [base_value], [±abs(delta)]) between [comparison period] and [base period].
 
-Ranked table of all confirmed dimensions, sorted by `dimension_driver_pct` descending. Successfully analyzed dimensions appear first; failed dimensions appear at the bottom:
+Ranked table of analyzed dimensions, sorted by `dimension_driver_pct` descending:
 
-| Dimension | Top Segment | Contribution to change | Δ |
-|-----------|-------------|------------------------|---|
+| Dimension | Driver% | Top Segment | Δ |
+|-----------|---------|-------------|---|
 | … | | | |
 
 **Conditionally include (one line each):**
 
 - Dimension with no dominant segment → add note in Top Segment cell: `spread across segments`
-- Failed dimension → set Top Segment to `Failed to analyze: [reason]`, Contribution to change to `—`, Δ to `—`
+- Unanalyzed dimensions → `Note: [Dimension list] were not analyzed.`
 
 **Always include at the end:**
 
