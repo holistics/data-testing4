@@ -1,4 +1,4 @@
-Model travel_preferences_survey_2025_csv {
+Model travel_preferences_survey_2025_csv_ {
   type: 'table'
   label: 'Travel preferences survey 2025 csv'
   description: ''
