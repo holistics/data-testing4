@@ -1,0 +1,33 @@
+Dataset hieu_test {
+  label: 'hieu_test'
+  description: ''
+  data_source_name: 'movies_lens'
+  models: [
+    holidays,
+    dim_date_hieu
+  ]
+  relationships: []
+  metric date1 {
+    label: "Date 1"
+    type: "date"
+    hidden: false
+    description: ""
+    definition: @aql min(date_trunc(dim_date_hieu.date_key, 'day'))
+| where(dim_date_hieu.date_key == @(9-Oct-2025) );;
+  }
+  metric date2 {
+    label: "Date 2"
+    type: "date"
+    hidden: false
+    description: ""
+    definition: @aql min(date_trunc(dim_date_hieu.date_key, 'day'))
+| where(dim_date_hieu.date_key == @(14-Oct-2025) );;
+  }
+  metric business_days {
+    label: "Business Days"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql cast(2.4, 'int');;
+  }
+}
