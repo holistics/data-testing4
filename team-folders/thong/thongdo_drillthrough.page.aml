@@ -1,0 +1,121 @@
+Dashboard thong_do_drill_through {
+  title: 'Thong Do - Drill Through'
+  owner: 'thong.do@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block v_p6tl: VizBlock {
+    label: 'Status and Id'
+    viz: DataTable {
+      dataset: simple_dataset
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce_orders.status)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_orders.id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f_orders_created_date: FilterBlock {
+    label: 'Orders Created Date'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: simple_dataset
+      field: r(ecommerce_orders.created_date)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+    settings {
+      drillthrough: Drillthrough {
+        enabled: true
+        sources: [
+          AutoDrillthroughSource {
+          }
+        ]
+      }
+    }
+  }
+  block f_orders_status: FilterBlock {
+    label: 'Orders Status'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: simple_dataset
+      field: r(ecommerce_orders.status)
+    }
+    default {
+      operator: 'is'
+      value: 'delivered'
+    }
+    settings {
+      drillthrough: Drillthrough {
+        enabled: true
+        sources: [
+          AutoDrillthroughSource {
+          }
+        ]
+      }
+    }
+  }
+  interactions: [
+    FilterInteraction {
+      from: 'f_orders_created_date'
+      to: [
+        CustomMapping {
+          block: 'f_orders_status'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_orders_status'
+      to: [
+        CustomMapping {
+          block: 'f_orders_created_date'
+          disabled: true
+        }
+      ]
+    }
+  ]
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 800
+    grid_size: 20
+    auto_expand_vertically: true
+    block title {
+      position: pos(20, 20, 1260, 60)
+    }
+    block v_p6tl {
+      position: pos(60, 200, 660, 480)
+    }
+    block f_orders_status {
+      position: pos(420, 80, 300, 80)
+    }
+    block f_orders_created_date {
+      position: pos(80, 100, 300, 80)
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: H.themes.vanilla
+}
