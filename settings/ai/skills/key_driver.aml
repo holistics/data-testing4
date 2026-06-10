@@ -291,11 +291,9 @@ Always show this, even when the user accepted the proposed list without changes.
 
    **Segments moving against the overall change:**
 
-   | Segment | Δ |
-   |---------|---|
-   | [Segment] | [±delta] |
+   - **[Segment]**: Δ [±delta]
 
-   Omit the offsets table entirely if there are none.
+   Omit this section entirely if there are none.
 
 5. Conditional flags — each as its own bullet, only when applicable:
    - `↑ [Segment] bucked the trend ([comparison_value] → [base_value], [±delta]).`
