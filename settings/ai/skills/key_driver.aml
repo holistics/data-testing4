@@ -281,20 +281,21 @@ Always show this, even when the user accepted the proposed list without changes.
 2. The grouped ColumnChart generated above — **this is the only viz output at this step, no DataTable**
 3. One sentence summarizing the overall picture for this dimension (e.g. which direction most segments moved, whether the change was concentrated or spread).
 
-4. Segment breakdown in bullet points — list drivers first, then offsets. Show top 3 of each. If fewer than 3 exist, show all. Do not add a summary line for the remainder.
+4. Segment breakdown as tables — list drivers first, then offsets. Show top 3 of each. If fewer than 3 exist, show all.
 
    **Drivers** (segments moving in the same direction as the overall change):
 
-   For each driver, apply the contribution % display rule:
-   - If `|contribution_pct| ≤ 100%`: `**[Segment]**: [comparison_value] → [base_value] (Δ [±delta], [contribution_pct]% of net change)`
-   - If `|contribution_pct| > 100%`: `**[Segment]**: [comparison_value] → [base_value] (Δ [±delta], [N]× the net change)` where [N] = round(|contribution_pct| / 100, 1)
+   | Segment | Δ | Contribution to Net Change |
+   |---------|---|---------------------------|
+   | [Segment] | [±delta] | [contribution_pct]% of net change — or [N]× the net change if `\|contribution_pct\| > 100%`, where [N] = round(\|contribution_pct\| / 100, 1) |
 
    **Segments moving against the overall change:**
 
-   Do not display contribution % for these segments. Format each as:
-   - `**[Segment]**: [comparison_value] → [base_value] (Δ [±delta])`
+   | Segment | Δ |
+   |---------|---|
+   | [Segment] | [±delta] |
 
-   Omit this section entirely if there are none.
+   Omit the offsets table entirely if there are none.
 
 5. Conditional flags — each as its own bullet, only when applicable:
    - `↑ [Segment] bucked the trend ([comparison_value] → [base_value], [±delta]).`
@@ -310,8 +311,9 @@ If the dimension fails at any point (query error, empty result, schema issue, et
 
 ### Phase 4 — Final overview
 
-
 Produced after all confirmed dimensions are complete, or after the user stops early.
+
+**Do NOT display any charts or visualizations in this phase.** The per-dimension charts were already shown in Phase 3 — do not repeat them here.
 
 **Show:**
 
