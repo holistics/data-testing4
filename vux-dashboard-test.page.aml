@@ -5,6 +5,12 @@ Dashboard vux_dashboard_test {
   block title: TextBlock {
     content: @md # Your title goes here ;;
   }
+  block t_0s3t: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block t_9hnc: TextBlock {
+    content: @md # Your title goes here ;;
+  }
 
   view: CanvasLayout {
     label: 'View 1'
@@ -15,11 +21,16 @@ Dashboard vux_dashboard_test {
     block title {
       position: pos(20, 20, 1260, 60)
     }
+    block t_0s3t {
+      position: pos(70, 70, 1260, 60)
+    }
+    block t_9hnc {
+      position: pos(120, 120, 1260, 60)
+    }
     mobile {
       mode: 'auto'
     }
   }
 
   theme: H.themes.vanilla
-
 }

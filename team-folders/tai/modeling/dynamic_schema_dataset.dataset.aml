@@ -1,7 +1,17 @@
+const dynamic_db = if (H.git.is_production) {
+  'production_data_source'
+} else if (H.git.current_branch == 'staging') {
+  'staging_data_source'
+} else if (H.current_user.region) {
+  'region_${H.current_user.region}'
+} else {
+  'demodb'
+}
+
 Dataset dynamic_schema_dataset {
   label: 'Dynamic Schema Dataset'
   description: ''
-  data_source_name: 'demodb'
+  data_source_name: dynamic_db
   models: [
     dynamic_schema_ecommerce_orders
   ]
