@@ -1,0 +1,127 @@
+Dashboard thong_test_dvvpx {
+  title: 'Thong Test'
+  owner: 'thong.do@holistics.io'
+  block v_9sox: VizBlock {
+    label: 'GMV - Gross Merchandise Value, 7-day MovAvg of GMV, and Count of Order Id by Day Order Created At'
+    viz: CombinationChart {
+      dataset: demo_ecommerce
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2023'
+      }
+      filter {
+        field: r(ecommerce_countries.name)
+        operator: 'is'
+        value: '$H_NIL$'
+      }
+      filter {
+        field: r(ecommerce_users.age_group)
+        operator: 'is'
+        value: '$H_NIL$'
+      }
+      filter {
+        field: r(ecommerce_cities.name)
+        operator: 'is'
+        value: '$H_NIL$'
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc day'
+        format {
+          type: 'date'
+          pattern: 'LLL dd, yyyy'
+        }
+      }
+      y_axis {
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#D1EDEC'
+            line_interpolation: 'smooth'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: '7-day MovAvg of GMV'
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+            analytic: MovingCalculationField {
+              type: 'avg'
+              order: 'row'
+              range {
+                previous: 7
+                next: 0
+              }
+              null_if_not_enough_values: true
+            }
+          }
+          settings {
+            color: '#18A59E'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            ref: r(order_master.order_id)
+            aggregation: 'count'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            ref: r(order_master.user_id)
+            aggregation: 'count'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      ]
+      settings {
+        legend_label: 'right'
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  interactions: []
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 800
+    grid_size: 20
+    auto_expand_vertically: true
+    block v_9sox {
+      position: pos(20, 20, 620, 420)
+      layer: 1
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: H.themes.vanilla
+  settings {
+    autorun_on_open: true
+  }
+}
