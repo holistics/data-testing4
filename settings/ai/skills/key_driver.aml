@@ -262,7 +262,7 @@ Always show this, even when the user accepted the proposed list without changes.
 2. Pass the AQL to `generate_viz` to produce the grouped ColumnChart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
 
    Natural language query for `generate_viz`:
-   `"Grouped column chart. X-axis: segment dimension. Two series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Show all segments. No row limit. Add delta_value (labeled 'Δ') and pct_delta (labeled '% Change') to tooltip. Sort by contribution_pct descending."`
+   `"Combo chart. X-axis: segment dimension. Two bar series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Add a line series for delta_value labeled 'Δ Change' on a secondary Y-axis. Show all segments. No row limit. Add pct_delta (labeled '% Change') to tooltip. Sort by delta_value descending."`
 
 3. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
@@ -281,19 +281,26 @@ Always show this, even when the user accepted the proposed list without changes.
 2. The grouped ColumnChart generated above — **this is the only viz output at this step, no DataTable**
 3. One sentence summarizing the overall picture for this dimension (e.g. which direction most segments moved, whether the change was concentrated or spread).
 
-4. Segment breakdown as tables — list drivers first, then offsets. Show top 3 of each. If fewer than 3 exist, show all.
+4. Segment insight — output as concise prose, no tables.
 
-   **Drivers** (segments moving in the same direction as the overall change):
+   Write one sentence describing the overall pattern for this dimension (e.g. "Most segments moved in the same direction as the overall drop.").
 
-   | Segment | Δ | Contribution to Net Change |
-   |---------|---|---------------------------|
-   | [Segment] | [±delta] | [contribution_pct]% of net change — or [N]× the net change if `\|contribution_pct\| > 100%`, where [N] = round(\|contribution_pct\| / 100, 1) |
+   Then list the **top 3 driver segments** (those moving in the same direction as the overall change) as bullets:
 
-   **Segments moving against the overall change:**
+   > The top drivers were:
+   > - **[Segment A]**: [contribution_display] of the net [drop/increase] ([±delta])
+   > - **[Segment B]**: [contribution_display] of the net [drop/increase] ([±delta])
+   > - **[Segment C]**: [contribution_display] of the net [drop/increase] ([±delta])
 
-   - **[Segment]**: Δ [±delta]
+   **Contribution display rule:** if `|contribution_pct| > 100%`, show `[N]× the net change` where N = round(|contribution_pct| / 100, 1). Otherwise show `[contribution_pct]%`.
 
-   Omit this section entirely if there are none.
+   If there are more than 3 driver segments, list the rest in a single follow-on sentence:
+   > [Segment D], [Segment E], and [Segment F] also contributed (range: [min_delta] to [max_delta]).
+
+   If offset segments exist (moving against the overall change), add one sentence:
+   > [Segment G] and [Segment H] moved in the opposite direction, partially offsetting the [drop/increase].
+
+   Omit the offset sentence if no offset segments exist.
 
 5. Conditional flags — each as its own bullet, only when applicable:
    - `↑ [Segment] bucked the trend ([comparison_value] → [base_value], [±delta]).`
@@ -359,14 +366,14 @@ For the **Contribution to change** column, apply the same threshold rule as the 
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
 - Never call `execute_aql` during Phase 3 — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only.
-- When generating the ColumnChart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Sort by `contribution_pct` descending:
+- When generating the combo chart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Sort by `delta_value` descending:
 
 ```
-ColumnChart {
+ComboChart {
   ...
   settings {
     sort {
-      field: contribution_pct
+      field: delta_value
       direction: 'desc'
     }
   }
