@@ -1,0 +1,66 @@
+Model vy_kaggle_orders {
+  type: 'table'
+  label: 'Orders'
+  description: ''
+  data_source_name: 'demodb'
+  dimension order_id {
+    label: 'Order'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_id }};;
+  }
+  dimension customer_id {
+    label: 'Customer'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.customer_id }};;
+  }
+  dimension order_status {
+    label: 'Order status'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_status }};;
+  }
+  dimension order_purchase_timestamp {
+  label: 'Order purchase timestamp'
+  type: 'datetime'
+  definition: @sql {{ #SOURCE.order_purchase_timestamp }}::timestamp;;
+  }
+  dimension order_approved_at {
+    label: 'Order approved at'
+    type: 'datetime'
+    definition: @sql {{ #SOURCE.order_approved_at }}::timestamp;;
+  }
+  dimension order_delivered_customer_date {
+    label: 'Order delivered customer date'
+    type: 'datetime'
+    definition: @sql {{ #SOURCE.order_delivered_customer_date }}::timestamp;;
+  }
+  dimension order_estimated_delivery_date {
+    label: 'Order estimated delivery date'
+    type: 'datetime'
+    definition: @sql {{ #SOURCE.order_estimated_delivery_date }}::timestamp;;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'olist_orders_dataset.csv'
+    uploaded_at: '2026-04-15 08:12:31'
+    hash: '8df58ef3d2d7e9944010f7beecd9b75367f5588ec6e3c91cec19ae3345ef9ecf'
+    column_configs: [
+      H.imports.column_config("order_id", "order_id", "text"),
+      H.imports.column_config("customer_id", "customer_id", "text"),
+      H.imports.column_config("order_status", "order_status", "text"),
+      H.imports.column_config("order_purchase_timestamp", "order_purchase_timestamp", "text"),
+      H.imports.column_config("order_approved_at", "order_approved_at", "text"),
+      H.imports.column_config("order_delivered_carrier_date", "order_delivered_carrier_date", "text"),
+      H.imports.column_config("order_delivered_customer_date", "order_delivered_customer_date", "text"),
+      H.imports.column_config("order_estimated_delivery_date", "order_estimated_delivery_date", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_ord_974b2_202604150812"'
+}

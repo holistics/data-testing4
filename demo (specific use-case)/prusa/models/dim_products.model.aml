@@ -1,0 +1,23 @@
+// Source of truth: BigQuery `keboola.products` (verified via Holistics MCP).
+Model dim_products {
+  type: 'table'
+  label: 'Products'
+  data_source_name: 'data_staging'
+  table_name: 'keboola.products'
+
+  dimension product_id {
+    label: 'Product ID'
+    type: 'text'
+    primary_key: true
+  }
+
+  dimension product_name {
+    label: 'Product Name'
+    type: 'text'
+  }
+
+  dimension selling_denied {
+    label: 'Selling Denied'
+    type: 'text'
+  }
+}

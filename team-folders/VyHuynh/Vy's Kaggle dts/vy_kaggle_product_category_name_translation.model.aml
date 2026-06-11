@@ -1,0 +1,33 @@
+Model vy_kaggle_product_category_name_translation {
+  type: 'table'
+  label: 'Category mapping'
+  description: ''
+  data_source_name: 'demodb'
+  dimension product_category_name {
+    label: 'Product category name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_category_name }};;
+  }
+  dimension product_category_name_english {
+    label: 'Product category name english'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_category_name_english }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'product_category_name_translation.csv'
+    uploaded_at: '2026-04-15 08:14:06'
+    hash: 'a81f0d1f27b27e7293f761bc79e3ce8f348ee39c4b3ed3e49bde38f478586278'
+    column_configs: [
+      H.imports.column_config("product_category_name", "product_category_name", "text"),
+      H.imports.column_config("product_category_name_english", "product_category_name_english", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_pro_ecb0c_202604150814"'
+}

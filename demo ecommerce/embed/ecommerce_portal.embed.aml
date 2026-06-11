@@ -1,11 +1,11 @@
 EmbedPortal ecommerce_portal {
   objects: [
     // demo_ecommerce_overview_pro,
-    // _0_ecommerce_dashboard_30,
-    // _1_country_breakdown,
-    // _2_category_breakdown,
-    // _3_customer_demographics,
-    // _4_product_x_merchant_drill_down,
+    _0_ecommerce_dashboard_30,
+    _1_country_breakdown,
+    _2_category_breakdown,
+    _3_customer_demographics,
+    _4_product_x_merchant_drill_down,
     // dataset
     demo_ecommerce
   ],

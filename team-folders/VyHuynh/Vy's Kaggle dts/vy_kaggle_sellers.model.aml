@@ -1,0 +1,49 @@
+Model vy_kaggle_sellers {
+  type: 'table'
+  label: 'Sellers'
+  description: ''
+  data_source_name: 'demodb'
+  dimension seller_id {
+    label: 'Seller'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.seller_id }};;
+  }
+  dimension seller_zip_code_prefix {
+    label: 'Seller zip code prefix'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.seller_zip_code_prefix }};;
+  }
+  dimension seller_city {
+    label: 'Seller city'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.seller_city }};;
+  }
+  dimension seller_state {
+    label: 'Seller state'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.seller_state }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'olist_sellers_dataset.csv'
+    uploaded_at: '2026-04-15 08:13:38'
+    hash: '1f643d2b950373b85735e7794b20986f528d7a000432e7c6f9bcbb44d0846a0e'
+    column_configs: [
+      H.imports.column_config("seller_id", "seller_id", "text"),
+      H.imports.column_config("seller_zip_code_prefix", "seller_zip_code_prefix", "number"),
+      H.imports.column_config("seller_city", "seller_city", "text"),
+      H.imports.column_config("seller_state", "seller_state", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_sel_8ac85_202604150813"'
+}

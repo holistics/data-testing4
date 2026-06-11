@@ -1,0 +1,73 @@
+Model vy_kaggle_order_items {
+  type: 'table'
+  label: 'Order items'
+  description: ''
+  data_source_name: 'demodb'
+  dimension order_id {
+    label: 'Order'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_id }};;
+  }
+  dimension order_item_id {
+    label: 'Order item'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_item_id }};;
+  }
+  dimension product_id {
+    label: 'Product'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_id }};;
+  }
+  dimension seller_id {
+    label: 'Seller'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.seller_id }};;
+  }
+  dimension shipping_limit_date {
+    label: 'Shipping limit date'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.shipping_limit_date }};;
+  }
+  dimension price {
+    label: 'Price'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.price }};;
+  }
+  dimension freight_value {
+    label: 'Freight value'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.freight_value }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'olist_order_items_dataset.csv'
+    uploaded_at: '2026-04-15 08:10:14'
+    hash: '0bc4d068c4fe38cbb01bd90e8746e3c613fe7b4baef75fab7b0e329701c3e279'
+    column_configs: [
+      H.imports.column_config("order_id", "order_id", "text"),
+      H.imports.column_config("order_item_id", "order_item_id", "number"),
+      H.imports.column_config("product_id", "product_id", "text"),
+      H.imports.column_config("seller_id", "seller_id", "text"),
+      H.imports.column_config("shipping_limit_date", "shipping_limit_date", "text"),
+      H.imports.column_config("price", "price", "number"),
+      H.imports.column_config("freight_value", "freight_value", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_ord_3671b_202604150810"'
+}
