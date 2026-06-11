@@ -1,6 +1,6 @@
-Skill change_analysis_v2 {
+Skill analysis_workflow {
 
-  label: "Change Analysis v2"
+  label: "Analysis Workflow"
   invocation: "auto"
   description: '''
     Collaborative analytics investigation that routes to the right Gartner analytics level based
