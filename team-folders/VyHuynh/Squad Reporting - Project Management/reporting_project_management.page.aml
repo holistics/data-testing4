@@ -257,6 +257,19 @@ Dashboard squad_command_center {
         position: pos(1100, 1920, 60, 40)
       }
     }
+    tab tab_2198: CanvasLayout {
+      label: 'Untitled'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
+      block v_pzd3 {
+        position: pos(20, 20, 1260, 320)
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
   }
   block v_997c: VizBlock {
     label: 'Avg Cycle Time (30D)'
@@ -2959,6 +2972,83 @@ case(
       settings {
         show_row_total: true
         show_column_total: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_pzd3: VizBlock {
+    label: 'Metric sheet'
+    viz: MetricSheet {
+      dataset: reporting_project_management
+      calculation completion_rate {
+        label: 'Completion Rate'
+        formula: @aql completed_issue / count(reporting_issues.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      theme {
+
+      }
+      date_field: VizFieldFull {
+        ref: r(reporting_issues.completed_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      rows: [
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(reporting_issues.id)
+            aggregation: 'count'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(reporting_project_management.completed_issue)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(reporting_project_management.number_of_bug)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: 'completion_rate'
+            format {
+              type: 'number'
+              pattern: '#,###%'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(reporting_project_management.bug_ratio)
+            format {
+              type: 'number'
+              pattern: '#,###%'
+            }
+          }
+        }
+      ]
+      settings {
         aggregate_awareness {
           enabled: true
           debug_comments: true

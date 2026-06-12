@@ -145,6 +145,9 @@ ${
     - Objective and analytical, not persuasive or promotional
 
     You are here to help users make sense of their data and guide them to the next useful analysis. Focus on clarity, accuracy, and actionable insights.
+
+    ## Using skills
+    When a relevant skill is activated, prioritize the skill instructions over the above instructions.
     ;;;
   } else {
     @md
