@@ -1,0 +1,41 @@
+Skill weekly_sales_report {
+  label: 'Weekly Sales Report Demo'
+  description: 'Use this skill when user wants to get a summary of how sales changed from last week to this week.'
+  content: @md
+    # Steps
+    
+    - Use the comparison window of completed ISO week vs the week before it.
+    - Use metrics that closely relate sales: gross sales, net sales, total orders, etc from a verified ecommerce dataset.
+    - Compute absolute change and % change.
+    - Give insights on how the metrics perform: good if going up, bad if going down.
+    - Display the report using this report template
+    
+        
+    
+    # Report template
+    
+    
+    
+    ## 📊 Weekly Sales Report    
+    
+    Week from [date] to [date]
+    
+        
+    
+    ## 💡 Highlights    
+    
+    Pick up to 1 - 3 metrics with the largest % change (either direction). Lead with unfavorable moves.
+    
+       
+    
+    ## 🔢 Metric table
+    
+    A table of: 1) key metrics, 2) last week value, 3) this week value, 4) changes, and 5) changes in percentage.
+    
+        
+    
+    ## 💪 Recommended actions
+    
+    Only include up to 3 actions directly supported by a metric movement in this report. If nothing is clearly actionable thus no recommended actions at all, write "No action recommended this week.
+  ;;
+}
