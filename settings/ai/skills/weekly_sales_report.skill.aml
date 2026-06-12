@@ -1,5 +1,5 @@
 Skill weekly_sales_report {
-  label: 'Weekly Sales Report Demo'
+  label: 'Weekly Sales Report'
   description: 'Use this skill when user wants to get a summary of how sales changed from last week to this week.'
   content: @md
     # Steps
