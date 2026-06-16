@@ -6,7 +6,7 @@ Dashboard test_2 {
     content: @md
       # Heading 1
       ### Heading 3
-      This is a **dashboard** with _canvas layout_
+      This is a **dashboard** with _aasdcanvas layout_
     ;;
   }
 
