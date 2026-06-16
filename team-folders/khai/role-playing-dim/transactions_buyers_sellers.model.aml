@@ -1,0 +1,44 @@
+Model transactions_buyers_sellers {
+  type: 'query'
+  label: 'Transactions'
+  description: ''
+  data_source_name: 'demodb'
+  dimension transaction_date {
+    label: 'Transaction Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.transaction_date }};;
+  }
+  dimension seller_id {
+    label: 'Seller Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.seller_id }};;
+  }
+  dimension buyer_id {
+    label: 'Buyer Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.buyer_id }};;
+  }
+  dimension quantity {
+    label: 'Quantity'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.quantity }};;
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql
+    SELECT o.created_at::date as transaction_date 
+      , u.id as seller_id
+      , m.id as buyer_id 
+      , oi.quantity as quantity
+    FROM ecommerce.order_items oi 
+      left join ecommerce.orders o on oi.order_id = o.id
+      left join ecommerce.products p on oi.product_id = p.id 
+      left join ecommerce.merchants m on p.merchant_id = m.id 
+      left join ecommerce.users u on o.user_id = u.id ;;
+  models: [
+  ]
+}

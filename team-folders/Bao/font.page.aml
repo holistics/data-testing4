@@ -1,0 +1,658 @@
+PageTheme dw_copy_2 {
+  background {
+    bg_color: "#002186"
+    bg_repeat: false
+    bg_size: "contain"
+
+  }
+  canvas {
+    border {
+      border_radius: 0
+      border_width: 4
+      border_color: "#002186"
+      border_style: "solid"
+    }
+    background {
+      bg_color: "#002186"
+      bg_repeat: false
+    }
+    shadow: "none"
+    opacity: 1
+
+  }
+
+  block {
+    text {
+      font_size: 12
+      font_color: "#081336"
+      font_weight: "normal"
+      font_style: "normal"
+    }
+    border {
+      border_width: 0
+      border_radius: 0
+      border_style: "solid"
+    }
+    background {
+      bg_color: "#FFFFFF"
+      bg_repeat: false
+      bg_size: "cover"
+    }
+    padding: 20
+    shadow: "none"
+    opacity: 1
+  }
+
+
+  custom_css: @css
+@import url("https://www.dw.com/display/holistics/styles.css");
+* {
+  font-family: "Pangea" !important;
+}
+a,
+a:link,
+a:visited {
+  color: #002186 !important;
+  font-size: 15px;
+  font-variation-settings: "opsz" 10, "wght" 600, "ital" 0 !important;
+}
+a:after {
+  content: "";
+  width: 22px;
+  height: 22px;
+  background: transparent
+    url("http://dw.com/display/holistics/icons-indicator-ind-info.svg")
+    no-repeat 0px 0px fixed;
+  top: 6px;
+  right: -5px;
+  position: relative;
+  display: inline-block;
+  background-size: 18px 18px;
+}
+a:hover {
+  text-decoration: underline;
+}
+a.no_arrow:after {
+  content: none;
+}
+.single-value .text-container {
+  justify-content: flex-start;
+}
+.dac-canvas {
+  background-image: url(https://www.dw.com/display/holistics/brand-dialogforms-parallelogram.svg);
+  background-repeat: no-repeat;
+  background-size: 56%;
+  background-position: right bottom;
+}
+.dac-viz-block:not(:has(.single-value-table)) .dac-viz-block-label {
+  font-variation-settings: "opsz" 20, "wght" 500, "ital" 0 !important;
+  line-height: 110% !important;
+  font-size: 23px !important;
+  text-align: left !important;
+  color: #002186 !important;
+}
+.dw_italic {
+  font-variation-settings: "opsz" 10, "wght" 500, "ital" 1 !important;
+}
+.dw_bold {
+  font-variation-settings: "opsz" 10, "wght" 600, "ital" 0 !important;
+}
+.html-value ol,
+.html-value ul {
+  list-style: disc !important;
+  margin: 15px 0 0 15px !important;
+  text-align: left !important;
+}
+.html-value li {
+  list-style-position: outside;
+  font-size: 14px;
+  font-variation-settings: "opsz" 10, "wght" 400, "ital" 0 !important;
+  line-height: 1.4;
+  padding-left: 5px;
+  margin-bottom: 5px;
+  text-align: left !important;
+}
+.html-value p {
+  font-family: Pangea, sans-serif;
+  font-variation-settings: "opsz" 10, "wght" 400, "ital" 0 !important;
+  text-align: left !important;
+}
+.html-value h2 {
+  color: #002186 !important;
+  font-family: Pangea, sans-serif;
+  font-variation-settings: "opsz" 20, "wght" 600, "ital" 0 !important;
+  font-size: 27px !important;
+  text-align: left !important;
+}
+
+.html-value h3,
+.html-value h4 {
+  color: #002186 !important;
+  font-family: Pangea, sans-serif;
+  font-variation-settings: "opsz" 20, "wght" 500, "ital" 0 !important;
+  font-size: 23px !important;
+  text-align: left;
+  text-align: left !important;
+}
+  ;;
+}
+
+Dashboard mou_olga_tmp {
+  title: 'Olga_Monthly_Online_Usage'
+
+
+
+  block t8: TextBlock {
+    content: @md <h5> 🔎
+ Hover over each bar for more information. ;;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+
+
+  block t10: TextBlock {
+    content: @md <h5 style="text-align:center"> ❓ Any Questions ❓ 
+    <h6 style="text-align:left">Please contact <a href="mailto:digi.desk@dw.com?subject=Question on Monthly Online Usage Dashboard" class="no_arrow">digi.desk@dw.com</a> 
+<br>or reach out via <a href="https://teams.microsoft.com/l/team/19%3Ae4ae6678066b4feaa76c3db9bdd750ea%40thread.tacv2/conversations?groupId=1a73e2fa-b965-4d9a-a58c-2ea1b79a6b03&tenantId=2401f820-b2b4-4e78-9c4b-ca13a0d9c13d" class="no_arrow">Dr. Data on Teams</a>;;
+  }
+
+
+  block t13: TextBlock {
+    content: @md <br>;;
+    theme {
+      text {
+        font_family: 'Pangea, sans-serif'
+        font_color: '#002186'
+      }
+      background {
+        bg_color: '#05B2FC'
+      }
+      padding: 50
+    }
+  }
+
+
+  block t15: TextBlock {
+    content: @md <h5> 🔎
+ Hover over each bar for more information.;;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t18: TextBlock {
+    content: @md <style>
+  .dw-tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: none;
+    z-index: 10000000;
+  }
+
+  .dw-tooltip .dw-tooltiptext {
+    visibility: hidden;
+    width: 430px;
+    height: 90px;
+    background-color: #13151a;
+    color: #fff;
+    font-size: 14px;
+    font-style: normal;
+    text-align: left;
+    border-radius: 6px;
+    padding: 6px;
+    font-variation-settings: 'opsz' 10, 'wght' 400, 'ital' 0;
+    position: absolute;
+    z-index: 10000;
+    top: -5px;
+    left: 0;
+  }
+
+  .dw-tooltip:hover .dw-tooltiptext {
+    visibility: visible;
+  }
+
+  .dw-title {
+    color: #002186 ! important;
+    background-color: rgb(255 255 255 /0);
+    font-family: Pangea, sans-serif;
+    font-variation-settings: 'opsz' 20, 'wght' 500 'ital' 1;
+    font-size: 33px;
+    line-height: 33px;
+  }
+</style>
+
+<div style="text-align: top">
+  <img src="https://www.dw.com/display/holistics/dw_logo_white.svg"><br><br>
+  <span class="dw-title" style="font-size: 33px; font-variation-settings: 'opsz' 20, 'wght' 500, 'ital' 1; ">Monthly Online Usage</span>
+
+  <span class="dw-tooltip">
+    <span class="h-icon cursor-pointer text-blue-gray-800" data-icon="info">
+      <svg aria-hidden="true" style="width: 24px; height: 24px;">
+        <use href="#icon-info"></use>
+      </svg>
+      <span class="dw-tooltiptext"> \. This dashboard contains an overview of DW`s monthly online usage. This includes
+        views on all DW own websites and social media accounts as well as on all website and social media cooperations.
+      </span>
+    </span>
+  </span>
+</div>;;
+    theme {
+      text {
+        font_color: '#002186'
+      }
+      background {
+        bg_color: 'transparent'
+      }
+      padding: 5
+    }
+  }
+
+  block t22: TextBlock {
+    content: @md <h6> and click 'Apply'  at the bottom of the screen.;;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t23: TextBlock {
+    content: @md <style>
+.trenner_header {
+color: #081336;
+line-height: 45px;
+font-size: 28px;
+font-variation-settings: 'opsz' 20, 'wght' 600, 'ital' 0;
+}
+</style>
+<h2 class="trenner_header" style="color: #081336 !important;
+line-height: 28px !important;
+font-size: 28px !important;
+font-variation-settings: 'opsz' 20, 'wght' 500, 'ital' 0; !important" id="general">1. General Overview</h2>;;
+    theme {
+      background {
+        bg_color: '#F0F6FA'
+      }
+    }
+  }
+  block t24: TextBlock {
+    content: @md <style>
+.trenner_header {
+color: #081336;
+line-height: 45px;
+font-size: 28px;
+font-variation-settings: 'opsz' 20, 'wght' 600, 'ital' 0;
+}
+</style>
+<h2 class="trenner_header" style="color: #081336 !important;
+line-height: 28px !important;
+font-size: 28px !important;
+font-variation-settings: 'opsz' 20, 'wght' 500, 'ital' 0; !important" id="language">2. Language Overview</h2>;;
+    theme {
+      background {
+        bg_color: '#CDE1EE'
+      }
+    }
+  }
+  block t25: TextBlock {
+    content: @md <style>
+.trenner_header {
+color: #081336;
+line-height: 45px;
+font-size: 28px;
+font-variation-settings: 'opsz' 20, 'wght' 600, 'ital' 0;
+}
+</style>
+<h2 class="trenner_header" style="color: #081336 !important;
+line-height: 28px !important;
+font-size: 28px !important;
+font-variation-settings: 'opsz' 20, 'wght' 500, 'ital' 0; !important" id="platform">3. Development of Platforms and Distribution Channels</h2>;;
+    theme {
+      background {
+        bg_color: '#b3c6ff'
+      }
+    }
+  }
+
+
+
+  block t28: TextBlock {
+    content: @md <h5> ⚠️ EN "billion" = DE "Milliarde";;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t30: TextBlock {
+    content: @md <h5> ⚠️ EN "billion" = DE "Milliarde";;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t37: TextBlock {
+    content: @md [**1. General Overview**](#general)
+
+[**2. Language Overview**](#language)
+
+[**3. Development of Platforms and Distribution Channels**](#platform);;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t39: TextBlock {
+    content: @md <h5>Select a DW Language (optional);;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t40: TextBlock {
+    content: @md <h6> and click 'Apply'  at the bottom of the screen.;;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t43: TextBlock {
+    content: @md <h6>   and click 'Apply'  at the bottom of the screen.;;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t44: TextBlock {
+    content: @md <h6> and click 'Apply'  at the bottom of the screen.;;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+
+
+  block t51: TextBlock {
+    content: @md <br>;;
+    theme {
+      background {
+        bg_color: 'transparent'
+      }
+    }
+  }
+  block t52: TextBlock {
+    content: @md <span class="title" style="font-size: 20px; font-variation-settings: 'opsz' 20, 'wght' 500, 'ital' 1; ">-- for internal use only --</span>;;
+    theme {
+      text {
+        font_family: 'Pangea, sans-serif'
+        font_color: '#002186'
+      }
+      background {
+        bg_color: 'transparent'
+      }
+      padding: 5
+    }
+  }
+  block t53: TextBlock {
+    content: @md Olga/Design uses this version;;
+  }
+  view: CanvasLayout {
+    label: 'Canvas Layout'
+    width: 1460
+    height: 3640
+    grid_size: 20
+    block month {
+      position: pos(400, 220, 440, 100)
+      layer: 2
+    }
+    block language {
+      position: pos(440, 1560, 360, 80)
+      layer: 2
+    }
+    block v3 {
+      position: pos(100, 2440, 500, 420)
+      layer: 1
+    }
+    block v5 {
+      position: pos(940, 1660, 420, 360)
+      layer: 1
+    }
+    block v8 {
+      position: pos(620, 2440, 740, 420)
+      layer: 1
+    }
+    block v9 {
+      position: pos(100, 3080, 1260, 380)
+      layer: 1
+    }
+    block v10 {
+      position: pos(620, 2040, 740, 380)
+      layer: 1
+    }
+    block v13 {
+      position: pos(100, 2040, 500, 380)
+      layer: 1
+    }
+    block v18 {
+      position: pos(100, 340, 440, 340)
+      layer: 2
+    }
+    block v19 {
+      position: pos(100, 1080, 1260, 420)
+      layer: 1
+    }
+    block v20 {
+      position: pos(500, 1660, 420, 360)
+      layer: 1
+    }
+    block t8 {
+      position: pos(900, 1120, 360, 80)
+      layer: 1
+    }
+    block v21 {
+      position: pos(560, 340, 800, 340)
+      layer: 1
+    }
+    block f1 {
+      position: pos(120, 2960, 380, 80)
+      layer: 5
+    }
+    block f2 {
+      position: pos(500, 2960, 360, 80)
+      layer: 2
+    }
+    block t10 {
+      position: pos(1120, 3500, 280, 120)
+      layer: 1
+    }
+    block v24 {
+      position: pos(820, 1540, 360, 100)
+      layer: 1
+    }
+    block v15 {
+      position: pos(100, 700, 520, 360)
+    }
+    block t13 {
+      position: pos(100, 0, 1300, 200)
+    }
+    block v30 {
+      position: pos(640, 700, 720, 360)
+      layer: 1
+    }
+    block v31 {
+      position: pos(100, 1660, 380, 360)
+      layer: 1
+    }
+    block t15 {
+      position: pos(1020, 940, 360, 80)
+      layer: 1
+    }
+    block css {
+      position: pos(1200, 0, 0, 80)
+    }
+    block t18 {
+      position: pos(100, 0, 780, 220)
+      layer: 5
+    }
+    block t21 {
+      position: pos(1420, 220, 260, 100)
+    }
+    block t22 {
+      position: pos(420, 280, 460, 60)
+      layer: 1
+    }
+    block t23 {
+      position: pos(100, 220, 1300, 1300)
+      layer: -1
+    }
+    block t24 {
+      position: pos(100, 1540, 1300, 1340)
+    }
+    block t25 {
+      position: pos(100, 2900, 1300, 580)
+      layer: -1
+    }
+    block f4 {
+      position: pos(-500, 180, 480, 100)
+      layer: 6
+    }
+    block f5 {
+      position: pos(-320, 80, 300, 100)
+      layer: 7
+    }
+    block t26 {
+      position: pos(1300, 80, 300, 100)
+      layer: 8
+    }
+    block t28 {
+      position: pos(200, 620, 280, 80)
+      layer: 2
+    }
+    block t30 {
+      position: pos(180, 1960, 280, 80)
+      layer: 1
+    }
+    block t35 {
+      position: pos(-200, 2980, 420, 100)
+      layer: 6
+    }
+    block t37 {
+      position: pos(880, 40, 500, 160)
+      layer: 6
+    }
+    block t39 {
+      position: pos(460, 1540, 520, 60)
+      layer: 1
+    }
+    block t40 {
+      position: pos(460, 1600, 440, 60)
+      layer: 1
+    }
+    block t43 {
+      position: pos(140, 3020, 460, 80)
+      layer: 1
+    }
+    block t44 {
+      position: pos(520, 3020, 460, 80)
+      layer: 1
+    }
+    block v32 {
+      position: pos(100, 460, 280, 120)
+      layer: 3
+    }
+    block v33 {
+      position: pos(100, 1780, 320, 100)
+      layer: 3
+    }
+    block t45 {
+      position: pos(-400, 1820, 840, 80)
+      layer: 4
+    }
+    block t48 {
+      position: pos(-220, 1660, 580, 120)
+      layer: 4
+    }
+    block t51 {
+      position: pos(520, 1960, 860, 80)
+      layer: 9
+    }
+    block t52 {
+      position: pos(120, 160, 240, 60)
+      layer: 10
+    }
+    block t53 {
+      position: pos(260, 40, 280, 60)
+      layer: 11
+    }
+    mobile {
+      mode: 'manual'
+      block f5
+      block t26
+      block t21
+      block t13
+      block css
+      block t18 {
+
+      }
+      block t53
+      block t37
+      block t52
+      block t23
+      block t38
+      block month
+      block t22
+      block v18
+      block v21
+      block t50
+      block v32
+      block t49
+      block t28
+      block v15
+      block v30
+      block t15
+      block v19
+      block t8
+      block t24
+      block t39
+      block v24
+      block t46
+      block language
+      block t40
+      block t48
+      block v31
+      block v20
+      block v5
+      block v33
+      block t45
+      block t30
+      block t51
+      block v13
+      block v10
+      block v3
+      block v8
+      block t25
+      block t42
+      block t41
+      block t35
+      block f1
+      block f2
+      block t43
+      block t44
+      block v9
+      block t10
+    }
+  }
+  theme: dw_copy_2
+  settings {
+    cache_duration: 1440
+  }
+}

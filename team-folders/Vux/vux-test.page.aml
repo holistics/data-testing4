@@ -1,0 +1,238 @@
+Dashboard vux_test {
+  title: 'vux-test'
+  description: ''
+  owner: 'vu.dq@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block v_a79o: VizBlock {
+    label: 'Revenue Percentage by Status'
+    viz: PieChart {
+      dataset: ecom_dataset_vux
+      calculation revenue_percentage {
+        label: 'Revenue Percentage'
+        formula: @aql (order_master.revenue * 1.0)
+/ (order_master.revenue | of_all(order_master, keep_filters: true));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      legend: VizFieldFull {
+        ref: r(order_master.status)
+        format {
+          type: 'text'
+        }
+      }
+      series {
+        field: VizFieldFull {
+          ref: 'revenue_percentage'
+          format {
+            type: 'number'
+            pattern: '#,###%'
+          }
+        }
+      }
+      settings {
+        display_as_donut: true
+        row_limit: 5000
+        show_percentage: true
+        data_label_position: 'none'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_no1k: VizBlock {
+    label: 'Revenue by Continent'
+    viz: ColumnChart {
+      dataset: ecom_dataset_vux
+      calculation revenue_percentage {
+        label: 'Revenue Percentage'
+        formula: @aql (order_master.revenue * 1.0)
+/ (order_master.revenue | of_all(order_master, keep_filters: true));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.revenue)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color_palette: 'seq-magma'
+            point {
+              value: 'Asia'
+              color: '#FBFDBF'
+            }
+            point {
+              value: 'Europe'
+              color: '#FB8761'
+            }
+            point {
+              value: 'North America'
+              color: '#B5367A'
+            }
+            point {
+              value: 'Oceania'
+              color: '#4F127B'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f_order_master_order_created_at: FilterBlock {
+    label: 'Order Master Order Created At'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: ecom_dataset_vux
+      field: r(order_master.order_created_at)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+  }
+  block v_mxlz: VizBlock {
+    label: 'Revenue Percentage by Status copy'
+    viz: MetricSheet {
+      dataset: ecom_dataset_vux
+      calculation revenue_percentage {
+        label: 'Revenue Percentage'
+        formula: @aql (order_master.revenue * 1.0)
+/ (order_master.revenue | of_all(order_master, keep_filters: true));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      date_field: VizFieldFull {
+        ref: r(order_master.order_created_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      rows: [
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(ecom_dataset_vux.total_orders)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            mark_type: 'line'
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(ecom_dataset_vux.running_total)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      ]
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  view: TabLayout {
+    label: 'View 1'
+    tab view_1: CanvasLayout {
+      label: 'Tab 1'
+      width: 640
+      height: 880
+      grid_size: 20
+      auto_expand_vertically: true
+      block v_a79o {
+        position: pos(20, 100, 600, 460)
+      }
+      block f_order_master_order_created_at {
+        position: pos(20, 20, 300, 80)
+      }
+      block v_mxlz {
+        position: pos(20, 580, 600, 220)
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
+    tab tab_d9q1: CanvasLayout {
+      label: 'Tab 2'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      block v_no1k {
+        position: pos(120, 120, 600, 460)
+      }
+      block f_order_master_order_created_at {
+        position: pos(20, 20, 300, 80)
+      }
+    }
+  }
+
+  theme: H.themes.vanilla
+  interactions: [
+    FilterInteraction {
+      from: 'v_a79o'
+      to: [
+        CustomMapping {
+          block: 'v_no1k'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_no1k'
+      to: [
+        CustomMapping {
+          block: [
+            'v_a79o',
+            'v_mxlz'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_mxlz'
+      to: [
+        CustomMapping {
+          block: 'v_no1k'
+          disabled: true
+        }
+      ]
+    }
+  ]
+}

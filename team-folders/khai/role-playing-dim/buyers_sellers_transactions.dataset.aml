@@ -1,0 +1,63 @@
+Dataset buyers_sellers_transactions {
+  label: 'Buyers Sellers Transactions'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    transactions_buyers_sellers,
+    buyers,
+    sellers,
+    sellerss
+  ]
+  relationships: [
+    relationship(transactions_buyers_sellers.seller_id > sellers.id, true),
+    relationship(transactions_buyers_sellers.buyer_id > buyers.id, true)
+  ]
+  owner: 'khai.to@holistics.io'
+  dimension is_buyer {
+    label: "Is Buyer"
+    type: "truefalse"
+    description: ""
+    definition: @aql case(
+  when: count(transactions_buyers_sellers.buyer_id) is not null
+  , then: true
+  , else: false
+)
+| dimensionalize(buyers.id);;
+    model: buyers
+  }
+  dimension is_seller {
+    label: "Is Seller"
+    type: "truefalse"
+    description: ""
+    definition: @aql case(
+  when: count(transactions_buyers_sellers.seller_id) is not null
+  , then: true
+  , else: false
+)
+| dimensionalize(sellers.id);;
+    model: sellers
+  }
+  dimension buyer_name {
+    label: "Buyer Name"
+    type: "text"
+    hidden: false
+    description: ""
+    definition: @aql case(
+  when: buyers.is_buyer is false
+  , then: null
+  , else: buyers.full_name
+);;
+    model: buyers
+  }
+  dimension seller_name {
+    label: "Seller Name"
+    type: "text"
+    description: ""
+    definition: @aql case(
+  when: sellers.is_seller is false
+  , then: null
+  , else: sellers.full_name
+);;
+    model: sellers
+  }
+}

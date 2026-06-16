@@ -1,0 +1,34 @@
+Dataset users_transactions_role_playing {
+  label: 'Users Transactions Role Playing'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    users,
+    transactions_buyers_sellers
+  ]
+  relationships: [
+    relationship(transactions_buyers_sellers.buyer_id > users.id, true),
+    relationship(transactions_buyers_sellers.seller_id > users.id, false)
+  ]
+  owner: 'khai.to@holistics.io'
+  dimension buyer_name {
+    label: "Buyer Name"
+    type: "text"
+    description: ""
+    definition: @aql users.full_name;;
+    model: transactions_buyers_sellers
+  }
+  dimension seller_name {
+    label: "Seller Name"
+    type: "text"
+    hidden: false
+    description: ""
+    definition: @aql max(users.full_name)
+  | with_relationships(
+    transactions_buyers_sellers.seller_id > users.id,
+    relationship(transactions_buyers_sellers.buyer_id > users.id, false, 'two_way')
+    )
+  | dimensionalize(transactions_buyers_sellers.seller_id);;
+    model: transactions_buyers_sellers
+  }
+}

@@ -1,0 +1,33 @@
+Model vy_opportunity_forecast_adjustment_csv {
+  type: 'table'
+  label: 'Opportunity forecast adjustment'
+  description: ''
+  data_source_name: 'demodb'
+  dimension forecast_adjustment {
+    label: 'Forecast adjustment'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.forecast_adjustment }};;
+  }
+  dimension blank {
+    label: 'Blank'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.blank }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'opportunity_forecast_adjustment.csv'
+    uploaded_at: '2026-05-05 15:29:14'
+    hash: '9b46f7443e85f87bda8357cd91753d6b65775d9d8a2317ceea7e53f6e7e06ac7'
+    column_configs: [
+      H.imports.column_config("forecast_adjustment", "forecast_adjustment", "number"),
+      H.imports.column_config("blank", "blank", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_opportunit_9a348_202605051529"'
+}

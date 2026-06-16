@@ -1,0 +1,24 @@
+Model test_format {
+  type: 'query'
+  label: 'Num'
+  description: ''
+  data_source_name: 'demodb'
+  dimension num {
+    label: 'Num'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.num }};;
+  }
+
+  owner: 'vu.dq@holistics.io'
+  query: @sql
+    SELECT 100 AS num
+    UNION ALL
+    SELECT 1000
+    UNION ALL
+    SELECT 15938
+    UNION ALL
+    SELECT 19340403214;;;
+  models: [
+  ]
+}

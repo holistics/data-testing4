@@ -1,0 +1,193 @@
+Model vy_opportunities_csv {
+  type: 'table'
+  label: 'Opportunities'
+  description: ''
+  data_source_name: 'demodb'
+  dimension purchase_process {
+    label: 'Purchase process'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.purchase_process }};;
+  }
+  dimension decision_maker_identified {
+    label: 'Decision maker identified'
+    description: ''
+    type: 'truefalse'
+    hidden: false
+    definition: @sql {{ #SOURCE.decision_maker_identified }};;
+  }
+  dimension status {
+    label: 'Status'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.status }};;
+  }
+  dimension sales_stage {
+    label: 'Sales stage'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales_stage }};;
+  }
+  dimension value {
+    label: 'Value'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.value }};;
+  }
+  dimension weeks_open {
+    label: 'Weeks open'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.weeks_open }};;
+  }
+  dimension days_to_close {
+    label: 'Days to close'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.days_to_close }};;
+  }
+  dimension discount {
+    label: 'Discount'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.discount }};;
+  }
+  dimension probability {
+    label: 'Probability'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.probability }};;
+  }
+  dimension rating {
+    label: 'Rating'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.rating }};;
+  }
+  dimension days_remaining_in_pipeline {
+    label: 'Days remaining in pipeline'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.days_remaining_in_pipeline }};;
+  }
+  dimension probability_raw {
+    label: 'Probability raw'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.probability_raw }};;
+  }
+  dimension account_seq {
+    label: 'Account seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.account_seq }};;
+  }
+  dimension opportunity_seq {
+    label: 'Opportunity seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.opportunity_seq }};;
+  }
+  dimension product_seq {
+    label: 'Product seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_seq }};;
+  }
+  dimension system_user_seq {
+    label: 'System user seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.system_user_seq }};;
+  }
+  dimension campaign_seq {
+    label: 'Campaign seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql CAST({{ #SOURCE.campaign_seq }} AS numeric);;
+  }
+  dimension blank {
+    label: 'Blank'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.blank }};;
+  }
+  dimension date_diff_days {
+    label: 'Date diff days'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.date_diff_days }};;
+  }
+  dimension opportunity_created_on {
+    label: 'Opportunity created on'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.opportunity_created_on }};;
+  }
+  dimension close_date {
+    label: 'Close date'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.close_date }};;
+  }
+  dimension days_remaining_in_pipeline_bins {
+    label: 'Days remaining in pipeline bins'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.days_remaining_in_pipeline_bins }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'opportunities.csv'
+    uploaded_at: '2026-05-05 15:28:38'
+    hash: 'e44216a59125a123d6021bba0417ad2ec5ce5a61c18c8602daf0f981c78d4609'
+    column_configs: [
+      H.imports.column_config("purchase_process", "purchase_process", "text"),
+      H.imports.column_config("decision_maker_identified", "decision_maker_identified", "truefalse"),
+      H.imports.column_config("status", "status", "text"),
+      H.imports.column_config("sales_stage", "sales_stage", "text"),
+      H.imports.column_config("value", "value", "number"),
+      H.imports.column_config("weeks_open", "weeks_open", "number"),
+      H.imports.column_config("days_to_close", "days_to_close", "number"),
+      H.imports.column_config("discount", "discount", "number"),
+      H.imports.column_config("probability", "probability", "number"),
+      H.imports.column_config("rating", "rating", "text"),
+      H.imports.column_config("days_remaining_in_pipeline", "days_remaining_in_pipeline", "number"),
+      H.imports.column_config("probability_raw", "probability_raw", "number"),
+      H.imports.column_config("account_seq", "account_seq", "number"),
+      H.imports.column_config("opportunity_seq", "opportunity_seq", "number"),
+      H.imports.column_config("product_seq", "product_seq", "number"),
+      H.imports.column_config("system_user_seq", "system_user_seq", "number"),
+      H.imports.column_config("campaign_seq", "campaign_seq", "number"),
+      H.imports.column_config("blank", "blank", "text"),
+      H.imports.column_config("date_diff_days", "date_diff_days", "number"),
+      H.imports.column_config("opportunity_created_on", "opportunity_created_on", "datetime"),
+      H.imports.column_config("close_date", "close_date", "datetime"),
+      H.imports.column_config("days_remaining_in_pipeline_bins", "days_remaining_in_pipeline_bins", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_opportunit_c58d9_202605051528"'
+}

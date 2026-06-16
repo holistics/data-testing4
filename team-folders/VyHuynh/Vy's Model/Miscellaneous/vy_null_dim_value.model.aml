@@ -1,0 +1,33 @@
+Model test_data_null_dim_value_csv {
+  type: 'table'
+  label: 'Test data null dim value csv'
+  description: ''
+  data_source_name: 'demodb'
+  dimension membership_name {
+    label: 'Membership name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.membership_name }};;
+  }
+  dimension amount {
+    label: 'Amount'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.amount }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'test_data_-_null_dim_value.csv'
+    uploaded_at: '2025-10-31 05:18:07'
+    hash: '6d25bb2a816e5098bab45110695cb2987b2b057add45277b9062cb388974dc98'
+    column_configs: [
+      H.imports.column_config("membership_name", "membership_name", "text"),
+      H.imports.column_config("amount", "amount", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"public"."holistics_test_data_nul_dcd2b_202510310518"'
+}

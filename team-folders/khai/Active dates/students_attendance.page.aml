@@ -1,0 +1,181 @@
+Dashboard students_attendance_2 {
+  title: 'students_attendance'
+  description: ''
+  owner: 'khai.to@holistics.io'
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 860
+    height: 1000
+    grid_size: 20
+    auto_expand_vertically: true
+    mobile {
+      mode: 'auto'
+    }
+    block v_mw9p {
+      position: pos(20, 120, 820, 420)
+      layer: 1
+    }
+    block f_date_selected {
+      position: pos(20, 20, 300, 80)
+      layer: 1
+    }
+    block v_ar8f {
+      position: pos(20, 560, 820, 420)
+      layer: 1
+    }
+  }
+  theme: H.themes.vanilla
+  block v_mw9p: VizBlock {
+    label: 'Student Name, Date Of Birth and 3 more'
+    viz: DataTable {
+      dataset: students_attendance
+      conditions: [
+        '''(
+  dim_students.enrollment_start_date <= (dim_students.date_selected | first())
+  or
+  dim_students.enrollment_start_date matches (dim_students.date_selected | first())
+)
+and dim_students.enrollment_end_date > (dim_students.date_selected | first())'''
+      ]
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(dim_students.student_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(dim_students.date_of_birth)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(dim_students.grade_level)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(dim_students.enrollment_start_date)
+          format {
+            type: 'date'
+            pattern: 'yyyy-LL-dd'
+          }
+          uname: 'dim_students_enrollment_start_date'
+        },
+        VizFieldFull {
+          ref: r(dim_students.enrollment_end_date)
+          format {
+            type: 'date'
+            pattern: 'yyyy-LL-dd'
+          }
+          uname: 'dim_students_enrollment_end_date'
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'dim_students_enrollment_end_date'
+            width: 165
+          },
+          ColumnStyle {
+            key: 'dim_students_enrollment_start_date'
+            width: 171
+          }
+        ]
+      }
+    }
+  }
+  block f_date_selected: FilterBlock {
+    label: 'Date Selected'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: students_attendance
+      field: r(dim_students.date_selected)
+    }
+    default {
+      operator: 'matches'
+      value: '2023-12-15 - 2024-03-03'
+    }
+  }
+  block v_ar8f: VizBlock {
+    label: 'Student Name, Date Of Birth and 3 more copy'
+    viz: DataTable {
+      dataset: students_attendance
+      conditions: [
+        '''dim_students.enrollment_start_date <= (dim_students.date_selected | first())
+and
+dim_students.enrollment_end_date >= (dim_students.date_selected | first())
+and
+dim_students.enrollment_end_date is not (dim_students.date_selected | first())'''
+      ]
+      theme {
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(dim_students.student_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(dim_students.date_of_birth)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(dim_students.grade_level)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(dim_students.enrollment_start_date)
+          format {
+            type: 'date'
+          }
+          uname: 'dim_students_enrollment_start_date'
+        },
+        VizFieldFull {
+          ref: r(dim_students.enrollment_end_date)
+          format {
+            type: 'date'
+          }
+          uname: 'dim_students_enrollment_end_date'
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'dim_students_enrollment_end_date'
+            width: 165
+          },
+          ColumnStyle {
+            key: 'dim_students_enrollment_start_date'
+            width: 171
+          }
+        ]
+      }
+    }
+  }
+  interactions: []
+}

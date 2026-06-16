@@ -1,0 +1,68 @@
+Dataset test_num {
+  label: 'Test Num'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    test_format
+  ]
+  relationships: [
+  ]
+  owner: 'vu.dq@holistics.io'
+  metric format {
+    label: "Format"
+    type: "text"
+    hidden: false
+    description: ""
+    definition: @aql case(
+    when: test_format.num >= 1000000
+  , then: 
+      concat(
+        cast(div(test_format.num, 1000000), 'text'), '.',
+        cast(div(mod(test_format.num, 1000000), 100000), 'text'),
+        cast(div(mod(test_format.num, 100000), 10000), 'text'),
+        cast(div(mod(test_format.num, 10000), 1000), 'text'),
+        'M'
+      )
+  , when: test_format.num >= 1000
+  , then: 
+      concat(
+        cast(div(test_format.num, 1000), 'text'), '.',
+        cast(div(mod(test_format.num, 1000), 100), 'text'),
+        cast(div(mod(test_format.num, 100), 10), 'text'),
+        cast(div(mod(test_format.num, 10), 1), 'text'),
+        'K'
+      )
+  , else: cast(test_format.num, 'text')
+);;
+  }
+  metric format_2 {
+    label: "Format 2"
+    type: "number"
+    description: ""
+    definition: @aql case(
+    when: test_format.num >= 1000000
+  , then: 
+      cast(
+        concat(
+          cast(div(test_format.num, 1000000), 'text'), '.',
+          cast(div(mod(test_format.num, 1000000), 100000), 'text'),
+          cast(div(mod(test_format.num, 100000), 10000), 'text'),
+          cast(div(mod(test_format.num, 10000), 1000), 'text'),
+          'M'
+        )
+      , 'number')
+  , when: test_format.num >= 1000
+  , then: 
+      cast(
+        concat(
+          cast(div(test_format.num, 1000), 'text'), '.',
+          cast(div(mod(test_format.num, 1000), 100), 'text'),
+          cast(div(mod(test_format.num, 100), 10), 'text'),
+          cast(div(mod(test_format.num, 10), 1), 'text'),
+          'K'
+        )
+      , 'number')
+  , else: cast(test_format.num, 'number')
+);;
+  }
+}

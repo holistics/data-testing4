@@ -1,6 +1,26 @@
+Func time_compare(metric_name: String, metric_label: String, format: String) {
+  Metric {
+    label: '${metric_label} (time compare)'
+    type: 'number'
+    definition: @aql case(
+        when: time_type.time_type == "1. Week"
+        , then: ${metric_name} | where(khai_date_d.date_key match @(this week))
+        , when: time_type.time_type == "2. MTD"
+        , then: ${metric_name} | where(khai_date_d.date_key match @(this month to today))
+        , when: time_type.time_type == "3. MTD LY"
+        , then: ${metric_name} | relative_period(khai_date_d.date_key, interval(-1 year)) | where(khai_date_d.date_key match @(this month to today))
+        , when: time_type.time_type == "4. YTD"
+        , then: ${metric_name} | where(khai_date_d.date_key match @(this year to today))
+        , when: time_type.time_type == "5. YTD LY"
+        , then: ${metric_name} | relative_period(khai_date_d.date_key, interval(-1 year)) | where(khai_date_d.date_key match @(this year to today))
+      )  ;;
+    format: format
+  }
+}
+
 Dataset khai_ecommerce {
   __engine__: 'aql'
-  label: 'Khai Ecommerce'
+  label: 'Ecommerce (from Khai)'
   description: "This is Dataset for AQL testing"
   data_source_name: "demodb"
   models: [
@@ -11,37 +31,110 @@ Dataset khai_ecommerce {
     merchants,
     products,
     cities,
+    khai_date_d,
     param_model
+    ,
+    khai_categories
+    ,
+    time_type
   ]
 
   relationships: [
-    relationship(orders.user_id > users.id, true),
-    relationship(order_items.order_id > orders.id, true),
-    relationship(cities.country_code > countries.code, true),
-    relationship(users.city_id > cities.id, true),
-    relationship(order_items.product_id > products.id, true),
-    relationship(products.merchant_id > merchants.id, true),
-    relationship(merchants.city_id > cities.id, false)
+    relationship(orders.user_id > users.id, true, 'two_way'),
+    relationship(order_items.order_id > orders.id, true, 'two_way'),
+    relationship(cities.country_code > countries.code, true, 'two_way'),
+    relationship(users.city_id > cities.id, true, 'two_way'),
+    relationship(order_items.product_id > products.id, true, 'two_way'),
+    relationship(products.merchant_id > merchants.id, true, 'two_way'),
+    relationship(merchants.city_id > cities.id, true, 'two_way'),
+    relationship(orders.created_date > khai_date_d.date_key, true, 'two_way')
+    ,
+    relationship(products.category_id > khai_categories.id, true, 'two_way')
   ]
 
   owner: 'khai.to+demo4@holistics.io'
+
+  permission vendor_access {
+    field: r(countries.name)
+    operator: 'matches_user_attribute'
+    value: 'country_attribute' // user attribute
+  }
+
+  dimension user_acquired_at {
+    model: users
+    label: 'User Acquired At'
+    type: 'datetime'
+    definition: @aql min(orders.created_at) | dimensionalize(users.id) ;;
+  }
+
+  dimension user_order_frequency {
+    model: users
+    label: 'User Order Frequency'
+    type: 'text'
+    hidden: false
+    definition: @aql 
+      case(
+        when: total_orders < 10, then: '< 10 orders'
+        , when: total_orders > 10 and total_orders < 50, then: 'between 10 and 50 orders'
+        , when: total_orders > 50, then: '> 50 orders'
+        , else: null
+      )
+      | where(orders.created_at matches (param_model.date_param | first()))
+      | dimensionalize(users.id)
+     ;;
+  }
 
   metric revenue {
     label: 'Revenue'
     type: 'number'
     definition: @aql sum(order_items, order_items.quantity * products.price) ;;
+    format: "[\$\$]#,###"
   }
 
   metric total_orders {
     label: 'Total Orders'
     type: 'number'
     definition: @aql count(orders.id) ;;
+    format: "#,###"
+  }
+
+  metric total_delivered_orders {
+    label: "Total Delivered Orders"
+    type: "number"
+    hidden: false
+    description: "Count of all orders that were successfully delivered."
+    definition: @aql total_orders | where(orders.status is 'delivered');;
+  }
+
+  metric total_refunded_orders {
+    label: "Total Refunded Orders"
+    type: "number"
+    hidden: false
+    description: "Count of all orders that were refunded after fulfillment."
+    definition: @aql total_orders | where(orders.status is 'refunded');;
+  }
+  metric total_cancelled_orders {
+    label: "Total Cancelled Orders"
+    type: "number"
+    hidden: false
+    description: "Count of orders that were cancelled before fulfillment."
+    definition: @aql total_orders | where(orders.status is 'cancelled');;
+  }
+
+  metric cancelled_order_ratio {
+    label: "Cancelled Order Ratio"
+    type: "number"
+    hidden: false
+    description: "Percentage of orders that were cancelled - Total number of cancelled orders/Total numbers of orders"
+    definition: @aql total_cancelled_orders / total_orders;;
+    format: "#,###0.00%"
   }
 
   metric total_users {
     label: 'Total Users'
     type: 'number'
     definition: @aql count(users.id) ;;
+    format: "#,###"
   }
 
   metric dynamic_metric {
@@ -57,6 +150,71 @@ Dataset khai_ecommerce {
         , then: total_users
       )
      ;;
+    format: "#,###,\"K\""
   }
+
+  metric gmv {
+    label: "GMV (Gross Merchandise Value)"
+    type: "number"
+    hidden: false
+    description: "GMV - Gross Merchandise Value: Total value of all orders before discount."
+    definition: @aql order_items | sum(order_items.quantity * products.price);;
+    format: "[\$\$]#,###0"
+  }
+
+  metric gmv_converted {
+    label: 'GMV (Converted)'
+    type: 'number'
+    definition: @aql case(
+      when: '🇺🇸 USD' in param_model.currency, then: gmv * 1,
+      when: '🇲🇾 MYR' in param_model.currency, then: gmv * 4.47,
+      when: '🇸🇬 SGD' in param_model.currency, then: gmv * 1.35,
+      when: '🇹🇭 THB' in param_model.currency, then: gmv * 35.5,
+      when: '🇻🇳 VND' in param_model.currency, then: gmv * 25450,
+      when: '🇦🇺 AUD' in param_model.currency, then: gmv * 1.57
+    ) ;;
+    format: "#,###0"
+  }
+  metric revenue_per_active_customers {
+    label: "Revenue Per Active Customers"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql revenue / total_users;;
+  }
+
+  metric nmv {
+    label: "NMV (Net Merchandise Value)"
+    type: "number"
+    hidden: false
+    description: "* Fulfilled order value after discount. Excludes cancelled/refunded orders. <br>* Represents the total paid value of fulfilled orders, excluding cancelled and refunded orders, and adjusted for any discounts applied. <br>* This reflects what customers actually paid for successfully completed transactions, and serves as the revenue base before applying commission."
+    definition: @aql (order_items | sum(order_items.quantity * products.price * (1 - orders.discount))) |  where(orders.status not in ['cancelled', 'refunded']);;
+    format: "[\$\$]#,###0"
+  }
+
+  metric aov {
+    label: "AOV (Average Order Value)"
+    type: "number"
+    description: "AOV - Average Order Value: Average value per order (GMV / number of orders)."
+    hidden: false
+    definition: @aql gmv / total_orders;;
+    format: "[\$\$]#,###0"
+  }
+
+  // time comparison metrics
+
+  metric gmv_time_compare: time_compare('gmv', 'GMV', '[\$\$]#,###0')
+
+  metric nmv_time_compare: time_compare('nmv', 'NMV', '[\$\$]#,###0')
+
+  metric aov_time_compare: time_compare('aov', 'AOV', '[\$\$]#,###0')
+
+  metric total_orders_compare: time_compare('total_orders', 'Total Orders', '#,###')
+
+  metric total_delivered_orders_time_compare: time_compare('total_delivered_orders', 'Total Delivered Orders', '#,###')
+
+  metric total_cancelled_orders_time_compare: time_compare('total_cancelled_orders', 'Total Cancelled Orders', '#,###')
+
+  metric cancelled_order_ratio_time_compare: time_compare('cancelled_order_ratio', 'Cancelled Orders Ratio', '#,###0.00%')
 
 }

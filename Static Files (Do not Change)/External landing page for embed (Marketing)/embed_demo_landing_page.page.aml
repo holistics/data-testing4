@@ -170,21 +170,11 @@ Dashboard embed_demo_landing_page {
       ]
       settings {
         show_row_number: true
-        conditional_formats: [
-          ConditionalFormat {
-            ref: ref('order_master', 'aov')
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than_equal'
-                value: 700
-              }
-              text_color: '#005A32FF'
-              background_color: '#D0E7DDFF'
-              apply_to_row: true
-            }
-          }
-        ]
         row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
       }
     }
     settings {

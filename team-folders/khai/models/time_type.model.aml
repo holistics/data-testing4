@@ -1,0 +1,24 @@
+Model time_type {
+  type: 'query'
+  label: 'Time Type'
+  description: ''
+  data_source_name: 'demodb'
+  dimension time_type {
+    label: 'Time Type'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.time_type }};;
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql
+    SELECT time_type FROM (VALUES 
+        ('1. Week'),
+        ('2. MTD'),
+        ('3. MTD LY'),
+        ('4. YTD'),
+        ('5. YTD LY')
+    ) AS t(time_type);;
+  models: [
+  ]
+}

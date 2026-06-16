@@ -1,0 +1,13 @@
+Dataset overlapped_time_ds {
+  label: 'Overlapped Time Ds'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    overlapped_time
+    ,
+    sample_overlapping_time
+  ]
+  relationships: [
+  ]
+  owner: 'khai.to@holistics.io'
+}

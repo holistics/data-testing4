@@ -101,6 +101,9 @@ Dashboard ops_dashboard {
     label: 'Order Listing'
     viz: DataTable {
       dataset: demo_ecommerce
+      theme {
+
+      }
       fields: [
         VizFieldFull {
           ref: ref('order_master', 'order_created_at')
@@ -138,7 +141,7 @@ Dashboard ops_dashboard {
           ref: ref('order_master', 'quantity')
           format {
             type: 'number'
-            pattern: 'inherited'
+            pattern: '#,###'
           }
         },
         VizFieldFull {

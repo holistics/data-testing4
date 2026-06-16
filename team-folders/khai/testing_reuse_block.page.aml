@@ -1,0 +1,27 @@
+Dashboard testing_reuse_block {
+  title: 'Testing Reuse Block'
+  description: ''
+
+  view: CanvasLayout {
+    label: 'View 1'
+    height: 840
+    grid_size: 20
+    mobile {
+      mode: 'auto'
+    }
+    block v1 {
+      position: pos(20, 20, 1160, 560)
+      layer: 1
+    }
+    block f_buya {
+      position: pos(20, 600, 300, 80)
+      layer: 2
+    }
+  }
+
+  theme: H.themes.vanilla
+  block v1: block_cohort_retention(
+    'quarter',
+    'Baking and Cooking'
+  )
+}

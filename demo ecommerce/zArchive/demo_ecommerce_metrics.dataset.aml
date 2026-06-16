@@ -43,5 +43,11 @@ Dataset demo_ecommerce_metrics {
     type: 'number'
     definition: @aql order_master | sum(order_master.amount * ecommerce_products.price) ;;
   }
-
+  dimension clv_dimensionalized {
+    label: "Clv Dimensionalized"
+    type: "number"
+    description: ""
+    definition: @aql total_order_value | dimensionalize(order_master.user_id);;
+    model: order_master
+  }
 }

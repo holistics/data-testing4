@@ -376,6 +376,38 @@ Dashboard ecommerce_mobile {
       }
     }
   }
+  block v7: VizBlock {
+    label: 'Revenue by Status'
+    viz: DataTable {
+      dataset: demo_ecommerce
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          ref: ref('order_master', 'status')
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: 'total_orders'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'f1'
@@ -440,6 +472,10 @@ Dashboard ecommerce_mobile {
       position: pos(20, 800, 1160, 520)
       layer: 4
     }
+    block v7 {
+      position: pos(1250, 275, 400, 180)
+      layer: 5
+    }
     mobile {
       mode: 'manual'
       block t1
@@ -456,5 +492,6 @@ Dashboard ecommerce_mobile {
       block v6
     }
     grid_size: 5
+    width: 1670
   }
 }

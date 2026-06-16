@@ -16,6 +16,33 @@ Model param_model {
     allowed_values: ['Revenue', 'Total Orders', 'Total Users']
   }
 
+  param date_param {
+    label: 'Date Param'
+    type: 'datetime'
+  }
+
+  param number_param {
+    label: 'Number Param'
+    type: 'number'
+  }
+
+  param param_slider {
+    label: 'Slider Parameter'
+    type: 'number'
+  }
+
+  param date_grain {
+    label: 'Date Grain'
+    type: 'text'
+    allowed_values: ['month', 'year']
+  }
+
+  param currency {
+    label: 'Display Currency'
+    type: 'text'
+    allowed_values: ['🇺🇸 USD', '🇲🇾 MYR', '🇸🇬 SGD', '🇹🇭 THB', '🇻🇳 VND', '🇦🇺 AUD']
+  }
+
   owner: 'khai.to@holistics.io'
   query: @sql select 1;;
   models: [

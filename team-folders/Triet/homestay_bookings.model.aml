@@ -1,0 +1,63 @@
+Model homestay_bookings {
+  type: 'table'
+  label: 'Bookings'
+  description: ''
+  data_source_name: 'demodb'
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension listing_id {
+    label: 'Listing Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.listing_id }};;
+  }
+  dimension check_in_date {
+    label: 'Check In Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.check_in_date }};;
+  }
+  dimension check_out_date {
+    label: 'Check Out Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.check_out_date }};;
+  }
+  dimension nights {
+    label: 'Nights'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.nights }};;
+  }
+  dimension adults {
+    label: 'Adults'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.adults }};;
+  }
+  dimension children {
+    label: 'Children'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.children }};;
+  }
+  dimension babies {
+    label: 'Babies'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.babies }};;
+  }
+  dimension reservation_status {
+    label: 'Reservation Status'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.reservation_status }};;
+  }
+
+  owner: 'triet.pham@holistics.io'
+  table_name: '"homestay"."bookings"'
+}

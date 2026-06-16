@@ -1,0 +1,26 @@
+Dataset pii_ecommerce {
+  label: 'PII Ecommerce',
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    pii_users,
+    ecommerce_products,
+    ecommerce_merchants,
+    ecommerce_countries,
+    ecommerce_orders,
+    ecommerce_order_items,
+    ecommerce_cities,
+    map_categories
+  ]
+  relationships: [
+    relationship(ecommerce_order_items.order_id > ecommerce_orders.id, true),
+    relationship(ecommerce_orders.user_id > pii_users.id, true),
+    relationship(pii_users.city_id > ecommerce_cities.id, true),
+    relationship(ecommerce_cities.country_code > ecommerce_countries.code, true),
+    relationship(ecommerce_order_items.product_id > ecommerce_products.id, true),
+    // relationship(ecommerce_products.id - ecommerce_product_images.product_id, true),
+    relationship(ecommerce_products.merchant_id > ecommerce_merchants.id, true),
+    relationship(ecommerce_products_map_categories, true),
+    relationship(ecommerce_merchants.city_id > ecommerce_cities.id, false)
+  ]
+}

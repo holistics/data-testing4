@@ -264,6 +264,9 @@ Dashboard _0_ecommerce_dashboard_30 {
     label: 'GMV Total'
     viz: LineChart {
       dataset: demo_ecommerce
+      theme {
+
+      }
       x_axis: VizFieldFull {
         ref: ref('ecommerce_orders', 'created_at')
         transformation: 'datetrunc month'
@@ -281,8 +284,27 @@ Dashboard _0_ecommerce_dashboard_30 {
             }
           }
         }
+        series {
+          field: VizFieldFull {
+            label: 'Gmv (prev. 1y)'
+            ref: ref('order_master', 'gmv')
+            format {
+              type: 'number'
+              pattern: '[$$]#,###'
+            }
+            analytic: PeriodOverPeriodComparison {
+              time_dimension: ref('ecommerce_orders', 'created_at')
+              display: 'value'
+              comparison_period: 'relative to previous 1 year'
+            }
+          }
+          settings {
+            line_style: 'dashed'
+          }
+        }
       }
       settings {
+        x_axis_show_null_datetime: true
         aggregate_awareness {
           enabled: true
           debug_comments: true
@@ -545,82 +567,93 @@ Dashboard _0_ecommerce_dashboard_30 {
       ]
     }
   ]
-  view: CanvasLayout {
-    label: 'Canvas Layout'
-    width: 1220
-    height: 1800
-    grid_size: 20
-    block v1 {
-      position: pos(20, 380, 580, 630)
-      layer: 1
+  view: TabLayout {
+    label: 'View 1'
+    tab tab1: CanvasLayout {
+      label: 'Untitled'
+      width: 1220
+      height: 1800
+      grid_size: 20
+      block v1 {
+        position: pos(20, 380, 580, 630)
+        layer: 1
+      }
+      block v2 {
+        position: pos(620, 380, 580, 280)
+        layer: 1
+      }
+      block v3 {
+        position: pos(620, 1080, 580, 180)
+        layer: 1
+      }
+      block v4 {
+        position: pos(620, 680, 580, 380)
+        layer: 1
+      }
+      block v5 {
+        position: pos(620, 1280, 580, 380)
+        layer: 1
+      }
+      block v6 {
+        position: pos(20, 1030, 580, 350)
+        layer: 1
+      }
+      block v7 {
+        position: pos(20, 1400, 580, 260)
+        layer: 2
+      }
+      block city {
+        position: pos(620, 260, 280, 100)
+        layer: 1
+      }
+      block date {
+        position: pos(20, 20, 280, 100)
+        layer: 1
+      }
+      block gender {
+        position: pos(920, 20, 280, 100)
+        layer: 1
+      }
+      block country {
+        position: pos(320, 20, 280, 100)
+        layer: 1
+      }
+      block category {
+        position: pos(620, 20, 280, 100)
+        layer: 1
+      }
+      block date_drill {
+        position: pos(20, 260, 280, 100)
+        layer: 1
+      }
+      block order_date {
+        position: pos(620, 140, 280, 100)
+        layer: 1
+      }
+      block order_status {
+        position: pos(20, 140, 280, 100)
+        layer: 1
+      }
+      block item_category {
+        position: pos(320, 140, 280, 100)
+        layer: 1
+      }
+      block sale_comparison {
+        position: pos(320, 260, 280, 100)
+        layer: 1
+      }
+      block user_sign_up_date {
+        position: pos(920, 140, 280, 100)
+        layer: 1
+      }
     }
-    block v2 {
-      position: pos(620, 380, 580, 280)
-      layer: 1
-    }
-    block v3 {
-      position: pos(620, 1080, 580, 180)
-      layer: 1
-    }
-    block v4 {
-      position: pos(620, 680, 580, 380)
-      layer: 1
-    }
-    block v5 {
-      position: pos(620, 1280, 580, 380)
-      layer: 1
-    }
-    block v6 {
-      position: pos(20, 1030, 580, 350)
-      layer: 1
-    }
-    block v7 {
-      position: pos(20, 1400, 580, 260)
-      layer: 2
-    }
-    block city {
-      position: pos(620, 260, 280, 100)
-      layer: 1
-    }
-    block date {
-      position: pos(20, 20, 280, 100)
-      layer: 1
-    }
-    block gender {
-      position: pos(920, 20, 280, 100)
-      layer: 1
-    }
-    block country {
-      position: pos(320, 20, 280, 100)
-      layer: 1
-    }
-    block category {
-      position: pos(620, 20, 280, 100)
-      layer: 1
-    }
-    block date_drill {
-      position: pos(20, 260, 280, 100)
-      layer: 1
-    }
-    block order_date {
-      position: pos(620, 140, 280, 100)
-      layer: 1
-    }
-    block order_status {
-      position: pos(20, 140, 280, 100)
-      layer: 1
-    }
-    block item_category {
-      position: pos(320, 140, 280, 100)
-      layer: 1
-    }
-    block sale_comparison {
-      position: pos(320, 260, 280, 100)
-      layer: 1
-    }
-    block user_sign_up_date {
-      position: pos(920, 140, 280, 100)
-      layer: 1
+    tab tab2: CanvasLayout {
+      label: 'Untitled'
+      height: 800
+      grid_size: 20
+      mobile {
+        mode: 'auto'
+      }
     }
   }
   theme: H.themes.classic

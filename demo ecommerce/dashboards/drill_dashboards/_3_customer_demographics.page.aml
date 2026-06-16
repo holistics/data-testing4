@@ -5,11 +5,11 @@ Dashboard _3_customer_demographics {
     type: 'field'
     source: FieldFilterSource {
       dataset: demo_ecommerce
-      field: ref('ecommerce_cities', 'name')
+      field: r(ecommerce_cities.name)
     }
     default {
       operator: 'is'
-      value: []
+      value: 'Berlin'
     }
     settings {
       drillthrough: Drillthrough {
@@ -47,11 +47,11 @@ Dashboard _3_customer_demographics {
     type: 'field'
     source: FieldFilterSource {
       dataset: demo_ecommerce
-      field: ref('ecommerce_countries', 'name')
+      field: r(ecommerce_countries.name)
     }
     default {
       operator: 'is'
-      value: []
+      value: 'Australia'
     }
     settings {
       drillthrough: Drillthrough {

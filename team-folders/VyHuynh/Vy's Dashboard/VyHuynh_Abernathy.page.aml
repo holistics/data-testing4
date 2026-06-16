@@ -1,0 +1,5167 @@
+Dashboard vy_huynh_abernathy {
+  title: 'Vy Huynh Abernathy'
+  description: @md Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et massa vehicula, lobortis tortor bibendum, molestie velit. Morbi iaculis augue et pulvinar tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin lacus arcu, aliquam at elit at, porta suscipit libero. Integer euismod, urna vitae rhoncus tristique, tortor odio condimentum lacus, sit amet accumsan sem eros a sapien. Quisque commodo hendrerit dui, et fermentum nibh consectetur id. Maecenas convallis fringilla cursus. Fusce urna justo, lacinia a ipsum eu, lacinia vehicula dui. Vestibulum sagittis quam est, a posuere lorem suscipit sit amet.
+
+Vestibulum eu egestas odio. Maecenas sed dui ac turpis feugiat blandit et et mauris. Fusce felis ex, dignissim vel ante vitae, mattis facilisis arcu. Integer congue lorem sit amet libero sodales, a condimentum tellus commodo. Mauris eu nisl neque. Nam sagittis, augue quis eleifend euismod, lorem dui vulputate mi, a finibus sapien sapien at enim. Pellentesque accumsan orci pretium tincidunt sodales. Fusce volutpat rhoncus tellus, vel varius est imperdiet sit amet. Praesent ut urna sed turpis semper iaculis. Nam fringilla enim mi, nec tincidunt sem facilisis vel. Suspendisse aliquet mi eget mauris aliquet, eget vulputate risus laoreet. Pellentesque posuere sollicitudin elementum.
+
+Curabitur sit amet elementum nulla, id blandit mi. Vivamus ipsum dui, malesuada ut ultrices in, venenatis vitae nisl. Morbi blandit, sem et ultrices scelerisque, felis metus dapibus ante, non commodo erat erat at sapien. Aliquam lobortis risus eget finibus vehicula. Pellentesque auctor mi nec nunc blandit, nec dignissim eros gravida. Praesent facilisis libero convallis magna sollicitudin, sit amet ultrices felis suscipit. Quisque id sagittis leo, aliquam mattis lectus.
+
+Integer sodales et turpis tristique pulvinar. Quisque viverra magna a nibh sodales, a vehicula leo bibendum. Fusce suscipit diam id nulla blandit, non interdum elit pulvinar. Maecenas ante enim, fringilla at tortor id, fermentum mattis ligula. Donec diam nulla, mollis non sagittis a, tincidunt at dui. Praesent quis magna in magna aliquam dignissim. Cras ultricies scelerisque nisl sit amet consectetur. Quisque vitae semper elit, id tincidunt ante.
+
+Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut ante ex, vulputate at congue sit amet, sagittis nec risus. Donec lacinia aliquet nisi, tincidunt elementum ligula vehicula ut. Aliquam commodo id mauris eu vehicula. Nullam est nisl, tincidunt sed gravida vel, varius quis ante. Nulla facilisi. Proin ultricies dignissim eros, id dapibus lacus pharetra sed.
+
+;;
+  view: TabLayout {
+    label: 'View 1'
+    tab tab2: CanvasLayout {
+      label: 'Revenue Overview'
+      width: 1220
+      height: 5000
+      grid_size: 20
+      block v3 {
+        position: pos(20, 1760, 1160, 460)
+        layer: 3
+      }
+      block v4 {
+        position: pos(700, 740, 260, 140)
+        layer: 2
+      }
+      block t3 {
+        position: pos(20, 20, 380, 160)
+        layer: 4
+      }
+      block t4 {
+        position: pos(40, 40, 60, 40)
+        layer: 5
+      }
+      block t5 {
+        position: pos(80, 40, 300, 40)
+        layer: 6
+      }
+      block f1 {
+        position: pos(80, 80, 280, 60)
+        layer: 7
+      }
+      block t6 {
+        position: pos(400, 20, 380, 160)
+        layer: 4
+      }
+      block t7 {
+        position: pos(420, 40, 60, 40)
+        layer: 5
+      }
+      block t8 {
+        position: pos(460, 40, 300, 60)
+        layer: 8
+      }
+      block f2 {
+        position: pos(460, 80, 280, 60)
+        layer: 7
+      }
+      block t9 {
+        position: pos(20, 180, 1160, 20)
+        layer: 9
+      }
+      block v8 {
+        position: pos(20, 1160, 1160, 580)
+        layer: 1
+      }
+      block v_711g {
+        position: pos(20, 740, 640, 400)
+        layer: 1
+      }
+      block v_nehb {
+        position: pos(20, 2840, 540, 460)
+        layer: 1
+      }
+      block v_cii9 {
+        position: pos(20, 3320, 1160, 400)
+        layer: 10
+      }
+      block t_4ttu {
+        position: pos(800, 20, 380, 160)
+        layer: 1
+      }
+      block t_5y3l {
+        position: pos(820, 40, 60, 40)
+        layer: 2
+      }
+      block t_vb6z {
+        position: pos(860, 40, 300, 60)
+        layer: 3
+      }
+      block f_zwa4 {
+        position: pos(860, 80, 280, 60)
+        layer: 4
+      }
+      block v_qj0m {
+        position: pos(20, 3740, 1160, 400)
+        layer: 11
+      }
+      block v_lpgt {
+        position: pos(20, 4160, 580, 400)
+        layer: 12
+      }
+      block v_5zcz {
+        position: pos(20, 2240, 1160, 580)
+        layer: 1
+      }
+      block v_jbl8 {
+        position: pos(620, 4160, 560, 400)
+        layer: 3
+      }
+      block v_96z3 {
+        position: pos(580, 2840, 580, 400)
+        layer: 13
+      }
+      block v_c0sc {
+        position: pos(20, 200, 1160, 220)
+        layer: 1
+      }
+      block v_fb2g {
+        position: pos(20, 4580, 580, 400)
+        layer: 14
+      }
+      block v_wxn2 {
+        position: pos(620, 4580, 580, 400)
+        layer: 15
+      }
+      mobile {
+        mode: 'auto'
+      }
+      default_zoom: 1
+      auto_expand_vertically: true
+    }
+    tab tab_5auh: CanvasLayout {
+      label: 'Raw Data Table'
+      height: 1740
+      grid_size: 20
+      auto_expand_vertically: true
+      block v_ztqi {
+        position: pos(20, 20, 1180, 420)
+        layer: 1
+      }
+      block v_856v {
+        position: pos(20, 460, 1180, 420)
+        layer: 1
+      }
+      block v_9oui {
+        position: pos(20, 900, 580, 400)
+        layer: 2
+      }
+      block v_02lk {
+        position: pos(20, 1320, 580, 400)
+        layer: 4
+      }
+      block v_lrzt {
+        position: pos(620, 900, 580, 400)
+        layer: 3
+      }
+      mobile {
+        mode: 'auto'
+      }
+      width: 1220
+      default_zoom: 1
+    }
+    tab tab3: CanvasLayout {
+      label: 'Regional Analysis'
+      height: 9440
+      grid_size: 20
+      block v5 {
+        position: pos(20, 360, 540, 420)
+        layer: 1
+      }
+      block t1 {
+        position: pos(20, 20, 60, 60)
+        layer: 2
+      }
+      block t2 {
+        position: pos(80, 20, 400, 60)
+        layer: 3
+      }
+      block v_qctn {
+        position: pos(20, 5660, 560, 560)
+        layer: 1
+      }
+      block v_9rhg {
+        position: pos(20, 6260, 1160, 580)
+        layer: 1
+      }
+      block v_tusm {
+        position: pos(20, 7380, 1160, 500)
+        layer: 1
+      }
+      block v_j83d {
+        position: pos(20, 7900, 1160, 480)
+        layer: 1
+      }
+      block v_nyr1 {
+        position: pos(20, 8400, 1160, 500)
+        layer: 1
+      }
+      block v_5dpt {
+        position: pos(20, 8920, 1160, 500)
+        layer: 1
+      }
+      block v_8fpj {
+        position: pos(20, 5140, 1160, 500)
+        layer: 4
+      }
+      block v_350o {
+        position: pos(20, 800, 540, 400)
+        layer: 1
+      }
+      block v_qnug {
+        position: pos(20, 1220, 1160, 400)
+        layer: 1
+      }
+      block v_tq6d {
+        position: pos(580, 800, 600, 400)
+        layer: 1
+      }
+      block t_hcv3 {
+        position: pos(20, 1660, 320, 60)
+        layer: 1
+      }
+      block t_ww35 {
+        position: pos(20, 300, 320, 60)
+        layer: 1
+      }
+      block v_6o9d {
+        position: pos(20, 3580, 1160, 440)
+        layer: 1
+      }
+      block v_wwiv {
+        position: pos(20, 3120, 1160, 440)
+        layer: 1
+      }
+      block t_vh1h {
+        position: pos(20, 4080, 320, 60)
+        layer: 1
+      }
+      block v_7vcf {
+        position: pos(20, 100, 380, 180)
+        layer: 1
+      }
+      block v_ji80 {
+        position: pos(20, 4140, 1160, 480)
+        layer: 1
+      }
+      block v_n0qr {
+        position: pos(20, 4640, 1160, 480)
+        layer: 1
+      }
+      block v_0sbb {
+        position: pos(20, 2660, 1160, 440)
+        layer: 1
+      }
+      block v_58pi {
+        position: pos(20, 2200, 1160, 440)
+        layer: 1
+      }
+      block v_jpzg {
+        position: pos(20, 1740, 1160, 440)
+        layer: 1
+      }
+      block v_vk4x {
+        position: pos(580, 360, 540, 420)
+        layer: 1
+      }
+      block v_ufmq {
+        position: pos(420, 100, 380, 180)
+        layer: 1
+      }
+      block v_t8f9 {
+        position: pos(600, 5660, 580, 560)
+        layer: 1
+      }
+      mobile {
+        mode: 'auto'
+      }
+      auto_expand_vertically: true
+    }
+    tab tab_4i2l: CanvasLayout {
+      label: 'User Analysis'
+      width: 1500
+      height: 2020
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      block v_3mef {
+        position: pos(20, 860, 1240, 280)
+        layer: 1
+      }
+      block v_059z {
+        position: pos(20, 600, 1240, 240)
+        layer: 1
+      }
+      block v_ck6w {
+        position: pos(20, 120, 1460, 460)
+        layer: 2
+      }
+      block f_countries_continent_name {
+        position: pos(20, 20, 300, 80)
+        layer: 2
+      }
+      auto_expand_horizontally: true
+    }
+    tab tab_yzia: CanvasLayout {
+      label: 'Key Driver'
+      width: 1300
+      height: 2480
+      grid_size: 20
+      auto_expand_vertically: true
+      block v_bj6j {
+        position: pos(20, 580, 620, 420)
+      }
+      block v_segi {
+        position: pos(660, 1020, 620, 420)
+      }
+      block v_c1ru {
+        position: pos(20, 1020, 620, 420)
+      }
+      block v_3pqe {
+        position: pos(20, 1460, 620, 420)
+      }
+      block v_p9dt {
+        position: pos(660, 580, 620, 420)
+      }
+      block t_uje2 {
+        position: pos(20, 1960, 520, 60)
+      }
+      block v_d9k9 {
+        position: pos(20, 2040, 620, 420)
+      }
+      block v_zspi {
+        position: pos(660, 2040, 620, 420)
+      }
+      block t_io0f {
+        position: pos(20, 500, 520, 60)
+      }
+      block t_wymk {
+        position: pos(20, 20, 520, 60)
+      }
+      block v_j070 {
+        position: pos(660, 80, 600, 400)
+        layer: 2
+      }
+      block v_qpsb {
+        position: pos(20, 80, 600, 400)
+        layer: 1
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
+    tab tab_kamz: CanvasLayout {
+      label: 'draft'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      block v_91yu {
+        position: pos(40, 100, 260, 140)
+      }
+      block v_nir7 {
+        position: pos(320, 100, 220, 140)
+      }
+      block f_publift_test_data_csv_currency {
+        position: pos(40, 20, 300, 80)
+      }
+      block v_15s1 {
+        position: pos(40, 260, 260, 160)
+      }
+    }
+  }
+  theme: H.themes.vanilla
+  block v3: VizBlock {
+    label: 'Total Revenue and Number of Order by Month'
+    viz: CombinationChart {
+      dataset: vyhuynh_ecommerce_dataset
+      filter {
+        field: r(vyht_ecommerce_orders_1.created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      x_axis: VizFieldFull {
+        label: 'Order Month'
+        ref: r(vyht_ecommerce_orders_1.created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        label: 'Total Revenue'
+        settings {
+          group_values_into: 10
+          show_data_label_by: 'value'
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'Total Revenue'
+            ref: r(vyhuynh_ecommerce_dataset.total_revenue)
+            format {
+              type: 'number'
+              pattern: '[$$]#,###'
+            }
+          }
+          settings {
+            color: '#255DD4'
+          }
+        }
+      }
+      y_axis {
+        label: 'Number of Order'
+        settings {
+          alignment: 'right'
+          group_values_into: 10
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            ref: r(vyht_ecommerce_orders_1.id)
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#18A59E'
+            line_style: 'dashed'
+          }
+        }
+      }
+      settings {
+        row_limit: 100
+        x_axis_label: 'Order Month'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v4: VizBlock {
+    label: 'This month Total Order'
+    viz: MetricKpi {
+      dataset: vyhuynh_ecommerce_dataset
+      calculation monthly_revenue {
+        label: 'Monthly Revenue'
+        formula: @aql vyht_ecommerce_order_items
+  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(vyht_ecommerce_orders_1.created_at)
+        operator: 'matches'
+        value: 'July 2023'
+      }
+      value: VizFieldFull {
+        label: 'Total Order This Month'
+        ref: r(vyht_ecommerce_orders_1.id)
+        aggregation: 'count distinct'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      compare_value: VizPopSettings {
+        field: r(vyht_ecommerce_orders_1.created_at)
+        duration: 1
+        granularity: 'month'
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v5: VizBlock {
+    label: 'GMV by Continent (2024)'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block t1: TextBlock {
+    content: @md <div id="regional-analysis">  <svg width="40" height="40
+    " viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="49.7598" cy="49.7598" r="49.7598" fill="#1B7CE4"/>
+<path d="M39.2641 56.5871C33.6879 48.5033 32.6528 47.6736 32.6528 44.7027C32.6528 40.6332 35.9518 37.3342 40.0213 37.3342C44.0909 37.3342 47.3899 40.6332 47.3899 44.7027C47.3899 47.6736 46.3548 48.5033 40.7786 56.5871C40.4127 57.1157 39.63 57.1157 39.2641 56.5871ZM40.0213 47.7729C41.717 47.7729 43.0916 46.3983 43.0916 44.7027C43.0916 43.0071 41.717 41.6325 40.0213 41.6325C38.3257 41.6325 36.9511 43.0071 36.9511 44.7027C36.9511 46.3983 38.3257 47.7729 40.0213 47.7729Z" fill="white"/>
+<path d="M54.0011 46.7624C48.4249 38.6786 47.3899 37.849 47.3899 34.878C47.3899 30.8085 50.6888 27.5095 54.7584 27.5095C58.8279 27.5095 62.1269 30.8085 62.1269 34.878C62.1269 37.849 61.0918 38.6786 55.5156 46.7624C55.1497 47.291 54.367 47.291 54.0011 46.7624ZM54.7584 37.9482C56.454 37.9482 57.8286 36.5737 57.8286 34.878C57.8286 33.1824 56.454 31.8078 54.7584 31.8078C53.0627 31.8078 51.6881 33.1824 51.6881 34.878C51.6881 36.5737 53.0627 37.9482 54.7584 37.9482Z" fill="white"/>
+<path d="M51.5777 48.44L51.5749 48.436C51.0899 47.7329 50.6341 47.0776 50.2068 46.466C50.1505 46.809 50.0726 47.1567 49.9671 47.5131C49.6852 48.4651 49.2472 49.3386 48.7011 50.2466C48.0331 51.3573 47.0331 52.7823 45.6642 54.7331C44.9473 55.7547 44.1293 56.9204 43.2048 58.2607L43.202 58.2647C41.664 60.4865 38.3785 60.4863 36.8407 58.2647L36.8379 58.2607C35.9135 56.9206 35.0956 55.7551 34.3789 54.7336C33.0099 52.7829 32.0096 51.3573 31.3416 50.2466C30.7955 49.3386 30.3575 48.4651 30.0756 47.5131C29.787 46.5385 29.7054 45.6296 29.7054 44.7027C29.7054 42.4528 30.4257 40.3711 31.6483 38.6756L31.5947 38.6221C31.2668 38.2941 30.8035 38.1397 30.3443 38.2053L23.5932 39.1697C22.9279 39.2648 22.4112 39.7979 22.3369 40.4659L21.8547 44.8058C21.8181 45.1357 21.8938 45.4682 22.0697 45.7496L26.524 52.8765L24.8146 58.0047C24.6381 58.5342 24.7759 59.1181 25.1707 59.5128L28.5462 62.8883C28.7415 63.0836 28.9877 63.2201 29.2569 63.2822L34.5411 64.5016L34.8804 66.8768C34.9255 67.1925 35.0718 67.485 35.2972 67.7105L36.0492 68.4624C36.5549 68.9681 37.3507 69.0378 37.9365 68.6276L41.7612 65.9495L44.7584 70.2299C45.0043 70.5812 45.3911 70.8079 45.8178 70.8509L51.2426 71.3974C51.7871 71.4523 52.3171 71.2009 52.6192 70.7445L56.128 65.4435L70.6645 59.3475C71.0371 59.1913 71.3292 58.8889 71.4725 58.5111L76.7769 44.5268C76.9541 44.0596 76.8825 43.5345 76.5868 43.1318C76.291 42.729 75.8113 42.5036 75.3125 42.533L68.084 42.9582L64.9377 36.678C64.8819 37.0091 64.8059 37.3447 64.7041 37.6885C64.4222 38.6404 63.9842 39.5139 63.4381 40.4219C62.7701 41.5326 61.7701 42.9577 60.4012 44.9085C59.6843 45.93 58.8663 47.0957 57.9418 48.436L57.939 48.44C56.401 50.6618 53.1155 50.6616 51.5777 48.44Z" fill="white"/>
+</svg>
+</div>;;
+  }
+  block t2: TextBlock {
+    content: @md # Regional Analysis;;
+  }
+  block t3: TextBlock {
+    content: @md <svg width="361" height="130" viewBox="0 0 361 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="359" height="128" rx="6" fill="#E8F2FD" stroke="#4896EA" stroke-dasharray="4 4"/>
+</svg>;;
+  }
+  block t4: TextBlock {
+    content: @md <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect y="40" width="40" height="40" rx="4" transform="rotate(-90 0 40)" fill="#1B7CE4"/>
+<path d="M30.2524 9.28125H9.74783C8.44664 9.28125 7.79011 10.8599 8.712 11.7819L17.0703 20.1419V28.6904C17.0703 28.8992 17.1149 29.1056 17.2012 29.2957C17.2875 29.4859 17.4134 29.6553 17.5706 29.7928L20.5002 32.3555C21.4358 33.1741 22.9297 32.524 22.9297 31.2531V20.1419L31.2882 11.7819C32.2083 10.8618 31.5562 9.28125 30.2524 9.28125ZM21.4648 19.5352V31.2539L18.5352 28.6904V19.5352L9.74609 10.7461H30.2539L21.4648 19.5352Z" fill="white"/>
+</svg>;;
+  }
+  block t5: TextBlock {
+    content: @md ### Filter by Country;;
+  }
+  block f1: FilterBlock {
+    label: 'Country Name'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: r(ecommerce_countries.name)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+    settings {
+      drillthrough: Drillthrough {
+        enabled: true
+        sources: [
+          AutoDrillthroughSource {
+          }
+        ]
+      }
+    }
+  }
+  block t6: TextBlock {
+    content: @md <svg width="361" height="130" viewBox="0 0 361 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="359" height="128" rx="6" fill="#E8F2FD" stroke="#4896EA" stroke-dasharray="4 4"/>
+</svg>;;
+  }
+  block t7: TextBlock {
+    content: @md <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect y="40" width="40" height="40" rx="4" transform="rotate(-90 0 40)" fill="#1B7CE4"/>
+<path d="M30.2524 9.28125H9.74783C8.44664 9.28125 7.79011 10.8599 8.712 11.7819L17.0703 20.1419V28.6904C17.0703 28.8992 17.1149 29.1056 17.2012 29.2957C17.2875 29.4859 17.4134 29.6553 17.5706 29.7928L20.5002 32.3555C21.4358 33.1741 22.9297 32.524 22.9297 31.2531V20.1419L31.2882 11.7819C32.2083 10.8618 31.5562 9.28125 30.2524 9.28125ZM21.4648 19.5352V31.2539L18.5352 28.6904V19.5352L9.74609 10.7461H30.2539L21.4648 19.5352Z" fill="white"/>
+</svg>;;
+  }
+  block t8: TextBlock {
+    content: @md ### Filter by City;;
+  }
+  block f2: FilterBlock {
+    label: 'City Name'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: r(ecommerce_cities.name)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+    settings {
+      drillthrough: Drillthrough {
+        enabled: true
+        sources: [
+          AutoDrillthroughSource {
+          }
+        ]
+      }
+    }
+  }
+  block t9: H.blocks.line(2, '#8F99A3')
+  block v8: VizBlock {
+    label: 'GMV - Gross Merchandise Value by Month'
+    viz: AreaChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        label: 'GMV'
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Untitled Trend line'
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+            analytic: RegressionLine {
+              type: 'linear'
+            }
+          }
+          settings {
+            line_style: 'dashed'
+          }
+        }
+      }
+      settings {
+        show_rows_with_no_data: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_711g: VizBlock {
+    label: 'Number of Order by Country Name and City Name'
+    viz: LineChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_month)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Total Order'
+        settings {
+          show_data_label_by: 'value'
+          stack_series_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.order_id)
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_label: 'Country'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_ztqi: VizBlock {
+    label: 'Table 1'
+    viz: DataTable {
+      dataset: demo_ecommerce
+      theme {
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(order_master.order_created_month)
+          format {
+            type: 'date'
+          }
+          uname: 'order_master_order_created_month_1'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_countries.continent_name)
+          format {
+            type: 'text'
+          }
+          uname: 'ecommerce_countries_continent_name'
+        },
+        VizFieldFull {
+          ref: r(order_master.user_id)
+          aggregation: 'count distinct'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'count_distinct_user_id_1'
+        },
+        VizFieldFull {
+          ref: r(order_master.order_id)
+          aggregation: 'count'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'count_order_id'
+        },
+        VizFieldFull {
+          ref: r(order_master.price)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: '[$$]#,###'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'count_distinct_user_id_1'
+            direction: 'desc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'count_order_id'
+            width: 89
+          },
+          ColumnStyle {
+            key: 'count_distinct_user_id_1'
+            width: 100
+          },
+          ColumnStyle {
+            key: 'ecommerce_countries_continent_name'
+            width: 162
+          },
+          ColumnStyle {
+            key: 'order_master_order_created_month_1'
+            width: 215
+          }
+        ]
+      }
+    }
+  }
+  block v_hk4u: VizBlock {
+    label: 'Order Created Month, City Name, and CountD of User Id'
+    viz: DataTable {
+      dataset: demo_ecommerce
+      filter {
+        field: r(order_master.order_created_month)
+        operator: 'matches'
+        value: 'may 2023'
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(order_master.order_created_month)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_cities.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(order_master.user_id)
+          aggregation: 'count distinct'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'count_distinct_user_id_1'
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'count_distinct_user_id_1'
+            direction: 'desc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_wsww: VizBlock {
+    label: 'Order Created Month, City Name, and CountD of User Id'
+    viz: DataTable {
+      dataset: demo_ecommerce
+      filter {
+        field: r(order_master.order_created_month)
+        operator: 'matches'
+        value: 'may 2023'
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(order_master.order_created_month)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_cities.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(order_master.user_id)
+          aggregation: 'count distinct'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'count_distinct_user_id_1'
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'order_master_order_created_month_1'
+            direction: 'asc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_nehb: VizBlock {
+    label: 'Total Revenue and Number of Order by Month'
+    viz: DataTable {
+      dataset: vyhuynh_ecommerce_dataset
+      filter {
+        field: r(vyht_ecommerce_users_1.sign_up_date)
+        operator: 'matches'
+        value: '2025'
+      }
+      theme {
+      }
+      fields: [
+        VizFieldFull {
+          label: 'Order Month'
+          ref: r(vyht_ecommerce_orders_1.created_at)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+        },
+        VizFieldFull {
+          ref: r(vyhuynh_ecommerce_dataset.total_revenue)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 100
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_856v: VizBlock {
+    label: 'Table 2'
+    viz: DataTable {
+      dataset: demo_ecommerce
+      theme {
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(order_master.order_created_month)
+          format {
+            type: 'date'
+          }
+          uname: 'order_master_order_created_month_1'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_countries.continent_name)
+          format {
+            type: 'text'
+          }
+          uname: 'ecommerce_countries_continent_name'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_users.email_user)
+          format {
+            type: 'text'
+          }
+          uname: 'ecommerce_users_email_user'
+        },
+        VizFieldFull {
+          ref: r(demo_ecommerce.total_orders)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'custom_total_orders'
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'order_master_order_created_month_1'
+            width: 264
+          },
+          ColumnStyle {
+            key: 'ecommerce_countries_continent_name'
+            width: 221
+          },
+          ColumnStyle {
+            key: 'ecommerce_users_email_user'
+            width: 385
+          }
+        ]
+      }
+    }
+  }
+  block v_cii9: VizBlock {
+    label: 'Count Users, Sum Price, and AOV - Average Order Value by Name'
+    viz: CombinationChart {
+      dataset: demo_bigquery_ecommerce
+      calculation sum_price {
+        label: 'Sum Price'
+        formula: @aql sum(bq_dim_products.price);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(bq_fct_order_items.created_date)
+        operator: 'matches'
+        value: '2023'
+      }
+      x_axis: VizFieldFull {
+        ref: r(bq_dim_product_countries.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(demo_bigquery_ecommerce.count_users)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      y_axis {
+        settings {
+          alignment: 'right'
+        }
+        series {
+          field: VizFieldFull {
+            ref: 'sum_price'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(demo_bigquery_ecommerce.aov)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_qctn: VizBlock {
+    label: 'Trend analysis'
+    viz: LineChart {
+      dataset: demo_ecommerce
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Total Order'
+        settings {
+          show_data_label_by: 'value'
+          stack_series_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.order_id)
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_label: 'Country'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    description: '''How is each continent trending over time? 
+
+**Insights**: Seasonality patterns, growth trends, comparative performance across months
+
+'''
+  }
+  block v_9rhg: VizBlock {
+    label: 'Number of Order by Country Name and City Name'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_cities.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Total Order'
+        settings {
+          show_data_label_by: 'value'
+          stack_series_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.order_id)
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'desc'
+          type: 'xaxis'
+        }
+        x_axis_label: 'Country'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block t_4ttu: TextBlock {
+    content: @md <svg width="361" height="130" viewBox="0 0 361 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="359" height="128" rx="6" fill="#E8F2FD" stroke="#4896EA" stroke-dasharray="4 4"/>
+</svg>;;
+  }
+  block t_5y3l: TextBlock {
+    content: @md <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect y="40" width="40" height="40" rx="4" transform="rotate(-90 0 40)" fill="#1B7CE4"/>
+<path d="M30.2524 9.28125H9.74783C8.44664 9.28125 7.79011 10.8599 8.712 11.7819L17.0703 20.1419V28.6904C17.0703 28.8992 17.1149 29.1056 17.2012 29.2957C17.2875 29.4859 17.4134 29.6553 17.5706 29.7928L20.5002 32.3555C21.4358 33.1741 22.9297 32.524 22.9297 31.2531V20.1419L31.2882 11.7819C32.2083 10.8618 31.5562 9.28125 30.2524 9.28125ZM21.4648 19.5352V31.2539L18.5352 28.6904V19.5352L9.74609 10.7461H30.2539L21.4648 19.5352Z" fill="white"/>
+</svg>;;
+  }
+  block t_vb6z: TextBlock {
+    content: @md ### Date Filter;;
+  }
+  block f_zwa4: FilterBlock {
+    label: 'Date'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: r(order_master.order_created_at)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+    settings {
+      drillthrough: Drillthrough {
+        enabled: true
+        sources: [
+          AutoDrillthroughSource {
+          }
+        ]
+      }
+    }
+  }
+  block v_3mef: VizBlock {
+    label: 'Chart 3'
+    viz: CombinationChart {
+      dataset: ecom_dataset_vux
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.status)
+        format {
+          type: 'text'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            label: 'Number Order'
+            ref: r(order_master.order_id)
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color_palette: 0
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Number User'
+            ref: r(order_master.user_id)
+            aggregation: 'count'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_059z: VizBlock {
+    label: 'Table 2'
+    viz: PivotTable {
+      dataset: ecom_dataset_vux
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          ref: r(order_master.status)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      columns: [
+        VizFieldFull {
+          ref: r(ecommerce_countries.continent_name)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Number Order'
+          ref: r(order_master.order_id)
+          aggregation: 'count distinct'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          label: 'Number User'
+          ref: r(order_master.user_id)
+          aggregation: 'count'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_total: true
+        show_column_total: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_tusm: VizBlock {
+    label: 'GMV - Gross Merchandise Value by Country Name'
+    viz: BarChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_countries.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_j83d: VizBlock {
+    label: 'Count of Id by Latitude, Longitude, and Neighbourhood'
+    viz: BubbleChart {
+      dataset: demo_ecommerce
+      x_col: VizFieldFull {
+        ref: r(demo_ecommerce.total_orders)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      y_col: VizFieldFull {
+        ref: r(order_master.gmv)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      z_col: VizFieldFull {
+        ref: r(order_master.aov)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      group_col: VizFieldFull {
+        ref: r(map_categories.parent_category)
+        format {
+          type: 'text'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_nyr1: VizBlock {
+    label: 'GMV - Gross Merchandise Value by Continent Name'
+    viz: PieChart {
+      dataset: demo_ecommerce
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      series {
+        field: VizFieldFull {
+          ref: r(order_master.gmv)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+        settings {
+          color_palette: 0
+        }
+      }
+      settings {
+        display_as_donut: true
+        show_total: true
+        row_limit: 5000
+        data_label_position: 'outside'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_qj0m: VizBlock {
+    label: 'Sales by Category ID'
+    viz: LineChart {
+      dataset: american_housing_data_chinh_test
+      x_axis: VizFieldFull {
+        ref: r(zipcode_data_american_housing_data.beds)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            label: 'Sales'
+            ref: r(zipcode_data_american_housing_data.price)
+            aggregation: 'sum'
+            format {
+              type: 'number'
+              pattern: '[$$]#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_lpgt: VizBlock {
+    label: 'AOV - Average Order Value by Category'
+    viz: PieChart {
+      dataset: demo_ecommerce
+      legend: VizFieldFull {
+        ref: r(map_categories.category)
+        format {
+          type: 'text'
+        }
+      }
+      series {
+        field: VizFieldFull {
+          ref: r(order_master.aov)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+        settings {
+          color_palette: 0
+        }
+      }
+      settings {
+        row_limit: 5000
+        data_label_position: 'none'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_5zcz: VizBlock {
+    label: 'GMV - Gross Merchandise Value by Month'
+    viz: CombinationChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        label: 'GMV'
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      y_axis {
+        settings {
+          alignment: 'right'
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Untitled Reference line'
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+            analytic: ReferenceLine {
+              type: 'avg'
+            }
+          }
+        }
+      }
+      settings {
+        show_rows_with_no_data: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_5dpt: VizBlock {
+    label: 'GMV - Gross Merchandise Value and Total Orders by Month Order Created At'
+    viz: CombinationChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      y_axis {
+        settings {
+          alignment: 'right'
+        }
+        series {
+          mark_type: 'line'
+          field: r(demo_ecommerce.total_orders)
+          settings {
+            line_style: 'dashed'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_ck6w: VizBlock {
+    label: 'Table 1'
+    viz: PivotTable {
+      dataset: ecom_dataset_vux
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          ref: r(ecommerce_countries.continent_name)
+          format {
+            type: 'text'
+          }
+          uname: 'ecommerce_countries_continent_name'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_users.gender)
+          format {
+            type: 'text'
+          }
+          uname: 'ecommerce_users_gender'
+        },
+        VizFieldFull {
+          label: 'Product Category'
+          ref: r(order_master.delivery_attempts)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'order_master_delivery_attempts'
+        }
+      ]
+      columns: [
+        VizFieldFull {
+          ref: r(order_master.status)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Number Order'
+          ref: r(order_master.order_id)
+          aggregation: 'count distinct'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          label: 'GMV'
+          ref: r(order_master.gmv)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_total: true
+        show_column_total: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'ecommerce_users_gender'
+            width: 86
+          },
+          ColumnStyle {
+            key: 'order_master_delivery_attempts'
+            width: 116
+          },
+          ColumnStyle {
+            key: 'ecommerce_countries_continent_name'
+            width: 117
+          }
+        ]
+      }
+    }
+  }
+  block f_countries_continent_name: FilterBlock {
+    label: 'Countries Continent Name'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: r(ecommerce_countries.continent_name)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block v_8fpj: VizBlock {
+    label: 'Revenue by Sale reps'
+    viz: BarChart {
+      dataset: vyhuynh_ecommerce_dataset
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(vy_sales_revenue_demo_csv.sales_rep)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(vy_sales_revenue_demo_csv.revenue_usd)
+            aggregation: 'sum'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: ConstantVizField {
+            label: 'KPI goal'
+            value: 60000
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            line_style: 'dashed'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_jbl8: VizBlock {
+    label: 'Total Order Value by Month Created Date'
+    viz: LineChart {
+      dataset: demo_ecommerce_metrics
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(demo_ecommerce_metrics.total_order_value)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color_palette: 0
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_350o: VizBlock {
+    label: 'GMV by Continent (2024) - Compare vs LY'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      calculation metric_f0aed54 {
+        label: '% Delta LY - GMV '
+        formula: @aql safe_divide(order_master.gmv, order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation metric_a9389ef {
+        label: ' LY - GMV'
+        formula: @aql order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation metric_57371a1 {
+        label: 'Delta LY - GMV'
+        formula: @aql order_master.gmv - (order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: 'metric_a9389ef'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#7C9EE5'
+          }
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#255DD4'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            ref: 'metric_f0aed54'
+            format {
+              type: 'number'
+              pattern: '#,###%'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            ref: 'metric_57371a1'
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      ]
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_qnug: VizBlock {
+    label: 'GMV by Continent (2024) - Show trend over time'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_tq6d: VizBlock {
+    label: 'GMV by Continent (2024) - Show % change copy'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      calculation metric_f0aed54 {
+        label: '% Delta LY - GMV '
+        formula: @aql safe_divide(order_master.gmv, order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation metric_a9389ef {
+        label: ' LY - GMV'
+        formula: @aql order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: 'metric_f0aed54'
+            format {
+              type: 'number'
+              pattern: '#,###%'
+            }
+          }
+          settings {
+            color: '#18A59E'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_wwiv: VizBlock {
+    label: 'GMV by Continent over time - With Trendline'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Trend line of Gmv'
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+            analytic: RegressionLine {
+              type: 'linear'
+            }
+          }
+          settings {
+            line_style: 'dashed'
+            point {
+              value: 'Asia'
+              line_style: 'dashed'
+            }
+            point {
+              value: 'Europe'
+              line_style: 'dashed'
+            }
+            point {
+              value: 'Oceania'
+              line_style: 'dashed'
+            }
+            point {
+              value: 'North America'
+              line_style: 'dashed'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_6o9d: VizBlock {
+    label: 'GMV by Continent over time - Line chart'
+    description: 'This is description of the block'
+    viz: LineChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block t_hcv3: TextBlock {
+    content: @md ## Time series analysis;;
+  }
+  block t_ww35: TextBlock {
+    content: @md ## Categorical analysis;;
+  }
+  block t_vh1h: TextBlock {
+    content: @md ## Distribution analysis;;
+  }
+  block v_ji80: VizBlock {
+    label: 'Total order distributed by Price'
+    viz: ScatterChart {
+      dataset: demo_ecommerce
+      theme {
+      }
+      x_col: VizFieldFull {
+        ref: r(order_master.price)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      y_col: VizFieldFull {
+        ref: r(demo_ecommerce.total_orders)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+    }
+  }
+  block v_7vcf: VizBlock {
+    label: 'Total GMV (2024)'
+    description: 'This is description of the block'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      calculation metric_f688c32 {
+        label: '% Change - LY - GMV'
+        formula: @aql order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2025'
+      }
+      theme {
+      }
+      value: VizFieldFull {
+        ref: r(order_master.gmv)
+        format {
+          type: 'number'
+          pattern: '#,###'
+        }
+      }
+      compare_value: VizFieldFull {
+        ref: 'metric_f688c32'
+        format {
+          type: 'number'
+          pattern: '#,###'
+        }
+      }
+      settings {
+        display_mode: 'compare_by_number'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+  }
+  block v_n0qr: VizBlock {
+    label: 'Total order distributed by Price- With trend line'
+    viz: LineChart {
+      dataset: demo_ecommerce
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.price)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(demo_ecommerce.total_orders)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Trend line of Total Orders'
+            ref: r(demo_ecommerce.total_orders)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+            analytic: RegressionLine {
+              type: 'linear'
+            }
+          }
+          settings {
+            line_style: 'dashed'
+          }
+        }
+      }
+      settings {
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_jpzg: VizBlock {
+    label: 'GMV over time'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_0sbb: VizBlock {
+    label: 'GMV over time - with trendline'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Trend line of Gmv'
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+            analytic: RegressionLine {
+              type: 'linear'
+            }
+          }
+          settings {
+            line_style: 'dashed'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_58pi: VizBlock {
+    label: 'GMV over time - vs LY'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      calculation metric_14d21cf {
+        label: 'LY - GMV'
+        formula: @aql order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            ref: 'metric_14d21cf'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_vk4x: VizBlock {
+    label: 'GMV by Country (2024)'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2024'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_countries.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_ufmq: VizBlock {
+    label: 'Total GMV (2024) copy'
+    description: 'This is description of the block'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      calculation metric_f688c32 {
+        label: '% Change - LY - GMV'
+        formula: @aql order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: '2025'
+      }
+      theme {
+      }
+      value: VizFieldFull {
+        ref: r(order_master.gmv)
+        format {
+          type: 'number'
+          pattern: '#,###'
+        }
+      }
+      compare_value: VizFieldFull {
+        label: 'KPI Goal'
+        ref: r(order_master.revenue)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        display_mode: 'progress'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+  }
+  block v_t8f9: VizBlock {
+    label: 'Comparison anlysis'
+    description: @md Which continent generate the most revenue overall?
+
+**Insights**: Continent rankings, performance gaps, which continent dominate;;
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        label: 'Total Order'
+        settings {
+          show_data_label_by: 'value'
+          stack_series_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.order_id)
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_label: 'Country'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_bj6j: VizBlock {
+    label: 'Monthly Order Revenue'
+    viz: LineChart {
+      dataset: vy_kaggle_ecomm
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(vy_kaggle_orders.order_purchase_timestamp)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(vy_kaggle_ecomm.order_revenue)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color_palette: 0
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_96z3: VizBlock {
+    label: 'Nov vs Dec - Revenue drop by Order Status'
+    viz: PivotTable {
+      dataset: vy_kaggle_ecomm
+      calculation november_revenue {
+        label: 'November Revenue'
+        formula: @aql order_revenue | where(vy_kaggle_orders.order_purchase_timestamp is @(2017-11));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation december_revenue {
+        label: 'December Revenue'
+        formula: @aql order_revenue | where(vy_kaggle_orders.order_purchase_timestamp is @(2017-12));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation revenue_delta {
+        label: 'Revenue Delta'
+        formula: @aql december_revenue - november_revenue;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation drop_amount {
+        label: 'Drop Amount'
+        formula: @aql november_revenue - december_revenue;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation total_drop_amount {
+        label: 'Total Drop Amount'
+        formula: @aql drop_amount | keep_grains();;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation drop_contribution_share {
+        label: 'Drop Contribution Share'
+        formula: @aql safe_divide(drop_amount, total_drop_amount);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation concentration_score {
+        label: 'Concentration Score'
+        formula: @aql pow(drop_contribution_share, 2);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation concentration_rank {
+        label: 'Concentration Rank'
+        formula: @aql rank(order: concentration_score | desc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(vy_kaggle_orders.order_purchase_timestamp)
+        operator: 'matches'
+        value: '2017-11 - 2017-12'
+      }
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Order Status'
+          ref: r(vy_kaggle_orders.order_status)
+          format {
+            type: 'text'
+          }
+          uname: 'vy_kaggle_orders_order_status'
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'November Revenue'
+          ref: 'november_revenue'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'December Revenue'
+          ref: 'december_revenue'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Revenue Delta'
+          ref: 'revenue_delta'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Drop Amount'
+          ref: 'drop_amount'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Drop Contribution Share'
+          ref: 'drop_contribution_share'
+          format {
+            type: 'number'
+            pattern: '#,###%'
+          }
+        },
+        VizFieldFull {
+          label: 'Concentration Score'
+          ref: 'concentration_score'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Concentration Rank'
+          ref: 'concentration_rank'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+          uname: 'custom_concentration_rank_1'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_total: true
+        show_column_total: true
+        show_sub_total: true
+        sorts: [
+          SortSetting {
+            key: 'custom_concentration_rank_1'
+            direction: 'desc'
+          },
+          SortSetting {
+            key: 'vy_kaggle_orders_order_status'
+            direction: 'asc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_segi: VizBlock {
+    label: 'Monthly Repeat Customer Rate'
+    viz: LineChart {
+      dataset: vy_kaggle_ecomm
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(vy_kaggle_orders.order_purchase_timestamp)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(vy_kaggle_ecomm.repeat_customer_rate)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_c1ru: VizBlock {
+    label: 'Monthly Distinct Customers'
+    viz: LineChart {
+      dataset: vy_kaggle_ecomm
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(vy_kaggle_orders.order_purchase_timestamp)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(vy_kaggle_orders.customer_id)
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_3pqe: VizBlock {
+    label: 'Monthly Cancellation Rate'
+    viz: LineChart {
+      dataset: vy_kaggle_ecomm
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(vy_kaggle_orders.order_purchase_timestamp)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(vy_kaggle_ecomm.cancellation_rate)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_p9dt: VizBlock {
+    label: 'Monthly Total Order'
+    viz: LineChart {
+      dataset: vy_kaggle_ecomm
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(vy_kaggle_orders.order_purchase_timestamp)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(vy_kaggle_ecomm.total_orders)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_d9k9: VizBlock {
+    label: 'Monthly Bug Ratio'
+    viz: CombinationChart {
+      dataset: reporting_project_management
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(reporting_issues.completed_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            ref: r(reporting_project_management.number_of_bug)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#982021FF'
+          }
+        }
+      }
+      y_axis {
+        settings {
+          alignment: 'right'
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            ref: r(reporting_project_management.bug_ratio)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#E9AA2BFF'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block t_uje2: TextBlock {
+    content: @md ## **Squad Reporting - Project Management**;;
+  }
+  block v_zspi: VizBlock {
+    label: 'Project Velocity Comparison copy'
+    description: 'Issues completed per month per project'
+    viz: LineChart {
+      dataset: reporting_project_management
+      calculation completion_rate {
+        label: 'Completion Rate'
+        formula: @aql completed_issue / count(reporting_issues.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      x_axis: VizFieldFull {
+        ref: r(reporting_issues.completed_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(reporting_project.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'completion_rate'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            point {
+              value: 'Explore 2'
+              color: '#206BC4FF'
+              line_interpolation: 'smooth'
+            }
+            point {
+              value: 'Data Alerts Revamp'
+              color: '#E27712'
+              line_interpolation: 'smooth'
+            }
+            point {
+              value: 'Dashboard Performance'
+              color: '#5DB88FFF'
+              line_interpolation: 'smooth'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_9oui: VizBlock {
+    label: 'Number of bug change by status for May 2025 vs April 2025'
+    viz: PivotTable {
+      dataset: reporting_project_management
+      calculation number_of_bug_may_2025 {
+        label: 'Number Of Bug May 2025'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-05));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation number_of_bug_apr_2025 {
+        label: 'Number Of Bug Apr 2025'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation member_change {
+        label: 'Member Change'
+        formula: @aql number_of_bug_may_2025 - number_of_bug_apr_2025;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_offsetting_member {
+        label: 'Is Offsetting Member'
+        formula: @aql member_change <= 0;;
+        calc_type: 'measure'
+        data_type: 'truefalse'
+      }
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Status'
+          ref: r(reporting_issues.status)
+          format {
+            type: 'text'
+          }
+          uname: 'reporting_issues_status'
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Base Value'
+          ref: 'number_of_bug_may_2025'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Comparison Value'
+          ref: 'number_of_bug_apr_2025'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Member Change'
+          ref: 'member_change'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+          uname: 'custom_member_change_1'
+        },
+        VizFieldFull {
+          label: 'Is Offsetting Member'
+          ref: 'is_offsetting_member'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_total: true
+        show_column_total: true
+        show_sub_total: true
+        sorts: [
+          SortSetting {
+            key: 'custom_member_change_1'
+            direction: 'desc'
+          },
+          SortSetting {
+            key: 'reporting_issues_status'
+            direction: 'asc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_lrzt: VizBlock {
+    label: 'Bug count change by creator for May 2025 vs April 2025'
+    viz: PivotTable {
+      dataset: reporting_project_management
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-05));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation member_change {
+        label: 'Member Change'
+        formula: @aql (number_of_bug | where(reporting_issues.completed_at is @(2025-05))) - (number_of_bug | where(reporting_issues.completed_at is @(2025-04)));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_offsetting_member {
+        label: 'Is Offsetting Member'
+        formula: @aql ((number_of_bug | where(reporting_issues.completed_at is @(2025-05))) - (number_of_bug | where(reporting_issues.completed_at is @(2025-04)))) <= 0;;
+        calc_type: 'measure'
+        data_type: 'truefalse'
+      }
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Creator Name'
+          ref: r(reporting_team.name)
+          format {
+            type: 'text'
+          }
+          uname: 'reporting_team_name'
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Base Value'
+          ref: 'base_value'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Comparison Value'
+          ref: 'comparison_value'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Member Change'
+          ref: 'member_change'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+          uname: 'custom_member_change_1'
+        },
+        VizFieldFull {
+          label: 'Is Offsetting Member'
+          ref: 'is_offsetting_member'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_total: true
+        show_column_total: true
+        show_sub_total: true
+        sorts: [
+          SortSetting {
+            key: 'custom_member_change_1'
+            direction: 'desc'
+          },
+          SortSetting {
+            key: 'reporting_team_name'
+            direction: 'asc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_02lk: VizBlock {
+    label: 'Bug count change by priority for May 2025 vs April 2025'
+    viz: PivotTable {
+      dataset: reporting_project_management
+      calculation base_value_metric {
+        label: 'Base Value Metric'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-05));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_metric {
+        label: 'Comparison Value Metric'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation member_change_metric {
+        label: 'Member Change Metric'
+        formula: @aql base_value_metric - comparison_value_metric;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_offsetting_member_metric {
+        label: 'Is Offsetting Member Metric'
+        formula: @aql case(when: member_change_metric < 1, then: 1, else: 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      filter {
+        field: r(reporting_issues.completed_at)
+        operator: 'matches'
+        value: '2025-04 - 2025-05'
+      }
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Priority'
+          ref: r(reporting_issues.priority)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Base Value'
+          ref: 'base_value_metric'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Comparison Value'
+          ref: 'comparison_value_metric'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Member Change'
+          ref: 'member_change_metric'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+          uname: 'custom_member_change_metric_1'
+        },
+        VizFieldFull {
+          label: 'Is Offsetting Member'
+          ref: 'is_offsetting_member_metric'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_total: true
+        show_column_total: true
+        show_sub_total: true
+        sorts: [
+          SortSetting {
+            key: 'custom_member_change_metric_1'
+            direction: 'desc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block t_io0f: TextBlock {
+    content: @md ## **Kaggle Olist Ecomm Dataset**;;
+  }
+  block t_wymk: TextBlock {
+    content: @md ## **Power BI Dataset**;;
+  }
+  block v_qpsb: VizBlock {
+    label: 'Close % by Year month'
+    viz: LineChart {
+      dataset: vy_pbi_dts
+      x_axis: VizFieldFull {
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        format {
+          type: 'date'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(vy_pbi_dts.close_percent)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_j070: VizBlock {
+    label: 'Revenue Won by Year month'
+    viz: LineChart {
+      dataset: vy_pbi_dts
+      x_axis: VizFieldFull {
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        format {
+          type: 'date'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_91yu: VizBlock {
+    label: 'This month Revenue copy'
+    viz: MetricKpi {
+      dataset: vyhuynh_ecommerce_dataset
+      calculation monthly_revenue {
+        label: 'Monthly Revenue'
+        formula: @aql vyht_ecommerce_order_items
+  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation max_of_orders_status {
+        label: 'Max of Orders Status'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      calculation max_of_orders_status_01 {
+        label: 'Max of Orders Status 01'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      value: VizFieldFull {
+        ref: r(publift_test_data_csv.earning)
+        aggregation: 'sum'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_nir7: VizBlock {
+    label: 'Currency Symbol'
+    viz: MetricKpi {
+      dataset: vyhuynh_ecommerce_dataset
+      calculation monthly_revenue {
+        label: 'Monthly Revenue'
+        formula: @aql vyht_ecommerce_order_items
+  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation max_of_orders_status {
+        label: 'Max of Orders Status'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      calculation max_of_orders_status_01 {
+        label: 'Max of Orders Status 01'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      value: VizFieldFull {
+        label: ' Currency Symbol'
+        ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
+        format {
+          type: 'text'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block f_publift_test_data_csv_currency: FilterBlock {
+    label: 'Currency'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: vyhuynh_ecommerce_dataset
+      field: r(publift_test_data_csv.currency)
+    }
+    default {
+      operator: 'is'
+      value: 'USD'
+    }
+    settings {
+      input_type: 'single'
+    }
+  }
+  block v_15s1: VizBlock {
+    theme: BlockTheme {
+      background {
+        bg_color: 'transparent'
+      }
+      border {
+        border_width: 0
+        border_color: 'transparent'
+      }
+      shadow: 'none'
+    }
+    label: 'Sum of Earning'
+    viz: MarkdownViz {
+      dataset: vyhuynh_ecommerce_dataset
+      values: [
+        VizFieldFull {
+          ref: r(publift_test_data_csv.earning)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+        },
+        VizFieldFull {
+          ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      content: @md <style>
+
+  .kpi-title {
+    margin: 0;
+    color: #8e94a5;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .kpi-value {
+    font-size: 52px;
+    font-weight: 500;
+    color: #5DB88F;
+    line-height: 1;
+  }
+
+  
+</style>
+
+<div>
+  <p class="kpi-title">Sum of Earning</p>
+  <div class="kpi-value">
+    {{ rows[0].values.`Sum of Earning` }}
+    {{ rows[0].values.`Currency Symbol` }}
+  </div>
+
+</div>                ;;
+      settings {
+        show_row_total: true
+        show_column_total: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_c0sc: VizBlock {
+    label: 'Project Management - Dec vs Nov 2025'
+    viz: MarkdownViz {
+      dataset: reporting_project_management
+      calculation completed_issue_dec {
+        label: 'Completed Issue Dec 2025'
+        formula: @aql completed_issue | exact_period(reporting_issues.completed_at, @2025-12-01 - 2026-01-01);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation completed_issue_nov {
+        label: 'Completed Issue Nov 2025'
+        formula: @aql completed_issue | exact_period(reporting_issues.completed_at, @(2025-11-01 - 2025-12-01));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation duration_day_dec {
+        label: 'Duration Day Dec 2025'
+        formula: @aql duration_day | exact_period(reporting_issues.completed_at, @2025-12-01 - 2026-01-01);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation pop_comparison_of_completed_issue_dec_2025 {
+        label: '% Completed Issue Dec 2025'
+        formula: @aql safe_divide(completed_issue_dec, completed_issue_dec | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation _duration_day_lm {
+        label: '% Duration day LM'
+        formula: @aql safe_divide(duration_day_dec, duration_day_dec | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation condition_formatting {
+        label: 'condition formatting'
+        formula: @aql case(
+  when: or(pop_comparison_of_completed_issue_dec_2025 < 0, _duration_day_lm < 0),
+  then: "negative",
+  when: or(pop_comparison_of_completed_issue_dec_2025 > 0, _duration_day_lm > 0),
+  then: "positive",
+  else: "neutral"
+);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Project Name'
+          ref: r(reporting_project.name)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: 'completed_issue_dec'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+        },
+        VizFieldFull {
+          ref: 'completed_issue_nov'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+        },
+        VizFieldFull {
+          ref: 'pop_comparison_of_completed_issue_dec_2025'
+          format {
+            type: 'number'
+            pattern: '#,###0.00%'
+          }
+        },
+        VizFieldFull {
+          ref: 'duration_day_dec'
+          format {
+            type: 'number'
+            pattern: '#,##0.0'
+          }
+        },
+        VizFieldFull {
+          ref: '_duration_day_lm'
+          format {
+            type: 'number'
+            pattern: '#,###0.00%'
+          }
+        },
+        VizFieldFull {
+          ref: 'condition_formatting'
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      content: @md <style>
+  .pm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: inherit;
+    font-size: 12px;
+  }
+  .pm-table th {
+    background: #f3f4f6;
+    color: #8e94a5;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 2px solid #e5e7eb;
+    white-space: nowrap;
+  }
+  .pm-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #525866;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .pm-table td.col-project {
+    text-align: left;
+    font-weight: 500;
+    color: #1a202c;
+  }
+
+  /* --- Global Conditional Formatting (Applied dynamically by JS) --- */
+  .pm-table td.negative {
+    color: #b91c1c;
+    background-color: #fee2e2;
+    font-weight: 600;
+  }
+  .pm-table td.positive {
+    color: #15803d;
+    background-color: #dcfce7;
+    font-weight: 600;
+  }
+
+  /* --- Global SVG Icon Setup --- */
+  .pm-table td.positive::before,
+  .pm-table td.negative::before {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    vertical-align: -1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    content: "";
+  }
+  .pm-table td.positive::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315803d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5'/%3E%3Cpath d='M5 12l7-7 7 7'/%3E%3C/svg%3E");
+  }
+  .pm-table td.negative::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b91c1c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='M19 12l-7 7-7-7'/%3E%3C/svg%3E");
+  }
+</style>
+
+<table class="pm-table">
+  <thead>
+    <tr>
+      <th class="col-project">Project Name</th>
+      <th>Duration Day (Dec 2025)</th>
+      <th>Duration Day (Compared to Nov 25)</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {% map(rows) %}
+  <tr>
+    <td class="col-project">{{ `Project Name` }}</td>
+    <td>{{ values.`Duration Day Dec 2025` }}</td>
+    <td class="format-me" data-raw="{{ values.`% Duration day LM`.raw }}">{{ values.`% Duration day LM`.formatted }}</td>
+  </tr>
+  {% end %}
+  </tbody>
+</table> ;;
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_fb2g: VizBlock {
+    label: 'Campaign, Revenue Won and 2 more'
+    viz: DataTable {
+      dataset: vy_pbi_dts
+      calculation revenue_won_mar_2021 {
+        label: 'Revenue Won Mar 2021'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(2021-03));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation revenue_won_apr_2021 {
+        label: 'Revenue Won Apr 2021'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(2021-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql coalesce(revenue_won_mar_2021, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql coalesce(revenue_won_apr_2021, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Delta Value'
+        formula: @aql comparison_value - base_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation campaigns_in_either_month {
+        label: 'Campaigns In Either Month'
+        formula: @aql unique(vy_campaigns_csv.campaign)
+  | filter(revenue_won_mar_2021 is not null or revenue_won_apr_2021 is not null);;
+        calc_type: 'measure'
+        data_type: 'json'
+      }
+      calculation lm_revenue_won {
+        label: 'LM Revenue Won'
+        formula: @aql revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation _lm_revenue_won {
+        label: '% LM Revenue Won'
+        formula: @aql safe_divide(revenue_won, revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+        format {
+          type: 'number'
+          pattern: '#,###0.00%'
+        }
+      }
+      filter {
+        field: r(vy_opportunities_csv.close_date)
+        operator: 'matches'
+        value: 'april 2021'
+      }
+      fields: [
+        VizFieldFull {
+          label: 'Campaign'
+          ref: r(vy_campaigns_csv.campaign)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(vy_pbi_dts.revenue_won)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: 'lm_revenue_won'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: '_lm_revenue_won'
+          format {
+            type: 'number'
+            pattern: '#,###0.00%'
+          }
+          uname: 'custom__lm_revenue_won_1'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'custom__lm_revenue_won_1'
+            direction: 'desc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_wxn2: VizBlock {
+    label: 'Jan 2021, Dec 2020 and 2 more by Product Category'
+    viz: ColumnChart {
+      dataset: vy_pbi_dts
+      calculation base_won_count {
+        label: 'Base Won Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') | where(vy_opportunity_calendar_csv.year_month is @(2021-01)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_lost_count {
+        label: 'Base Lost Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') | where(vy_opportunity_calendar_csv.year_month is @(2021-01)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_won_count {
+        label: 'Comparison Won Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') | where(vy_opportunity_calendar_csv.year_month is @(2020-12)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_lost_count {
+        label: 'Comparison Lost Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') | where(vy_opportunity_calendar_csv.year_month is @(2020-12)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value_raw {
+        label: 'Base Value Raw'
+        formula: @aql safe_divide(base_won_count, base_won_count + base_lost_count);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_raw {
+        label: 'Comparison Value Raw'
+        formula: @aql safe_divide(comparison_won_count, comparison_won_count + comparison_lost_count);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql coalesce(base_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql coalesce(comparison_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Delta Value'
+        formula: @aql base_value - comparison_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation pct_delta {
+        label: 'Pct Delta'
+        formula: @aql safe_divide(delta_value, comparison_value) * 100.0;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(vy_opportunity_calendar_csv.year_month)
+        operator: 'matches'
+        value: '2020-12 - 2021-01'
+      }
+      x_axis: VizFieldFull {
+        label: 'Product Category'
+        ref: r(vy_products_csv.product_category)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Close %'
+        series {
+          field: VizFieldFull {
+            label: 'Jan 2021'
+            ref: 'base_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#0891F2'
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Dec 2020'
+            ref: 'comparison_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#F1434B'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Δ'
+            ref: 'delta_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: '% Change'
+            ref: 'pct_delta'
+            format {
+              type: 'number'
+              pattern: '#,###0.0\\%'
+            }
+          }
+        }
+      ]
+      settings {
+        show_rows_with_no_data: true
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'tooltip'
+        }
+        x_axis_label: 'Product Category'
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  interactions: [
+    FilterInteraction {
+      from: 'v3'
+      to: [
+        CustomMapping {
+          block: [
+            'v4',
+            'v_nehb',
+            'v_8fpj',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v4'
+      to: [
+        CustomMapping {
+          block: [
+            'v3',
+            'v_nehb',
+            'v_8fpj',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v5'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f1'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_hk4u',
+            'v_wsww',
+            'v_j83d',
+            'v_lpgt',
+            'v_5zcz',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'f2'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f2'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_hk4u',
+            'v_wsww',
+            'v_856v',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_lpgt',
+            'v_5zcz',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9',
+            'f1',
+            'f_zwa4'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v8'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v_711g',
+            'v_ztqi',
+            'v_hk4u',
+            'v_wsww',
+            'v_j83d',
+            'v_lpgt',
+            'v_5zcz',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_711g'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_ztqi',
+            'v_hk4u',
+            'v_wsww',
+            'v_j83d',
+            'v_lpgt',
+            'v_5zcz',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_ztqi'
+      to: [
+        CustomMapping {
+          block: [
+            'v_hk4u',
+            'v_wsww'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_hk4u'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_wsww',
+            'v_j83d',
+            'v_5zcz',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_wsww'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_hk4u',
+            'v_j83d',
+            'v_5zcz',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_nehb'
+      to: [
+        CustomMapping {
+          block: [
+            'v3',
+            'v4',
+            'v_8fpj',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_856v'
+      to: [
+        CustomMapping {
+          block: [
+            'v_ztqi',
+            'v_j83d',
+            'v_ji80',
+            'v_n0qr'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_qctn'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_9rhg'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v_qctn',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_zwa4'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_856v',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_lpgt',
+            'v_5zcz',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9'
+          ]
+          disabled: true
+        },
+        CustomMapping {
+          block: [
+            'v3',
+            'v4',
+            'v_nehb'
+          ]
+          field: ref('vyht_ecommerce_orders_1', 'created_at')
+        },
+        CustomMapping {
+          block: 'v_cii9'
+          field: ref('bq_fct_order_items', 'created_at')
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_tusm'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v_qctn',
+            'v_9rhg',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_j83d'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_hk4u',
+            'v_wsww',
+            'v_856v',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_nyr1',
+            'v_5zcz',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_7vcf',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_nyr1'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_lpgt'
+      to: [
+        CustomMapping {
+          block: [
+            'v8',
+            'v_711g',
+            'v_5zcz'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_5zcz'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_hk4u',
+            'v_wsww',
+            'v_j83d',
+            'v_lpgt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_5dpt'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_8fpj'
+      to: [
+        CustomMapping {
+          block: [
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_350o'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_qnug'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_tq6d'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_wwiv'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_6o9d'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_ji80'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_hk4u',
+            'v_wsww',
+            'v_856v',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_nyr1',
+            'v_5zcz',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_7vcf',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_7vcf'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_n0qr'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v8',
+            'v_711g',
+            'v_ztqi',
+            'v_hk4u',
+            'v_wsww',
+            'v_856v',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_nyr1',
+            'v_5zcz',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_7vcf',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_jpzg'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_0sbb'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_58pi'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_vk4x'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_ufmq'
+      to: [
+        CustomMapping {
+          block: [
+            'v_711g',
+            'v_wsww',
+            'v_qctn',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_ji80',
+            'v_n0qr',
+            'v_t8f9'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_t8f9'
+      to: [
+        CustomMapping {
+          block: [
+            'v5',
+            'v_9rhg',
+            'v_tusm',
+            'v_j83d',
+            'v_nyr1',
+            'v_5dpt',
+            'v_350o',
+            'v_qnug',
+            'v_tq6d',
+            'v_wwiv',
+            'v_6o9d',
+            'v_ji80',
+            'v_7vcf',
+            'v_n0qr',
+            'v_jpzg',
+            'v_0sbb',
+            'v_58pi',
+            'v_vk4x',
+            'v_ufmq'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_d9k9'
+      to: [
+        CustomMapping {
+          block: [
+            'v_9oui',
+            'v_lrzt',
+            'v_02lk',
+            'v_c0sc'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_zspi'
+      to: [
+        CustomMapping {
+          block: [
+            'v_9oui',
+            'v_lrzt',
+            'v_02lk',
+            'v_c0sc'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_9oui'
+      to: [
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi',
+            'v_c0sc'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_lrzt'
+      to: [
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi',
+            'v_c0sc'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_02lk'
+      to: [
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi',
+            'v_c0sc'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_qpsb'
+      to: [
+        CustomMapping {
+          block: 'v_wxn2'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_j070'
+      to: [
+        CustomMapping {
+          block: 'v_wxn2'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_91yu'
+      to: [
+        CustomMapping {
+          block: [
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_nir7'
+      to: [
+        CustomMapping {
+          block: [
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_publift_test_data_csv_currency'
+      to: [
+        CustomMapping {
+          block: [
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_15s1'
+      to: [
+        CustomMapping {
+          block: [
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_c0sc'
+      to: [
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi',
+            'v_9oui',
+            'v_lrzt',
+            'v_02lk'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_wxn2'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_countries_continent_name'
+      to: [
+        CustomMapping {
+          block: [
+            'v_059z',
+            'v_3mef',
+            'v_ck6w'
+          ]
+          field: ref('ecommerce_countries', 'continent_name')
+        }
+      ]
+    }
+  ]
+  settings {
+    timezone: 'Etc/UTC'
+    cache_duration: 1440
+  }
+}

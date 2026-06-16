@@ -1,0 +1,71 @@
+VizBlock nice {
+  label: 'test_ecommerce'
+  viz: DataTable {
+    dataset: simple_dataset
+    theme {
+
+    }
+    fields: [
+      VizFieldFull {
+        ref: ref('ecommerce_orders', 'created_at')
+        format {
+          type: 'datetime'
+        }
+      },
+      VizFieldFull {
+        ref: ref('ecommerce_orders', 'status')
+        format {
+          type: 'text'
+        }
+      }
+    ]
+    settings {
+      show_row_number: true
+      row_limit: 5000
+      aggregate_awareness {
+        enabled: true
+        debug_comments: true
+      }
+    }
+  }
+}
+
+VizBlock nice2 = nice.extend(
+  {
+  }
+)
+
+Dashboard untitled_1 {
+  title: 'test_dashboard_theme'
+  block v1: nice
+  block v2: nice2
+  view: TabLayout {
+    label: 'View 1'
+    tab tab1: CanvasLayout {
+      label: 'Tab 1'
+      height: 840
+      grid_size: 20
+      block v1 {
+        position: pos(20, 320, 400, 300)
+        layer: 1
+      }
+      block v2 {
+        position: pos(500, 20, 400, 300)
+        layer: 1
+      }
+    }
+    tab tab2: CanvasLayout {
+      label: 'Tab 2'
+      height: 800
+      grid_size: 20
+      block v2 {
+        position: pos(500, 20, 400, 300)
+        layer: 1
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
+  }
+  theme: H.themes.midnight
+}

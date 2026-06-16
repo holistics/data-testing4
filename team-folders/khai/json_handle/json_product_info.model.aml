@@ -1,0 +1,29 @@
+Model json_product_info {
+  type: 'query'
+  label: 'Json Product Info'
+  description: ''
+  data_source_name: 'demodb'
+  dimension product_data {
+    label: 'Product Data'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_data }};;
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql
+    SELECT product_data
+    FROM (
+        VALUES
+            ('{"product_id":1,"name":"Wireless Headphones","category":"Electronics","price":79.99,"stock_quantity":150,"description":"Premium bluetooth headphones with noise cancellation"}'::jsonb),
+            ('{"product_id":2,"name":"Smart Watch","category":"Electronics","price":249.99,"stock_quantity":85,"description":"Fitness tracking smartwatch with heart rate monitor"}'::jsonb),
+            ('{"product_id":3,"name":"Laptop Backpack","category":"Accessories","price":45.00,"stock_quantity":200,"description":"Durable laptop backpack with multiple compartments"}'::jsonb),
+            ('{"product_id":4,"name":"USB-C Cable","category":"Accessories","price":12.99,"stock_quantity":500,"description":"Fast charging USB-C cable 6ft length"}'::jsonb),
+            ('{"product_id":5,"name":"Coffee Maker","category":"Home & Kitchen","price":89.99,"stock_quantity":60,"description":"Programmable coffee maker with thermal carafe"}'::jsonb),
+            ('{"product_id":6,"name":"Yoga Mat","category":"Sports","price":29.99,"stock_quantity":120,"description":"Non-slip exercise yoga mat with carrying strap"}'::jsonb),
+            ('{"product_id":7,"name":"Running Shoes","category":"Sports","price":119.99,"stock_quantity":75,"description":"Lightweight running shoes with cushioned sole"}'::jsonb),
+            ('{"product_id":8,"name":"Desk Lamp","category":"Home & Kitchen","price":34.99,"stock_quantity":95,"description":"LED desk lamp with adjustable brightness"}'::jsonb)
+    ) AS products(product_data);;
+  models: [
+  ]
+}

@@ -1,0 +1,7 @@
+const embed_schema = if (H.current_user.schema) {
+                H.current_user.schema
+              } else {
+                'amql_demo_ecommerce'
+              }
+            
+

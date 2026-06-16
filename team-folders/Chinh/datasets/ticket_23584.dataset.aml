@@ -1,0 +1,50 @@
+Dataset ticket_23584 {
+  label: 'ticket_23584'
+  description: ''
+  data_source_name: 'demodb'
+
+  models: [
+    chinh_dim_date,
+    chinh_dim_category,
+    chinh_dim_product,
+    chinh_fact_sales
+  ]
+
+  relationships: [
+    relationship(chinh_fact_sales.product_id > chinh_dim_product.product_id, true),
+    relationship(chinh_fact_sales.date_id > chinh_dim_date.date_id, true),
+    relationship(chinh_dim_product.category_id > chinh_dim_category.category_id, true),
+  ]
+
+  metric total_amount {
+    label: 'Total Amount'
+    type: 'number'
+    definition: @aql sum(chinh_fact_sales.sales_amount) ;;
+  }
+
+  dimension products_ordered_within_2_years {
+    model: chinh_dim_category
+    label: 'Products (ordered within 2 years)'
+    type: 'number'
+    definition: @aql
+      dimensionalize(
+        chinh_fact_sales
+          | filter(chinh_fact_sales.created_at > @(last 2 years))
+          | count(chinh_dim_product.product_id)
+        , chinh_dim_category.category_id
+      )
+    ;;
+  }
+
+  dimension active_category {
+    model: chinh_dim_category
+    label: 'Active Category'
+    type: 'text'
+    definition: @aql
+      case(
+        when: chinh_dim_category.products_ordered_within_2_years > 0, then: chinh_dim_category.category,
+        else: null
+      )
+    ;;
+  }
+}

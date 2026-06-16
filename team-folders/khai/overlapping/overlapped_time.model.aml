@@ -1,0 +1,96 @@
+Model overlapped_time {
+  type: 'query'
+  label: 'Flatted Overlapped Time'
+  description: ''
+  data_source_name: 'demodb'
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension event_time {
+    label: 'Event Time'
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.event_time }};;
+  }
+  dimension event_type {
+    label: 'Event Type'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.event_type }};;
+  }
+
+  dimension active_count {
+    label: 'Active Count'
+    type: 'number'
+    hidden: false
+    definition: @aql 
+        window_sum(sum(overlapped_time.event_type), partition: overlapped_time.id, order: overlapped_time.event_time)
+        | dimensionalize(overlapped_time.event_time) ;;
+  }
+
+  dimension prev_event_time {
+    label: 'Prev Event Time'
+    type: 'datetime'
+    hidden: false
+    definition: @aql 
+      previous(max(overlapped_time.event_time), partition: overlapped_time.id, order: overlapped_time.event_time)
+        | dimensionalize(overlapped_time.event_time) ;;
+  }
+
+  dimension prev_active_count {
+    label: 'Prev Active Count'
+    type: 'number'
+    hidden: false
+    definition: @aql
+      previous(
+        sum(overlapped_time.active_count)
+        , partition: overlapped_time.id
+        , order: overlapped_time.event_time
+      )
+      | dimensionalize(overlapped_time.event_time)
+     ;;
+  }
+
+  dimension segment_hours {
+    label: 'Segment Hours'
+    type: 'number'
+    hidden: false
+    definition: @aql (epoch(overlapped_time.event_time) - epoch(overlapped_time.prev_event_time)) / 60 / 60 ;;
+  }
+
+  measure total_hours {
+    label: 'Total Hours'
+    type: 'number'
+    hidden: false
+    definition: @aql sum(overlapped_time.segment_hours) ;;
+  }
+
+  measure work_start {
+    label: 'Work Start'
+    type: 'datetime'
+    hidden: false
+    definition: @aql min(overlapped_time.prev_event_time) ;;
+  }
+
+  measure work_end {
+    label: 'Work End'
+    type: 'datetime'
+    hidden: false
+    definition: @aql max(overlapped_time.event_time) ;;
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql
+    SELECT {{ #ot.id }} as id, {{ #ot.start_datetime }} AS event_time, 1 AS event_type
+    FROM {{ #sample_overlapping_time ot }}
+    UNION ALL
+    SELECT {{ #ot.id }} as id, {{ #ot.end_datetime }} AS event_time, -1 AS event_type
+    FROM {{ #sample_overlapping_time ot }}
+    ORDER BY id, event_time, event_type DESC;;
+  models: [
+    sample_overlapping_time
+  ]
+}

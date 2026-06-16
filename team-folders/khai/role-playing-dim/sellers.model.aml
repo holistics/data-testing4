@@ -1,0 +1,7 @@
+Model sellers = users.extend({
+  label: 'Sellers'
+  dimension full_name {
+    label: 'User Name'
+    description: 'Contains name of both Buyers & Sellers'
+  }
+})

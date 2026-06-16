@@ -83,6 +83,10 @@ Dashboard saas_metric {
     block t9 {
       position: pos(540, 620, 500, 400)
     }
+    block v12 {
+      position: pos(1060, 620, 400, 300)
+      layer: 6
+    }
     width: 1480
   }
   block v1: VizBlock {
@@ -626,5 +630,71 @@ Dashboard saas_metric {
         border-radius: 4px;
         background: #fafafa;"
     </div>;;
+  }
+  block v12: VizBlock {
+    label: 'User Growth'
+    viz: CombinationChart {
+      dataset: demo_ecommerce
+      calculation f_3f16a1c {
+        label: 'Running Total'
+        formula: @aql          running_total!(
+ecommerce_users.id | count() ,
+ecommerce_users.sign_up_date
+);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      theme {
+
+      }
+      x_axis: VizFieldFull {
+        ref: ref('ecommerce_users', 'sign_up_date')
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+        }
+      }
+      y_axis {
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            ref: ref('ecommerce_users', 'total_users')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#005A32FF'
+          }
+        }
+      }
+      y_axis {
+        settings {
+          alignment: 'right'
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            ref: 'f_3f16a1c'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#41ab5d'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        pop {
+          field: ref('ecommerce_users', 'sign_up_date')
+          duration: 3
+          granularity: 'month'
+        }
+      }
+    }
   }
 }

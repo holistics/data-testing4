@@ -1,0 +1,11 @@
+Dataset ds_json_products {
+  label: 'Ds Json Products'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    json_product_info
+  ]
+  relationships: [
+  ]
+  owner: 'khai.to@holistics.io'
+}
