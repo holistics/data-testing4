@@ -1,0 +1,112 @@
+Skill weekly_business_review {
+  label: 'Weekly Business Review'
+  description: 'Generates Weekly Business Reviews. Use this whenever the user asks for a WBR, weekly update, weekly metrics review, or a Monday report, even if they don\'t use those exact words.'
+  content: @md
+    **Step 1: Determine the comparison window** 
+    
+    - Default: most recently completed ISO week vs. the week before it.
+    - Override if the user specifies a different window. 
+    
+    
+    
+    **Step 2: Determine which metrics to compare** 
+    
+    - Priority order: 
+      - 1. Metrics the user explicitly names. 
+      - 2. If user has a pinned or mentioned dashboard, use the metrics extracted from the dashboard's AML. 
+      - 3. If user has a pinned or mentioned dataset, use the metrics defined in the dataset.
+      - 4. Metrics extracted from a dataset that user has used most frequently and recently.
+      - 5. If none of the above, ask the user which metrics to include. Always pull existing metrics. Never compute new metrics in this report.
+    
+    
+    
+    **Step 3: Compute changes**
+    
+    - Absolute change: this_week - last_week
+    - % change: (this_week - last_week) / last_week
+    - If either week has no value, mark N/A and skip styling.
+    
+    
+    
+    **Step 4: Determine direction**
+    
+    - If not yet instructed anywhere, use your judgement to determine the good direction and the bad direction.
+    
+    
+    
+    **Step 5: Display the answer** 
+
+    - Fill in the template below and display it to user. It's the only thing user will see.
+    - Do not display any visualizations you searched or created in the process.
+    
+    
+    
+    # 📊 Weekly Business Review (use heading 1)
+    
+    Week from [date] to [date]
+    
+    
+    
+    ## 💡 Highlights (use heading 2)
+    
+    Pick up to 3 metrics with the largest % change (either direction). Lead with unfavorable moves.
+    
+    
+    
+    ## 🔢 Metric table (use heading 2)
+    
+    A table of: 1) key metrics, 2) last week value, 3) this week value, 4) changes, and 5) changes in percentage.
+        
+    
+    
+    ## 💪 Recommended actions (use heading 2)
+    
+    Only include up to 3 actions directly supported by a metric movement in this report. If nothing is clearly actionable thus no recommended actions at all, write "No action recommended this week."
+    
+    
+    
+    ---
+    
+    
+    
+    **Example** 
+    
+    User: "Give me this week's WBR for the revenue dashboard" 
+    
+    
+    
+    Output: 
+    
+    **# Weekly Business Review** 
+    
+    Week from 2026-04-13 to 2026-04-19 
+    
+    
+    
+    **## Highlights**
+    
+    - Revenue grew 6.2% WoW, driven by expansion MRR
+    - New signups dropped 14% — worst week in Q2
+    - Gross margin held flat at 78% 
+    
+    
+    
+    **## Metric table**
+    
+    |** Metric **|** Last week **|** This week **|** Change **|** % **|
+    
+    |---|---|---|---|---|
+    
+    | Revenue | \$1.20M | \$1.27M |  +\$70K |  +6.2% | 
+    
+    | New signups | 420 | 361 |  -59 |  -14.0% |
+    
+    | Gross margin | 78% | 78% | ⚪ 0 | ⚪ 0% | 
+    
+    
+    
+    **## Recommended actions**
+    
+    - Investigate the signup drop — check paid channel performance first.
+  ;;
+}
