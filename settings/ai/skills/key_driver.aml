@@ -260,10 +260,14 @@ Always show this, even when the user accepted the proposed list without changes.
    - `delta_value = base_value - comparison_value`
    - `pct_delta = coalesce(safe_divide(delta_value, comparison_value), 0) * 100`
 
-2. Pass the AQL to `generate_viz` to produce the combo chart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
+2. Before calling `generate_viz`, resolve the sort direction from `overall_delta_value`:
+   - `overall_delta_value < 0` (drop) → `sort_direction = "ascending"` (most negative first)
+   - `overall_delta_value > 0` (increase) → `sort_direction = "descending"` (most positive first)
 
-   Natural language query for `generate_viz`:
-   `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change'. Show all segments. No row limit. Add pct_delta (labeled '% Change') to tooltip. Sort by delta_value [ASC if this is a drop (overall_delta_value < 0), DESC if this is an increase (overall_delta_value > 0)] — this sort must be set explicitly in the viz chart settings, not only in the AQL."`
+   Then pass the AQL to `generate_viz` to produce the combo chart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
+
+   Natural language query for `generate_viz` (fill in `[sort_direction]` with the resolved value above):
+   `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change'. Show all segments. No row limit. No tooltip fields. Sort segments by delta_value [sort_direction]."`
 
 3. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
@@ -370,21 +374,7 @@ For the **Contribution to change** column, apply the same threshold rule as the 
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
 - Never call `execute_aql` during Phase 3 — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only.
-- When generating the combo chart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. **Do not rely on AQL sort order — the chart rebuilds the explore and overrides it.** Sort must be set explicitly in the viz chart settings, direction-aware:
-  - Drop (`overall_delta_value < 0`): `direction: 'asc'` — most negative delta first
-  - Increase (`overall_delta_value > 0`): `direction: 'desc'` — most positive delta first
-
-```
-ComboChart {
-  ...
-  settings {
-    sort {
-      field: delta_value
-      direction: 'asc'  // use 'asc' for drops, 'desc' for increases
-    }
-  }
-}
-```
+- When generating the combo chart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Express the sort intent in plain language to `generate_viz` — let it determine the correct AQL/AML to implement the sort. Do not write or prescribe chart sort AML syntax manually.
 
 ;;
 
