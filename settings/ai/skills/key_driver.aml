@@ -259,10 +259,17 @@ Always show this, even when the user accepted the proposed list without changes.
    - `delta_value = base_value - comparison_value`
    - `pct_delta = coalesce(safe_divide(delta_value, comparison_value), 0) * 100`
 
+<<<<<<< local:settings/ai/skills/key_driver.aml
+2. Pass the AQL to `generate_viz` to produce the combo chart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
+
+   Natural language query for `generate_viz`:
+   `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change'. Show all segments. No row limit. Add pct_delta (labeled '% Change') to tooltip. Sort by delta_value descending."`
+=======
 2. Pass the AQL to `generate_viz` to produce the grouped ColumnChart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
 
    Natural language query for `generate_viz`:
    `"Combo chart. X-axis: segment dimension. Two bar series: base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Add a line series for delta_value labeled 'Δ Change' on a secondary Y-axis. Show all segments. No row limit. Add pct_delta (labeled '% Change') to tooltip. Sort by delta_value descending."`
+>>>>>>> cloud:settings/ai/skills/key_driver.aml
 
 3. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
@@ -278,7 +285,11 @@ Always show this, even when the user accepted the proposed list without changes.
 **Show:**
 
 1. Header: `# [Metric] breakdown by [Dimension Name] — [N] segments`
+<<<<<<< local:settings/ai/skills/key_driver.aml
+2. The combo chart generated above — **this is the only viz output at this step, no DataTable**
+=======
 2. The grouped ColumnChart generated above — **this is the only viz output at this step, no DataTable**
+>>>>>>> cloud:settings/ai/skills/key_driver.aml
 3. One sentence summarizing the overall picture for this dimension (e.g. which direction most segments moved, whether the change was concentrated or spread).
 
 4. Segment insight — output as concise prose, no tables.
