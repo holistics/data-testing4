@@ -175,6 +175,19 @@ Dashboard khai_test {
         position: pos(20, 120, 240, 80)
       }
     }
+    tab tab_maea: CanvasLayout {
+      label: 'Untitled'
+      width: 1300
+      height: 1900
+      grid_size: 20
+      auto_expand_vertically: true
+      block v_uc87 {
+        position: pos(20, 0, 1260, 1860)
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
   }
   theme: H.themes.classic
   block v1: VizBlock {
@@ -188,7 +201,6 @@ Dashboard khai_test {
         data_type: 'number'
       }
       theme {
-
       }
       x_axis: VizFieldFull {
         ref: r(khai_date_d.date_key)
@@ -369,7 +381,6 @@ Dashboard khai_test {
       value: []
     }
   }
-
   block v_6g2o: VizBlock {
     label: 'Name and Revenue'
     viz: DataTable {
@@ -888,6 +899,102 @@ Dashboard khai_test {
     default {
       operator: 'matches'
       value: '2024 to now'
+    }
+  }
+  block v_uc87: VizBlock {
+    label: 'Id, Sign Up Date and 11 more'
+    viz: DataTable {
+      dataset: khai_ecommerce
+      fields: [
+        VizFieldFull {
+          ref: r(users.id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.sign_up_date)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.sign_up_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.first_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.last_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.email)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.birth_date)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.gender)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.city_id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.full_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.email_pii)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce, users.user_acquired_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce, users.user_order_frequency)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
     }
   }
   interactions: [

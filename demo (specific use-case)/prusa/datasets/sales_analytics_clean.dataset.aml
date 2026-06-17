@@ -1,0 +1,137 @@
+// =============================================================================
+// MAINTENANCE — shared metrics with `sales_analytics.dataset.aml`
+// =============================================================================
+// This dataset duplicates every metric from `sales_analytics` on the _clean
+// fact models (Overview SQL filters). When editing metrics, change BOTH files
+// on any branch: keep metric names and @aql logic aligned except for swapping
+// fact_orders → fact_orders_clean and fact_order_items → fact_order_items_clean.
+// =============================================================================
+
+Dataset sales_analytics_clean {
+  label: 'Sales Analytics (Overview subset)'
+  description: 'Same metrics as `sales_analytics` (duplicated AML) on Overview-filtered facts: paid, successful, non-refunded, non-reseller pricing, physical line items. Edit `sales_analytics.dataset.aml` first when possible, then mirror every metric change here — any Git branch.'
+  owner: 'jan.lupac@prusa3d.cz'
+  data_source_name: 'data_staging'
+
+  models: [
+    dim_dates_prusa,
+    dim_customers,
+    dim_customer_properties,
+    dim_products,
+    dim_product_categories,
+    dim_vat,
+    dim_admin_mapping,
+    dim_lead_type_coefficients,
+    dim_order_properties,
+    dim_order_items_properties,
+    fact_orders_clean,
+    fact_order_items_clean,
+  ]
+
+  relationships: [
+    relationship(fact_order_items_clean.order_id > fact_orders_clean.id, true),
+    relationship(fact_order_items_clean.product_id > dim_products.product_id, true),
+    relationship(fact_orders_clean.customer_user_id > dim_customers.id, true),
+    relationship(dim_customers.customer_properties_hashed > dim_customer_properties.customer_properties_hashed, true),
+    relationship(fact_orders_clean.order_properties_hashed > dim_order_properties.order_properties_hashed, true),
+    relationship(fact_order_items_clean.order_items_properties_hashed > dim_order_items_properties.order_items_properties_hashed, true),
+    relationship(dim_product_categories.product_id - dim_products.product_id, true),
+    relationship(fact_orders_clean.created_at_date > dim_dates_prusa.full_date, true),
+    relationship(fact_orders_clean.created_as_administrator_name > dim_admin_mapping.admin, true),
+    relationship(fact_orders_clean.lead_type > dim_lead_type_coefficients.lead_type, true),
+  ]
+
+  metric revenue {
+    label: 'Revenue'
+    type: 'number'
+    definition: @aql sum(fact_order_items_clean.total_price_without_vat_czk);;
+  }
+
+  metric orders_count {
+    label: 'Orders'
+    type: 'number'
+    description: 'Distinct order IDs at order_lines grain (matches PBI DISTINCTCOUNT of order_id on order_items).'
+    definition: @aql count_distinct(fact_order_items_clean.order_id);;
+  }
+
+  metric quantity_total {
+    label: 'Quantity'
+    type: 'number'
+    definition: @aql sum(fact_order_items_clean.quantity);;
+  }
+
+  metric unique_customers {
+    label: 'Unique Customers'
+    type: 'number'
+    definition: @aql count_distinct(fact_orders_clean.email);;
+  }
+
+  metric unique_companies {
+    label: 'Unique Companies'
+    type: 'number'
+    definition: @aql count_distinct(fact_orders_clean.company_name);;
+  }
+
+  metric margin_amount {
+    label: 'Margin'
+    type: 'number'
+    description: 'Sum of line margin. PBI also gates this via Show_margin_setting — not modeled here yet.'
+    definition: @aql sum(fact_order_items_clean.total_margin);;
+  }
+
+  metric avg_order_value {
+    label: 'Avg Order Value'
+    type: 'number'
+    definition: @aql revenue / orders_count;;
+  }
+
+  metric margin_pct {
+    label: 'Margin %'
+    type: 'number'
+    definition: @aql margin_amount / revenue;;
+  }
+
+  metric revenue_vat_included {
+    label: 'Revenue (VAT incl.)'
+    type: 'number'
+    definition: @aql sum(fact_order_items_clean.total_price_with_vat_czk);;
+  }
+
+  metric revenue_vat_excluded {
+    label: 'Revenue (VAT excl.)'
+    type: 'number'
+    definition: @aql sum(fact_order_items_clean.total_price_without_vat_czk);;
+  }
+
+  metric revenue_vat_toggle {
+    label: 'Revenue (VAT toggle)'
+    type: 'number'
+    description: 'Requires dim_vat in explore scope / slicer. If validation fails, use revenue + revenue_vat_included instead.'
+    definition: @aql case(
+      when: dim_vat.vat == 'VAT included',
+      then: sum(fact_order_items_clean.total_price_with_vat_czk),
+      else: sum(fact_order_items_clean.total_price_without_vat_czk)
+    );;
+  }
+
+  metric canceled_orders {
+    label: 'Canceled orders'
+    type: 'number'
+    description: 'Distinct orders where status is Canceled or Canceled but replaced. On this dataset the fact layer excludes them, so this metric is usually 0.'
+    definition: @aql count_distinct(fact_orders_clean.id) | where(dim_order_properties.status == 'Canceled' or dim_order_properties.status == 'Canceled but replaced');;
+  }
+
+  metric canceled_orders_pct {
+    label: 'Canceled orders %'
+    type: 'number'
+    description: 'Share of orders in scope that are canceled or canceled-but-replaced.'
+    definition: @aql canceled_orders / orders_count;;
+  }
+
+  metric successful_pq {
+    label: 'Successful PQ orders'
+    type: 'number'
+    description: 'Distinct orders that are a price-quote flow and PQ not canceled (PBI B2B-style slice).'
+    definition: @aql count_distinct(fact_orders_clean.id) | where((dim_order_properties.was_price_quote == 'Customer PQ' or dim_order_properties.was_price_quote == 'Manual PO' or dim_order_properties.was_price_quote == 'Manual PQ') and dim_order_properties.pq_status != 'Canceled');;
+  }
+}

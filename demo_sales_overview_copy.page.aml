@@ -897,6 +897,62 @@ Dashboard demo_sales_overview_copy {
       }
     }
   }
+  block v_hayr: VizBlock {
+    label: 'Registered Users copy'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      calculation f_c70646c {
+        label: 'Target Users'
+        formula: @aml ecommerce_users.users_signed_up_count * 1.38;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation untitled_metric_1681e8f {
+        label: 'Untitled Metric'
+        formula: @aql ecommerce_users.users_signed_up_count * 1.38;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      value: VizFieldFull {
+        label: ' '
+        ref: r(ecommerce_users.total_users)
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      compare_value: VizFieldFull {
+        label: 'Target Users'
+        ref: 'untitled_metric_1681e8f'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        reverse_color: true
+        display_mode: 'progress'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        label {
+          font_size: 15
+        }
+        alignment: 'center'
+        metric_value {
+          font_size: 45
+          font_color: '#CCFF00FF'
+        }
+        progress {
+          bar {
+            color: '#68C3D4FF'
+          }
+
+        }
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'f1'
@@ -904,13 +960,14 @@ Dashboard demo_sales_overview_copy {
         CustomMapping {
           block: [
             'v10',
-            'v129'
+            'v129',
+            'v_hayr'
           ]
-          field: ref('ecommerce_users', 'sign_up_at')
+          field: r(ecommerce_users.sign_up_at)
         },
         CustomMapping {
           block: 'v128'
-          field: ref('ecommerce_products', 'created_at')
+          field: r(ecommerce_products.created_at)
         },
         CustomMapping {
           block: [
@@ -926,11 +983,11 @@ Dashboard demo_sales_overview_copy {
         },
         CustomMapping {
           block: 'v132'
-          field: ref('ecommerce_users', 'sign_up_at')
+          field: r(ecommerce_users.sign_up_at)
         },
         CustomMapping {
           block: 'v6'
-          field: ref('order_master', 'order_created_at')
+          field: r(order_master.order_created_at)
         }
       ]
     },
@@ -1125,7 +1182,8 @@ Dashboard demo_sales_overview_copy {
             'v128',
             'v129',
             'v133',
-            'v134'
+            'v134',
+            'v_hayr'
           ]
           disabled: true
         }
@@ -1143,7 +1201,8 @@ Dashboard demo_sales_overview_copy {
             'v127',
             'v128',
             'v129',
-            'v131'
+            'v131',
+            'v_hayr'
           ]
           disabled: true
         }
@@ -1161,7 +1220,21 @@ Dashboard demo_sales_overview_copy {
             'v127',
             'v128',
             'v129',
-            'v131'
+            'v131',
+            'v_hayr'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_hayr'
+      to: [
+        CustomMapping {
+          block: [
+            'v131',
+            'v133',
+            'v134'
           ]
           disabled: true
         }
@@ -1172,7 +1245,7 @@ Dashboard demo_sales_overview_copy {
       to: [
         CustomMapping {
           block: 'v131'
-          field: ref('order_master', 'order_created_at')
+          field: r(order_master.order_created_at)
         }
       ]
     }
@@ -1254,6 +1327,10 @@ Dashboard demo_sales_overview_copy {
       }
       block v131 {
         position: pos(50, 675, 1160, 355)
+        layer: 1
+      }
+      block v_hayr {
+        position: pos(95, 80, 225, 155)
         layer: 1
       }
       mobile {

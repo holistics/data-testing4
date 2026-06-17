@@ -693,11 +693,10 @@ Dashboard ecommerce_dashboard_amyra {
       }
     }
   }
-  interactions: []
   view: CanvasLayout {
     label: 'Canvas Layout'
     width: 1220
-    height: 2720
+    height: 2770
     grid_size: 20
     auto_expand_vertically: true
     block t_1nvq {
@@ -768,4 +767,5 @@ Dashboard ecommerce_dashboard_amyra {
   settings {
     cache_duration: 1440
   }
+  interactions: []
 }

@@ -1,4 +1,4 @@
-Dataset vy_ecommerce_dataset {
+Dataset vyhuynh_ecommerce_dataset {
   label: 'Ecommerce Dataset'
   description: ''
   data_source_name: 'demodb'
