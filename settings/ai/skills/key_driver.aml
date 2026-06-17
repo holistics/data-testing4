@@ -252,41 +252,39 @@ Always show this, even when the user accepted the proposed list without changes.
 
 **Compute:**
 
-1. Write the per-dimension AQL grouped by the dimension's segment field. Include these computed fields:
+1. Resolve the sort direction from `overall_delta_value` — reuse this value in both the AQL and the `generate_viz` NL:
+   - `overall_delta_value < 0` (drop) → `sort_direction = "ascending"` (most negative first)
+   - `overall_delta_value > 0` (increase) → `sort_direction = "descending"` (most positive first)
+
+2. Write the per-dimension AQL grouped by the dimension's segment field. Include these computed fields:
    - `base_value_raw`, `comparison_value_raw` — raw, uncoalesced (needed for new/disappeared detection)
    - `base_value`, `comparison_value` — coalesced per null safety rules (Core Rule 4)
    - For ratio metrics: coalesce each component of numerator and denominator individually before `safe_divide` — `base_value = coalesce(safe_divide(coalesce(comp_A_base, 0), coalesce(comp_A_base, 0) + coalesce(comp_B_base, 0) + ...), 0)`
    - For additive metrics: `base_value = coalesce(base_value_raw, 0)`, `comparison_value = coalesce(comparison_value_raw, 0)`
    - `delta_value = base_value - comparison_value`
    - `pct_delta = coalesce(safe_divide(delta_value, comparison_value), 0) * 100`
+   - Sort the AQL by `delta_value [sort_direction]`
 
-2. Before calling `generate_viz`, resolve the sort direction from `overall_delta_value`:
-   - `overall_delta_value < 0` (drop) → `sort_direction = "ascending"` (most negative first)
-   - `overall_delta_value > 0` (increase) → `sort_direction = "descending"` (most positive first)
+3. Pass the AQL to `generate_viz` to produce the combo chart.
 
-   Then pass the AQL to `generate_viz` to produce the combo chart. **Do NOT call `execute_aql` — it renders a visible result table to the user.** `generate_viz` executes the query internally without exposing a table.
-
-   Natural language query for `generate_viz` (fill in `[sort_direction]` with the resolved value above):
+   Natural language query for `generate_viz` (fill in `[sort_direction]` with the resolved value):
    `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change'. Show all segments. No row limit. No tooltip fields. Sort segments by delta_value [sort_direction]."`
 
-3. From the chart result data, classify each segment's `impact_direction` (post-query):
+4. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
    - `overall_delta_value < 0` and `delta_value > 0` → offset_to_change
    - `overall_delta_value > 0` and `delta_value > 0` → driver_of_change
    - `overall_delta_value > 0` and `delta_value < 0` → offset_to_change
    - `delta_value = 0` → neutral
 
-4. Compute `contribution_pct = delta_value / overall_delta_value × 100` for each segment using the scalar `overall_delta_value` from Phase 2.
+5. Compute `contribution_pct = delta_value / overall_delta_value × 100` for each segment using the scalar `overall_delta_value` from Phase 2.
 
-5. Compute and store `dimension_driver_pct = sum(delta_value for all driver_of_change segments) / overall_delta_value × 100` — used to rank dimensions in Phase 4.
+6. Compute and store `dimension_driver_pct = sum(delta_value for all driver_of_change segments) / overall_delta_value × 100` — used to rank dimensions in Phase 4.
 
 **Show:**
 
 1. Header: `# [Metric] breakdown by [Dimension Name] — [N] segments`
-2. Call `execute_viz` with the generated viz. Then inspect the rendered row order:
-   - If rows are sorted by `delta_value` in the correct direction (ASC for drops, DESC for increases) → proceed.
-   - If rows are **not** correctly sorted → call `generate_viz` again with an explicit sort correction in the viz chart settings, then `execute_viz` again. Repeat until the rendered chart passes the sort check before proceeding.
-   **This is the only viz output at this step — no DataTable.**
+2. The combo chart generated above — **this is the only viz output at this step, no DataTable.**
 3. One sentence summarizing the overall picture for this dimension (e.g. which direction most segments moved, whether the change was concentrated or spread).
 
 4. Segment insight — output as concise prose, no tables.
@@ -337,9 +335,9 @@ Opening heading and summary line:
 
 Ranked table of all confirmed dimensions, sorted by `dimension_driver_pct` descending. Successfully analyzed dimensions appear first; failed dimensions appear at the bottom:
 
-| Dimension | Top Segment | Contribution to change | Δ |
-|-----------|-------------|------------------------|---|
-| … | | | |
+| Dimension | Top Segment | Contribution to change |
+|-----------|-------------|------------------------|
+| … | | |
 
 For the **Contribution to change** column, apply the same threshold rule as the per-segment display:
 - If `|dimension_driver_pct| ≤ 100%`: show `[dimension_driver_pct]%`
@@ -348,7 +346,7 @@ For the **Contribution to change** column, apply the same threshold rule as the 
 **Conditionally include (one line each):**
 
 - Dimension with no dominant segment → add note in Top Segment cell: `spread across segments`
-- Failed dimension → set Top Segment to `Failed to analyze: [reason]`, Contribution to change to `—`, Δ to `—`
+- Failed dimension → set Top Segment to `Failed to analyze: [reason]`, Contribution to change to `—`
 
 **Always include at the end:**
 
@@ -374,7 +372,7 @@ For the **Contribution to change** column, apply the same threshold rule as the 
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
 - Never call `execute_aql` during Phase 3 — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only.
-- When generating the combo chart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Express the sort intent in plain language to `generate_viz` — let it determine the correct AQL/AML to implement the sort. Do not write or prescribe chart sort AML syntax manually.
+- When generating the combo chart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Apply sort at both layers: (1) include `order by delta_value [sort_direction]` in the AQL, and (2) pass the same sort intent in the `generate_viz` NL. Both layers must use the same pre-resolved `sort_direction` value.
 
 ;;
 
