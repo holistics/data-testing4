@@ -159,6 +159,23 @@ Dataset ecom_dataset_vux {
         , then: map_categories.category
       ) ;;
   }
+  dimension rank_by_total_orders {
+    label: "Rank by Total Orders"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql rank(order: total_orders | desc());;
+    format: "undefined"
+    model: order_master
+  }
+  dimension abcxyz55555 {
+    label: "ABCXYZ55555"
+    type: "text"
+    hidden: false
+    description: ""
+    definition: @aql concat(cast(total_orders, 'text'), " ", cast(percent_of_total, 'text'));;
+    model: order_master
+  }
   relationships: [
     relationship(ecommerce_orders_dim_dates, true),
     relationship(ecommerce_orders_ecommerce_users, true),
