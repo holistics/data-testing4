@@ -3384,7 +3384,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     content: @md ## **Power BI Dataset**;;
   }
   block v_qpsb: VizBlock {
-    label: 'Close % by Year month'
+    label: 'Close % by month'
     viz: LineChart {
       dataset: vy_pbi_dts
       x_axis: VizFieldFull {
@@ -3416,7 +3416,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v_j070: VizBlock {
-    label: 'Revenue Won by Year month'
+    label: 'Revenue Won by month'
     viz: LineChart {
       dataset: vy_pbi_dts
       x_axis: VizFieldFull {
