@@ -70,6 +70,12 @@ Model users {
     definition: @aql count(users.id);; 
   }
 
+  measure total_users {
+    label: 'Total Users'
+    type: 'number'
+    definition: @aql count(users.id) ;;
+  }
+
   owner: 'khai.to+demo4@holistics.io'
   table_name: '"ecommerce"."users"'
 }

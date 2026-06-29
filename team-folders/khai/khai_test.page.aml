@@ -8,6 +8,19 @@ Dashboard khai_test {
       position: pos(20, 20, 1160, 520)
       layer: 1
     }
+    tab tab_maea: CanvasLayout {
+      label: 'Untitled'
+      width: 1300
+      height: 1900
+      grid_size: 20
+      auto_expand_vertically: true
+      block v_uc87 {
+        position: pos(20, 0, 1260, 1860)
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
   }
   theme: H.themes.classic
   block v1: VizBlock {
@@ -21,10 +34,439 @@ Dashboard khai_test {
         data_type: 'number'
       }
       theme {
-
       }
       x_axis: VizFieldFull {
-        ref: ref('khai_date_d', 'date_key')
+        ref: r(khai_date_d.date_key)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(khai_ecommerce.total_orders)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block f_ml3q: FilterBlock {
+    label: 'Orders Status'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(orders.status)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block f_kmoy: FilterBlock {
+    label: 'Countries Name'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(countries.name)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block f_vs3y: FilterBlock {
+    label: 'Khai Date D Date Key'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(khai_date_d.date_key)
+    }
+    default {
+      operator: 'matches'
+      value: 'last 3 years to today'
+    }
+  }
+  block v_s6re: VizBlock {
+    label: ' '
+    viz: CombinationChart {
+      dataset: khai_ecommerce
+      calculation total_quantity {
+        label: 'Total Quantity'
+        formula: @aql sum(order_items.quantity);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(khai_date_d.date_key)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(khai_ecommerce.revenue)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      y_axis {
+        settings {
+          alignment: 'right'
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            ref: r(khai_ecommerce.total_users)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block f_z363: FilterBlock {
+    label: 'Orders Status'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(orders.status)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block f_pofb: FilterBlock {
+    label: 'Countries Name'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(countries.name)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block f_uuo1: FilterBlock {
+    label: 'Khai Date D Date Key'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(khai_date_d.date_key)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+  }
+  block f_m383: FilterBlock {
+    label: 'Users Gender'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(users.gender)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block v_6g2o: VizBlock {
+    label: 'Name and Revenue'
+    viz: DataTable {
+      dataset: khai_ecommerce
+      fields: [
+        VizFieldFull {
+          ref: r(countries.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce.revenue)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_52wr: VizBlock {
+    label: 'Full Name and Total Orders'
+    viz: DataTable {
+      dataset: khai_ecommerce
+      conditions: [
+        '''users.full_name in (
+  top((param_model.number_param | first())
+    , users.full_name
+    , by: total_orders)
+)'''
+      ]
+      fields: [
+        VizFieldFull {
+          ref: r(users.full_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(orders.total_orders)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f_wimh: FilterBlock {
+    label: 'Top N'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(param_model.number_param)
+    }
+    default {
+      operator: 'is'
+      value: '10'
+    }
+  }
+  block v_c5p0: VizBlock {
+    label: 'Name, Revenue, and High Or Low'
+    viz: DataTable {
+      dataset: khai_ecommerce
+      calculation high_or_low {
+        label: 'High Or Low'
+        formula: @aql case(
+  when: revenue >= (param_model.number_param | first())
+  , then: 'HIGH'
+  , when: revenue is null 
+  , then: 'IGNORE'
+  , else: 'LOW'
+);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(khai_categories.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce.revenue)
+          format {
+            type: 'number'
+            pattern: '[$$]#,###'
+            group_separator: ','
+            decimal_separator: '.'
+          }
+        },
+        VizFieldFull {
+          ref: 'high_or_low'
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f_jmgl: FilterBlock {
+    label: 'High Congestion Days'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(param_model.number_param)
+    }
+    default {
+      operator: 'is'
+      value: '600000'
+    }
+  }
+  block v_okde: VizBlock {
+    label: 'Revenue Time Type and Total Orders Time Type by Time Type'
+    viz: PivotTable {
+      dataset: khai_ecommerce
+      calculation revenue_time_type {
+        label: 'Revenue Time Type'
+        formula: @aql case(
+  when: time_type.time_type == "1. Week"
+  , then: revenue | where(khai_date_d.date_key match @(this week))
+  , when: time_type.time_type == "2. MTD"
+  , then: revenue | where(khai_date_d.date_key match @(this month to today))
+  , when: time_type.time_type == "3. MTD LY"
+  , then: revenue | relative_period(khai_date_d.date_key, interval(-1 year)) | where(khai_date_d.date_key match @(this month to today))
+  , when: time_type.time_type == "4. YTD"
+  , then: revenue | where(khai_date_d.date_key match @(this year to today))
+  , when: time_type.time_type == "5. YTD LY"
+  , then: revenue | relative_period(khai_date_d.date_key, interval(-1 year)) | where(khai_date_d.date_key match @(this year to today))
+);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation total_orders_time_type {
+        label: 'Total Orders Time Type'
+        formula: @aql case(
+  when: time_type.time_type == "1. Week"
+  , then: total_orders | where(khai_date_d.date_key match @(this week))
+  , when: time_type.time_type == "2. MTD"
+  , then: total_orders | where(khai_date_d.date_key match @(this month to today))
+  , when: time_type.time_type == "3. MTD LY"
+  , then: total_orders | where(khai_date_d.date_key match @(2025-01-10))
+  , when: time_type.time_type == "4. YTD"
+  , then: total_orders | where(khai_date_d.date_key match @(this year to today))
+  , when: time_type.time_type == "5. YTD LY"
+  , then: total_orders | where(khai_date_d.date_key match @(this year to today)) | relative_period(khai_date_d.date_key, interval(-1 year))
+);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      columns: [
+        VizFieldFull {
+          ref: r(time_type.time_type)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: 'revenue_time_type'
+          format {
+            type: 'number'
+            pattern: '[$$]#,###'
+            group_separator: ','
+            decimal_separator: '.'
+          }
+        },
+        VizFieldFull {
+          ref: 'total_orders_time_type'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+        }
+      ]
+      settings {
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        frozen_columns: 0
+        value_labels_position {
+          placement: 'rows'
+        }
+      }
+    }
+  }
+  block v_rqnl: VizBlock {
+    label: '  copy'
+    viz: CombinationChart {
+      dataset: khai_ecommerce
+      calculation previous_year_revenue {
+        label: 'Previous Year Revenue'
+        formula: @aql relative_period(
+  revenue,
+  khai_date_d.date_key,
+  interval(-(param_model.number_param | first()) year)
+);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation previous_month_revenue {
+        label: 'Previous Month Revenue'
+        formula: @aql relative_period(
+  revenue,
+  khai_date_d.date_key,
+  interval(-(param_model.number_param | first()) month)
+);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation previous_revenue {
+        label: 'Previous Revenue'
+        formula: @aql case(
+  when: 'year' in param_model.date_grain
+  , then: previous_year_revenue
+  , when: 'month' in param_model.date_grain
+  , then: previous_month_revenue
+  , else: null
+);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(khai_date_d.date_key)
         transformation: 'datetrunc month'
         format {
           type: 'date'
@@ -58,4 +500,857 @@ Dashboard khai_test {
       hide_label: true
     }
   }
+  block f_slux: FilterBlock {
+    label: 'Currency'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(param_model.currency)
+    }
+    default {
+      operator: 'is'
+      value: '🇺🇸 USD'
+    }
+    settings {
+      input_type: 'single'
+    }
+  }
+  block f_408l: FilterBlock {
+    label: 'Date'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: khai_ecommerce
+      field: r(khai_date_d.date_key)
+    }
+    default {
+      operator: 'matches'
+      value: '2024 to now'
+    }
+  }
+  block v_uc87: VizBlock {
+    label: 'Id, Sign Up Date and 11 more'
+    viz: DataTable {
+      dataset: khai_ecommerce
+      fields: [
+        VizFieldFull {
+          ref: r(users.id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.sign_up_date)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.sign_up_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.first_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.last_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.email)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.birth_date)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.gender)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.city_id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.full_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(users.email_pii)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce, users.user_acquired_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce, users.user_order_frequency)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  interactions: [
+    FilterInteraction {
+      from: 'v1'
+      to: [
+        CustomMapping {
+          block: [
+            'v_s6re',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_ml3q'
+      to: [
+        CustomMapping {
+          block: [
+            'v_s6re',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_kmoy'
+      to: [
+        CustomMapping {
+          block: [
+            'v_s6re',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_vs3y'
+      to: [
+        CustomMapping {
+          block: [
+            'v_s6re',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_s6re'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_z363'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_pofb'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_uuo1'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_m383'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_j1la'
+      to: [
+        CustomMapping {
+          block: [
+            'v_s6re',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_6g2o'
+      to: [
+        CustomMapping {
+          block: [
+            'v_s6re',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_52wr'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_wimh'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_c5p0'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_jmgl'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_okde'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_rqnl',
+            'v_1boj',
+            'v_dn8j'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_rqnl'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_1boj',
+            'v_dn8j'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_oit3'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_th9g'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_1rlj'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_1boj',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_jccu',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_1boj'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_dn8j'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_jccu'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_irwp',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_irwp'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_dn8j',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_slux',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_dn8j'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_slux'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_408l'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_408l'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v_s6re',
+            'v_6g2o',
+            'v_52wr',
+            'v_c5p0',
+            'v_okde',
+            'v_rqnl',
+            'v_1boj',
+            'f_ml3q',
+            'f_kmoy',
+            'f_vs3y',
+            'f_z363',
+            'f_pofb',
+            'f_uuo1',
+            'f_m383',
+            'f_j1la',
+            'f_wimh',
+            'f_jmgl',
+            'f_oit3',
+            'f_th9g',
+            'f_1rlj',
+            'f_jccu',
+            'f_irwp',
+            'f_slux'
+          ]
+          disabled: true
+        }
+      ]
+    }
+  ]
 }

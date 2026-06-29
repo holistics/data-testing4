@@ -28,6 +28,12 @@ Model cities {
     definition: @aql count(cities.id) ;;
   }
 
+  measure total_city {
+    label: 'Total City'
+    type: 'number'
+    definition: @aql count(cities.id) ;;
+  }
+
   owner: 'khai.to+demo4@holistics.io'
   table_name: '"ecommerce"."cities"'
 }

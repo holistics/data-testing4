@@ -1,0 +1,74 @@
+const pii =
+if (H.current_user.pii_access != 1) {
+  '\'(redacted)\''
+} else {
+  '{{ #SOURCE.email }}'
+}
+
+Model pii_users {
+  type: 'table'
+  label: 'Users'
+  description: ''
+  data_source_name: 'demodb'
+
+  dimension email {
+    label: 'Email'
+    type: 'text'
+    hidden: false
+    definition: @sql ${pii};;
+  }
+  dimension id {
+    label: "Id"
+    type: "number"
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+    primary_key: false
+  }
+  dimension sign_up_at {
+    label: "Sign Up At"
+    type: "datetime"
+    hidden: false
+    definition: @sql {{ #SOURCE.sign_up_at }};;
+    primary_key: false
+  }
+  dimension first_name {
+    label: "First Name"
+    type: "text"
+    hidden: false
+    definition: @sql {{ #SOURCE.first_name }};;
+    primary_key: false
+  }
+  dimension last_name {
+    label: "Last Name"
+    type: "text"
+    hidden: false
+    definition: @sql {{ #SOURCE.last_name }};;
+    primary_key: false
+  }
+  dimension birth_date {
+    label: "Birth Date"
+    type: "date"
+    hidden: false
+    definition: @sql {{ #SOURCE.birth_date }};;
+    primary_key: false
+  }
+  dimension gender {
+    label: "Gender"
+    type: "text"
+    hidden: false
+    definition: @sql {{ #SOURCE.gender }};;
+    primary_key: false
+  }
+  dimension city_id {
+    label: "City Id"
+    type: "number"
+    hidden: false
+    definition: @sql {{ #SOURCE.city_id }};;
+    primary_key: false
+  }
+
+
+  owner: 'thong.do@holistics.io'
+  table_name: 'ecommerce.users'
+
+}
