@@ -173,9 +173,17 @@ Run the overall delta query (no segment grouping):
 
 If `overall_delta_value = 0`: stop. Inform the user the metric did not change net between the two periods. Do not proceed further.
 
-Then inspect the dataset schema and select top 3 dimensions per Core Rule 6.
+Scan the **user's original message** in the conversation history (not AI output) for explicitly named dimensions (e.g. "by category and campaign", "break it down by region", "which segments drove it"). Store this as `user_specified_dimensions` (ordered list, or empty if none found).
+
+If `user_specified_dimensions` is empty: inspect the dataset schema and select top 3 dimensions per Core Rule 6.
 
 **Show:**
+
+**If `user_specified_dimensions` is non-empty — fast path:**
+
+Run only Steps 1 and 2, then proceed directly to Phase 3 using `user_specified_dimensions` as the confirmed dimension list. Do NOT run Steps 3, 4, or 5. Do NOT stop for confirmation.
+
+**If `user_specified_dimensions` is empty — standard path:**
 
 Execute these five steps in the exact order below. Do not reorder, skip, or batch any step.
 
@@ -268,7 +276,7 @@ Always show this, even when the user accepted the proposed list without changes.
 3. Pass the AQL to `generate_viz` to produce the combo chart.
 
    Natural language query for `generate_viz` (fill in `[sort_direction]` with the resolved value):
-   `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change' with color #1F3864 (dark navy blue). Show all segments. No row limit. No tooltip fields. Sort segments by delta_value [sort_direction]."`
+   `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' with color #255DD4, and comparison_value labeled '[comparison_period_name]' with color #92AEEA. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change' with color #1F3864 (dark navy blue) and smooth interpolation. Show all segments. No row limit. No tooltip fields. Sort segments by delta_value [sort_direction]."`
 
 4. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
