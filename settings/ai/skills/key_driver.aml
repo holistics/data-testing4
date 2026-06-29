@@ -268,7 +268,11 @@ Always show this, even when the user accepted the proposed list without changes.
 3. Pass the AQL to `generate_viz` to produce the combo chart.
 
    Natural language query for `generate_viz` (fill in `[sort_direction]` with the resolved value):
+<<<<<<< local:settings/ai/skills/key_driver.aml
+   `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change' with color #1F3864 (dark navy blue). Show all segments. No row limit. No tooltip fields. Sort segments by delta_value [sort_direction]."`
+=======
    `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' and comparison_value labeled '[comparison_period_name]'. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change'. Show all segments. No row limit. No tooltip fields. Sort segments by delta_value [sort_direction]."`
+>>>>>>> cloud:settings/ai/skills/key_driver.aml
 
 4. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
@@ -320,6 +324,22 @@ If the dimension fails at any point (query error, empty result, schema issue, et
 
 ---
 
+<<<<<<< local:settings/ai/skills/key_driver.aml
+### Phase 3 Completion → Proceed to Phase 4
+
+Immediately after outputting the last confirmed dimension's analysis (the final chart + prose block):
+- Do NOT stop, pause, or wait for user input.
+- Do NOT end the response.
+- Continue within the same response and proceed directly to Phase 4.
+
+Phase 4 is mandatory and requires no user confirmation. Skipping it is not allowed.
+
+If Phase 4 was not produced in the same response as the final Phase 3 output (e.g., due to response length), run Phase 4 immediately at the start of the next response before addressing anything else.
+
+---
+
+=======
+>>>>>>> cloud:settings/ai/skills/key_driver.aml
 ### Phase 4 — Final overview
 
 Produced after all confirmed dimensions are complete, or after the user stops early.
