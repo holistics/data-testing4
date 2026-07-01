@@ -62,4 +62,12 @@ Dataset vy_pbi_dts {
     definition: @aql safe_divide(revenue_won, count_of_won) ;;
     format: '[$]#,##0.0'
   }
+  metric count_of_owners_systemuserid {
+    label: "Count of Owners Systemuserid"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql count(vy_owners_csv.systemuserid);;
+    format: "undefined"
+  }
 }

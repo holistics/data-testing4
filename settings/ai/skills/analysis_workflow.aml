@@ -1,0 +1,284 @@
+Skill analysis_workflow {
+
+  label: "Analysis Workflow"
+  invocation: "manual"
+  description: '''
+    Collaborative analytics investigation that routes to the right Gartner analytics level based
+    on the user's intent, then offers a contextual menu so the user steers the investigation.
+    Replaces change_analysis v1.
+
+    Auto-trigger on:
+      • Observation — "What happened to revenue recently?", "Show me the trend in signups",
+        "What's going on with MRR?", "How is revenue doing?"
+      • Explanation — "Why did revenue drop?", "What's causing the decline in conversions?",
+        "Explain the increase in churn last quarter"
+      • Attribution — "Which region drove the drop?", "Break revenue down by product",
+        "What segment is behind this?", "Where did the increase come from?"
+      • Projection — "What will revenue look like next quarter?", "Forecast signups" (stub)
+      • Recommendation — "What should we do about the churn increase?" (stub)
+
+    Do NOT trigger for:
+      • Pure anomaly scanning with no specific change in mind ("detect anomalies in revenue") — detect_anomaly handles those
+      • Chart explanation ("what does this chart show?") — explain_and_insight handles those
+  '''
+
+  content: @md
+
+    # Change Analysis v2
+
+    This skill is a **collaborative partner** — it detects the user's intent, runs the right
+    analysis, then offers a contextual escalation menu. The user picks what to explore next;
+    the skill never auto-proceeds.
+
+    ---
+
+    ## On every invocation — check for a stage block first
+
+    Scan the conversation history for the most recent **Change Analysis v2 stage block** (format
+    defined in Stage Block Format below).
+
+    **If found:** load state from it. Show the dynamic escalation menu for the most recently
+    completed level (see Escalation Menus), then stop. Do not re-run any analysis.
+
+    **If not found:** fresh invocation. Continue to Intent Detection.
+
+    ---
+
+    ## Intent detection — fresh invocations only
+
+    Classify the user's question:
+
+    | Signal | Intent | Entry point |
+    |---|---|---|
+    | "What happened?", "What's the trend?", "How is X doing?" | Observation | Level 1 — Descriptive |
+    | "Why did X change?", "What's causing X?", "Explain X change" | Explanation | Level 2a — Anomaly check |
+    | "Which segment drove X?", "Break X down by Y" | Attribution | Level 2c — Key driver (skip anomaly) |
+    | "What will X look like?", "Forecast X" | Projection | Level 3 — Predictive stub |
+    | "What should we do about X?" | Recommendation | Level 4 — Prescriptive stub |
+
+    Ambiguous (e.g. "Tell me about revenue") → default to Level 1 Descriptive.
+
+    **Required:** metric name. If missing, ask before doing anything:
+    > "Which metric are you looking at?"
+
+    ---
+
+    ## Level 1 — Descriptive ("What happened?")
+
+    Goal: show what the metric has been doing recently. No judgment yet.
+
+    **Steps:**
+
+    1. Resolve the metric and dataset (`list_datasets` / `fetch_dataset`).
+
+    2. Generate a **CombinationChart** showing the actual metric as a solid line and a
+       3-period moving average as a dashed trend line. This is the programmatic trend line —
+       Holistics does not support adding trend lines declaratively to existing charts in AML.
+       Use the same `calculation` block pattern as `detect_anomaly`:
+       - `rolling_avg`: `window_avg(M, -3..-1, order: T | asc(), partition: [])`
+       - Two series on the y-axis: `actual` (solid, primary color) and `rolling_avg` (dashed, grey)
+       - If chart AML syntax is unclear, call `search_docs("CombinationChart calculation series AML")` first.
+       - Run with `execute_viz` (pass only `dataset_uname`, `viz`, `title`; never an `aql` property).
+
+       If the dataset has no suitable time dimension or the chart fails after one retry,
+       fall back to `execute_aql` showing the metric over recent periods as a plain table.
+
+    3. Output a 2–3 sentence plain-text summary:
+       > "[Metric] has [been declining / rising / been flat] over the past [N] [periods].
+       > It [peaked / bottomed] at [value] in [period] and [has dropped / risen] to [value]
+       > in [latest period] — a [N]% [decline / increase]. The trend line shows
+       > [a consistent downward slope / an upward acceleration / a leveling off]."
+
+    4. Write a stage block (see Stage Block Format) with `Timeframe` set and
+       `Completed diagnostics` empty. Show escalation **Menu A**, then stop.
+
+    ---
+
+    ## Level 2 — Diagnostic ("Why did it happen?")
+
+    ### 2a. Anomaly check
+
+    Call `load_skill("detect_anomaly")`. Let it run fully through all five steps.
+
+    When detect_anomaly finishes, write a new stage block appending `anomaly_check` to
+    `Completed diagnostics` and recording the `Anomaly verdict`.
+    Show **Menu B** (anomalous) or **Menu C** (within normal range), then stop.
+
+    ### 2b. YoY comparison
+
+    **Period resolution:** use `Base period` from the stage block if already set; otherwise
+    default to the most recently completed period at month granularity. Ask if granularity
+    is ambiguous.
+
+    Derive the comparison period: same period one year prior at the same granularity
+    (e.g. `@(2026-06)` → `@(2025-06)`, `@(2026-Q2)` → `@(2025-Q2)`).
+
+    Write an AQL query with both periods as separate measures, then render with `generate_viz`:
+
+    - If the base period spans **multiple sub-periods** (e.g. Jan–Jun 2026 vs Jan–Jun 2025):
+      use a **LineChart** with time on x-axis and two series (current year / prior year).
+    - If comparing **two single values** (e.g. June 2026 vs June 2025):
+      use a **ColumnChart** with period label on x-axis and the two values as two columns.
+
+    Validate AQL with `validate_aql` before executing.
+
+    Output a one-sentence verdict after the chart:
+    > "[Metric] in [base period] is [value] — [N]% [above / below] the same period last year ([comparison value])."
+
+    Write a new stage block appending `yoy_comparison`. Show the relevant menu, then stop.
+
+    ### 2c. Dimensional breakdown
+
+    Call `load_skill("key_driver")`. It reads `Base period` and `Comparison period` from
+    the stage block.
+
+    If those fields are absent (user jumped here from Descriptive without running anomaly
+    check first): resolve periods using the same logic as 2b, write a new stage block with
+    those fields set, then call `load_skill("key_driver")`.
+
+    When key_driver finishes: write a new stage block appending `key_driver`.
+    Show **Menu E**, then stop.
+
+    ### 2d. Metric decomposition
+
+    **Period resolution:** same as 2b/2c above.
+
+    1. Inspect the metric formula using `fetch_dataset`.
+
+    2. Classify the metric:
+       - **Additive** (e.g. MRR = New MRR + Expansion − Churn) → each named component is a series
+       - **Ratio** (e.g. Close Rate = Won / Total) → numerator and denominator are the two series
+       - **Atomic** (no formula, single field) → inform the user:
+         > "This metric has no components to decompose — try a dimensional breakdown instead."
+         Show **Menu E** without appending to `Completed diagnostics`, then stop.
+
+    3. Write one AQL query per component for both periods. Then render a single `execute_viz`:
+       - **Additive** → `ColumnChart` with period on x-axis, metric value on y-axis,
+         and component name as `Legend` (Holistics stacks/groups by Legend automatically).
+       - **Ratio** → `ColumnChart` with period on x-axis and numerator / denominator as
+         two series (use Legend or two separate y-axis measures).
+
+       Validate AQL with `validate_aql` before executing.
+
+    4. Output a plain-text summary identifying the component with the largest shift:
+       - Additive example:
+         > "MRR dropped $120K in June. New MRR was flat (+$2K), Expansion MRR declined $45K,
+         > and Churn MRR increased $77K. Churn is the primary driver."
+       - Ratio example:
+         > "Close rate dropped from 32% to 24%. Won deals fell 18 (−22%), while total deals
+         > held roughly flat (−3%). The drop is driven by fewer wins, not more losses entering
+         > the funnel."
+
+    Write a new stage block appending `decomposition`. Show **Menu F**, then stop.
+
+    ---
+
+    ## Level 3 — Predictive ("What will happen?") — stub
+
+    > "Forecasting isn't supported yet — it's on the roadmap! In the meantime, would you like
+    > to dig into what's been driving the trend?"
+
+    Offer Level 2c (key driver) as an alternative. Do not write a stage block.
+
+    ---
+
+    ## Level 4 — Prescriptive ("What should we do?") — stub
+
+    > "Recommended actions aren't supported yet — it's on the roadmap! Would you like to
+    > investigate what's been driving the change first?"
+
+    Offer Level 2a or 2c as alternatives. Do not write a stage block.
+
+    ---
+
+    ## Stage block format
+
+    Write this as plain text after every level completes. Always write the **full current state**
+    — do not reference or rely on a previous block. The most recent block in the conversation
+    supersedes all earlier ones.
+
+    ```
+    ---
+    Change Analysis v2 — stage
+    - Metric: [metric name]
+    - Dataset: [dataset_uname]
+    - Timeframe: [e.g. "Jan 2025 – Jun 2026"]
+    - Base period: [resolved literal, e.g. "@(2026-06)"]       ← omit if not yet resolved
+    - Comparison period: [resolved literal, e.g. "@(2025-06)"] ← omit if not yet resolved
+    - Anomaly verdict: [Anomalous / Within normal range]        ← omit if anomaly check not run
+    - Completed diagnostics: [comma-separated: anomaly_check, yoy_comparison, key_driver, decomposition]
+    ---
+    ```
+
+    ---
+
+    ## Escalation menus
+
+    Menus are **dynamic**: before rendering, read `Completed diagnostics` from the latest
+    stage block and drop any option whose key already appears in that list.
+    Re-number the remaining options sequentially.
+
+    - If only one option remains → present it as a direct offer, not a numbered list.
+    - If all four diagnostic keys are present → output the closing summary instead of a menu.
+
+    The full option pools are listed below. Options in *(italics)* show the key used for
+    completed-diagnostics tracking.
+
+    **Menu A — after Descriptive:**
+    > **Want to dig deeper?**
+    > 1. Is this change normal? *(anomaly_check)*
+    > 2. How does this compare to the same period last year? *(yoy_comparison)*
+    > 3. Which segments are driving this? *(key_driver)*
+    > 4. What will this look like going forward? *(Predictive — coming soon)*
+
+    **Menu B — after anomaly check, anomalous:**
+    > **The change is unusual. Want to find what drove it?**
+    > 1. Break it down by dimensions *(key_driver)*
+    > 2. Decompose the metric — see which component shifted *(decomposition)*
+    > 3. Compare to the same period last year *(yoy_comparison)*
+    > 4. What should we do? *(Prescriptive — coming soon)*
+
+    **Menu C — after anomaly check, within normal range:**
+    > **This looks like normal variation. Anything else you'd like to check?**
+    > 1. Break it down by dimensions anyway *(key_driver)*
+    > 2. Decompose the metric *(decomposition)*
+    > 3. Compare to the same period last year *(yoy_comparison)*
+
+    **Menu D — after YoY comparison:**
+    > 1. Break it down by dimensions *(key_driver)*
+    > 2. Decompose the metric *(decomposition)*
+    > 3. Check if this is statistically unusual *(anomaly_check)*
+    > 4. What should we do? *(Prescriptive — coming soon)*
+
+    **Menu E — after dimensional breakdown:**
+    > 1. Compare to the same period last year *(yoy_comparison)*
+    > 2. Decompose the metric *(decomposition)*
+    > 3. Check if this is statistically unusual *(anomaly_check)*
+    > 4. What should we do? *(Prescriptive — coming soon)*
+
+    **Menu F — after metric decomposition:**
+    > 1. Break it down by dimensions to find which segment drove the component shift *(key_driver)*
+    > 2. Compare to the same period last year *(yoy_comparison)*
+    > 3. Check if this is statistically unusual *(anomaly_check)*
+    > 4. What should we do? *(Prescriptive — coming soon)*
+
+    **Closing summary — when all four diagnostic keys are in Completed diagnostics:**
+    > Here's what we covered for **[metric]** [timeframe]:
+    > - [one-line finding per completed diagnostic, in the order they were run]
+    >
+    > Let me know if you'd like to revisit anything.
+
+    ---
+
+    ## Guard rails
+
+    - Never re-run a diagnostic already in `Completed diagnostics`
+    - Always confirm the metric before any analysis if ambiguous
+    - `detect_anomaly` and `key_driver` are called with `load_skill()`, never re-implemented inline
+    - For YoY and decomposition: validate AQL with `validate_aql` before `execute_aql` / `execute_viz`
+    - Pass only `dataset_uname`, `viz`, and `title` to `execute_viz` — never an `aql` property
+    - The escalation menu is the only path to the next diagnostic — never auto-proceed
+
+  ;;
+
+}
