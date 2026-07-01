@@ -1,7 +1,7 @@
 Skill analysis_workflow {
 
   label: "Analysis Workflow"
-  invocation: "auto"
+  invocation: "manual"
   description: '''
     Collaborative analytics investigation that routes to the right Gartner analytics level based
     on the user's intent, then offers a contextual menu so the user steers the investigation.
