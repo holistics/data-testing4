@@ -1,7 +1,6 @@
 Dashboard vy_hdrill_quarter_demo {
-  title: 'h-drill: Interactive Quarter Buttons Demo'
-  description: @md
-## What is this?
+  title: 'Quarter button demo'
+  description: @md ## What is this?
 
 This dashboard demos the `<h-drill>` interactive button pattern — the answer to the question: *"how do I add custom clickable buttons that filter the dashboard without a page reload?"*
 
@@ -36,8 +35,7 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
 **Key clarifications:**
 - `h-drill` is *authored* inside a Dynamic Content / MarkdownViz block, but it *targets* other dashboard vizualizations
 - It is **not** the same as Date Drill (which changes time granularity, not the time window)
-- Use `.raw` for the filter value passed to other charts; `.formatted` for the display label
-;;
+- Use `.raw` for the filter value passed to other charts; `.formatted` for the display label;;
   block v_quarters: VizBlock {
     label: 'Quarter Selector'
     viz: MarkdownViz {
@@ -146,13 +144,12 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
       }
     }
   }
-
   block v_revenue_by_month: VizBlock {
     label: 'Revenue by Quarter'
     viz: ColumnChart {
       dataset: demo_ecommerce
       x_axis: VizFieldFull {
-        ref: ref('order_master', 'order_created_at')
+        ref: r(order_master.order_created_at)
         transformation: 'datetrunc quarter'
         format {
           type: 'date'
@@ -162,7 +159,7 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
       y_axis {
         series {
           field: VizFieldFull {
-            ref: ref('order_master', 'gmv')
+            ref: r(order_master.gmv)
             format {
               type: 'number'
               pattern: '#,###'
@@ -173,6 +170,10 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
       settings {
         row_limit: 5000
         x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
       }
     }
   }
@@ -193,5 +194,8 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
       position: pos(600, 140, 580, 440)
       layer: 1
     }
+  }
+  settings {
+    autorun_on_open: true
   }
 }
