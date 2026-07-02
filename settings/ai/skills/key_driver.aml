@@ -1,10 +1,6 @@
 Skill key_driver {
 
-<<<<<<< local:settings/ai/skills/key_driver.aml
-label: 'Key Driver'
-=======
 label: 'Contribution Analysis'
->>>>>>> cloud:settings/ai/skills/key_driver.aml
 
 description: '''Identify which segments drove a metric change between two periods by ranking raw delta change per segment — no volume weighting. Invoked by the change_analysis orchestrator or directly when the user explicitly requests a dimensional breakdown (e.g. "break revenue down by region", "which segments drove it").'''
 
