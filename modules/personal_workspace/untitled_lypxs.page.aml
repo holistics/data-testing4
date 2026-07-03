@@ -1,0 +1,25 @@
+Dashboard untitled_lypxs {
+  title: 'Untitled'
+  owner: 'vy.ht@holistics.io'
+  block title: TextBlock {
+    content: @md # Vy's Personal Dashboard;;
+  }
+  interactions: []
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 800
+    grid_size: 20
+    auto_expand_vertically: true
+    block title {
+      position: pos(20, 20, 1260, 60)
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: H.themes.vanilla
+  settings {
+    autorun_on_open: true
+  }
+}
