@@ -16,7 +16,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
       width: 1220
-      height: 5000
+      height: 5420
       grid_size: 20
       block v3 {
         position: pos(20, 1760, 1160, 460)
@@ -125,6 +125,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       block v_wxn2 {
         position: pos(620, 4580, 580, 400)
         layer: 15
+      }
+      block v_m2xo {
+        position: pos(20, 5000, 580, 400)
+        layer: 16
       }
       mobile {
         mode: 'auto'
@@ -4063,6 +4067,120 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block v_m2xo: VizBlock {
+    label: '''Revenue Won Change by Owner: February 2021 vs January 2021
+'''
+    viz: CombinationChart {
+      dataset: vy_pbi_dts
+      calculation base_value_raw {
+        label: 'Base Value Raw'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(February 2021));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_raw {
+        label: 'Comparison Value Raw'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(January 2021));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value {
+        label: 'February 2021'
+        formula: @aql coalesce(base_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'January 2021'
+        formula: @aql coalesce(comparison_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Δ Change'
+        formula: @aql base_value - comparison_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation pct_delta {
+        label: 'Pct Delta'
+        formula: @aql safe_divide(delta_value, comparison_value_raw) * 100.0;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      conditions: [
+        'vy_opportunity_calendar_csv.year_month is @(January 2021 - February 2021)'
+      ]
+      x_axis: VizFieldFull {
+        label: 'Owner'
+        ref: r(vy_owners_csv.owner)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Revenue'
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'February 2021'
+            ref: 'base_value'
+            format {
+              type: 'number'
+              pattern: '[$$]#,###0.00'
+            }
+          }
+          settings {
+            color: '#255DD4'
+          }
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'January 2021'
+            ref: 'comparison_value'
+            format {
+              type: 'number'
+              pattern: '[$$]#,###0.00'
+            }
+          }
+          settings {
+            color: '#92AEEA'
+          }
+        }
+      }
+      y_axis {
+        label: 'Δ Change'
+        settings {
+          alignment: 'right'
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Δ Change'
+            ref: 'delta_value'
+            format {
+              type: 'number'
+              pattern: '[$$]#,###0.00'
+            }
+          }
+          settings {
+            color: '#1F3864'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        sort {
+          field_index: 2
+          direction: 'asc'
+          type: 'series'
+        }
+        legend_label: 'top'
+        x_axis_label: 'Owner'
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v3'
@@ -5049,7 +5167,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       from: 'v_qpsb'
       to: [
         CustomMapping {
-          block: 'v_wxn2'
+          block: [
+            'v_wxn2',
+            'v_m2xo'
+          ]
           disabled: true
         }
       ]
@@ -5058,7 +5179,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       from: 'v_j070'
       to: [
         CustomMapping {
-          block: 'v_wxn2'
+          block: [
+            'v_wxn2',
+            'v_m2xo'
+          ]
           disabled: true
         }
       ]
@@ -5136,6 +5260,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     },
     FilterInteraction {
       from: 'v_wxn2'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_m2xo'
       to: [
         CustomMapping {
           block: [
