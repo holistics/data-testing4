@@ -260,23 +260,124 @@ Always show this, even when the user accepted the proposed list without changes.
 
 **Compute:**
 
-1. Resolve the sort direction from `overall_delta_value` — reuse this value in both the AQL and the `generate_viz` NL:
-   - `overall_delta_value < 0` (drop) → `sort_direction = "ascending"` (most negative first)
-   - `overall_delta_value > 0` (increase) → `sort_direction = "descending"` (most positive first)
+1. Resolve the sort direction from `overall_delta_value` — use this value when filling in the AML template below:
+   - `overall_delta_value < 0` (drop) → `sort_direction = 'asc'` (most negative first)
+   - `overall_delta_value > 0` (increase) → `sort_direction = 'desc'` (most positive first)
 
-2. Write the per-dimension AQL grouped by the dimension's segment field. Include these computed fields:
-   - `base_value_raw`, `comparison_value_raw` — raw, uncoalesced (needed for new/disappeared detection)
-   - `base_value`, `comparison_value` — coalesced per null safety rules (Core Rule 4)
-   - For ratio metrics: coalesce each component of numerator and denominator individually before `safe_divide` — `base_value = coalesce(safe_divide(coalesce(comp_A_base, 0), coalesce(comp_A_base, 0) + coalesce(comp_B_base, 0) + ...), 0)`
-   - For additive metrics: `base_value = coalesce(base_value_raw, 0)`, `comparison_value = coalesce(comparison_value_raw, 0)`
-   - `delta_value = base_value - comparison_value`
-   - `pct_delta = coalesce(safe_divide(delta_value, comparison_value), 0) * 100`
-   - Sort the AQL by `delta_value [sort_direction]`
+2. Write the per-dimension `CombinationChart` AML block using the template below. Fill in every placeholder before calling `execute_viz`:
 
-3. Pass the AQL to `generate_viz` to produce the combo chart.
+   - `[dataset_uname]` — dataset identifier from Phase 2
+   - `[date_field]` — the date field used for period filtering (e.g., `orders.created_at`)
+   - `[base_period_literal]` and `[comparison_period_literal]` — confirmed literals from Phase 1
+   - `[base_period_name]` and `[comparison_period_name]` — human-readable period names
+   - `[metric_name]` — display name for the Y-axis label
+   - `[metric_formula]` — for additive metrics: the raw field reference (e.g., `revenue_won`). For ratio metrics: rebuild inline with coalesced components — `safe_divide(coalesce(num, 0), coalesce(den_A, 0) + coalesce(den_B, 0) + ...)` — applied before the `where()` filter
+   - `[dimension_label]` — display name of the dimension
+   - `[dimension_field_ref]` — field ref from dataset schema in `table.field` format (e.g., `owners_csv.owner`), used inside `r(...)` in the AML
+   - `[sort_direction]` — `'asc'` for drops, `'desc'` for increases. Always fill in the actual value — never leave as a placeholder
 
-   Natural language query for `generate_viz` (fill in `[sort_direction]` with the resolved value — "ascending" for drops, "descending" for increases):
-   `"Combo chart. X-axis: segment dimension, categories sorted by delta_value [sort_direction] (most negative delta first for drops, most positive first for increases). Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' with color #255DD4, and comparison_value labeled '[comparison_period_name]' with color #92AEEA. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change' with color #1F3864 (dark navy blue) and smooth interpolation. Show all segments. No row limit. No tooltip fields."`
+   ```
+   CombinationChart {
+     dataset: [dataset_uname]
+     calculation base_value_raw {
+       label: 'Base Value Raw'
+       formula: @aql [metric_formula] | where([date_field] is [base_period_literal]);;
+       calc_type: 'measure'
+       data_type: 'number'
+     }
+     calculation comparison_value_raw {
+       label: 'Comparison Value Raw'
+       formula: @aql [metric_formula] | where([date_field] is [comparison_period_literal]);;
+       calc_type: 'measure'
+       data_type: 'number'
+     }
+     calculation base_value {
+       label: '[base_period_name]'
+       formula: @aql coalesce(base_value_raw, 0);;
+       calc_type: 'measure'
+       data_type: 'number'
+     }
+     calculation comparison_value {
+       label: '[comparison_period_name]'
+       formula: @aql coalesce(comparison_value_raw, 0);;
+       calc_type: 'measure'
+       data_type: 'number'
+     }
+     calculation delta_value {
+       label: 'Δ Change'
+       formula: @aql base_value - comparison_value;;
+       calc_type: 'measure'
+       data_type: 'number'
+     }
+     x_axis: VizFieldFull {
+       label: '[dimension_label]'
+       ref: r([dimension_field_ref])
+       format {
+         type: 'text'
+       }
+     }
+     y_axis {
+       label: '[metric_name]'
+       series {
+         mark_type: 'column'
+         field: VizFieldFull {
+           label: '[base_period_name]'
+           ref: 'base_value'
+           format {
+             type: 'number'
+           }
+         }
+         settings {
+           color: '#255DD4'
+         }
+       }
+       series {
+         mark_type: 'column'
+         field: VizFieldFull {
+           label: '[comparison_period_name]'
+           ref: 'comparison_value'
+           format {
+             type: 'number'
+           }
+         }
+         settings {
+           color: '#92AEEA'
+         }
+       }
+     }
+     y_axis {
+       label: 'Δ Change'
+       settings {
+         alignment: 'right'
+       }
+       series {
+         mark_type: 'line'
+         field: VizFieldFull {
+           label: 'Δ Change'
+           ref: 'delta_value'
+           format {
+             type: 'number'
+           }
+         }
+         settings {
+           color: '#1F3864'
+           line_interpolation: 'smooth'
+         }
+       }
+     }
+     settings {
+       sort {
+         field_index: 2
+         direction: '[sort_direction]'
+         type: 'series'
+       }
+       legend_label: 'top'
+       x_axis_label: '[dimension_label]'
+     }
+   }
+   ```
+
+3. Call `execute_viz` with the completed AML block, `dataset_uname`, and a title (e.g., `"[Metric] by [Dimension] — [base_period_name] vs [comparison_period_name]"`). The result data returned by `execute_viz` contains all calculation values including `base_value_raw`, `comparison_value_raw`, and `delta_value` — use this for segment classification in step 4 and `contribution_pct` in step 5.
 
 4. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
@@ -393,8 +494,8 @@ For the **Contribution to change** column, apply the same threshold rule as the 
 - Run one AQL query per dimension — never union or batch dimensions
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
-- Never call `execute_aql` during Phase 3 — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only.
-- When generating the combo chart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Apply sort at both layers: (1) include `order by delta_value [sort_direction]` as the final ORDER BY clause in the AQL, and (2) embed the sort in the X-axis definition of the `generate_viz` NL as "categories sorted by delta_value [sort_direction]". Both layers must use the exact pre-resolved value ("ascending" or "descending") — never leave `[sort_direction]` as a placeholder in the actual tool call.
+- Never call `execute_aql` during Phase 3 — it renders a visible result table to the user. Use `execute_viz` with a hand-written AML block instead.
+- For Phase 3 combo charts, do not call `generate_viz` — write the `CombinationChart` AML block directly using the template in step 2, then call `execute_viz`. Sort is controlled by the `settings { sort { field_index: 2, direction: '...', type: 'series' } }` block — `field_index: 2` always refers to `delta_value` (series index 0 = base_value column, 1 = comparison_value column, 2 = delta_value line). Fill in `direction` with the pre-resolved value (`'asc'` or `'desc'`) — never leave it as a placeholder.
 
 ;;
 
