@@ -275,8 +275,8 @@ Always show this, even when the user accepted the proposed list without changes.
 
 3. Pass the AQL to `generate_viz` to produce the combo chart.
 
-   Natural language query for `generate_viz` (fill in `[sort_direction]` with the resolved value):
-   `"Combo chart. X-axis: segment dimension. Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' with color #255DD4, and comparison_value labeled '[comparison_period_name]' with color #92AEEA. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change' with color #1F3864 (dark navy blue) and smooth interpolation. Show all segments. No row limit. No tooltip fields. Sort segments by delta_value [sort_direction]."`
+   Natural language query for `generate_viz` (fill in `[sort_direction]` with the resolved value — "ascending" for drops, "descending" for increases):
+   `"Combo chart. X-axis: segment dimension, categories sorted by delta_value [sort_direction] (most negative delta first for drops, most positive first for increases). Y-axis 1 (primary): two column series — base_value labeled '[base_period_name]' with color #255DD4, and comparison_value labeled '[comparison_period_name]' with color #92AEEA. Y-axis 2 (secondary): one line series for delta_value labeled 'Δ Change' with color #1F3864 (dark navy blue) and smooth interpolation. Show all segments. No row limit. No tooltip fields."`
 
 4. From the chart result data, classify each segment's `impact_direction` (post-query):
    - `overall_delta_value < 0` and `delta_value < 0` → driver_of_change
@@ -394,7 +394,7 @@ For the **Contribution to change** column, apply the same threshold rule as the 
 - Do not introduce volume weighting of any kind
 - For ratio metrics, note in output that combined contribution % across multiple segments is an approximation
 - Never call `execute_aql` during Phase 3 — it renders a visible result table to the user. Always use `generate_viz` to run per-dimension queries so the AQL result is consumed internally by the chart only.
-- When generating the combo chart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Apply sort at both layers: (1) include `order by delta_value [sort_direction]` in the AQL, and (2) pass the same sort intent in the `generate_viz` NL. Both layers must use the same pre-resolved `sort_direction` value.
+- When generating the combo chart viz (Phase 3), pass `row_limit: 5000` to ensure all segments are shown. Apply sort at both layers: (1) include `order by delta_value [sort_direction]` as the final ORDER BY clause in the AQL, and (2) embed the sort in the X-axis definition of the `generate_viz` NL as "categories sorted by delta_value [sort_direction]". Both layers must use the exact pre-resolved value ("ascending" or "descending") — never leave `[sort_direction]` as a placeholder in the actual tool call.
 
 ;;
 
