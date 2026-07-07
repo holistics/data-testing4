@@ -276,106 +276,106 @@ Always show this, even when the user accepted the proposed list without changes.
    - `[dimension_field_ref]` — field ref from dataset schema in `table.field` format (e.g., `owners_csv.owner`), used inside `r(...)` in the AML
    - `[sort_direction]` — `'asc'` for drops, `'desc'` for increases. Always fill in the actual value — never leave as a placeholder
 
-   ```
-   CombinationChart {
-     dataset: [dataset_uname]
-     calculation base_value_raw {
-       label: 'Base Value Raw'
-       formula: @aql [metric_formula] | where([date_field] is [base_period_literal]);;
-       calc_type: 'measure'
-       data_type: 'number'
-     }
-     calculation comparison_value_raw {
-       label: 'Comparison Value Raw'
-       formula: @aql [metric_formula] | where([date_field] is [comparison_period_literal]);;
-       calc_type: 'measure'
-       data_type: 'number'
-     }
-     calculation base_value {
-       label: '[base_period_name]'
-       formula: @aql coalesce(base_value_raw, 0);;
-       calc_type: 'measure'
-       data_type: 'number'
-     }
-     calculation comparison_value {
-       label: '[comparison_period_name]'
-       formula: @aql coalesce(comparison_value_raw, 0);;
-       calc_type: 'measure'
-       data_type: 'number'
-     }
-     calculation delta_value {
-       label: 'Δ Change'
-       formula: @aql base_value - comparison_value;;
-       calc_type: 'measure'
-       data_type: 'number'
-     }
-     x_axis: VizFieldFull {
-       label: '[dimension_label]'
-       ref: r([dimension_field_ref])
-       format {
-         type: 'text'
-       }
-     }
-     y_axis {
-       label: '[metric_name]'
-       series {
-         mark_type: 'column'
-         field: VizFieldFull {
+   **Note:** In the template below, each `formula:` line ends with `[END]` as a placeholder. Replace every `[END]` with two semicolons (`; ;` without the space) when writing the actual AML block. (Literal double-semicolons cannot appear in this skill file as they are the AML content terminator.)
+
+       CombinationChart {
+         dataset: [dataset_uname]
+         calculation base_value_raw {
+           label: 'Base Value Raw'
+           formula: @aql [metric_formula] | where([date_field] is [base_period_literal])[END]
+           calc_type: 'measure'
+           data_type: 'number'
+         }
+         calculation comparison_value_raw {
+           label: 'Comparison Value Raw'
+           formula: @aql [metric_formula] | where([date_field] is [comparison_period_literal])[END]
+           calc_type: 'measure'
+           data_type: 'number'
+         }
+         calculation base_value {
            label: '[base_period_name]'
-           ref: 'base_value'
-           format {
-             type: 'number'
-           }
+           formula: @aql coalesce(base_value_raw, 0)[END]
+           calc_type: 'measure'
+           data_type: 'number'
          }
-         settings {
-           color: '#255DD4'
-         }
-       }
-       series {
-         mark_type: 'column'
-         field: VizFieldFull {
+         calculation comparison_value {
            label: '[comparison_period_name]'
-           ref: 'comparison_value'
-           format {
-             type: 'number'
-           }
+           formula: @aql coalesce(comparison_value_raw, 0)[END]
+           calc_type: 'measure'
+           data_type: 'number'
          }
-         settings {
-           color: '#92AEEA'
-         }
-       }
-     }
-     y_axis {
-       label: 'Δ Change'
-       settings {
-         alignment: 'right'
-       }
-       series {
-         mark_type: 'line'
-         field: VizFieldFull {
+         calculation delta_value {
            label: 'Δ Change'
-           ref: 'delta_value'
+           formula: @aql base_value - comparison_value[END]
+           calc_type: 'measure'
+           data_type: 'number'
+         }
+         x_axis: VizFieldFull {
+           label: '[dimension_label]'
+           ref: r([dimension_field_ref])
            format {
-             type: 'number'
+             type: 'text'
+           }
+         }
+         y_axis {
+           label: '[metric_name]'
+           series {
+             mark_type: 'column'
+             field: VizFieldFull {
+               label: '[base_period_name]'
+               ref: 'base_value'
+               format {
+                 type: 'number'
+               }
+             }
+             settings {
+               color: '#255DD4'
+             }
+           }
+           series {
+             mark_type: 'column'
+             field: VizFieldFull {
+               label: '[comparison_period_name]'
+               ref: 'comparison_value'
+               format {
+                 type: 'number'
+               }
+             }
+             settings {
+               color: '#92AEEA'
+             }
+           }
+         }
+         y_axis {
+           label: 'Δ Change'
+           settings {
+             alignment: 'right'
+           }
+           series {
+             mark_type: 'line'
+             field: VizFieldFull {
+               label: 'Δ Change'
+               ref: 'delta_value'
+               format {
+                 type: 'number'
+               }
+             }
+             settings {
+               color: '#1F3864'
+               line_interpolation: 'smooth'
+             }
            }
          }
          settings {
-           color: '#1F3864'
-           line_interpolation: 'smooth'
+           sort {
+             field_index: 2
+             direction: '[sort_direction]'
+             type: 'series'
+           }
+           legend_label: 'top'
+           x_axis_label: '[dimension_label]'
          }
        }
-     }
-     settings {
-       sort {
-         field_index: 2
-         direction: '[sort_direction]'
-         type: 'series'
-       }
-       legend_label: 'top'
-       x_axis_label: '[dimension_label]'
-     }
-   }
-   ```
 
 3. Call `execute_viz` with the completed AML block, `dataset_uname`, and a title (e.g., `"[Metric] by [Dimension] — [base_period_name] vs [comparison_period_name]"`). The result data returned by `execute_viz` contains all calculation values including `base_value_raw`, `comparison_value_raw`, and `delta_value` — use this for segment classification in step 4 and `contribution_pct` in step 5.
 
