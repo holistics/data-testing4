@@ -52,7 +52,7 @@ Skill analysis_workflow {
     |---|---|---|
     | "What happened?", "What's the trend?", "How is X doing?" | Observation | Level 1 — Descriptive |
     | "Why did X change?", "What's causing X?", "Explain X change" | Explanation | Level 2a — Anomaly check |
-    | "Which segment drove X?", "Break X down by Y" | Attribution | Level 2c — Key driver (skip anomaly) |
+    | "Which segment drove X?", "Break X down by Y" | Attribution | Level 2c — Contribution Analysis (skip anomaly) |
     | "What will X look like?", "Forecast X" | Projection | Level 3 — Predictive stub |
     | "What should we do about X?" | Recommendation | Level 4 — Prescriptive stub |
 
@@ -129,14 +129,14 @@ Skill analysis_workflow {
 
     ### 2c. Dimensional breakdown
 
-    Call `load_skill("key_driver")`. It reads `Base period` and `Comparison period` from
+    Call `load_skill("contribution_analysis")`. It reads `Base period` and `Comparison period` from
     the stage block.
 
     If those fields are absent (user jumped here from Descriptive without running anomaly
     check first): resolve periods using the same logic as 2b, write a new stage block with
-    those fields set, then call `load_skill("key_driver")`.
+    those fields set, then call `load_skill("contribution_analysis")`.
 
-    When key_driver finishes: write a new stage block appending `key_driver`.
+    When contribution_analysis finishes: write a new stage block appending `contribution_analysis`.
     Show **Menu E**, then stop.
 
     ### 2d. Metric decomposition
@@ -206,7 +206,7 @@ Skill analysis_workflow {
     - Base period: [resolved literal, e.g. "@(2026-06)"]       ← omit if not yet resolved
     - Comparison period: [resolved literal, e.g. "@(2025-06)"] ← omit if not yet resolved
     - Anomaly verdict: [Anomalous / Within normal range]        ← omit if anomaly check not run
-    - Completed diagnostics: [comma-separated: anomaly_check, yoy_comparison, key_driver, decomposition]
+    - Completed diagnostics: [comma-separated: anomaly_check, yoy_comparison, contribution_analysis, decomposition]
     ---
     ```
 
@@ -228,24 +228,24 @@ Skill analysis_workflow {
     > **Want to dig deeper?**
     > 1. Is this change normal? *(anomaly_check)*
     > 2. How does this compare to the same period last year? *(yoy_comparison)*
-    > 3. Which segments are driving this? *(key_driver)*
+    > 3. Which segments are driving this? *(contribution_analysis)*
     > 4. What will this look like going forward? *(Predictive — coming soon)*
 
     **Menu B — after anomaly check, anomalous:**
     > **The change is unusual. Want to find what drove it?**
-    > 1. Break it down by dimensions *(key_driver)*
+    > 1. Break it down by dimensions *(contribution_analysis)*
     > 2. Decompose the metric — see which component shifted *(decomposition)*
     > 3. Compare to the same period last year *(yoy_comparison)*
     > 4. What should we do? *(Prescriptive — coming soon)*
 
     **Menu C — after anomaly check, within normal range:**
     > **This looks like normal variation. Anything else you'd like to check?**
-    > 1. Break it down by dimensions anyway *(key_driver)*
+    > 1. Break it down by dimensions anyway *(contribution_analysis)*
     > 2. Decompose the metric *(decomposition)*
     > 3. Compare to the same period last year *(yoy_comparison)*
 
     **Menu D — after YoY comparison:**
-    > 1. Break it down by dimensions *(key_driver)*
+    > 1. Break it down by dimensions *(contribution_analysis)*
     > 2. Decompose the metric *(decomposition)*
     > 3. Check if this is statistically unusual *(anomaly_check)*
     > 4. What should we do? *(Prescriptive — coming soon)*
@@ -257,7 +257,7 @@ Skill analysis_workflow {
     > 4. What should we do? *(Prescriptive — coming soon)*
 
     **Menu F — after metric decomposition:**
-    > 1. Break it down by dimensions to find which segment drove the component shift *(key_driver)*
+    > 1. Break it down by dimensions to find which segment drove the component shift *(contribution_analysis)*
     > 2. Compare to the same period last year *(yoy_comparison)*
     > 3. Check if this is statistically unusual *(anomaly_check)*
     > 4. What should we do? *(Prescriptive — coming soon)*
@@ -274,7 +274,7 @@ Skill analysis_workflow {
 
     - Never re-run a diagnostic already in `Completed diagnostics`
     - Always confirm the metric before any analysis if ambiguous
-    - `detect_anomaly` and `key_driver` are called with `load_skill()`, never re-implemented inline
+    - `detect_anomaly` and `contribution_analysis` are called with `load_skill()`, never re-implemented inline
     - For YoY and decomposition: validate AQL with `validate_aql` before `execute_aql` / `execute_viz`
     - Pass only `dataset_uname`, `viz`, and `title` to `execute_viz` — never an `aql` property
     - The escalation menu is the only path to the next diagnostic — never auto-proceed
