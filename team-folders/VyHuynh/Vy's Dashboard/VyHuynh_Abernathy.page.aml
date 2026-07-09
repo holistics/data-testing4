@@ -3339,7 +3339,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     content: @md ## **Kaggle Olist Ecomm Dataset**;;
   }
   block t_wymk: TextBlock {
-    content: @md ## **Power BI Dataset**;;
+    content: @md ## **Regional Sales**;;
   }
   block v_qpsb: VizBlock {
     label: 'Close % by month'
