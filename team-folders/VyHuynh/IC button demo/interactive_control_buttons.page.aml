@@ -1,5 +1,5 @@
-Dashboard vy_hdrill_quarter_demo {
-  title: 'Quarter button demo'
+Dashboard interactive_control_buttons {
+  title: 'Sales Performance'
   description: @md ## What is this?
 
 This dashboard demos the `<h-drill>` interactive button pattern — the answer to the question: *"how do I add custom clickable buttons that filter the dashboard without a page reload?"*
@@ -296,12 +296,234 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
       hide_label: true
     }
   }
+  block v_country_info: VizBlock {
+    label: 'Information'
+    viz: MarkdownViz {
+      dataset: demo_ecommerce
+      rows: [
+        VizFieldFull {
+          label: 'Country'
+          ref: r(ecommerce_countries.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Code'
+          ref: r(ecommerce_countries.code)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Continent'
+          ref: r(ecommerce_countries.continent_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Flag'
+          ref: r(ecommerce_countries.flag)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Key City'
+          ref: r(ecommerce_countries.key_city)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      content: @md <style>
+  /* Default: placeholder visible, individual cards hidden */
+  .all-countries-placeholder { display: flex; }
+  .info-card { display: none; }
+
+  /* When exactly 1 country selected: article:only-of-type is true (placeholder is a div, not article) */
+  .info-wrapper:has(article:only-of-type) .all-countries-placeholder { display: none; }
+  .info-wrapper:has(article:only-of-type) .info-card { display: block; }
+
+  .all-countries-placeholder {
+    align-items: center;
+    gap: 0.875rem;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .placeholder-flag {
+    font-size: 2.25rem;
+    line-height: 1;
+  }
+  .placeholder-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+  }
+  .placeholder-subtitle {
+    font-size: 0.8rem;
+    color: #9CA3AF;
+  }
+  .info-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid #F3F4F6;
+    margin-bottom: 0.75rem;
+  }
+  .card-flag {
+    font-size: 2.25rem;
+    line-height: 1;
+  }
+  .card-country-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.3rem;
+  }
+  .card-code-badge {
+    display: inline-block;
+    background: #F3F4F6;
+    color: #6B7280;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+  }
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #F9FAFB;
+  }
+  .card-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .row-label {
+    font-size: 0.8rem;
+    color: #9CA3AF;
+  }
+  .row-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #111827;
+  }
+</style>
+
+<div class="info-wrapper">
+  <div class="all-countries-placeholder">
+    <span class="placeholder-flag">🌍</span>
+    <div>
+      <div class="placeholder-title">All Countries</div>
+      <div class="placeholder-subtitle">Select a country above to see details</div>
+    </div>
+  </div>
+  {% map(rows) %}
+  <article class="info-card">
+    <div class="card-header">
+      <span class="card-flag">{{ `Flag`.formatted }}</span>
+      <div>
+        <div class="card-country-name">{{ `Country`.formatted }}</div>
+        <span class="card-code-badge">{{ `Code`.formatted }}</span>
+      </div>
+    </div>
+    <div class="card-row">
+      <span class="row-label">Continent</span>
+      <span class="row-value">{{ `Continent`.formatted }}</span>
+    </div>
+    <div class="card-row">
+      <span class="row-label">Key City</span>
+      <span class="row-value">{{ `Key City`.formatted }}</span>
+    </div>
+  </article>
+  {% end %}
+</div> ;;
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_kpi_revenue: VizBlock {
+    label: 'Total Revenue'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        ref: r(order_master.gmv)
+        format {
+          type: 'number'
+          pattern: '[$$]#,###'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_kpi_orders: VizBlock {
+    label: 'Total Orders'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        ref: r(ecommerce_orders.total_order)
+        format {
+          type: 'number'
+          pattern: '#,###'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_kpi_aov: VizBlock {
+    label: 'Avg Order Value'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        ref: r(order_master.aov)
+        format {
+          type: 'number'
+          pattern: '[$$]#,###.##'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   block v_revenue_by_country: VizBlock {
-    label: 'Revenue by Country'
+    label: 'Revenue by Category'
     viz: ColumnChart {
       dataset: demo_ecommerce
       x_axis: VizFieldFull {
-        ref: r(ecommerce_countries.name)
+        ref: r(map_categories.parent_category)
         format {
           type: 'text'
         }
@@ -317,12 +539,18 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
           }
           settings {
             color: '#07326C'
+            color_palette: H.color_palettes.seq_blue
           }
         }
       }
       settings {
         row_limit: 20
-        x_axis_show_null_datetime: true
+        sort {
+          field_index: 0
+          direction: 'desc'
+          type: 'yaxis'
+        }
+        x_axis_show_null_datetime: false
         aggregate_awareness {
           enabled: true
           debug_comments: true
@@ -367,10 +595,86 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
       }
     }
   }
+  block v_aov_by_country: VizBlock {
+    label: 'Avg Order Value by Month'
+    viz: LineChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.aov)
+            format {
+              type: 'number'
+              pattern: '[$$]#,###.##'
+            }
+          }
+          settings {
+            color: '#62ADD4'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_t38c: VizBlock {
+    label: 'Number of order by Category'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(map_categories.parent_category)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce_orders.total_order)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#92AEEA'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'desc'
+          type: 'yaxis'
+        }
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   view: TabLayout {
-    label: 'IC Button Demo'
+    label: 'Interactive Control Buttons'
     tab tab_quarters: CanvasLayout {
-      label: 'Quarter Buttons'
+      label: 'Quarterly Sales'
       width: 1220
       height: 600
       grid_size: 20
@@ -388,20 +692,44 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
       }
     }
     tab tab_countries: CanvasLayout {
-      label: 'Country Buttons'
+      label: 'Regional Sales'
       width: 1220
-      height: 600
+      height: 1060
       grid_size: 20
       block v_country_cards {
         position: pos(20, 20, 1160, 100)
         layer: 1
       }
+      block v_kpi_revenue {
+        position: pos(340, 180, 320, 120)
+        layer: 1
+      }
+      block v_kpi_orders {
+        position: pos(680, 180, 200, 120)
+        layer: 1
+      }
+      block v_kpi_aov {
+        position: pos(900, 180, 280, 120)
+        layer: 1
+      }
       block v_revenue_by_country {
-        position: pos(20, 140, 540, 440)
+        position: pos(20, 680, 580, 360)
+        layer: 1
+      }
+      block v_country_info {
+        position: pos(20, 140, 280, 220)
         layer: 1
       }
       block v_uygg {
-        position: pos(600, 140, 580, 440)
+        position: pos(20, 380, 580, 280)
+        layer: 1
+      }
+      block v_aov_by_country {
+        position: pos(640, 380, 560, 280)
+        layer: 1
+      }
+      block v_t38c {
+        position: pos(620, 680, 580, 360)
         layer: 1
       }
       auto_expand_vertically: true
@@ -410,4 +738,46 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
   settings {
     autorun_on_open: true
   }
+  interactions: [
+    FilterInteraction {
+      from: 'v_quarters'
+      to: [
+        CustomMapping {
+          block: 'v_t38c'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_orders_by_status'
+      to: [
+        CustomMapping {
+          block: 'v_t38c'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_revenue_by_month'
+      to: [
+        CustomMapping {
+          block: 'v_t38c'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_t38c'
+      to: [
+        CustomMapping {
+          block: [
+            'v_quarters',
+            'v_orders_by_status',
+            'v_revenue_by_month'
+          ]
+          disabled: true
+        }
+      ]
+    }
+  ]
 }
