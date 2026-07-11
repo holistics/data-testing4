@@ -1,0 +1,33 @@
+Model country {
+  type: 'table'
+  label: 'Country'
+  description: ''
+  data_source_name: 'data_staging'
+  dimension country {
+    label: 'Country'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.country }};;
+  }
+  dimension country_icon {
+    label: 'Country icon'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.country_icon }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: '9ba3a22a-sample-data-control-buttons.csv'
+    uploaded_at: '2026-07-11 03:14:17'
+    hash: '71b5febdd762b23f3ccf38ca48b84d9be7de2bf7d8bbd8c78325475137ca3ae4'
+    column_configs: [
+      H.imports.column_config("country", "country", "text"),
+      H.imports.column_config("country_icon", "country_icon", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '`Clari`.`holistics_country_aff64_202607110314`'
+}
