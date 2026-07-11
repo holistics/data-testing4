@@ -40,6 +40,11 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
     label: 'Quarter Selector'
     viz: MarkdownViz {
       dataset: demo_ecommerce
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: 'last 4 quarters'
+      }
       rows: [
         VizFieldFull {
           label: 'Quarter'
@@ -101,8 +106,8 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
 <div class="quarter-selector">
   <span class="qs-label">Filter by quarter →</span>
   {% map(rows) %}
-  <h-drill row="0" value="{{ `Quarter`.raw }}">
-    <div class="quarter-btn">{{ `Quarter`.formatted }}</div>
+  <h-drill row="0" value="{{ `Quarter`.raw }}" class="quarter-btn">
+    {{ `Quarter`.formatted }}
   </h-drill>
   {% end %}
 </div> ;;
