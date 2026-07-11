@@ -194,21 +194,217 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
       }
     }
   }
-  view: CanvasLayout {
-    width: 1220
-    height: 600
-    grid_size: 20
-    block v_quarters {
-      position: pos(20, 20, 1160, 100)
-      layer: 1
+  block v_country_cards: VizBlock {
+    label: 'Country Selector'
+    viz: MarkdownViz {
+      dataset: demo_ecommerce
+      rows: [
+        VizFieldFull {
+          label: 'Country'
+          ref: r(ecommerce_countries.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Country Icon'
+          ref: r(ecommerce_countries.flag)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      content: @md <style>
+  .country-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    align-items: center;
+    background: #F9FAFB;
+    border-radius: 8px;
+  }
+  .cts-label {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .country-card {
+    flex: 1;
+    min-width: 0;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.5rem 0.25rem;
+    background: #FFFFFF;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .country-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+  .country-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .country-card:hover {
+    border-color: #6366F1;
+    background: #F5F3FF;
+  }
+  .country-card:hover .country-name {
+    color: #6366F1;
+  }
+  .h-drill-selected.country-card {
+    border-color: #6366F1;
+    background: #6366F1;
+  }
+  .h-drill-selected.country-card .country-name {
+    color: #FFFFFF;
+  }
+</style>
+
+<div class="country-grid">
+  <span class="cts-label">Filter by country →</span>
+  {% map(rows) %}
+  <h-drill row="0" value="{{ `Country`.raw }}" class="country-card">
+    <span class="country-icon">{{ `Country Icon`.formatted }}</span>
+    <span class="country-name">{{ `Country`.formatted }}</span>
+  </h-drill>
+  {% end %}
+</div> ;;
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
     }
-    block v_orders_by_status {
-      position: pos(20, 140, 560, 440)
-      layer: 1
+    settings {
+      hide_label: true
     }
-    block v_revenue_by_month {
-      position: pos(600, 140, 580, 440)
-      layer: 1
+  }
+  block v_revenue_by_country: VizBlock {
+    label: 'Revenue by Country'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_countries.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#07326C'
+          }
+        }
+      }
+      settings {
+        row_limit: 20
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_uygg: VizBlock {
+    label: 'Revenue by Month'
+    viz: LineChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#07326C'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  view: TabLayout {
+    label: 'IC Button Demo'
+    tab tab_quarters: CanvasLayout {
+      label: 'Quarter Buttons'
+      width: 1220
+      height: 600
+      grid_size: 20
+      block v_quarters {
+        position: pos(20, 20, 1160, 100)
+        layer: 1
+      }
+      block v_orders_by_status {
+        position: pos(20, 140, 560, 440)
+        layer: 1
+      }
+      block v_revenue_by_month {
+        position: pos(600, 140, 580, 440)
+        layer: 1
+      }
+    }
+    tab tab_countries: CanvasLayout {
+      label: 'Country Buttons'
+      width: 1220
+      height: 600
+      grid_size: 20
+      block v_country_cards {
+        position: pos(20, 20, 1160, 100)
+        layer: 1
+      }
+      block v_revenue_by_country {
+        position: pos(20, 140, 540, 440)
+        layer: 1
+      }
+      block v_uygg {
+        position: pos(600, 140, 580, 440)
+        layer: 1
+      }
+      auto_expand_vertically: true
     }
   }
   settings {

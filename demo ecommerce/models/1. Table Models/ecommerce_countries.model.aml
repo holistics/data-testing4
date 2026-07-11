@@ -18,6 +18,24 @@ Model ecommerce_countries {
     type: 'text'
   }
 
+  dimension flag {
+    label: 'Country Flag'
+    type: 'text'
+    definition: @sql case
+  when {{ name }} = 'India' then '🇮🇳'
+  when {{ name }} = 'South Korea' then '🇰🇷'
+  when {{ name }} = 'United States' then '🇺🇸'
+  when {{ name }} = 'Australia' then '🇦🇺'
+  when {{ name }} = 'France' then '🇫🇷'
+  when {{ name }} = 'Indonesia' then '🇮🇩'
+  when {{ name }} = 'Singapore' then '🇸🇬'
+  when {{ name }} = 'Germany' then '🇩🇪'
+  when {{ name }} = 'United Kingdom' then '🇬🇧'
+  when {{ name }} = 'Vietnam' then '🇻🇳'
+  else '🌍'
+end;;
+  }
+
   dimension origin {
     label: "Origin"
     type: "text"
