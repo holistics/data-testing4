@@ -12,15 +12,10 @@ Skill analysis_workflow {
         "What's going on with MRR?", "How is revenue doing?"
       • Explanation — "Why did revenue drop?", "What's causing the decline in conversions?",
         "Explain the increase in churn last quarter"
-<<<<<<< local:settings/ai/skills/analysis_workflow.aml
       • Single-period breakdown — "Break GMV down by continent for Dec 2024",
         "Show revenue by product category for 2024", "Orders by country last month"
       • Attribution (change) — "Which region drove the drop?", "What drove the GMV increase from Nov to Dec?",
         "Which segments contributed most to the MoM change?", "Where did the increase come from?"
-=======
-      • Attribution — "Which region drove the drop?", "Break revenue down by product",
-        "What segment is behind this?", "Where did the increase come from?"
->>>>>>> cloud:settings/ai/skills/analysis_workflow.aml
       • Projection — "What will revenue look like next quarter?", "Forecast signups" (stub)
       • Recommendation — "What should we do about the churn increase?" (stub)
 
@@ -59,7 +54,6 @@ Skill analysis_workflow {
     |---|---|---|
     | "What happened?", "What's the trend?", "How is X doing?" | Observation | Level 1 — Descriptive |
     | "Why did X change?", "What's causing X?", "Explain X change" | Explanation | Level 2a — Anomaly check |
-<<<<<<< local:settings/ai/skills/analysis_workflow.aml
     | "Break X down by Y [for single period]", "Show X by Y [in period]" — **no change language, one period only** | Single-period breakdown | Level 1b — Simple Grouped Breakdown |
     | "Which segment drove X?", "What drove the change in X?", "Break down the [drop/increase] by Y", "X by Y [two periods or change language]" | Attribution (change) | Level 2c — Contribution Analysis (skip anomaly) |
     | "What will X look like?", "Forecast X" | Projection | Level 3 — Predictive stub |
@@ -67,12 +61,7 @@ Skill analysis_workflow {
 
     **Attribution disambiguation:** if "break down" or "by [dimension]" appears with **no second period and no change/delta language** (e.g. "increase", "drop", "change", "drove", "vs", "compared to"), route to Level 1b. If change language or two periods are present, route to Level 2c.
 
-=======
-    | "Which segment drove X?", "Break X down by Y" | Attribution | Level 2c — Contribution Analysis (skip anomaly) |
-    | "What will X look like?", "Forecast X" | Projection | Level 3 — Predictive stub |
-    | "What should we do about X?" | Recommendation | Level 4 — Prescriptive stub |
 
->>>>>>> cloud:settings/ai/skills/analysis_workflow.aml
     Ambiguous (e.g. "Tell me about revenue") → default to Level 1 Descriptive.
 
     **Required:** metric name. If missing, ask before doing anything:
@@ -111,7 +100,6 @@ Skill analysis_workflow {
 
     ---
 
-<<<<<<< local:settings/ai/skills/analysis_workflow.aml
     ## Level 1b — Simple Grouped Breakdown ("Break X down by Y for [single period]")
 
     Goal: show a metric broken down by a dimension for one period. No delta, no comparison.
@@ -132,8 +120,7 @@ Skill analysis_workflow {
 
     ---
 
-=======
->>>>>>> cloud:settings/ai/skills/analysis_workflow.aml
+
     ## Level 2 — Diagnostic ("Why did it happen?")
 
     ### 2a. Anomaly check
