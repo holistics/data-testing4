@@ -1,0 +1,39 @@
+Dashboard embed_theme_user_attribute_poc {
+  title: 'Embed Theme User Attribute POC'
+  description: 'Validates runtime dashboard theming from the primary_color embed user attribute.'
+  owner: 'chinh.dm@holistics.io'
+
+  block title: TextBlock {
+    content: @md
+# Runtime primary color
+
+This dashboard reads its page, canvas, text, and border color from `H.current_user.primary_color`.
+    ;;
+  }
+
+  block evidence: TextBlock {
+    content: @md
+Change `user_attributes.primary_color` in the signed Embed Portal JWT and reload the embed. The surrounding color should change without publishing another theme.
+    ;;
+  }
+
+  view: CanvasLayout {
+    label: 'Runtime color test'
+    width: 1200
+    height: 600
+    grid_size: 20
+    block title {
+      position: pos(40, 60, 1120, 220)
+      layer: 1
+    }
+    block evidence {
+      position: pos(40, 320, 1120, 160)
+      layer: 2
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+
+  theme: embed_user_primary_color_theme
+}

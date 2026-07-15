@@ -1,0 +1,6 @@
+EmbedPortal embed_theme_user_attribute_poc_portal {
+  objects: [
+    embed_theme_user_attribute_poc
+  ]
+  initial_object: embed_theme_user_attribute_poc
+}

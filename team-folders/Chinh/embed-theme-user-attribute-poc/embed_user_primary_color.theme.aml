@@ -1,0 +1,50 @@
+const embed_primary_color = H.current_user.primary_color
+
+PageTheme embed_user_primary_color_theme {
+  background {
+    bg_color: embed_primary_color
+  }
+
+  canvas {
+    background {
+      bg_color: embed_primary_color
+    }
+    border {
+      border_width: 0
+      border_radius: 0
+      border_color: embed_primary_color
+      border_style: 'none'
+    }
+    shadow: 'none'
+    opacity: 1
+  }
+
+  block {
+    label {
+      font_family: 'Inter'
+      font_size: 16
+      font_color: embed_primary_color
+      font_weight: 'bold'
+      font_style: 'normal'
+    }
+    text {
+      font_family: 'Inter'
+      font_size: 18
+      font_color: embed_primary_color
+      font_weight: 'normal'
+      font_style: 'normal'
+    }
+    border {
+      border_width: 3
+      border_radius: 12
+      border_color: embed_primary_color
+      border_style: 'solid'
+    }
+    background {
+      bg_color: '#FFFFFF'
+    }
+    padding: 24
+    shadow: 'md'
+    opacity: 1
+  }
+}
