@@ -694,7 +694,7 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
     tab tab_countries: CanvasLayout {
       label: 'Regional Sales'
       width: 1220
-      height: 1060
+      height: 1420
       grid_size: 20
       block v_country_cards {
         position: pos(20, 20, 1160, 100)
@@ -713,7 +713,7 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
         layer: 1
       }
       block v_revenue_by_country {
-        position: pos(20, 680, 580, 360)
+        position: pos(20, 1040, 580, 360)
         layer: 1
       }
       block v_country_info {
@@ -729,7 +729,7 @@ When clicked, Holistics reads the `value` attribute and applies it as a cross-fi
         layer: 1
       }
       block v_t38c {
-        position: pos(620, 680, 580, 360)
+        position: pos(620, 1040, 580, 360)
         layer: 1
       }
       auto_expand_vertically: true
