@@ -684,9 +684,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block v_ztqi: VizBlock {
     label: 'Table 1'
-    viz: DataTable {
+    viz: PivotTable {
       dataset: demo_ecommerce
-      fields: [
+      rows: [
         VizFieldFull {
           ref: r(order_master.order_created_at)
           transformation: 'datetrunc year'
@@ -702,7 +702,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             type: 'date'
             pattern: 'LLL yyyy'
           }
-        },
+        }
+      ]
+      values: [
         VizFieldFull {
           ref: r(order_master.user_id)
           aggregation: 'count distinct'
@@ -714,13 +716,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
       ]
       settings {
-        show_row_number: true
-        sorts: [
-          SortSetting {
-            key: 'count_distinct_user_id_1'
-            direction: 'desc'
-          }
-        ]
+        show_row_total: true
+        show_column_total: true
         row_limit: 5000
         aggregate_awareness {
           enabled: true
