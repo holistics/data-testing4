@@ -1,0 +1,31 @@
+Model hiring_dim_sources {
+  type: 'table'
+  label: 'Sources'
+  description: 'Sourcing channels candidates came through.'
+  data_source_name: 'demodb'
+  owner: 'huy.vu@holistics.io'
+  table_name: '"hiring"."dim_sources"'
+
+  dimension source_id {
+    label: 'Source Id'
+    type: 'text'
+    primary_key: true
+    hidden: true
+    definition: @sql {{ #SOURCE.source_id }};;
+  }
+  dimension source_name {
+    label: 'Source'
+    type: 'text'
+    definition: @sql {{ #SOURCE.source_name }};;
+  }
+  dimension source_category {
+    label: 'Source Category'
+    type: 'text'
+    definition: @sql {{ #SOURCE.source_category }};;
+  }
+  dimension cost_model {
+    label: 'Cost Model'
+    type: 'text'
+    definition: @sql {{ #SOURCE.cost_model }};;
+  }
+}

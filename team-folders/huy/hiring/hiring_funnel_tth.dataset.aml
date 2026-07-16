@@ -1,0 +1,205 @@
+Dataset hiring_funnel_tth {
+  label: '[Hiring] Funnel & Time-to-Hire'
+  description: '''
+# Recruiting Funnel & Time-to-Hire
+
+Grain: one row per **application** (`hiring_fct_application`).
+
+## What this can answer
+- **Funnel:** how many applications reach each stage (Applied → Recruiter Screen → HM Screen → Interview → Offer → Hired) and stage-to-stage conversion rates.
+- **Time-to-hire:** average days end-to-end (Apply → Hire) and per step, to locate bottlenecks.
+- **Stage-level cycle time:** avg hours spent in each stage (`hiring_fct_stage_events`).
+- Slice all of the above by department, team, level, role family, recruiter, hiring manager, priority (Jobs), source / source category (Sources), or candidate demographics (Candidates).
+
+## Caveats
+- Stage counts are based on the presence of each stage timestamp; an application that skipped a stage will not be counted there.
+- Time-to-hire averages exclude NULLs, so each avg is over applications that actually reached that step.
+- No FK constraints exist in the DB; relationships below are inferred from `*_id` columns.
+'''
+  data_source_name: 'demodb'
+  owner: 'huy.vu@holistics.io'
+
+  models: [
+    hiring_fct_application,
+    hiring_fct_stage_events,
+    hiring_dim_jobs,
+    hiring_dim_sources,
+    hiring_dim_candidates,
+    hiring_dim_date_job,
+  ]
+
+  relationships: [
+    relationship(hiring_fct_application.job_id > hiring_dim_jobs.job_id, true),
+    relationship(hiring_fct_application.source_id > hiring_dim_sources.source_id, true),
+    relationship(hiring_fct_application.candidate_id > hiring_dim_candidates.candidate_id, true),
+    relationship(hiring_fct_stage_events.application_id > hiring_fct_application.application_id, true),
+    relationship(hiring_fct_application.applied_at > hiring_dim_date_job.date_key, true),
+  ]
+
+  // ================= FUNNEL VOLUME (wraps model measures) =================
+  metric total_applications {
+    label: 'Total Applications'
+    type: 'number'
+    definition: @aql hiring_fct_application.total_applications;;
+    description: 'All applications (funnel entry).'
+  }
+  metric stage_applied {
+    label: '1. Applied'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_applied;;
+  }
+  metric stage_screened {
+    label: '2. Recruiter Screen'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_screened;;
+  }
+  metric stage_hm_screened {
+    label: '3. HM Screen'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_hm_screened;;
+  }
+  metric stage_interviewed {
+    label: '4. Interview'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_interviewed;;
+  }
+  metric stage_offered {
+    label: '5. Offer'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_offered;;
+  }
+  metric stage_hired {
+    label: '6. Hired'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_hired;;
+  }
+
+  // ================= STAGE-TO-STAGE CONVERSION RATES =================
+  metric screen_rate {
+    label: 'Apply -> Screen Rate'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_screened / hiring_fct_application.stage_applied;;
+    format: '#,##0.0%'
+    description: 'Share of applicants that pass to recruiter screen.'
+  }
+  metric hm_screen_rate {
+    label: 'Screen -> HM Screen Rate'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_hm_screened / hiring_fct_application.stage_screened;;
+    format: '#,##0.0%'
+  }
+  metric interview_rate {
+    label: 'HM Screen -> Interview Rate'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_interviewed / hiring_fct_application.stage_hm_screened;;
+    format: '#,##0.0%'
+  }
+  metric offer_rate {
+    label: 'Interview -> Offer Rate'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_offered / hiring_fct_application.stage_interviewed;;
+    format: '#,##0.0%'
+  }
+  metric offer_accept_rate {
+    label: 'Offer -> Hire (Accept) Rate'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_hired / hiring_fct_application.stage_offered;;
+    format: '#,##0.0%'
+    description: 'Offer acceptance rate.'
+  }
+  metric overall_conversion {
+    label: 'Overall Conversion (Apply -> Hire)'
+    type: 'number'
+    definition: @aql hiring_fct_application.stage_hired / hiring_fct_application.stage_applied;;
+    format: '#,##0.0%'
+  }
+
+  // ================= TIME-TO-HIRE (wraps model measures) =================
+  metric avg_days_to_hire {
+    label: 'Avg Days to Hire'
+    type: 'number'
+    definition: @aql hiring_fct_application.avg_days_to_hire;;
+    format: '#,##0.0'
+    description: 'Applied -> Hired, in days.'
+  }
+  metric avg_days_to_close {
+    label: 'Avg Days to Close'
+    type: 'number'
+    definition: @aql hiring_fct_application.avg_days_to_close;;
+    format: '#,##0.0'
+  }
+  metric avg_days_apply_to_screen {
+    label: 'Avg Days: Apply -> Screen'
+    type: 'number'
+    definition: @aql hiring_fct_application.avg_days_apply_to_screen;;
+    format: '#,##0.0'
+  }
+  metric avg_days_screen_to_interview {
+    label: 'Avg Days: Screen -> Interview'
+    type: 'number'
+    definition: @aql hiring_fct_application.avg_days_screen_to_interview;;
+    format: '#,##0.0'
+  }
+  metric avg_days_interview_to_offer {
+    label: 'Avg Days: Interview -> Offer'
+    type: 'number'
+    definition: @aql hiring_fct_application.avg_days_interview_to_offer;;
+    format: '#,##0.0'
+  }
+  metric avg_days_offer_to_hire {
+    label: 'Avg Days: Offer -> Hire'
+    type: 'number'
+    definition: @aql hiring_fct_application.avg_days_offer_to_hire;;
+    format: '#,##0.0'
+  }
+  metric avg_time_in_stage_hours {
+    label: 'Avg Time in Stage (Hours)'
+    type: 'number'
+    definition: @aql hiring_fct_stage_events.avg_time_in_stage_hours;;
+    format: '#,##0.0'
+  }
+
+  view {
+    group funnel_volume {
+      metric total_applications
+      metric stage_applied
+      metric stage_screened
+      metric stage_hm_screened
+      metric stage_interviewed
+      metric stage_offered
+      metric stage_hired
+    }
+
+    group conversion_rates {
+      metric screen_rate
+      metric hm_screen_rate
+      metric interview_rate
+      metric offer_rate
+      metric offer_accept_rate
+      metric overall_conversion
+    }
+
+    group time_to_hire {
+      metric avg_days_to_hire
+      metric avg_days_to_close
+      metric avg_days_apply_to_screen
+      metric avg_days_screen_to_interview
+      metric avg_days_interview_to_offer
+      metric avg_days_offer_to_hire
+      metric avg_time_in_stage_hours
+    }
+
+    model hiring_fct_application {
+    }
+    model hiring_fct_stage_events {
+    }
+    model hiring_dim_jobs {
+    }
+    model hiring_dim_sources {
+    }
+    model hiring_dim_candidates {
+    }
+    model hiring_dim_date_job {
+    }
+  }
+}

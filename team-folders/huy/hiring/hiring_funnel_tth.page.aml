@@ -1,0 +1,502 @@
+Dashboard hiring_funnel_tth_dashboard {
+  title: 'Hiring Funnel & Time-to-Hire'
+  description: 'Recruiting funnel conversion and time-to-hire, sliceable by department, source, and stage.'
+  owner: 'huy.vu@holistics.io'
+
+  block title: TextBlock {
+    content: @md
+# 🧑‍💼 Hiring Funnel & Time-to-Hire
+Applied → Recruiter Screen → HM Screen → Interview → Offer → Hired. Use the filters to slice by department or source.
+    ;;
+  }
+  block kpi_applications: VizBlock {
+    label: 'Total Applications'
+    viz: MetricKpi {
+      dataset: hiring_funnel_tth
+      theme {
+        metric_kpi {
+          alignment: 'center'
+          label {
+            font_size: 14
+          }
+          value {
+            font_size: 36
+          }
+        }
+      }
+      value: VizFieldFull {
+        label: 'Total Applications'
+        ref: r(hiring_funnel_tth.total_applications)
+        format {
+          type: 'number'
+          pattern: '#,##0'
+        }
+      }
+      settings {
+        display_mode: 'single'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block kpi_hired: VizBlock {
+    label: 'Total Hired'
+    settings {
+      hide_label: true
+    }
+    viz: MetricKpi {
+      dataset: hiring_funnel_tth
+      value: VizFieldFull {
+        label: 'Total Hired'
+        ref: 'stage_hired'
+        format {
+          type: 'number'
+          pattern: '#,##0'
+        }
+      }
+      settings {
+        display_mode: 'single'
+        alignment: 'center'
+        metric_value {
+          font_size: 36
+        }
+        label {
+          font_size: 14
+        }
+      }
+    }
+  }
+  block kpi_conversion: VizBlock {
+    label: 'Overall Conversion'
+    settings {
+      hide_label: true
+    }
+    viz: MetricKpi {
+      dataset: hiring_funnel_tth
+      value: VizFieldFull {
+        label: 'Overall Conversion (Apply → Hire)'
+        ref: 'overall_conversion'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        display_mode: 'single'
+        alignment: 'center'
+        metric_value {
+          font_size: 36
+        }
+        label {
+          font_size: 14
+        }
+      }
+    }
+  }
+  block kpi_tth: VizBlock {
+    label: 'Avg Days to Hire'
+    settings {
+      hide_label: true
+    }
+    viz: MetricKpi {
+      dataset: hiring_funnel_tth
+      value: VizFieldFull {
+        label: 'Avg Days to Hire'
+        ref: 'avg_days_to_hire'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        display_mode: 'single'
+        alignment: 'center'
+        metric_value {
+          font_size: 36
+        }
+        label {
+          font_size: 14
+        }
+      }
+    }
+  }
+
+  // ---------------- Conversion funnel ----------------
+  block funnel: VizBlock {
+    label: 'Recruiting Funnel'
+    viz: ConversionFunnel {
+      dataset: hiring_funnel_tth
+      values: [
+        VizFieldFull {
+          label: '1. Applied'
+          ref: 'stage_applied'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: '2. Recruiter Screen'
+          ref: 'stage_screened'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: '3. HM Screen'
+          ref: 'stage_hm_screened'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: '4. Interview'
+          ref: 'stage_interviewed'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: '5. Offer'
+          ref: 'stage_offered'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: '6. Hired'
+          ref: 'stage_hired'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        }
+      ]
+      settings {
+        show_label: true
+        show_table: true
+      }
+    }
+  }
+
+  // ---------------- Stage-to-stage conversion rates ----------------
+  block conversion_rates: VizBlock {
+    label: 'Stage-to-Stage Conversion Rates'
+    viz: ColumnChart {
+      dataset: hiring_funnel_tth
+      y_axis {
+        series {
+          field: VizFieldFull {
+            label: 'Apply → Screen'
+            ref: 'screen_rate'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Screen → HM Screen'
+            ref: 'hm_screen_rate'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'HM Screen → Interview'
+            ref: 'interview_rate'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Interview → Offer'
+            ref: 'offer_rate'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Offer → Hire (Accept)'
+            ref: 'offer_accept_rate'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        settings {
+          show_data_label_by: 'value'
+        }
+      }
+      settings {
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  // ---------------- Time-to-hire by step ----------------
+  block tth_by_step: VizBlock {
+    label: 'Avg Days by Funnel Step'
+    viz: BarChart {
+      dataset: hiring_funnel_tth
+      y_axis {
+        series {
+          field: VizFieldFull {
+            label: 'Apply → Screen'
+            ref: 'avg_days_apply_to_screen'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Screen → Interview'
+            ref: 'avg_days_screen_to_interview'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Interview → Offer'
+            ref: 'avg_days_interview_to_offer'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Offer → Hire'
+            ref: 'avg_days_offer_to_hire'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+        settings {
+          show_data_label_by: 'value'
+        }
+      }
+      settings {
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  // ---------------- Department breakdown ----------------
+  block dept_table: VizBlock {
+    label: 'Funnel & Time-to-Hire by Department'
+    viz: DataTable {
+      dataset: hiring_funnel_tth
+      fields: [
+        VizFieldFull {
+          label: 'Department'
+          ref: r(hiring_dim_jobs.department)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Applied'
+          ref: 'stage_applied'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: 'Hired'
+          ref: 'stage_hired'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: 'Conversion'
+          ref: 'overall_conversion'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          label: 'Avg Days to Hire'
+          ref: 'avg_days_to_hire'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: false
+        sorts: [
+          IndexBasedSortSetting {
+            field_index: 1
+            direction: 'desc'
+          }
+        ]
+        row_limit: 5000
+      }
+    }
+  }
+
+  // ---------------- Source breakdown ----------------
+  block source_table: VizBlock {
+    label: 'Funnel & Time-to-Hire by Source'
+    viz: PivotTable {
+      dataset: hiring_funnel_tth
+      rows: [
+        VizFieldFull {
+          label: 'Source Category'
+          ref: r(hiring_dim_sources.source_category)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Source'
+          ref: r(hiring_dim_sources.source_name)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Applied'
+          ref: 'stage_applied'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: 'Hired'
+          ref: 'stage_hired'
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        },
+        VizFieldFull {
+          label: 'Conversion'
+          ref: 'overall_conversion'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          label: 'Avg Days to Hire'
+          ref: 'avg_days_to_hire'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_total: false
+        show_column_total: false
+        row_limit: 5000
+      }
+    }
+  }
+
+  // ---------------- Date filter (sourced from the date dimension) ----------------
+  block date_filter: FilterBlock {
+    label: 'Application Date'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: hiring_funnel_tth
+      field: ref('hiring_dim_date_job', 'date_key')
+    }
+    default {
+      operator: 'matches'
+      value: 'last 5 months'
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'Overview'
+    width: 1300
+    height: 1380
+    grid_size: 20
+    auto_expand_vertically: true
+    mobile {
+      mode: 'auto'
+    }
+    block date_filter {
+      position: pos(20, 20, 400, 60)
+    }
+    block title {
+      position: pos(20, 100, 1260, 40)
+    }
+    block kpi_applications {
+      position: pos(20, 180, 305, 110)
+    }
+    block kpi_hired {
+      position: pos(345, 180, 305, 110)
+    }
+    block kpi_conversion {
+      position: pos(670, 180, 305, 110)
+    }
+    block kpi_tth {
+      position: pos(995, 180, 285, 110)
+    }
+    block funnel {
+      position: pos(20, 310, 630, 380)
+    }
+    block conversion_rates {
+      position: pos(670, 310, 610, 380)
+    }
+    block tth_by_step {
+      position: pos(20, 710, 630, 340)
+    }
+    block dept_table {
+      position: pos(670, 710, 610, 340)
+    }
+    block source_table {
+      position: pos(20, 1070, 1260, 320)
+    }
+  }
+
+  theme: H.themes.vanilla
+}

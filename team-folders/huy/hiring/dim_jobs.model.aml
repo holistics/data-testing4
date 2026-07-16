@@ -1,0 +1,108 @@
+Model hiring_dim_jobs {
+  type: 'table'
+  label: 'Jobs'
+  description: 'Open & closed requisitions. One row per job/req.'
+  data_source_name: 'demodb'
+  owner: 'huy.vu@holistics.io'
+  table_name: '"hiring"."dim_jobs"'
+
+  dimension job_id {
+    label: 'Job Id'
+    type: 'text'
+    primary_key: true
+    hidden: true
+    definition: @sql {{ #SOURCE.job_id }};;
+  }
+  dimension job_code {
+    label: 'Job Code'
+    type: 'text'
+    definition: @sql {{ #SOURCE.job_code }};;
+  }
+  dimension title {
+    label: 'Title'
+    type: 'text'
+    definition: @sql {{ #SOURCE.title }};;
+  }
+  dimension department {
+    label: 'Department'
+    type: 'text'
+    definition: @sql {{ #SOURCE.department }};;
+  }
+  dimension team {
+    label: 'Team'
+    type: 'text'
+    definition: @sql {{ #SOURCE.team }};;
+  }
+  dimension role_family {
+    label: 'Role Family'
+    type: 'text'
+    definition: @sql {{ #SOURCE.role_family }};;
+  }
+  dimension level {
+    label: 'Level'
+    type: 'text'
+    definition: @sql {{ #SOURCE.level }};;
+  }
+  dimension hiring_manager {
+    label: 'Hiring Manager'
+    type: 'text'
+    definition: @sql {{ #SOURCE.hiring_manager }};;
+  }
+  dimension recruiter {
+    label: 'Recruiter'
+    type: 'text'
+    definition: @sql {{ #SOURCE.recruiter }};;
+  }
+  dimension work_arrangement {
+    label: 'Work Arrangement'
+    type: 'text'
+    definition: @sql {{ #SOURCE.work_arrangement }};;
+  }
+  dimension employment_type {
+    label: 'Employment Type'
+    type: 'text'
+    definition: @sql {{ #SOURCE.employment_type }};;
+  }
+  dimension salary_min {
+    label: 'Salary Min'
+    type: 'number'
+    definition: @sql {{ #SOURCE.salary_min }};;
+  }
+  dimension salary_max {
+    label: 'Salary Max'
+    type: 'number'
+    definition: @sql {{ #SOURCE.salary_max }};;
+  }
+  dimension currency {
+    label: 'Currency'
+    type: 'text'
+    definition: @sql {{ #SOURCE.currency }};;
+  }
+  dimension priority {
+    label: 'Priority'
+    type: 'text'
+    definition: @sql {{ #SOURCE.priority }};;
+  }
+  dimension status {
+    label: 'Status'
+    type: 'text'
+    definition: @sql {{ #SOURCE.status }};;
+  }
+  dimension opened_date {
+    label: 'Opened Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.opened_date }};;
+  }
+  dimension filled_date {
+    label: 'Filled Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.filled_date }};;
+  }
+
+  measure total_jobs {
+    label: 'Total Jobs'
+    type: 'number'
+    definition: @sql {{ job_id }};;
+    aggregation_type: 'count'
+  }
+}

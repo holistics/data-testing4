@@ -1,0 +1,223 @@
+Model hiring_fct_application {
+  type: 'table'
+  label: 'Applications'
+  description: 'One row per candidate application. Core fact for funnel & time-to-hire analysis.'
+  data_source_name: 'demodb'
+  owner: 'huy.vu@holistics.io'
+  table_name: '"hiring"."fct_application"'
+
+  // ---------- Keys ----------
+  dimension application_id {
+    label: 'Application Id'
+    type: 'text'
+    primary_key: true
+    hidden: true
+    definition: @sql {{ #SOURCE.application_id }};;
+  }
+  dimension candidate_id {
+    label: 'Candidate Id'
+    type: 'text'
+    hidden: true
+    definition: @sql {{ #SOURCE.candidate_id }};;
+  }
+  dimension job_id {
+    label: 'Job Id'
+    type: 'text'
+    hidden: true
+    definition: @sql {{ #SOURCE.job_id }};;
+  }
+  dimension source_id {
+    label: 'Source Id'
+    type: 'text'
+    hidden: true
+    definition: @sql {{ #SOURCE.source_id }};;
+  }
+
+  // ---------- Status / outcome ----------
+  dimension current_stage {
+    label: 'Current Stage'
+    type: 'text'
+    definition: @sql {{ #SOURCE.current_stage }};;
+  }
+  dimension outcome {
+    label: 'Outcome'
+    type: 'text'
+    definition: @sql {{ #SOURCE.outcome }};;
+  }
+  dimension rejection_type {
+    label: 'Rejection Type'
+    type: 'text'
+    definition: @sql {{ #SOURCE.rejection_type }};;
+  }
+  dimension rejection_reason {
+    label: 'Rejection Reason'
+    type: 'text'
+    definition: @sql {{ #SOURCE.rejection_reason }};;
+  }
+  dimension is_referral {
+    label: 'Is Referral'
+    type: 'truefalse'
+    definition: @sql {{ #SOURCE.is_referral }};;
+  }
+
+  // ---------- Funnel timestamps ----------
+  dimension applied_at {
+    label: 'Applied At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.applied_at }};;
+  }
+  dimension screened_at {
+    label: 'Screened At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.screened_at }};;
+  }
+  dimension hm_screened_at {
+    label: 'HM Screened At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.hm_screened_at }};;
+  }
+  dimension interviewed_at {
+    label: 'Interviewed At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.interviewed_at }};;
+  }
+  dimension offered_at {
+    label: 'Offered At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.offered_at }};;
+  }
+  dimension hired_at {
+    label: 'Hired At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.hired_at }};;
+  }
+  dimension closed_at {
+    label: 'Closed At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.closed_at }};;
+  }
+
+  // ---------- Pre-computed durations (days) ----------
+  dimension days_to_hire {
+    label: 'Days to Hire'
+    type: 'number'
+    definition: @sql {{ #SOURCE.days_to_hire }};;
+  }
+  dimension days_to_close {
+    label: 'Days to Close'
+    type: 'number'
+    definition: @sql {{ #SOURCE.days_to_close }};;
+  }
+  dimension days_apply_to_screen {
+    label: 'Days Apply to Screen'
+    type: 'number'
+    definition: @sql {{ #SOURCE.days_apply_to_screen }};;
+  }
+  dimension days_screen_to_interview {
+    label: 'Days Screen to Interview'
+    type: 'number'
+    definition: @sql {{ #SOURCE.days_screen_to_interview }};;
+  }
+  dimension days_interview_to_offer {
+    label: 'Days Interview to Offer'
+    type: 'number'
+    definition: @sql {{ #SOURCE.days_interview_to_offer }};;
+  }
+  dimension days_offer_to_hire {
+    label: 'Days Offer to Hire'
+    type: 'number'
+    definition: @sql {{ #SOURCE.days_offer_to_hire }};;
+  }
+
+  // ================= FUNNEL MEASURES =================
+  // Count of applications that reached each stage (timestamp is present).
+  measure total_applications {
+    label: 'Total Applications'
+    type: 'number'
+    description: 'All applications (funnel entry).'
+    definition: @aql count(hiring_fct_application.application_id);;
+    aggregation_type: 'custom'
+  }
+  measure stage_applied {
+    label: '1. Applied'
+    type: 'number'
+    definition: @aql count(hiring_fct_application.application_id) | where(hiring_fct_application.applied_at is not null);;
+    aggregation_type: 'custom'
+  }
+  measure stage_screened {
+    label: '2. Recruiter Screen'
+    type: 'number'
+    definition: @aql count(hiring_fct_application.application_id) | where(hiring_fct_application.screened_at is not null);;
+    aggregation_type: 'custom'
+  }
+  measure stage_hm_screened {
+    label: '3. HM Screen'
+    type: 'number'
+    definition: @aql count(hiring_fct_application.application_id) | where(hiring_fct_application.hm_screened_at is not null);;
+    aggregation_type: 'custom'
+  }
+  measure stage_interviewed {
+    label: '4. Interview'
+    type: 'number'
+    definition: @aql count(hiring_fct_application.application_id) | where(hiring_fct_application.interviewed_at is not null);;
+    aggregation_type: 'custom'
+  }
+  measure stage_offered {
+    label: '5. Offer'
+    type: 'number'
+    definition: @aql count(hiring_fct_application.application_id) | where(hiring_fct_application.offered_at is not null);;
+    aggregation_type: 'custom'
+  }
+  measure stage_hired {
+    label: '6. Hired'
+    type: 'number'
+    definition: @aql count(hiring_fct_application.application_id) | where(hiring_fct_application.hired_at is not null);;
+    aggregation_type: 'custom'
+  }
+
+  // ================= TIME-TO-HIRE MEASURES =================
+  // average() ignores NULLs, so each avg is over applications that reached the relevant step.
+  measure avg_days_to_hire {
+    label: 'Avg Days to Hire'
+    type: 'number'
+    description: 'Applied -> Hired, in days.'
+    definition: @aql average(hiring_fct_application.days_to_hire);;
+    aggregation_type: 'custom'
+    format: '#,##0.0'
+  }
+  measure avg_days_to_close {
+    label: 'Avg Days to Close'
+    type: 'number'
+    definition: @aql average(hiring_fct_application.days_to_close);;
+    aggregation_type: 'custom'
+    format: '#,##0.0'
+  }
+  measure avg_days_apply_to_screen {
+    label: 'Avg Days: Apply -> Screen'
+    type: 'number'
+    definition: @aql average(hiring_fct_application.days_apply_to_screen);;
+    aggregation_type: 'custom'
+    format: '#,##0.0'
+  }
+  measure avg_days_screen_to_interview {
+    label: 'Avg Days: Screen -> Interview'
+    type: 'number'
+    definition: @aql average(hiring_fct_application.days_screen_to_interview);;
+    aggregation_type: 'custom'
+    format: '#,##0.0'
+  }
+  measure avg_days_interview_to_offer {
+    label: 'Avg Days: Interview -> Offer'
+    type: 'number'
+    definition: @aql average(hiring_fct_application.days_interview_to_offer);;
+    aggregation_type: 'custom'
+    format: '#,##0.0'
+  }
+  measure avg_days_offer_to_hire {
+    label: 'Avg Days: Offer -> Hire'
+    type: 'number'
+    definition: @aql average(hiring_fct_application.days_offer_to_hire);;
+    aggregation_type: 'custom'
+    format: '#,##0.0'
+  }
+}

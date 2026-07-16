@@ -22,12 +22,9 @@ Dashboard company_dashboard_v {
     label: 'Products Listed'
     viz: MetricKpi {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       value: VizFieldFull {
         label: 'Products Listed'
-        ref: ref('ecommerce_products', 'total_products')
+        ref: r(ecommerce_products.total_products)
         format {
           type: 'number'
           pattern: '#,###'
@@ -36,9 +33,11 @@ Dashboard company_dashboard_v {
         }
       }
       compare_value: VizPopSettings {
-        field: ref('ecommerce_users', 'sign_up_date')
-        duration: 1
-        granularity: 'quarter'
+        field: r(ecommerce_users.sign_up_date)
+        value: RelativePopValue {
+          duration: 1
+          granularity: 'quarter'
+        }
       }
       settings {
         display_mode: 'single'
@@ -46,7 +45,6 @@ Dashboard company_dashboard_v {
           enabled: true
           debug_comments: true
         }
-        alignment: 'left'
       }
     }
     settings {
@@ -57,21 +55,20 @@ Dashboard company_dashboard_v {
     label: 'Total Users'
     viz: MetricKpi {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       value: VizFieldFull {
         label: 'Total Users'
-        ref: 'total_users'
+        ref: r(demo_ecommerce_version_2.total_users)
         format {
           type: 'number'
           pattern: '#,###'
         }
       }
       compare_value: VizPopSettings {
-        field: ref('ecommerce_users', 'sign_up_date')
-        duration: 1
-        granularity: 'quarter'
+        field: r(ecommerce_users.sign_up_date)
+        value: RelativePopValue {
+          duration: 1
+          granularity: 'quarter'
+        }
       }
       settings {
         display_mode: 'single'
@@ -79,7 +76,6 @@ Dashboard company_dashboard_v {
           enabled: true
           debug_comments: true
         }
-        alignment: 'left'
       }
     }
     settings {
@@ -90,9 +86,6 @@ Dashboard company_dashboard_v {
     label: 'All-Time Orders'
     viz: MetricKpi {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       value: VizFieldFull {
         label: 'All-Time Orders'
         ref: r(ecommerce_orders.total_orders_count)
@@ -103,8 +96,10 @@ Dashboard company_dashboard_v {
       }
       compare_value: VizPopSettings {
         field: r(ecommerce_orders.created_at)
-        duration: 1
-        granularity: 'quarter'
+        value: RelativePopValue {
+          duration: 1
+          granularity: 'quarter'
+        }
       }
       settings {
         display_mode: 'single'
@@ -112,7 +107,6 @@ Dashboard company_dashboard_v {
           enabled: true
           debug_comments: true
         }
-        alignment: 'left'
       }
     }
     settings {
@@ -123,12 +117,9 @@ Dashboard company_dashboard_v {
     label: 'Merchants Onboarded'
     viz: MetricKpi {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       value: VizFieldFull {
         label: 'Merchants Onboarded'
-        ref: ref('ecommerce_merchants', 'created_at')
+        ref: r(ecommerce_merchants.created_at)
         aggregation: 'count'
         format {
           type: 'number'
@@ -136,9 +127,11 @@ Dashboard company_dashboard_v {
         }
       }
       compare_value: VizPopSettings {
-        field: ref('ecommerce_users', 'sign_up_date')
-        duration: 1
-        granularity: 'quarter'
+        field: r(ecommerce_users.sign_up_date)
+        value: RelativePopValue {
+          duration: 1
+          granularity: 'quarter'
+        }
       }
       settings {
         display_mode: 'single'
@@ -146,7 +139,6 @@ Dashboard company_dashboard_v {
           enabled: true
           debug_comments: true
         }
-        alignment: 'left'
       }
     }
     settings {
@@ -157,12 +149,9 @@ Dashboard company_dashboard_v {
     label: 'GMV (Sales) by Country'
     viz: FilledMap {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       location {
         field: VizFieldFull {
-          ref: ref('ecommerce_countries', 'name')
+          ref: r(ecommerce_countries.name)
           format {
             type: 'text'
           }
@@ -170,7 +159,7 @@ Dashboard company_dashboard_v {
         primary_field: true
       }
       value: VizFieldFull {
-        ref: 'gmv'
+        ref: r(demo_ecommerce_version_2.gmv)
         format {
           type: 'number'
           pattern: 'inherited'
@@ -188,12 +177,9 @@ Dashboard company_dashboard_v {
     label: 'AOV'
     viz: MetricKpi {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       value: VizFieldFull {
         label: 'Average Order Value'
-        ref: 'aov'
+        ref: r(demo_ecommerce_version_2.aov)
         format {
           type: 'number'
           pattern: 'inherited'
@@ -205,7 +191,6 @@ Dashboard company_dashboard_v {
           enabled: true
           debug_comments: true
         }
-        alignment: 'left'
       }
     }
     settings {
@@ -216,11 +201,8 @@ Dashboard company_dashboard_v {
     label: ' KPI Overview'
     viz: MetricSheet {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       date_field: VizFieldFull {
-        ref: ref('dim_dates', 'date_key')
+        ref: r(dim_dates.date_key)
         transformation: 'datetrunc month'
         format {
           type: 'date'
@@ -237,7 +219,7 @@ Dashboard company_dashboard_v {
         },
         MetricSeries {
           field: VizFieldFull {
-            ref: 'total_orders'
+            ref: r(demo_ecommerce_version_2.total_orders)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -246,7 +228,7 @@ Dashboard company_dashboard_v {
         },
         MetricSeries {
           field: VizFieldFull {
-            ref: 'total_cancelled_orders'
+            ref: r(demo_ecommerce_version_2.total_cancelled_orders)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -255,7 +237,7 @@ Dashboard company_dashboard_v {
         },
         MetricSeries {
           field: VizFieldFull {
-            ref: 'total_refunded_orders'
+            ref: r(demo_ecommerce_version_2.total_refunded_orders)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -264,7 +246,7 @@ Dashboard company_dashboard_v {
         },
         MetricSeries {
           field: VizFieldFull {
-            ref: 'total_delivered_orders'
+            ref: r(demo_ecommerce_version_2.total_delivered_orders)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -280,7 +262,7 @@ Dashboard company_dashboard_v {
         },
         MetricSeries {
           field: VizFieldFull {
-            ref: 'nmv'
+            ref: r(demo_ecommerce_version_2.nmv)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -289,7 +271,7 @@ Dashboard company_dashboard_v {
         },
         MetricSeries {
           field: VizFieldFull {
-            ref: 'gmv'
+            ref: r(demo_ecommerce_version_2.gmv)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -298,7 +280,7 @@ Dashboard company_dashboard_v {
         },
         MetricSeries {
           field: VizFieldFull {
-            ref: 'aov'
+            ref: r(demo_ecommerce_version_2.aov)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -345,12 +327,9 @@ It brings together a consolidated view of:
     label: 'Total Orders by Continents'
     viz: PieChart {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       legend: VizFieldFull {
         label: 'Continent'
-        ref: ref('ecommerce_countries', 'continent_name')
+        ref: r(ecommerce_countries.continent_name)
         format {
           type: 'text'
         }
@@ -358,7 +337,7 @@ It brings together a consolidated view of:
       }
       series {
         field: VizFieldFull {
-          ref: 'total_orders'
+          ref: r(demo_ecommerce_version_2.total_orders)
           format {
             type: 'number'
             pattern: 'inherited'
@@ -386,11 +365,8 @@ It brings together a consolidated view of:
     label: 'GMV (Sales) by Country Name'
     viz: BarChart {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       legend: VizFieldFull {
-        ref: ref('ecommerce_countries', 'name')
+        ref: r(ecommerce_countries.name)
         format {
           type: 'text'
         }
@@ -403,7 +379,7 @@ It brings together a consolidated view of:
         }
         series {
           field: VizFieldFull {
-            ref: 'gmv'
+            ref: r(demo_ecommerce_version_2.gmv)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -602,11 +578,8 @@ This format is especially useful for:
     label: 'Users Sign Up Over Time'
     viz: LineChart {
       dataset: demo_ecommerce_version_2
-      theme {
-
-      }
       x_axis: VizFieldFull {
-        ref: ref('ecommerce_users', 'sign_up_at')
+        ref: r(ecommerce_users.sign_up_at)
         transformation: 'datetrunc quarter'
         format {
           type: 'date'
@@ -619,7 +592,7 @@ This format is especially useful for:
         }
         series {
           field: VizFieldFull {
-            ref: 'total_users'
+            ref: r(demo_ecommerce_version_2.total_users)
             format {
               type: 'number'
               pattern: 'inherited'
@@ -670,12 +643,9 @@ This format is especially useful for:
         calc_type: 'measure'
         data_type: 'number'
       }
-      theme {
-
-      }
       rows: [
         VizFieldFull {
-          ref: ref('ecommerce_users', 'age_group')
+          ref: r(ecommerce_users.age_group)
           format {
             type: 'text'
           }
@@ -683,7 +653,7 @@ This format is especially useful for:
       ]
       columns: [
         VizFieldFull {
-          ref: ref('ecommerce_users', 'gender')
+          ref: r(ecommerce_users.gender)
           format {
             type: 'text'
           }
@@ -691,28 +661,28 @@ This format is especially useful for:
       ]
       values: [
         VizFieldFull {
-          ref: 'total_orders'
+          ref: r(demo_ecommerce_version_2.total_orders)
           format {
             type: 'number'
             pattern: 'inherited'
           }
         },
         VizFieldFull {
-          ref: 'revenue'
+          ref: r(demo_ecommerce_version_2.revenue)
           format {
             type: 'number'
             pattern: 'inherited'
           }
         },
         VizFieldFull {
-          ref: 'total_users'
+          ref: r(demo_ecommerce_version_2.total_users)
           format {
             type: 'number'
             pattern: 'inherited'
           }
         },
         VizFieldFull {
-          ref: 'total_repeated_buyers'
+          ref: r(demo_ecommerce_version_2.total_repeated_buyers)
           format {
             type: 'number'
             pattern: 'inherited'

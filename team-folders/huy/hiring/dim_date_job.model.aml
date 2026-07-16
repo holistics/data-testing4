@@ -1,0 +1,60 @@
+Model hiring_dim_date_job {
+  type: 'table'
+  label: 'Date'
+  description: 'Date dimension for hiring events.'
+  data_source_name: 'demodb'
+  owner: 'huy.vu@holistics.io'
+  table_name: '"hiring"."dim_date_job"'
+
+  dimension date_key {
+    label: 'Date'
+    type: 'date'
+    primary_key: true
+    definition: @sql {{ #SOURCE.date_key }};;
+  }
+  dimension year {
+    label: 'Year'
+    type: 'number'
+    definition: @sql {{ #SOURCE.year }};;
+  }
+  dimension quarter {
+    label: 'Quarter'
+    type: 'number'
+    definition: @sql {{ #SOURCE.quarter }};;
+  }
+  dimension quarter_label {
+    label: 'Quarter Label'
+    type: 'text'
+    definition: @sql {{ #SOURCE.quarter_label }};;
+  }
+  dimension month {
+    label: 'Month'
+    type: 'number'
+    definition: @sql {{ #SOURCE.month }};;
+  }
+  dimension month_label {
+    label: 'Month Label'
+    type: 'text'
+    definition: @sql {{ #SOURCE.month_label }};;
+  }
+  dimension week_of_year {
+    label: 'Week of Year'
+    type: 'number'
+    definition: @sql {{ #SOURCE.week_of_year }};;
+  }
+  dimension day_of_week {
+    label: 'Day of Week'
+    type: 'number'
+    definition: @sql {{ #SOURCE.day_of_week }};;
+  }
+  dimension day_name {
+    label: 'Day Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.day_name }};;
+  }
+  dimension is_weekend {
+    label: 'Is Weekend'
+    type: 'truefalse'
+    definition: @sql {{ #SOURCE.is_weekend }};;
+  }
+}

@@ -1,0 +1,66 @@
+Model hiring_fct_stage_events {
+  type: 'table'
+  label: 'Stage Events'
+  description: 'One row per stage transition of an application. Granular stage-level cycle time.'
+  data_source_name: 'demodb'
+  owner: 'huy.vu@holistics.io'
+  table_name: '"hiring"."fct_stage_events"'
+
+  dimension event_id {
+    label: 'Event Id'
+    type: 'text'
+    primary_key: true
+    hidden: true
+    definition: @sql {{ #SOURCE.event_id }};;
+  }
+  dimension application_id {
+    label: 'Application Id'
+    type: 'text'
+    hidden: true
+    definition: @sql {{ #SOURCE.application_id }};;
+  }
+  dimension stage {
+    label: 'Stage'
+    type: 'text'
+    definition: @sql {{ #SOURCE.stage }};;
+  }
+  dimension entered_at {
+    label: 'Entered At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.entered_at }};;
+  }
+  dimension exited_at {
+    label: 'Exited At'
+    type: 'date'
+    definition: @sql {{ #SOURCE.exited_at }};;
+  }
+  dimension time_in_stage_hours {
+    label: 'Time in Stage (Hours)'
+    type: 'number'
+    definition: @sql {{ #SOURCE.time_in_stage_hours }};;
+  }
+  dimension moved_by {
+    label: 'Moved By'
+    type: 'text'
+    definition: @sql {{ #SOURCE.moved_by }};;
+  }
+  dimension exit_type {
+    label: 'Exit Type'
+    type: 'text'
+    definition: @sql {{ #SOURCE.exit_type }};;
+  }
+
+  measure total_events {
+    label: 'Total Stage Events'
+    type: 'number'
+    definition: @aql count(hiring_fct_stage_events.event_id);;
+    aggregation_type: 'custom'
+  }
+  measure avg_time_in_stage_hours {
+    label: 'Avg Time in Stage (Hours)'
+    type: 'number'
+    definition: @aql average(hiring_fct_stage_events.time_in_stage_hours);;
+    aggregation_type: 'custom'
+    format: '#,##0.0'
+  }
+}

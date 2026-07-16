@@ -257,13 +257,13 @@ orders
         data_type: 'number'
       }
       filter {
-        field: ref('order_master', 'cohort_month')
+        field: r(demo_ecommerce, order_master.cohort_month)
         operator: 'matches'
         value: 'last 12 months - this month'
       }
       rows: [
         VizFieldFull {
-          ref: ref('order_master', 'cohort_month')
+          ref: r(demo_ecommerce, order_master.cohort_month)
           format {
             type: 'date'
           }
@@ -278,7 +278,7 @@ orders
       ]
       columns: [
         VizFieldFull {
-          ref: ref('order_master', 'month_no')
+          ref: r(demo_ecommerce, order_master.month_no)
           format {
             type: 'number'
             pattern: 'inherited'
@@ -288,7 +288,7 @@ orders
       values: [
         VizFieldFull {
           label: '# RU'
-          ref: ref('order_master', 'user_id')
+          ref: r(order_master.user_id)
           aggregation: 'count distinct'
           format {
             type: 'number'
@@ -321,8 +321,11 @@ orders
           }
         ]
         row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
       }
     }
   }
-
 }

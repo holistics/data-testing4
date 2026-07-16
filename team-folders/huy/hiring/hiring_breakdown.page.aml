@@ -1,0 +1,158 @@
+Dashboard hiring_breakdown_dashboard {
+  title: 'Hiring Breakdown'
+  description: 'Department and source breakdowns combining dataset metrics, adhoc metrics, and model dimensions.'
+  owner: 'huy.vu@holistics.io'
+
+  // ---------------- Date filter (field source from the date dimension model) ----------------
+  block f_date: FilterBlock {
+    label: 'Application Date'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: hiring_funnel_tth
+      field: r(hiring_dim_date_job.date_key)
+    }
+  }
+
+  // ---------------- VizBlock 1: by Department ----------------
+  // adhoc metric (unique_candidates) + dataset metric (total_applications) + model dimension (department)
+  block v_by_dept: VizBlock {
+    label: 'Applications & Unique Candidates by Department'
+    viz: ColumnChart {
+      dataset: hiring_funnel_tth
+
+      // Adhoc metric — referenced below by its bare string name.
+      calculation unique_candidates {
+        label: 'Unique Candidates'
+        formula: @aql count_distinct(hiring_fct_application.candidate_id);;
+        calc_type: 'measure'
+        data_type: 'number'
+        format {
+          type: 'number'
+          pattern: '#,##0'
+        }
+      }
+
+      // Model dimension.
+      x_axis: VizFieldFull {
+        ref: r(hiring_dim_jobs.department)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        // Dataset metric.
+        series {
+          field: VizFieldFull {
+            label: 'Total Applications'
+            ref: r(hiring_funnel_tth.total_applications)
+            format {
+              type: 'number'
+              pattern: '#,##0'
+            }
+          }
+        }
+        // Adhoc metric.
+        series {
+          field: VizFieldFull {
+            label: 'Unique Candidates'
+            ref: 'unique_candidates'
+            format {
+              type: 'number'
+              pattern: '#,##0'
+            }
+          }
+        }
+        settings {
+          show_data_label_by: 'value'
+        }
+      }
+      settings {
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  // ---------------- VizBlock 2: by Source Category ----------------
+  // model dimension (source_category) + dataset metric (overall_conversion) + adhoc metric (avg_days_to_close)
+  block v_by_source: VizBlock {
+    label: 'Conversion & Avg Days to Close by Source Category'
+    viz: DataTable {
+      dataset: hiring_funnel_tth
+
+      // Adhoc metric.
+      calculation adhoc_avg_days_to_close {
+        label: 'Avg Days to Close'
+        formula: @aql average(hiring_fct_application.days_to_close);;
+        calc_type: 'measure'
+        data_type: 'number'
+        format {
+          type: 'number'
+          pattern: '#,##0.0'
+        }
+      }
+
+      fields: [
+        // Model dimension.
+        VizFieldFull {
+          label: 'Source Category'
+          ref: r(hiring_dim_sources.source_category)
+          format {
+            type: 'text'
+          }
+        },
+        // Dataset metric.
+        VizFieldFull {
+          label: 'Overall Conversion'
+          ref: r(hiring_funnel_tth.overall_conversion)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        // Adhoc metric.
+        VizFieldFull {
+          label: 'Avg Days to Close'
+          ref: 'adhoc_avg_days_to_close'
+          format {
+            type: 'number'
+            pattern: '#,##0.0'
+          }
+        }
+      ]
+      settings {
+        show_row_number: false
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'Overview'
+    width: 1300
+    height: 560
+    grid_size: 20
+    auto_expand_vertically: true
+    mobile {
+      mode: 'auto'
+    }
+    block f_date {
+      position: pos(20, 20, 400, 60)
+    }
+    block v_by_dept {
+      position: pos(20, 100, 630, 420)
+    }
+    block v_by_source {
+      position: pos(680, 100, 620, 420)
+    }
+  }
+
+  theme: H.themes.vanilla
+}
