@@ -122,9 +122,15 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(20, 4560, 580, 400)
         layer: 16
       }
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+      block p_period_comparison {
+        position: pos(20, 200, 300, 80)
+        layer: 2
+=======
       block d_date_drill {
         position: pos(20, 200, 300, 80)
         layer: 1
+>>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       }
       mobile {
         mode: 'auto'
@@ -644,7 +650,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block v_711g: VizBlock {
     label: 'Number of Order by Continent'
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+    viz: LineChart {
+=======
     viz: ColumnChart {
+>>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       dataset: demo_ecommerce
       x_axis: VizFieldFull {
         ref: r(order_master.order_created_month)
@@ -3907,6 +3917,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         legend_label: 'top'
         x_axis_label: 'Owner'
       }
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+    }
+  }
+  block p_period_comparison: PopBlock {
+    label: 'Period Comparison'
+    default {
+      type: 'relative'
+      duration: 1
+      granularity: 'year'
+      show_growth_rate: true
+=======
+>>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
     }
   }
   block d_date_drill: DateDrillBlock {
@@ -4985,8 +5007,13 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
       ]
     },
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+    PopInteraction {
+      from: 'p_period_comparison'
+=======
     DateDrillInteraction {
       from: 'd_date_drill'
+>>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       to: [
         CustomMapping {
           block: [
@@ -5009,6 +5036,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: 'v_jbl8'
           field: ref('ecommerce_orders', 'created_date')
+<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+=======
         }
       ]
     },
@@ -5018,6 +5047,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: 'v_ztqi'
           field: ref('order_master', 'order_created_at')
+>>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
         }
       ]
     }
