@@ -1,5 +1,5 @@
 Dataset vy_pbi_dts {
-  label: 'Regional Sales Dataset'
+  label: 'Power BI - Regional Dts'
   description: ''
   data_source_name: 'demodb'
   models: [
