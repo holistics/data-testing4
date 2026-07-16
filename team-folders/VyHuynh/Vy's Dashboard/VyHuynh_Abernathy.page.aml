@@ -122,9 +122,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(20, 4560, 580, 400)
         layer: 16
       }
-      block p_period_comparison {
+      block d_date_drill {
         position: pos(20, 200, 300, 80)
-        layer: 2
+        layer: 1
       }
       mobile {
         mode: 'auto'
@@ -640,7 +640,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block v_711g: VizBlock {
     label: 'Number of Order by Continent'
-    viz: LineChart {
+    viz: ColumnChart {
       dataset: demo_ecommerce
       x_axis: VizFieldFull {
         ref: r(order_master.order_created_month)
@@ -648,12 +648,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         format {
           type: 'date'
           pattern: 'LLL yyyy'
-        }
-      }
-      legend: VizFieldFull {
-        ref: r(ecommerce_countries.continent_name)
-        format {
-          type: 'text'
         }
       }
       y_axis {
@@ -3943,14 +3937,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block p_period_comparison: PopBlock {
-    label: 'Period Comparison'
-    default {
-      type: 'relative'
-      duration: 1
-      granularity: 'year'
-      show_growth_rate: true
-    }
+  block d_date_drill: DateDrillBlock {
+    label: 'Date Drill'
   }
   interactions: [
     FilterInteraction {
@@ -5022,8 +5010,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
       ]
     },
-    PopInteraction {
-      from: 'p_period_comparison'
+    DateDrillInteraction {
+      from: 'd_date_drill'
       to: [
         CustomMapping {
           block: [
