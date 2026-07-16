@@ -1,0 +1,783 @@
+Dashboard interactive_control_buttons {
+  title: 'Sales Performance'
+  description: @md ## What is this?
+
+This dashboard demos the `<h-drill>` interactive button pattern — the answer to the question: *"how do I add custom clickable buttons that filter the dashboard without a page reload?"*
+
+**Click any quarter button to filter the two charts.**
+
+---
+
+### `h-drill` vs other approaches
+
+| Approach | Reloads page? | Custom button UI? |
+|---|---|---|
+| URL parameters | ✅ Yes | Depends on setup |
+| Filter Control (dropdown/picker) | ❌ No | Dropdown/calendar only |
+| **`h-drill` (this demo)** | ❌ No | ✅ Fully custom HTML/CSS |
+
+---
+
+### How the code works
+
+The quarter buttons are a **MarkdownViz** block that queries the `demo_ecommerce` dataset for distinct quarters from `order_master.order_created_at`. Inside the template, each quarter is wrapped in `<h-drill>`:
+
+```html
+{% map(rows) %}
+<h-drill row="0" value="{{ `Quarter`.raw }}">
+  <div class="quarter-btn">{{ `Quarter`.formatted }}</div>
+</h-drill>
+{% end %}
+```
+
+When clicked, Holistics reads the `value` attribute and applies it as a cross-filter to other blocks on the same dashboard. The `.h-drill-selected` CSS class is automatically applied to the selected button.
+
+**Key clarifications:**
+- `h-drill` is *authored* inside a Dynamic Content / MarkdownViz block, but it *targets* other dashboard vizualizations
+- It is **not** the same as Date Drill (which changes time granularity, not the time window)
+- Use `.raw` for the filter value passed to other charts; `.formatted` for the display label;;
+  block v_quarters: VizBlock {
+    label: 'Quarter Selector'
+    viz: MarkdownViz {
+      dataset: demo_ecommerce
+      filter {
+        field: r(order_master.order_created_at)
+        operator: 'matches'
+        value: 'last 4 quarters'
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Quarter'
+          ref: r(order_master.order_created_at)
+          transformation: 'datetrunc quarter'
+          format {
+            type: 'date'
+            pattern: 'yyyy Qq'
+          }
+        }
+      ]
+      content: @md <style>
+  .quarter-selector {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    align-items: center;
+    background: #F9FAFB;
+    border-radius: 8px;
+  }
+  .qs-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-right: 0.25rem;
+  }
+  .quarter-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 1rem;
+    background: #FFFFFF;
+    border: 2px solid #E5E7EB;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    transition: all 0.15s ease;
+    min-width: 80px;
+    user-select: none;
+  }
+  .quarter-btn:hover {
+    border-color: #6366F1;
+    color: #6366F1;
+    background: #F5F3FF;
+  }
+  .h-drill-selected.quarter-btn {
+    border-color: #6366F1;
+    background: #6366F1;
+    color: #FFFFFF;
+  }
+</style>
+
+<div class="quarter-selector">
+  <span class="qs-label">Filter by quarter →</span>
+  {% map(rows) %}
+  <h-drill row="0" value="{{ `Quarter`.raw }}" class="quarter-btn">
+    {{ `Quarter`.formatted }}
+  </h-drill>
+  {% end %}
+</div> ;;
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_orders_by_status: VizBlock {
+    label: 'Orders by Status'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_orders.status)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce_orders.total_order)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_revenue_by_month: VizBlock {
+    label: 'Revenue by Quarter'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc quarter'
+        format {
+          type: 'date'
+          pattern: 'yyyy Qq'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_country_cards: VizBlock {
+    label: 'Country Selector'
+    viz: MarkdownViz {
+      dataset: demo_ecommerce
+      rows: [
+        VizFieldFull {
+          label: 'Country'
+          ref: r(ecommerce_countries.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Country Icon'
+          ref: r(ecommerce_countries.flag)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      content: @md <style>
+  .country-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    align-items: center;
+    background: #F9FAFB;
+    border-radius: 8px;
+  }
+  .cts-label {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .country-card {
+    flex: 1;
+    min-width: 0;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.5rem 0.25rem;
+    background: #FFFFFF;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .country-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+  .country-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .country-card:hover {
+    border-color: #6366F1;
+    background: #F5F3FF;
+  }
+  .country-card:hover .country-name {
+    color: #6366F1;
+  }
+  .h-drill-selected.country-card {
+    border-color: #6366F1;
+    background: #6366F1;
+  }
+  .h-drill-selected.country-card .country-name {
+    color: #FFFFFF;
+  }
+</style>
+
+<div class="country-grid">
+  <span class="cts-label">Filter by country →</span>
+  {% map(rows) %}
+  <h-drill row="0" value="{{ `Country`.raw }}" class="country-card">
+    <span class="country-icon">{{ `Country Icon`.formatted }}</span>
+    <span class="country-name">{{ `Country`.formatted }}</span>
+  </h-drill>
+  {% end %}
+</div> ;;
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_country_info: VizBlock {
+    label: 'Information'
+    viz: MarkdownViz {
+      dataset: demo_ecommerce
+      rows: [
+        VizFieldFull {
+          label: 'Country'
+          ref: r(ecommerce_countries.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Code'
+          ref: r(ecommerce_countries.code)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Continent'
+          ref: r(ecommerce_countries.continent_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Flag'
+          ref: r(ecommerce_countries.flag)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Key City'
+          ref: r(ecommerce_countries.key_city)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      content: @md <style>
+  /* Default: placeholder visible, individual cards hidden */
+  .all-countries-placeholder { display: flex; }
+  .info-card { display: none; }
+
+  /* When exactly 1 country selected: article:only-of-type is true (placeholder is a div, not article) */
+  .info-wrapper:has(article:only-of-type) .all-countries-placeholder { display: none; }
+  .info-wrapper:has(article:only-of-type) .info-card { display: block; }
+
+  .all-countries-placeholder {
+    align-items: center;
+    gap: 0.875rem;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .placeholder-flag {
+    font-size: 2.25rem;
+    line-height: 1;
+  }
+  .placeholder-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+  }
+  .placeholder-subtitle {
+    font-size: 0.8rem;
+    color: #9CA3AF;
+  }
+  .info-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid #F3F4F6;
+    margin-bottom: 0.75rem;
+  }
+  .card-flag {
+    font-size: 2.25rem;
+    line-height: 1;
+  }
+  .card-country-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.3rem;
+  }
+  .card-code-badge {
+    display: inline-block;
+    background: #F3F4F6;
+    color: #6B7280;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+  }
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #F9FAFB;
+  }
+  .card-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .row-label {
+    font-size: 0.8rem;
+    color: #9CA3AF;
+  }
+  .row-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #111827;
+  }
+</style>
+
+<div class="info-wrapper">
+  <div class="all-countries-placeholder">
+    <span class="placeholder-flag">🌍</span>
+    <div>
+      <div class="placeholder-title">All Countries</div>
+      <div class="placeholder-subtitle">Select a country above to see details</div>
+    </div>
+  </div>
+  {% map(rows) %}
+  <article class="info-card">
+    <div class="card-header">
+      <span class="card-flag">{{ `Flag`.formatted }}</span>
+      <div>
+        <div class="card-country-name">{{ `Country`.formatted }}</div>
+        <span class="card-code-badge">{{ `Code`.formatted }}</span>
+      </div>
+    </div>
+    <div class="card-row">
+      <span class="row-label">Continent</span>
+      <span class="row-value">{{ `Continent`.formatted }}</span>
+    </div>
+    <div class="card-row">
+      <span class="row-label">Key City</span>
+      <span class="row-value">{{ `Key City`.formatted }}</span>
+    </div>
+  </article>
+  {% end %}
+</div> ;;
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_kpi_revenue: VizBlock {
+    label: 'Total Revenue'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        ref: r(order_master.gmv)
+        format {
+          type: 'number'
+          pattern: '[$$]#,###'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_kpi_orders: VizBlock {
+    label: 'Total Orders'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        ref: r(ecommerce_orders.total_order)
+        format {
+          type: 'number'
+          pattern: '#,###'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_kpi_aov: VizBlock {
+    label: 'Avg Order Value'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        ref: r(order_master.aov)
+        format {
+          type: 'number'
+          pattern: '[$$]#,###.##'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_revenue_by_country: VizBlock {
+    label: 'Revenue by Category'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(map_categories.parent_category)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#07326C'
+            color_palette: H.color_palettes.seq_blue
+          }
+        }
+      }
+      settings {
+        row_limit: 20
+        sort {
+          field_index: 0
+          direction: 'desc'
+          type: 'yaxis'
+        }
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_uygg: VizBlock {
+    label: 'Revenue by Month'
+    viz: LineChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#07326C'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_aov_by_country: VizBlock {
+    label: 'Avg Order Value by Month'
+    viz: LineChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_orders.created_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.aov)
+            format {
+              type: 'number'
+              pattern: '[$$]#,###.##'
+            }
+          }
+          settings {
+            color: '#62ADD4'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_t38c: VizBlock {
+    label: 'Number of order by Category'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: r(map_categories.parent_category)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce_orders.total_order)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#92AEEA'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'desc'
+          type: 'yaxis'
+        }
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  view: TabLayout {
+    label: 'Interactive Control Buttons'
+    tab tab_quarters: CanvasLayout {
+      label: 'Quarterly Sales'
+      width: 1220
+      height: 600
+      grid_size: 20
+      block v_quarters {
+        position: pos(20, 20, 1160, 100)
+        layer: 1
+      }
+      block v_orders_by_status {
+        position: pos(20, 140, 560, 440)
+        layer: 1
+      }
+      block v_revenue_by_month {
+        position: pos(600, 140, 580, 440)
+        layer: 1
+      }
+    }
+    tab tab_countries: CanvasLayout {
+      label: 'Regional Sales'
+      width: 1220
+      height: 1420
+      grid_size: 20
+      block v_country_cards {
+        position: pos(20, 20, 1160, 100)
+        layer: 1
+      }
+      block v_kpi_revenue {
+        position: pos(340, 180, 320, 120)
+        layer: 1
+      }
+      block v_kpi_orders {
+        position: pos(680, 180, 200, 120)
+        layer: 1
+      }
+      block v_kpi_aov {
+        position: pos(900, 180, 280, 120)
+        layer: 1
+      }
+      block v_revenue_by_country {
+        position: pos(20, 1040, 580, 360)
+        layer: 1
+      }
+      block v_country_info {
+        position: pos(20, 140, 280, 220)
+        layer: 1
+      }
+      block v_uygg {
+        position: pos(20, 380, 580, 280)
+        layer: 1
+      }
+      block v_aov_by_country {
+        position: pos(640, 380, 560, 280)
+        layer: 1
+      }
+      block v_t38c {
+        position: pos(620, 1040, 580, 360)
+        layer: 1
+      }
+      auto_expand_vertically: true
+    }
+  }
+  settings {
+    autorun_on_open: true
+  }
+  interactions: [
+    FilterInteraction {
+      from: 'v_quarters'
+      to: [
+        CustomMapping {
+          block: 'v_t38c'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_orders_by_status'
+      to: [
+        CustomMapping {
+          block: 'v_t38c'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_revenue_by_month'
+      to: [
+        CustomMapping {
+          block: 'v_t38c'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_t38c'
+      to: [
+        CustomMapping {
+          block: [
+            'v_quarters',
+            'v_orders_by_status',
+            'v_revenue_by_month'
+          ]
+          disabled: true
+        }
+      ]
+    }
+  ]
+}
