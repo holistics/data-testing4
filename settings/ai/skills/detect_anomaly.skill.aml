@@ -32,7 +32,7 @@ Skill detect_anomaly {
     - If `execute_viz` ultimately fails, fall back to the Step 3 table + prose (Conventions → *On an error*).
 
     ## Workflow
-    Five steps, in order. You author the AML yourself from the templates in Schema — substitute the resolved dataset's real names, then `validate_aql` (AQL steps) and `execute_aql` / `execute_viz` to run. Don't call `generate_aql` / `generate_viz` (Conventions → *Write the AML yourself*).
+    Five steps, in order. Hand-write the AQL yourself (Steps 1–3) — the method must be exact — but author the chart with `generate_viz` (Step 4): hand-written viz grammar is the top source of invalid output, so you feed your AQL to `generate_viz` rather than transcribing a `CombinationChart`. `validate_aql` checks the AQL before `execute_aql`; `execute_viz` runs the chart (Conventions → *Hand-write the AQL; let generate_viz author the chart*).
 
     Placeholders used throughout: `M` = the metric measure (e.g. `mou_monthly_mrr.sum_total_mrr`), `T` = the bound time dimension, `W` = the window for the granularity, `<dataset>` = the dataset name, `<metric label>` = a readable label.
 
@@ -53,10 +53,10 @@ Skill detect_anomaly {
     ### Step 3 — Anomaly query (write AQL → validate_aql → execute_aql)
     Write the whole query in one go from Schema → *Anomaly query*, substituting `M`, `T`, `W` and folding in any filters/timeframe. Pick `W` and apply the short-series rules from Schema → *Method*.
 
-    `validate_aql`, then `execute_aql` (title per Conventions → *Titles*). The result is the **anomaly results** — the answer the summary reads from. In the first `W` buckets `z_score` is null so `is_anomaly` is `0`; use the null `z_score`, not the flag, to tell these from true non-anomalies.
+    `validate_aql`, then `execute_aql` (title per Conventions → *Titles*). The result is the **anomaly results** — the answer the summary reads from, and the exact AQL you hand to `generate_viz` in Step 4. In the first `W` buckets `z_score` is null so `is_anomaly` is `0`; use the null `z_score`, not the flag, to tell these from true non-anomalies.
 
-    ### Step 4 — Build the anomaly chart (write CombinationChart → execute_viz)
-    Write one self-contained `CombinationChart` from Schema → *Anomaly chart* and run it with `execute_viz` (title per Conventions → *Titles*). This chart — `actual` line, dashed expected-range band, red anomaly columns — is the final deliverable. On a render failure, follow Conventions → *On an error*.
+    ### Step 4 — Build the anomaly chart (generate_viz → execute_viz)
+    Feed the Step 3 AQL to `generate_viz` per Schema → *Anomaly chart*, adjust the returned chart's decoration to the target look, then `execute_viz` (title per Conventions → *Titles*). `generate_viz` authors valid viz grammar from your AQL — proper terminators, calculations inlined against the base measure, the secondary axis — which hand-transcribing a `CombinationChart` does not reliably get right. The result — `actual` line, dashed expected-range band, red anomaly columns — is the final deliverable. On a failure, follow Conventions → *On an error*.
 
     ### Step 5 — Summarize
     Present the Step 4 chart plus the prose below — nothing else. Read the anomaly results to write it; don't render them as a table (the user sees the chart) unless asked.
@@ -146,60 +146,25 @@ Skill detect_anomaly {
 
     **Timeframe filter syntax:** write it exactly as `T matches @(last <N> <unit>)` — e.g. `mou_monthly_mrr.month matches @(last 24 months)`. The `@( … )` parentheses are mandatory; `matches @last 24 months` (no parens) fails with *"Syntax error … Expected one of …"*. Omit the `filters` block entirely only if the user asked for full history.
 
-    ### Anomaly chart (CombinationChart template — Step 4)
-    "Self-contained" is the whole trick: the chart defines its own ad-hoc fields (`rolling_mean`, `rolling_stddev`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`) as `calculation` blocks and reads the metric/time straight from the dataset, so it does not depend on the Step 3 result. Call `execute_viz` with only `dataset_uname`, `viz`, and `title` — never an `aql` property (it's rejected).
+    ### Anomaly chart (generate_viz — Step 4)
+    Don't hand-write the `CombinationChart` — pass the Step 3 explore (verbatim) to `generate_viz` and let it author the chart, then adjust only decoration. `generate_viz` reliably emits valid viz grammar from an AQL (correct formula terminators, calculations inlined against the base measure, a secondary 0..1 axis); hand-transcribing that block is the top source of render failures.
 
-    **The `calculation` blocks are MANDATORY — never drop them.** Every series/tooltip that uses `ref: '<name>'` resolves to the `calculation` of that name defined above it; omit them and the refs point at nothing and rendering fails (*"Referencing to an invalid biz calculation field"*). Emit all six. Do not reference the Step 3 result's internal column aliases (e.g. `mmm_m_dab06d`) — use the dataset field via `ref: r(<field>)` and calculations via `ref: '<calc_name>'`.
+    1. `generate_viz(dataset_uname: <dataset>, aql: <the Step 3 explore, verbatim>, query: "Combination chart of <metric label>: actual as a solid line; lower_bound and upper_bound as a dashed band; is_anomaly as columns on a secondary 0..1 right axis; x-axis is the <granularity> bucket; tooltips for rolling_mean and z_score.")`.
+    2. Adjust the returned viz's **decoration** to the target look below — keep the structure `generate_viz` produced (axes, series, calculations); change only colors, line styles, and number formats.
+    3. `execute_viz(dataset_uname: <dataset>, viz: <the adjusted viz>, title: …)` — pass only these three, no `aql` property.
 
-    **Emit the block below, substituting the placeholders** — `<dataset>`, `<M>`, `<T>`, `<W>`, `<metric label>`, the number `pattern`, and **every `__ENDF__` → a double-semicolon** that ends the `@aql` formula. Don't otherwise restructure it — this exact form is known-good, and improvising it is what breaks rendering. Two easy-to-miss requirements: the `dataset:` property (required, separate from the `dataset_uname` you pass to `execute_viz`) and commas between the `tooltips` array elements. It is a `CombinationChart` (not a `LineChart`): three line series on the left axis plus a column series on a secondary 0..1 right axis. Keep the 6-digit `#DC2626` (the 8-digit alpha hex `#DC26264D` can be rejected by the renderer).
+    Target look:
+    - **actual** — solid line, `#2563EB`.
+    - **lower_bound / upper_bound** — dashed lines, grey (`#9CA3AF` / `#6B7280`), forming the band.
+    - **is_anomaly** — column on the secondary right axis (`axis_min: 0 axis_max: 1`), red `#DC2626`.
+    - **tooltips** — actual, rolling_mean, z_score, is_anomaly; numbers per *Numeric formatting*.
+    - Keep 6-digit hex (an 8-digit alpha hex like `#DC26264D` can be rejected by the renderer).
 
-    ```aml
-    CombinationChart {
-      dataset: <dataset>
-      // Define the band/flag as calculations INSIDE the chart (self-contained) — this is what
-      // binds them. Calculations may reference each other (lower_bound uses rolling_mean and
-      // rolling_stddev, is_anomaly uses z_score). IMPORTANT: `__ENDF__` marks the end of each
-      // @aql formula — when you emit the chart, replace EVERY `__ENDF__` with a double-semicolon
-      // terminator (the two-character marker that ends an @aql formula). It is shown as a token
-      // here because a real terminator would close this skill's own text block.
-      calculation rolling_mean   { label: 'Rolling Mean'   formula: @aql window_avg(<M>, -<W>..-1, order: <T> | asc(), partition: [])__ENDF__ calc_type: 'measure' data_type: 'number' }
-      calculation rolling_stddev { label: 'Rolling Stddev' formula: @aql window_stdev(<M>, -<W>..-1, order: <T> | asc(), partition: [])__ENDF__ calc_type: 'measure' data_type: 'number' }
-      calculation lower_bound    { label: 'Lower Bound'    formula: @aql rolling_mean - 3 * rolling_stddev__ENDF__ calc_type: 'measure' data_type: 'number' }
-      calculation upper_bound    { label: 'Upper Bound'    formula: @aql rolling_mean + 3 * rolling_stddev__ENDF__ calc_type: 'measure' data_type: 'number' }
-      calculation z_score        { label: 'Z Score'        formula: @aql safe_divide(<M> - rolling_mean, rolling_stddev)__ENDF__ calc_type: 'measure' data_type: 'number' }
-      calculation is_anomaly     { label: 'Is Anomaly'     formula: @aql case(when: abs(z_score) > 3, then: 1, else: 0)__ENDF__ calc_type: 'measure' data_type: 'number' }
-      // Dataset fields use ref: r(<field>); calculations use ref: '<calc_name>'.
-      x_axis: VizFieldFull { ref: r(<T>) label: 'Period' transformation: 'datetrunc month' format { type: 'date' pattern: 'LLL yyyy' } uname: 'bucket' }
-      y_axis {
-        label: '<metric label>'
-        settings { alignment: 'left' scale: 'linear' }
-        series { mark_type: 'line' field: VizFieldFull { ref: r(<M>) label: 'Actual' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#2563EB' line_style: 'solid' } }
-        series { mark_type: 'line' field: VizFieldFull { ref: 'lower_bound' label: 'Lower Bound' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#9CA3AF' line_style: 'dashed' } }
-        series { mark_type: 'line' field: VizFieldFull { ref: 'upper_bound' label: 'Upper Bound' format { type: 'number' pattern: '[$$]#,###0' } } settings { color: '#6B7280' line_style: 'dashed' } }
-      }
-      y_axis {
-        label: 'Anomaly'
-        settings { alignment: 'right' scale: 'linear' axis_min: 0 axis_max: 1 }
-        series { mark_type: 'column' field: VizFieldFull { ref: 'is_anomaly' label: 'Is Anomaly' format { type: 'number' pattern: '#,###0' } } settings { color: '#FCA5A5' } }
-      }
-      // tooltips is an ARRAY — elements MUST be comma-separated.
-      tooltips: [
-        VizTooltip { field: VizFieldFull { ref: r(<M>) label: 'Actual' format { type: 'number' pattern: '[$$]#,###0' } } },
-        VizTooltip { field: VizFieldFull { ref: 'rolling_mean' label: 'Rolling Mean' format { type: 'number' pattern: '[$$]#,###0' } } },
-        VizTooltip { field: VizFieldFull { ref: 'z_score' label: 'Z Score' format { type: 'number' pattern: '#,###0.0' } } },
-        VizTooltip { field: VizFieldFull { ref: 'is_anomaly' label: 'Is Anomaly' format { type: 'number' pattern: '#,###0' } } }
-      ]
-      settings {
-        show_data_points: false
-        connect_discontinuous_points: false
-        sort: LineFamilySort { type: 'xaxis' direction: 'asc' }
-      }
-    }
-    ```
+    `generate_viz` consumes the AQL explore, so Step 3 must run first. If `execute_viz` errors, feed the error text back into `generate_viz`'s `query` (it self-corrects from prior errors) and retry once; if it still fails, fall back to the Step 3 `execute_aql` table + prose.
 
     ## Conventions
-    - **Write the AML yourself — never `generate_aql` / `generate_viz`.** This skill gives you exact templates (Schema); filling them in and running `execute_*` is faster and exact, with `validate_aql` as the syntax check before `execute_aql`. The two-step chain: (1) the anomaly AQL — actual + rolling stats + band/z/flag, all in one — `validate_aql`, `execute_aql` → anomaly results; (2) the self-contained `CombinationChart`, `execute_viz`.
-    - **On an error, consult the docs once, then retry once.** If a step errors (especially an AQL window-function or viz syntax error), call `search_docs` with the error / feature, fix the AML, then `execute_*` exactly once more. If it still fails, use the step's fallback: Step 3 → surface the error (don't pretend detection completed); Step 4 → fall back to the Step 3 `execute_aql` table + prose. Never loop more than one doc-lookup + one retry per step.
+    - **Hand-write the AQL; let `generate_viz` author the chart.** The Step 3 AQL is deterministic and encodes the method (windows, `k`) exactly — write it yourself and `validate_aql` before `execute_aql`. The `CombinationChart` is the opposite: hand-written viz grammar is the top source of invalid output, so pass your AQL to `generate_viz` and adjust only decoration. Flow: (1) write the anomaly AQL → `validate_aql` → `execute_aql` → anomaly results; (2) `generate_viz(aql: <Step 3 AQL>)` → adjust decoration → `execute_viz`. (Don't use `generate_aql` — the method must be exact, so the AQL is authored by hand.)
+    - **On an error, retry once, then fall back.** If the AQL errors (window-function or syntax), `search_docs` / `validate_aql` for the fix and re-run `execute_aql` once. If the chart errors on `execute_viz`, feed the error text back into `generate_viz`'s `query` and re-run once. If a retry still fails, use the step's fallback: Step 3 → surface the error (don't pretend detection completed); Step 4 → fall back to the Step 3 `execute_aql` table + prose. Never loop more than one retry per step.
     - **Titles.** `execute_aql` / `execute_viz` require a `title` (under ~60 chars; avoid "query 1"/"untitled"):
 
       | Call site | Title pattern |
@@ -223,8 +188,8 @@ Skill detect_anomaly {
     | `list_datasets()` errors (e.g. "not supported in development mode") | Ask the user to name the dataset explicitly. Do not proceed. |
     | Metric name matches no measure | Show top-3 closest measure names with descriptions; ask the user. |
     | Step 3 `execute_aql` errors | Fix the AML (`validate_aql` / `search_docs` for the right syntax) and re-run once; if it still fails, stop and surface the error. A transient `UNION types text and numeric cannot be matched (SQLSTATE 42804)` (from the rollup grand-total row) usually clears on a re-run — just retry once. |
-    | Step 4 chart: `Referencing to an invalid biz calculation field` / a reference error on `lower_bound`, `is_anomaly`, etc. | The chart is missing the `calculation` block for that field (or you referenced a Step-3 column alias like `mmm_m_dab06d`). Add all six `calculation` blocks inside the `CombinationChart`; reference dataset fields via `ref: r(<field>)`, calculations via `ref: '<calc_name>'`. Re-run once. |
-    | Step 4 chart: `contains additional properties ["aql"]` | You passed `aql` to `execute_viz` — remove it; pass only `dataset_uname`, `viz`, `title`. For viz-syntax errors, `search_docs` and re-run once, then fall back to the Step 3 table + prose. |
+    | Step 4 chart errors on `execute_viz` | Feed the error text back into `generate_viz`'s `query` (it self-corrects from prior errors) and re-run once. If it still fails, fall back to the Step 3 `execute_aql` table + prose. Don't switch to hand-writing the viz grammar. |
+    | Step 4: tempted to hand-write the `CombinationChart` to get an exact look | Don't — hand-transcribed viz grammar is the top render-failure source. Let `generate_viz` produce the structure, then change only decoration (Schema → *Anomaly chart* → target look). |
     | User asks "why did this happen?" or "what dimension drove it?" | Reply: "I can flag which points are statistically unusual, but identifying which dimension drove an anomaly — or its business cause — is outside this skill. Break the metric down by relevant dimensions in a dashboard, or check your marketing calendar / CRM / news for that window." |
     | User asks to "show the raw numbers" or wants the per-bucket table | Show the `execute_aql` anomaly results directly (already a table) — `bucket`, `actual`, `rolling_mean`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`. Never group/pivot rows by `is_anomaly`. |
   ;;
