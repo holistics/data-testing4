@@ -122,9 +122,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(20, 4560, 580, 400)
         layer: 16
       }
-      block p_period_comparison {
+      block d_date_drill {
         position: pos(20, 200, 300, 80)
-        layer: 2
+        layer: 1
       }
       mobile {
         mode: 'auto'
@@ -134,28 +134,32 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     tab tab_5auh: CanvasLayout {
       label: 'Raw Data Table'
-      height: 1740
+      height: 1840
       grid_size: 20
       auto_expand_vertically: true
       block v_ztqi {
-        position: pos(20, 20, 1180, 420)
+        position: pos(20, 120, 1180, 420)
         layer: 1
       }
       block v_856v {
-        position: pos(20, 460, 1180, 420)
+        position: pos(20, 560, 1180, 420)
         layer: 1
       }
       block v_9oui {
-        position: pos(20, 900, 580, 400)
+        position: pos(20, 1000, 580, 400)
         layer: 2
       }
       block v_02lk {
-        position: pos(20, 1320, 580, 400)
+        position: pos(20, 1420, 580, 400)
         layer: 4
       }
       block v_lrzt {
-        position: pos(620, 900, 580, 400)
+        position: pos(620, 1000, 580, 400)
         layer: 3
+      }
+      block d_date_drill_kv7g {
+        position: pos(20, 20, 300, 80)
+        layer: 1
       }
       mobile {
         mode: 'auto'
@@ -640,7 +644,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block v_711g: VizBlock {
     label: 'Number of Order by Continent'
-    viz: LineChart {
+    viz: ColumnChart {
       dataset: demo_ecommerce
       x_axis: VizFieldFull {
         ref: r(order_master.order_created_month)
@@ -648,12 +652,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         format {
           type: 'date'
           pattern: 'LLL yyyy'
-        }
-      }
-      legend: VizFieldFull {
-        ref: r(ecommerce_countries.continent_name)
-        format {
-          type: 'text'
         }
       }
       y_axis {
@@ -686,25 +684,27 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block v_ztqi: VizBlock {
     label: 'Table 1'
-    viz: DataTable {
+    viz: PivotTable {
       dataset: demo_ecommerce
-      theme {
-      }
-      fields: [
+      rows: [
         VizFieldFull {
-          ref: r(order_master.order_created_month)
+          ref: r(order_master.order_created_at)
+          transformation: 'datetrunc year'
           format {
             type: 'date'
+            pattern: 'yyyy'
           }
-          uname: 'order_master_order_created_month_1'
         },
         VizFieldFull {
-          ref: r(ecommerce_countries.continent_name)
+          ref: r(order_master.order_created_at)
+          transformation: 'datetrunc month'
           format {
-            type: 'text'
+            type: 'date'
+            pattern: 'LLL yyyy'
           }
-          uname: 'ecommerce_countries_continent_name'
-        },
+        }
+      ]
+      values: [
         VizFieldFull {
           ref: r(order_master.user_id)
           aggregation: 'count distinct'
@@ -713,33 +713,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             pattern: 'inherited'
           }
           uname: 'count_distinct_user_id_1'
-        },
-        VizFieldFull {
-          ref: r(order_master.order_id)
-          aggregation: 'count'
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-          uname: 'count_order_id'
-        },
-        VizFieldFull {
-          ref: r(order_master.price)
-          aggregation: 'sum'
-          format {
-            type: 'number'
-            pattern: '[$$]#,###'
-          }
         }
       ]
       settings {
-        show_row_number: true
-        sorts: [
-          SortSetting {
-            key: 'count_distinct_user_id_1'
-            direction: 'desc'
-          }
-        ]
+        show_row_total: true
+        show_column_total: true
         row_limit: 5000
         aggregate_awareness {
           enabled: true
@@ -747,20 +725,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
         column_styles: [
           ColumnStyle {
-            key: 'count_order_id'
-            width: 89
-          },
-          ColumnStyle {
             key: 'count_distinct_user_id_1'
             width: 100
-          },
-          ColumnStyle {
-            key: 'ecommerce_countries_continent_name'
-            width: 162
-          },
-          ColumnStyle {
-            key: 'order_master_order_created_month_1'
-            width: 215
           }
         ]
       }
@@ -3943,14 +3909,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block p_period_comparison: PopBlock {
-    label: 'Period Comparison'
-    default {
-      type: 'relative'
-      duration: 1
-      granularity: 'year'
-      show_growth_rate: true
-    }
+  block d_date_drill: DateDrillBlock {
+    label: 'Date Drill'
+  }
+  block d_date_drill_kv7g: DateDrillBlock {
+    label: 'Date Drill'
   }
   interactions: [
     FilterInteraction {
@@ -5022,8 +4985,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
       ]
     },
-    PopInteraction {
-      from: 'p_period_comparison'
+    DateDrillInteraction {
+      from: 'd_date_drill'
       to: [
         CustomMapping {
           block: [
@@ -5046,6 +5009,15 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: 'v_jbl8'
           field: ref('ecommerce_orders', 'created_date')
+        }
+      ]
+    },
+    DateDrillInteraction {
+      from: 'd_date_drill_kv7g'
+      to: [
+        CustomMapping {
+          block: 'v_ztqi'
+          field: ref('order_master', 'order_created_at')
         }
       ]
     }
