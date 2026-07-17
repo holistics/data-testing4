@@ -106,9 +106,41 @@ ul.content { padding-left: 1.2em; }
     document.getElementById('url').textContent = currentUrl;
   </script>;;
   }
+  block v_wbk2: VizBlock {
+    label: 'Untitled Report'
+    viz: DataTable {
+      dataset: demo_ecommerce
+      calculation metric_551b3ff {
+        label: 'Total Orders + Total Orders + Total Orders + Total Orders'
+        formula: @aql metric_44862fa + metric_44862fa;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          ref: 'metric_551b3ff'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   view: CanvasLayout {
     label: 'View 1'
-    height: 560
+    height: 860
     grid_size: 20
     block v1 {
       position: pos(280, 160, 600, 380)
@@ -132,10 +164,15 @@ ul.content { padding-left: 1.2em; }
       position: pos(60, 240, 460, 180)
       layer: 3
     }
+    block v_wbk2 {
+      position: pos(280, 560, 420, 280)
+      layer: 4
+    }
     mobile {
       mode: 'auto'
     }
     width: 900
   }
   theme: H.themes.vanilla
+  interactions: []
 }

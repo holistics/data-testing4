@@ -1,0 +1,65 @@
+Dataset vy_pbi_dts {
+  label: 'Power BI - Regional Dts'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    accounts_csv,
+    vy_campaigns_csv,
+    vy_industries_csv,
+    vy_opportunities_csv,
+    vy_opportunity_calendar_csv,
+    vy_opportunity_forecast_adjustment_csv,
+    vy_owners_csv,
+    vy_products_csv,
+    vy_territories_csv
+  ]
+  relationships: [
+    relationship(vy_opportunities_csv.account_seq > accounts_csv.account_seq, true),
+    relationship(vy_opportunities_csv.product_seq > vy_products_csv.product_seq, true),
+    relationship(vy_opportunities_csv.system_user_seq > vy_owners_csv.system_user_seq, true),
+    relationship(vy_opportunities_csv.campaign_seq > vy_campaigns_csv.campaign_seq, true),
+    relationship(vy_opportunities_csv.close_date > vy_opportunity_calendar_csv.date, true),
+    relationship(accounts_csv.industry_seq > vy_industries_csv.industry_seq, true),
+    relationship(accounts_csv.territory_seq > vy_territories_csv.territory_seq, true)
+  ]
+
+  metric count_of_won {
+    label: 'Count of Won'
+    type: 'number'
+    definition: @aql count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') ;;
+  }
+
+  metric count_of_lost {
+    label: 'Count of Lost'
+    type: 'number'
+    definition: @aql count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') ;;
+  }
+
+  metric close_percent {
+    label: 'Close %'
+    type: 'number'
+    definition: @aql safe_divide(count_of_won, count_of_won + count_of_lost) ;;
+    format: '#,##0.0%'
+  }
+
+  metric revenue_won {
+    label: 'Revenue Won'
+    type: 'number'
+    definition: @aql sum(vy_opportunities_csv.value) | where(vy_opportunities_csv.status == 'Won') ;;
+    format: '[$]#,##0.0'
+  }
+
+  metric revenue_open {
+    label: 'Revenue Open'
+    type: 'number'
+    definition: @aql (sum(vy_opportunities_csv.value) | where(vy_opportunities_csv.status == 'Open')) * (1 + safe_divide(sum(vy_opportunity_forecast_adjustment_csv.forecast_adjustment), 100)) ;;
+    format: '[$]#,##0.0'
+  }
+
+  metric revenue_won_average_deal_size {
+    label: 'Revenue Won Average Deal Size'
+    type: 'number'
+    definition: @aql safe_divide(revenue_won, count_of_won) ;;
+    format: '[$]#,##0.0'
+  }
+}

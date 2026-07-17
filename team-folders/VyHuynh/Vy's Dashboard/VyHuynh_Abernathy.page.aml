@@ -16,10 +16,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
       width: 1220
-      height: 4060
+      height: 4480
       grid_size: 20
       block v2 {
-        position: pos(920, 220, 260, 140)
+        position: pos(840, 220, 260, 140)
         layer: 2
       }
       block v3 {
@@ -27,7 +27,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 3
       }
       block v4 {
-        position: pos(920, 380, 260, 140)
+        position: pos(840, 380, 260, 140)
         layer: 2
       }
       block t3 {
@@ -126,21 +126,33 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     tab tab_5auh: CanvasLayout {
       label: 'Raw Data Table'
-      height: 1480
+      height: 1740
       grid_size: 20
       auto_expand_vertically: true
       block v_ztqi {
-        position: pos(20, 20, 940, 420)
+        position: pos(20, 20, 1180, 420)
         layer: 1
       }
       block v_856v {
-        position: pos(20, 460, 940, 420)
+        position: pos(20, 460, 1180, 420)
         layer: 1
+      }
+      block v_9oui {
+        position: pos(20, 900, 580, 400)
+        layer: 2
+      }
+      block v_02lk {
+        position: pos(20, 1320, 580, 400)
+        layer: 4
+      }
+      block v_lrzt {
+        position: pos(620, 900, 580, 400)
+        layer: 3
       }
       mobile {
         mode: 'auto'
       }
-      width: 1500
+      width: 1220
       default_zoom: 1
     }
     tab tab3: CanvasLayout {
@@ -290,18 +302,89 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab_yzia: CanvasLayout {
       label: 'Key Driver'
       width: 1300
-      height: 900
+      height: 2520
       grid_size: 20
       auto_expand_vertically: true
       block v_bj6j {
-        position: pos(20, 20, 620, 420)
+        position: pos(20, 620, 620, 420)
       }
       block v_segi {
-        position: pos(660, 460, 620, 420)
+        position: pos(660, 1060, 620, 420)
       }
       block v_c1ru {
-        position: pos(20, 460, 620, 420)
+        position: pos(20, 1060, 620, 420)
       }
+      block v_3pqe {
+        position: pos(20, 1500, 620, 420)
+      }
+      block v_p9dt {
+        position: pos(660, 620, 620, 420)
+      }
+      block t_uje2 {
+        position: pos(20, 2000, 520, 60)
+      }
+      block v_d9k9 {
+        position: pos(20, 2080, 620, 420)
+      }
+      block v_zspi {
+        position: pos(660, 2080, 620, 420)
+      }
+      block t_io0f {
+        position: pos(20, 540, 520, 60)
+      }
+      block t_wymk {
+        position: pos(20, 20, 520, 60)
+      }
+      block v_j070 {
+        position: pos(660, 80, 600, 400)
+        layer: 2
+      }
+      block v_qpsb {
+        position: pos(20, 80, 600, 400)
+        layer: 1
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
+    tab tab_kamz: CanvasLayout {
+      label: 'draft'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      block v_91yu {
+        position: pos(40, 100, 260, 140)
+      }
+      block v_nir7 {
+        position: pos(320, 100, 220, 140)
+      }
+      block f_publift_test_data_csv_currency {
+        position: pos(40, 20, 300, 80)
+      }
+      block v_15s1 {
+        position: pos(40, 260, 260, 160)
+      }
+    }
+    tab tab_fkvp: CanvasLayout {
+      label: 'Untitled'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+    }
+    tab tab_5dru: CanvasLayout {
+      label: 'Untitled'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
       mobile {
         mode: 'auto'
       }
@@ -319,23 +402,24 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         calc_type: 'measure'
         data_type: 'number'
       }
-      filter {
-        field: r(vyht_ecommerce_orders_1.created_at)
-        operator: 'matches'
-        value: 'July 2023'
+      calculation max_of_orders_status {
+        label: 'Max of Orders Status'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      calculation max_of_orders_status_01 {
+        label: 'Max of Orders Status 01'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
       }
       value: VizFieldFull {
-        label: 'Total Revenue This Month'
-        ref: 'total_revenue'
+        label: ' '
+        ref: 'max_of_orders_status_01'
         format {
-          type: 'number'
-          pattern: '[$$]#,###'
+          type: 'text'
         }
-      }
-      compare_value: VizPopSettings {
-        field: r(vyht_ecommerce_orders_1.created_at)
-        duration: 1
-        granularity: 'month'
       }
       settings {
         aggregate_awareness {
@@ -932,12 +1016,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           format {
             type: 'text'
           }
+          uname: 'ecommerce_countries_continent_name'
         },
         VizFieldFull {
           ref: r(ecommerce_users.email_user)
           format {
             type: 'text'
           }
+          uname: 'ecommerce_users_email_user'
         },
         VizFieldFull {
           ref: r(demo_ecommerce.total_orders)
@@ -945,6 +1031,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             type: 'number'
             pattern: 'inherited'
           }
+          uname: 'custom_total_orders'
         }
       ]
       settings {
@@ -954,6 +1041,20 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           enabled: true
           debug_comments: true
         }
+        column_styles: [
+          ColumnStyle {
+            key: 'order_master_order_created_month_1'
+            width: 264
+          },
+          ColumnStyle {
+            key: 'ecommerce_countries_continent_name'
+            width: 221
+          },
+          ColumnStyle {
+            key: 'ecommerce_users_email_user'
+            width: 385
+          }
+        ]
       }
     }
   }
@@ -2784,7 +2885,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     viz: LineChart {
       dataset: vy_kaggle_ecomm
       theme {
-
       }
       x_axis: VizFieldFull {
         ref: r(vy_kaggle_orders.order_purchase_timestamp)
@@ -2820,6 +2920,748 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block v_3pqe: VizBlock {
+    label: 'Monthly Cancellation Rate'
+    viz: LineChart {
+      dataset: vy_kaggle_ecomm
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(vy_kaggle_orders.order_purchase_timestamp)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(vy_kaggle_ecomm.cancellation_rate)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_p9dt: VizBlock {
+    label: 'Monthly Total Order'
+    viz: LineChart {
+      dataset: vy_kaggle_ecomm
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(vy_kaggle_orders.order_purchase_timestamp)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(vy_kaggle_ecomm.total_orders)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_d9k9: VizBlock {
+    label: 'Monthly Bug Ratio'
+    viz: CombinationChart {
+      dataset: reporting_project_management
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      theme {
+      }
+      x_axis: VizFieldFull {
+        ref: r(reporting_issues.completed_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            ref: r(reporting_project_management.number_of_bug)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#982021FF'
+          }
+        }
+      }
+      y_axis {
+        settings {
+          alignment: 'right'
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            ref: r(reporting_project_management.bug_ratio)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#E9AA2BFF'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block t_uje2: TextBlock {
+    content: @md ## **Squad Reporting - Project Management**;;
+  }
+  block v_zspi: VizBlock {
+    label: 'Project Velocity Comparison copy'
+    description: 'Issues completed per month per project'
+    viz: LineChart {
+      dataset: reporting_project_management
+      calculation completion_rate {
+        label: 'Completion Rate'
+        formula: @aql completed_issue / count(reporting_issues.id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      x_axis: VizFieldFull {
+        ref: r(reporting_issues.completed_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(reporting_project.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'completion_rate'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            point {
+              value: 'Explore 2'
+              color: '#206BC4FF'
+              line_interpolation: 'smooth'
+            }
+            point {
+              value: 'Data Alerts Revamp'
+              color: '#E27712'
+              line_interpolation: 'smooth'
+            }
+            point {
+              value: 'Dashboard Performance'
+              color: '#5DB88FFF'
+              line_interpolation: 'smooth'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_9oui: VizBlock {
+    label: 'Number of bug change by status for May 2025 vs April 2025'
+    viz: PivotTable {
+      dataset: reporting_project_management
+      calculation number_of_bug_may_2025 {
+        label: 'Number Of Bug May 2025'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-05));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation number_of_bug_apr_2025 {
+        label: 'Number Of Bug Apr 2025'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation member_change {
+        label: 'Member Change'
+        formula: @aql number_of_bug_may_2025 - number_of_bug_apr_2025;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_offsetting_member {
+        label: 'Is Offsetting Member'
+        formula: @aql member_change <= 0;;
+        calc_type: 'measure'
+        data_type: 'truefalse'
+      }
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Status'
+          ref: r(reporting_issues.status)
+          format {
+            type: 'text'
+          }
+          uname: 'reporting_issues_status'
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Base Value'
+          ref: 'number_of_bug_may_2025'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Comparison Value'
+          ref: 'number_of_bug_apr_2025'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Member Change'
+          ref: 'member_change'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+          uname: 'custom_member_change_1'
+        },
+        VizFieldFull {
+          label: 'Is Offsetting Member'
+          ref: 'is_offsetting_member'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_total: true
+        show_column_total: true
+        show_sub_total: true
+        sorts: [
+          SortSetting {
+            key: 'custom_member_change_1'
+            direction: 'desc'
+          },
+          SortSetting {
+            key: 'reporting_issues_status'
+            direction: 'asc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_lrzt: VizBlock {
+    label: 'Bug count change by creator for May 2025 vs April 2025'
+    viz: PivotTable {
+      dataset: reporting_project_management
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-05));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation member_change {
+        label: 'Member Change'
+        formula: @aql (number_of_bug | where(reporting_issues.completed_at is @(2025-05))) - (number_of_bug | where(reporting_issues.completed_at is @(2025-04)));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_offsetting_member {
+        label: 'Is Offsetting Member'
+        formula: @aql ((number_of_bug | where(reporting_issues.completed_at is @(2025-05))) - (number_of_bug | where(reporting_issues.completed_at is @(2025-04)))) <= 0;;
+        calc_type: 'measure'
+        data_type: 'truefalse'
+      }
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Creator Name'
+          ref: r(reporting_team.name)
+          format {
+            type: 'text'
+          }
+          uname: 'reporting_team_name'
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Base Value'
+          ref: 'base_value'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Comparison Value'
+          ref: 'comparison_value'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Member Change'
+          ref: 'member_change'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+          uname: 'custom_member_change_1'
+        },
+        VizFieldFull {
+          label: 'Is Offsetting Member'
+          ref: 'is_offsetting_member'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_total: true
+        show_column_total: true
+        show_sub_total: true
+        sorts: [
+          SortSetting {
+            key: 'custom_member_change_1'
+            direction: 'desc'
+          },
+          SortSetting {
+            key: 'reporting_team_name'
+            direction: 'asc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_02lk: VizBlock {
+    label: 'Bug count change by priority for May 2025 vs April 2025'
+    viz: PivotTable {
+      dataset: reporting_project_management
+      calculation base_value_metric {
+        label: 'Base Value Metric'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-05));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_metric {
+        label: 'Comparison Value Metric'
+        formula: @aql number_of_bug | where(reporting_issues.completed_at is @(2025-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation member_change_metric {
+        label: 'Member Change Metric'
+        formula: @aql base_value_metric - comparison_value_metric;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_offsetting_member_metric {
+        label: 'Is Offsetting Member Metric'
+        formula: @aql case(when: member_change_metric < 1, then: 1, else: 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(reporting_project.name)
+        operator: 'is'
+        value: 'Explore 2'
+      }
+      filter {
+        field: r(reporting_issues.completed_at)
+        operator: 'matches'
+        value: '2025-04 - 2025-05'
+      }
+      theme {
+      }
+      rows: [
+        VizFieldFull {
+          label: 'Priority'
+          ref: r(reporting_issues.priority)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Base Value'
+          ref: 'base_value_metric'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Comparison Value'
+          ref: 'comparison_value_metric'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        },
+        VizFieldFull {
+          label: 'Member Change'
+          ref: 'member_change_metric'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+          uname: 'custom_member_change_metric_1'
+        },
+        VizFieldFull {
+          label: 'Is Offsetting Member'
+          ref: 'is_offsetting_member_metric'
+          format {
+            type: 'number'
+            pattern: '#,###0.00'
+          }
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_total: true
+        show_column_total: true
+        show_sub_total: true
+        sorts: [
+          SortSetting {
+            key: 'custom_member_change_metric_1'
+            direction: 'desc'
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block t_io0f: TextBlock {
+    content: @md ## **Kaggle Olist Ecomm Dataset**;;
+  }
+  block t_wymk: TextBlock {
+    content: @md ## **Power BI Dataset**;;
+  }
+  block v_qpsb: VizBlock {
+    label: 'Close % by Year month'
+    viz: LineChart {
+      dataset: vy_pbi_dts
+      x_axis: VizFieldFull {
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        format {
+          type: 'date'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(vy_pbi_dts.close_percent)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_j070: VizBlock {
+    label: 'Revenue Won by Year month'
+    viz: LineChart {
+      dataset: vy_pbi_dts
+      x_axis: VizFieldFull {
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        format {
+          type: 'date'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_91yu: VizBlock {
+    label: 'This month Revenue copy'
+    viz: MetricKpi {
+      dataset: vyhuynh_ecommerce_dataset
+      calculation monthly_revenue {
+        label: 'Monthly Revenue'
+        formula: @aql vyht_ecommerce_order_items
+  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation max_of_orders_status {
+        label: 'Max of Orders Status'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      calculation max_of_orders_status_01 {
+        label: 'Max of Orders Status 01'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      value: VizFieldFull {
+        ref: r(publift_test_data_csv.earning)
+        aggregation: 'sum'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v_nir7: VizBlock {
+    label: 'Currency Symbol'
+    viz: MetricKpi {
+      dataset: vyhuynh_ecommerce_dataset
+      calculation monthly_revenue {
+        label: 'Monthly Revenue'
+        formula: @aql vyht_ecommerce_order_items
+  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation max_of_orders_status {
+        label: 'Max of Orders Status'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      calculation max_of_orders_status_01 {
+        label: 'Max of Orders Status 01'
+        formula: @aql max(vyht_ecommerce_orders_1.status);;
+        calc_type: 'measure'
+        data_type: 'text'
+      }
+      value: VizFieldFull {
+        label: ' Currency Symbol'
+        ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
+        format {
+          type: 'text'
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        alignment: 'left'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block f_publift_test_data_csv_currency: FilterBlock {
+    label: 'Currency'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: vyhuynh_ecommerce_dataset
+      field: r(publift_test_data_csv.currency)
+    }
+    default {
+      operator: 'is'
+      value: 'USD'
+    }
+    settings {
+      input_type: 'single'
+    }
+  }
+  block v_15s1: VizBlock {
+    label: 'Sum of Earning'
+    viz: MarkdownViz {
+      dataset: vyhuynh_ecommerce_dataset
+      values: [
+        VizFieldFull {
+          ref: r(publift_test_data_csv.earning)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: '#,###'
+          }
+        },
+        VizFieldFull {
+          ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      content: @md <style>
+
+  .kpi-title {
+    margin: 0;
+    color: #8e94a5;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .kpi-value {
+    font-size: 52px;
+    font-weight: 500;
+    color: #5DB88F;
+    line-height: 1;
+  }
+
+  
+</style>
+
+<div>
+  <p class="kpi-title">Sum of Earning</p>
+  <div class="kpi-value">
+    {{ rows[0].values.`Sum of Earning` }}
+    {{ rows[0].values.`Currency Symbol` }}
+  </div>
+
+</div>                ;;
+      settings {
+        show_row_total: true
+        show_column_total: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v2'
@@ -2829,7 +3671,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v3',
             'v4',
             'v_nehb',
-            'v_8fpj'
+            'v_8fpj',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -2843,7 +3688,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v2',
             'v4',
             'v_nehb',
-            'v_8fpj'
+            'v_8fpj',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -2857,7 +3705,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v2',
             'v3',
             'v_nehb',
-            'v_8fpj'
+            'v_8fpj',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -3100,7 +3951,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v2',
             'v3',
             'v4',
-            'v_8fpj'
+            'v_8fpj',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -3221,11 +4075,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v4',
             'v_nehb'
           ]
-          field: ref('vyht_ecommerce_orders_1', 'created_at')
+          field: r(vyht_ecommerce_orders_1.created_at)
         },
         CustomMapping {
           block: 'v_cii9'
-          field: ref('bq_fct_order_items', 'created_at')
+          field: r(bq_fct_order_items.created_at)
         }
       ]
     },
@@ -3406,7 +4260,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v2',
             'v3',
             'v4',
-            'v_nehb'
+            'v_nehb',
+            'v_91yu',
+            'v_nir7',
+            'v_15s1'
           ]
           disabled: true
         }
@@ -3743,6 +4600,128 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
     },
     FilterInteraction {
+      from: 'v_d9k9'
+      to: [
+        CustomMapping {
+          block: [
+            'v_9oui',
+            'v_lrzt',
+            'v_02lk'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_zspi'
+      to: [
+        CustomMapping {
+          block: [
+            'v_9oui',
+            'v_lrzt',
+            'v_02lk'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_9oui'
+      to: [
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_lrzt'
+      to: [
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_02lk'
+      to: [
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_91yu'
+      to: [
+        CustomMapping {
+          block: [
+            'v2',
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_nir7'
+      to: [
+        CustomMapping {
+          block: [
+            'v2',
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_publift_test_data_csv_currency'
+      to: [
+        CustomMapping {
+          block: [
+            'v2',
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_15s1'
+      to: [
+        CustomMapping {
+          block: [
+            'v2',
+            'v3',
+            'v4',
+            'v_nehb',
+            'v_8fpj'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
       from: 'f_countries_continent_name'
       to: [
         CustomMapping {
@@ -3751,7 +4730,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_3mef',
             'v_ck6w'
           ]
-          field: ref('ecommerce_countries', 'continent_name')
+          field: r(ecommerce_countries.continent_name)
         }
       ]
     }
