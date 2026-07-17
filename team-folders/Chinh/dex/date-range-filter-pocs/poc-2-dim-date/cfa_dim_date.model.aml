@@ -1,0 +1,31 @@
+Model cfa_dim_date {
+  type: 'query'
+  label: 'CFA Dim Date'
+  description: 'Date dimension for testing dashboard date range bounds without query parameters.'
+  data_source_name: 'data_staging'
+  owner: 'chinh.dm@holistics.io'
+
+  dimension date_day {
+    label: 'Date'
+    type: 'date'
+    hidden: false
+    primary_key: true
+    definition: @sql {{ #SOURCE.date_day }};;
+  }
+
+  dimension year_month {
+    label: 'Year Month'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.year_month }};;
+  }
+
+  query: @sql
+    select
+      date_day
+      , format_date('%Y-%m', date_day) as year_month
+    from unnest(generate_date_array(date '2025-12-01', date '2026-03-31')) as date_day
+  ;;
+
+  models: []
+}
