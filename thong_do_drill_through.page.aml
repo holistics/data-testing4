@@ -40,10 +40,6 @@ Dashboard thong_do_drill_through {
       dataset: simple_dataset
       field: r(ecommerce_orders.created_date)
     }
-    default {
-      operator: 'matches'
-      value: '$H_NIL$'
-    }
     settings {
       drillthrough: Drillthrough {
         enabled: true
