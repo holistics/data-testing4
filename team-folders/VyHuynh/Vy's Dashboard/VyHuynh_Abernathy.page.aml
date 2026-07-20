@@ -122,15 +122,19 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(20, 4560, 580, 400)
         layer: 16
       }
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
-      block p_period_comparison {
-        position: pos(20, 200, 300, 80)
-        layer: 2
-=======
+<<<<<<< HEAD
       block d_date_drill {
         position: pos(20, 200, 300, 80)
         layer: 1
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+=======
+      block p_period_comparison {
+        position: pos(20, 200, 300, 80)
+        layer: 2
+      }
+      block v_i4x9 {
+        position: pos(620, 4560, 580, 400)
+        layer: 17
+>>>>>>> origin/master
       }
       mobile {
         mode: 'auto'
@@ -140,32 +144,28 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     tab tab_5auh: CanvasLayout {
       label: 'Raw Data Table'
-      height: 1840
+      height: 1740
       grid_size: 20
       auto_expand_vertically: true
       block v_ztqi {
-        position: pos(20, 120, 1180, 420)
+        position: pos(20, 20, 1180, 420)
         layer: 1
       }
       block v_856v {
-        position: pos(20, 560, 1180, 420)
+        position: pos(20, 460, 1180, 420)
         layer: 1
       }
       block v_9oui {
-        position: pos(20, 1000, 580, 400)
+        position: pos(20, 900, 580, 400)
         layer: 2
       }
       block v_02lk {
-        position: pos(20, 1420, 580, 400)
+        position: pos(20, 1320, 580, 400)
         layer: 4
       }
       block v_lrzt {
-        position: pos(620, 1000, 580, 400)
+        position: pos(620, 900, 580, 400)
         layer: 3
-      }
-      block d_date_drill_kv7g {
-        position: pos(20, 20, 300, 80)
-        layer: 1
       }
       mobile {
         mode: 'auto'
@@ -650,11 +650,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block v_711g: VizBlock {
     label: 'Number of Order by Continent'
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
-    viz: LineChart {
-=======
+<<<<<<< HEAD
     viz: ColumnChart {
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+=======
+    viz: LineChart {
+>>>>>>> origin/master
       dataset: demo_ecommerce
       x_axis: VizFieldFull {
         ref: r(order_master.order_created_month)
@@ -662,6 +662,12 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         format {
           type: 'date'
           pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
         }
       }
       y_axis {
@@ -694,27 +700,25 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block v_ztqi: VizBlock {
     label: 'Table 1'
-    viz: PivotTable {
+    viz: DataTable {
       dataset: demo_ecommerce
-      rows: [
+      theme {
+      }
+      fields: [
         VizFieldFull {
-          ref: r(order_master.order_created_at)
-          transformation: 'datetrunc year'
+          ref: r(order_master.order_created_month)
           format {
             type: 'date'
-            pattern: 'yyyy'
           }
+          uname: 'order_master_order_created_month_1'
         },
         VizFieldFull {
-          ref: r(order_master.order_created_at)
-          transformation: 'datetrunc month'
+          ref: r(ecommerce_countries.continent_name)
           format {
-            type: 'date'
-            pattern: 'LLL yyyy'
+            type: 'text'
           }
-        }
-      ]
-      values: [
+          uname: 'ecommerce_countries_continent_name'
+        },
         VizFieldFull {
           ref: r(order_master.user_id)
           aggregation: 'count distinct'
@@ -723,11 +727,33 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             pattern: 'inherited'
           }
           uname: 'count_distinct_user_id_1'
+        },
+        VizFieldFull {
+          ref: r(order_master.order_id)
+          aggregation: 'count'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'count_order_id'
+        },
+        VizFieldFull {
+          ref: r(order_master.price)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: '[$$]#,###'
+          }
         }
       ]
       settings {
-        show_row_total: true
-        show_column_total: true
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'count_distinct_user_id_1'
+            direction: 'desc'
+          }
+        ]
         row_limit: 5000
         aggregate_awareness {
           enabled: true
@@ -735,8 +761,20 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
         column_styles: [
           ColumnStyle {
+            key: 'count_order_id'
+            width: 89
+          },
+          ColumnStyle {
             key: 'count_distinct_user_id_1'
             width: 100
+          },
+          ColumnStyle {
+            key: 'ecommerce_countries_continent_name'
+            width: 162
+          },
+          ColumnStyle {
+            key: 'order_master_order_created_month_1'
+            width: 215
           }
         ]
       }
@@ -3917,7 +3955,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         legend_label: 'top'
         x_axis_label: 'Owner'
       }
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
     }
   }
   block p_period_comparison: PopBlock {
@@ -3927,15 +3964,186 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       duration: 1
       granularity: 'year'
       show_growth_rate: true
-=======
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
     }
   }
-  block d_date_drill: DateDrillBlock {
-    label: 'Date Drill'
-  }
-  block d_date_drill_kv7g: DateDrillBlock {
-    label: 'Date Drill'
+  block v_i4x9: VizBlock {
+    label: '''Anomaly detection: Revenue Won (Oct 2019-Nov 2021)
+'''
+    viz: CombinationChart {
+      dataset: vy_pbi_dts
+      calculation rolling_mean {
+        label: 'Rolling Mean'
+        formula: @aql window_avg(revenue_won, -12..-1, order: vy_opportunity_calendar_csv.year_month | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation rolling_stddev {
+        label: 'Rolling Stddev'
+        formula: @aql window_stdev(revenue_won, -12..-1, order: vy_opportunity_calendar_csv.year_month | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation lower_bound {
+        label: 'Lower Bound'
+        formula: @aql rolling_mean - 3 * rolling_stddev;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation upper_bound {
+        label: 'Upper Bound'
+        formula: @aql rolling_mean + 3 * rolling_stddev;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation z_score {
+        label: 'Z Score'
+        formula: @aql safe_divide(revenue_won - rolling_mean, rolling_stddev);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_anomaly {
+        label: 'Is Anomaly'
+        formula: @aql case(when: abs(z_score) > 3, then: 1, else: 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        label: 'Period'
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+        uname: 'bucket'
+      }
+      y_axis {
+        label: 'Revenue Won'
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Actual'
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#2563EB'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Lower Bound'
+            ref: 'lower_bound'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#9CA3AF'
+            line_style: 'dashed'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Upper Bound'
+            ref: 'upper_bound'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#6B7280'
+            line_style: 'dashed'
+          }
+        }
+      }
+      y_axis {
+        label: 'Anomaly'
+        settings {
+          alignment: 'right'
+          axis_min: 0
+          axis_max: 1
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'Is Anomaly'
+            ref: 'is_anomaly'
+            format {
+              type: 'number'
+              pattern: '#,###0'
+            }
+          }
+          settings {
+            color: '#FCA5A5'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Actual'
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Rolling Mean'
+            ref: 'rolling_mean'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Z Score'
+            ref: 'z_score'
+            format {
+              type: 'number'
+              pattern: '#,###0.0'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Is Anomaly'
+            ref: 'is_anomaly'
+            format {
+              type: 'number'
+              pattern: '#,###0'
+            }
+          }
+        }
+      ]
+      settings {
+        connect_discontinuous_points: false
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'xaxis'
+        }
+        x_axis_label: 'Period'
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
   }
   interactions: [
     FilterInteraction {
@@ -4900,7 +5108,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v_wxn2',
-            'v_m2xo'
+            'v_m2xo',
+            'v_i4x9'
           ]
           disabled: true
         }
@@ -4912,7 +5121,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v_wxn2',
-            'v_m2xo'
+            'v_m2xo',
+            'v_i4x9'
           ]
           disabled: true
         }
@@ -4995,6 +5205,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
     },
     FilterInteraction {
+      from: 'v_i4x9'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
       from: 'f_countries_continent_name'
       to: [
         CustomMapping {
@@ -5007,13 +5229,13 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
       ]
     },
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
-    PopInteraction {
-      from: 'p_period_comparison'
-=======
+<<<<<<< HEAD
     DateDrillInteraction {
       from: 'd_date_drill'
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
+=======
+    PopInteraction {
+      from: 'p_period_comparison'
+>>>>>>> origin/master
       to: [
         CustomMapping {
           block: [
@@ -5038,16 +5260,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           field: ref('ecommerce_orders', 'created_date')
 <<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
 =======
-        }
-      ]
-    },
-    DateDrillInteraction {
-      from: 'd_date_drill_kv7g'
-      to: [
-        CustomMapping {
-          block: 'v_ztqi'
-          field: ref('order_master', 'order_created_at')
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
         }
       ]
     }
