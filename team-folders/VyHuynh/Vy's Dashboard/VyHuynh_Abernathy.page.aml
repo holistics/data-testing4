@@ -16,7 +16,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
       width: 1220
-      height: 4980
+      height: 5400
       grid_size: 20
       block v3 {
         position: pos(20, 1320, 1160, 460)
@@ -129,6 +129,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       block v_i4x9 {
         position: pos(620, 4560, 580, 400)
         layer: 17
+      }
+      block v_iky7 {
+        position: pos(20, 4980, 580, 400)
+        layer: 18
       }
       mobile {
         mode: 'auto'
@@ -4135,6 +4139,198 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block v_iky7: VizBlock {
+    label: '''Anomaly detection: Revenue Won looser (2020)
+'''
+    viz: CombinationChart {
+      dataset: vy_pbi_dts
+      calculation m_prev {
+        label: 'Previous Revenue Won'
+        formula: @aql window_avg(revenue_won, -1..-1, order: vy_opportunity_calendar_csv.year_month | month() | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_delta {
+        label: 'Revenue Won Delta'
+        formula: @aql revenue_won - m_prev;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_n {
+        label: 'Prior Window Count'
+        formula: @aql window_count(revenue_won, -6..-1, order: vy_opportunity_calendar_csv.year_month | month() | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_drift {
+        label: 'Expected Drift'
+        formula: @aql window_avg(m_delta, -6..-1, order: vy_opportunity_calendar_csv.year_month | month() | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_spread {
+        label: 'Expected Spread'
+        formula: @aql window_stdev(m_delta, -6..-1, order: vy_opportunity_calendar_csv.year_month | month() | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_expected {
+        label: 'Expected Revenue Won'
+        formula: @aql m_prev + m_drift;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_z {
+        label: 'Z Score'
+        formula: @aql safe_divide(revenue_won - (m_prev + m_drift), m_spread);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_lower {
+        label: 'Lower Bound'
+        formula: @aql case(when: m_n >= 6, then: m_prev + m_drift - 2 * m_spread, else: null);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_upper {
+        label: 'Upper Bound'
+        formula: @aql case(when: m_n >= 6, then: m_prev + m_drift + 2 * m_spread, else: null);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation m_anom {
+        label: 'Is Anomaly'
+        formula: @aql case(when: and(m_n >= 6, abs(safe_divide(revenue_won - (m_prev + m_drift), m_spread)) > 2), then: 1, else: 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(vy_opportunity_calendar_csv.year_month)
+        operator: 'matches'
+        value: '2020'
+      }
+      x_axis: VizFieldFull {
+        label: 'Month'
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        label: 'Revenue Won'
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Revenue Won'
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: '[$$]#,###,"K"'
+            }
+          }
+          settings {
+            color: '#2563EB'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Lower Bound'
+            ref: 'm_lower'
+            format {
+              type: 'number'
+              pattern: '[$$]#,###,"K"'
+            }
+          }
+          settings {
+            color: '#9CA3AF'
+            line_style: 'dashed'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Upper Bound'
+            ref: 'm_upper'
+            format {
+              type: 'number'
+              pattern: '[$$]#,###,"K"'
+            }
+          }
+          settings {
+            color: '#9CA3AF'
+            line_style: 'dashed'
+          }
+        }
+      }
+      y_axis {
+        label: 'Anomaly Flag'
+        settings {
+          alignment: 'right'
+          axis_min: 0
+          axis_max: 1
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'Is Anomaly'
+            ref: 'm_anom'
+            format {
+              type: 'number'
+              pattern: '#,###0'
+            }
+          }
+          settings {
+            color: '#DC2626'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Expected'
+            ref: 'm_expected'
+            format {
+              type: 'number'
+              pattern: '[$$]#,###,"K"'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Revenue Won'
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: '[$$]#,###,"K"'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Z Score'
+            ref: 'm_z'
+            format {
+              type: 'number'
+              pattern: '#,###0.00'
+            }
+          }
+        }
+      ]
+      settings {
+        show_data_points: true
+        connect_discontinuous_points: false
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'xaxis'
+        }
+        x_axis_label: 'Month'
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v3'
@@ -5099,7 +5295,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           block: [
             'v_wxn2',
             'v_m2xo',
-            'v_i4x9'
+            'v_i4x9',
+            'v_iky7'
           ]
           disabled: true
         }
@@ -5112,7 +5309,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           block: [
             'v_wxn2',
             'v_m2xo',
-            'v_i4x9'
+            'v_i4x9',
+            'v_iky7'
           ]
           disabled: true
         }
@@ -5196,6 +5394,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     },
     FilterInteraction {
       from: 'v_i4x9'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_iky7'
       to: [
         CustomMapping {
           block: [
