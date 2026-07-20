@@ -1,116 +1,6 @@
 Skill detect_anomaly {
   label: "Detect anomaly"
-<<<<<<< local:settings/ai/skills/detect_anomaly.skill.aml
-  invocation: "auto"
-  description: '''
-    Detect anomalies across a metric's history and visualize them — unusual spikes, drops,
-    and deviations flagged against an expected range built from the metric's recent history.
-    Auto-trigger whenever the user wants to find or check for unusual values in a metric —
-    words like anomaly, unusual, spike, drop, dip, outlier, "out of the ordinary", "anything
-    weird". A specific date is OPTIONAL; the skill always scans the whole series. Typical
-    phrasings:
-      • "Detect anomalies in revenue" / "Any outliers in daily signups?"
-      • "Has anything looked unusual in MRR lately?"
-      • "Were there spikes or drops in active users this quarter?"
-      • "Is revenue on May 20 unusual?" (focus date — still scans the full series)
-      • "/detect_anomaly" with no args (the skill asks for the metric)
-
-    Do NOT trigger for: dimensional attribution (which segment/dimension drove an anomaly),
-    explaining the business cause, or ongoing/scheduled monitoring & alerting. This skill
-    flags which points are statistically unusual and shows them; it does not explain why.
-  '''
-  content: @md
-    # Anomaly Detection Playbook
-
-    The user wants to know which values in a metric are **statistically unusual given the
-    metric's own recent history**, and to see them. Build an expected range from recent
-    history, flag points outside it, and visualize the result.
-
-    Do NOT speculate on causes or identify which dimension drove an anomaly — that is
-    outside this skill. Deflect such asks (see Reference → Edge cases).
-
-    ## Output contract — write the AML yourself, then execute
-
-    **Do NOT use `generate_aql` or `generate_viz`.**. This skill already gives
-    you exact AML **templates**; your job is to fill in the bracketed values from the resolved
-    dataset and run the result with `execute_aql` / `execute_viz`. You are fully capable of
-    writing valid AQL and viz AML — `validate_aql` catches any syntax slip before you execute.
-    
-
-    1. **Anomaly results (Step 3):** write **one** AQL producing `actual`, `rolling_mean`,
-       `rolling_stddev`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`; `validate_aql`;
-       `execute_aql`. These are the **anomaly results** — the source of truth for the summary.
-    2. **Anomaly chart (Step 4):** write **one** *self-contained* `CombinationChart` — `actual`
-       (solid blue line), `lower_bound`/`upper_bound` (dashed grey band), and `is_anomaly` (red
-       columns on a secondary 0..1 axis), plus tooltips. The chart **defines its own ad-hoc fields as
-       `calculation` blocks** and reads the metric/time straight from the dataset, so it does **not**
-       depend on the Step 3 result. Run with `execute_viz` — pass only `dataset_uname`, `viz`,
-       `title`; **never an `aql` property**. (Step 3 is only the source of numbers for the prose.)
-
-    The deliverable is the **combination chart plus a short prose summary**; the anomaly results are
-    internal state — don't render them as a user-facing table. **Fallback (real failure only):** if
-    `execute_viz` errors after one retry, fall back to the Step 3 `execute_aql` table + prose.
-
-    ## Workflow
-
-    Five steps, in order.
-
-    **How the tool steps read.** You author the AML. Each tool step (3–4) gives a **template** (an
-    AML block with bracketed placeholders) plus the values to fill. Substitute the resolved
-    dataset's real names: `M` = the metric measure (e.g. `mou_monthly_mrr.sum_total_mrr`), `T` =
-    the bound time dimension (e.g. `mou_monthly_mrr.month`), `W` = the window for the granularity,
-    `<dataset>` = the dataset name, `<metric label>` = a readable label, and the currency `pattern`.
-    Then `validate_aql` (AQL steps) and `execute_aql` / `execute_viz` to run. **Never call
-    `generate_aql` / `generate_viz`.**
-
-    ### Step 1 — Parse inputs
-
-    Parse the user's message for these fields:
-
-    | Field | Required | Examples | If missing |
-    |---|---|---|---|
-    | `metric` | **Yes** | `revenue`, `signups`, `MRR`, `daily_active_users` | **Ask the user. Do not guess.** |
-    | `focus_date` | No | `May 20`, `last Tuesday`, `2026-05-20` | Optional. Changes only the closing prose (Step 5), never the detection or chart. |
-    | `granularity` | Inferred | `day`, `week`, `month`, `quarter` | Derive from the metric's time dimension and any date phrasing. If ambiguous, ask. |
-    | `filters` | No | `Region=West`, `Plan=Pro` | Optional. If present, fold them into the Step 3 query. |
-    | `timeframe` | No | `last 90 days`, `last 6 months`, `this quarter` | Optional. Default by granularity: `day` → 90 days, `week` → 26 weeks, `month` → 24 months, `quarter` → 12 quarters. Treat these as **performance-first defaults**, not business limits: use them unless the user explicitly asks for full history or the shorter range is insufficient for anomaly classification. |
-
-    Echo the extracted values back, including the **resolved timeframe** as an absolute date
-    range (e.g., *"Aug 19, 2025 – May 29, 2026"*), so the user can correct any mis-parse.
-
-    ### Step 2 — Resolve the dataset
-
-    Anchor to **one** dataset per invocation:
-
-    1. **If the user named a dataset** → `fetch_dataset(dataset_uname=<name>)` and proceed.
-    2. **Else:** `list_datasets()`, rank candidates by how well the metric name matches each
-       dataset's measures/labels/descriptions (prefer measure matches), `fetch_dataset` the
-       top candidate, then **confirm with the user before proceeding** (*"I'll use
-       `sales_orders` (has measure `total_revenue`). Confirm, or name another."*). Wait for
-       confirmation.
-    3. **Fallback** — if `list_datasets()` errors (e.g., "not supported in development
-       mode"), ask the user to name the dataset explicitly.
-
-    **Validate the metric.** Confirm `metric` exists as a measure. If not, show the top-3
-    closest measure names (with descriptions) and ask which to use.
-
-    **Bind the time axis.** Find the dataset's date/timestamp dimension. If multiple exist,
-    prefer: (a) the one tagged primary in metadata; (b) the one most referenced by the
-    metric's definition; (c) a dimension named `event_date`, `created_at`, `date`, or
-    `timestamp` (in that order). If still ambiguous, ask. Resolve any relative `focus_date`
-    in the dataset's stated timezone and echo the absolute date back.
-
-    ### Step 3 — Anomaly query (write AQL → validate_aql → execute_aql)
-
-    Write the **whole query in one go** — the metric, its rolling stats, the band, and the
-    flag. Let `M` be the
-    metric measure (e.g. `mou_monthly_mrr.sum_total_mrr`), `T` its bound time dimension, `W` the
-    trailing window, `k = 3`.
-
-    **Method.** Expected range = trailing moving average ± `k`·stddev over a window that **excludes
-    the current bucket** (so a spike can't inflate its own band). `k = 3` (≈1 false flag per 370
-    normal points). Window `W` by granularity — a whole number of cycles:
-=======
+  invocation: 'auto'
   description: @md
     Detect statistical anomalies across a metric's history and visualize them — unusual spikes, drops, and deviations flagged against an expected range built from the metric's own recent history.
 
@@ -120,7 +10,6 @@ Skill detect_anomaly {
 
     Do NOT trigger for: dimensional attribution (which segment or dimension drove an anomaly), explaining the business cause, or ongoing/scheduled monitoring & alerting. This skill flags which points are statistically unusual and shows them; it does not explain why.
   ;;
-  invocation: 'auto'
   content: @md
     Find which values in a metric are statistically unusual given the metric's own recent history, and show them: build an expected range from recent history, flag the points outside it, and visualize the result. This skill flags *which* points are unusual, never *why* — deflect causal or dimensional-attribution asks (Conventions → *Edge cases*).
 
@@ -211,7 +100,6 @@ Skill detect_anomaly {
 
     ### Method
     Expected range = trailing moving average ± `k`·stddev over a window that excludes the current bucket (so a spike can't inflate its own band). `k` is the sensitivity threshold, in standard deviations; default `k = 3` (≈1 false flag per 370 normal points). Window `W` by granularity — a whole number of cycles:
->>>>>>> cloud:settings/ai/skills/detect_anomaly.skill.aml
 
     | Granularity | Window `W` |
     |---|---|
@@ -220,23 +108,6 @@ Skill detect_anomaly {
     | month | 12 (a year) |
     | quarter | 8 (two years) |
 
-<<<<<<< local:settings/ai/skills/detect_anomaly.skill.aml
-    The first `W` buckets have no full window → `rolling_*` and `z_score` come back null (not
-    flagged, shown as gaps). If the series is shorter than `W + 1` points, shrink `W` to about half
-    the available history (minimum 4) and say so. With fewer than 8 points total, stop: *"Not enough
-    history (n=X) to detect anomalies."*
-
-    **Write this AQL yourself**, substituting `M`, `T`, `W` (and folding in any filters / timeframe).
-    Each column:
-    • **bucket** — the period date (`T` truncated to `<granularity>`).
-    • **actual** — the metric `M` for that bucket.
-    • **rolling_mean** / **rolling_stddev** — mean / stddev of `actual` over the `W` buckets
-      *immediately before* the current one (trailing window `-W..-1`, **excludes the current bucket**).
-    • **lower_bound** / **upper_bound** — `rolling_mean ∓ 3 * rolling_stddev`.
-    • **z_score** — `safe_divide(actual - rolling_mean, rolling_stddev)` (returns null when
-      `rolling_stddev` is null or zero — never divide by zero).
-    • **is_anomaly** — `1` when `abs(z_score) > 3`, else `0`. The `3` is the sensitivity threshold (k).
-=======
     The first `W` buckets have no full window → `rolling_*` and `z_score` come back null (not flagged, shown as gaps). If the series is shorter than `W + 1` points, shrink `W` to about half the available history (minimum 4) and say so. With fewer than 8 points total, stop: *"Not enough history (n=X) to detect anomalies."*
 
     ### Anomaly query (AQL template — Step 3)
@@ -247,7 +118,6 @@ Skill detect_anomaly {
     • **lower_bound** / **upper_bound** — `rolling_mean ∓ 3 * rolling_stddev`.
     • **z_score** — `safe_divide(actual - rolling_mean, rolling_stddev)` (null when `rolling_stddev` is null or zero — never divide by zero).
     • **is_anomaly** — `1` when `abs(z_score) > 3`, else `0` (the `3` is `k`; see Method).
->>>>>>> cloud:settings/ai/skills/detect_anomaly.skill.aml
 
     ```aql
     explore {
@@ -274,47 +144,6 @@ Skill detect_anomaly {
     }
     ```
 
-<<<<<<< local:settings/ai/skills/detect_anomaly.skill.aml
-    **Timeframe filter syntax:** write it exactly as `T matches @(last <N> <unit>)` — e.g.
-    `mou_monthly_mrr.month matches @(last 24 months)`. The `@( … )` parentheses are mandatory;
-    `matches @last 24 months` (no parens) fails with *"Syntax error … Expected one of …"*. Omit the
-    `filters` block entirely only if the user asked for full history.
-
-    `validate_aql`, then `execute_aql` with `title="<metric> anomaly results (<resolved timeframe>)"`.
-    Call the result the **anomaly results** — they are the answer; the summary (Step 5) reads from them. In the
-    early no-band buckets `z_score` is null so `is_anomaly` falls to `0` (use `z_score` null, not the
-    flag, to tell these from true non-anomalies).
-
-    ### Step 4 — Build the anomaly chart (write CombinationChart → execute_viz)
-
-    Write **one** *self-contained* `CombinationChart` (template below) and run it with `execute_viz`.
-    "Self-contained" is the whole trick: the chart **defines its own ad-hoc fields** (`rolling_mean`,
-    `rolling_stddev`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`) as `calculation` blocks
-    and reads the metric/time straight from the dataset. So it does **not** depend on the Step 3 AQL
-    result — Step 3 is only the source of numbers for the prose.
-
-    **The `calculation` blocks are MANDATORY — never drop them.** Every series/tooltip that uses
-    `ref: '<name>'` (`rolling_mean`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`) resolves
-    to the `calculation` of that name defined above it. If the chart omits the calculations, those
-    refs point at nothing and rendering fails (*"Referencing to an invalid biz calculation field"* /
-    a reference error). Emit **all six** calculation blocks exactly as shown. Do not reference the
-    Step 3 result's internal column aliases (e.g. `mmm_m_dab06d`, `c_mmm_stm_d5e586`) — use the
-    dataset field via `ref: r(<field>)` and the calculations via `ref: '<calc_name>'`.
-
-    **`execute_viz` call shape.** Pass **only** `dataset_uname`, `viz`, and `title`. **Never an `aql`
-    property** — `execute_viz` rejects it ("contains additional properties [aql]").
-
-    **Emit the block below, substituting the placeholders** — `<dataset>`, `<M>` (the metric
-    measure, e.g. `mou_monthly_mrr.sum_total_mrr`), `<T>` (the time dimension), `<W>` (the window),
-    `<metric label>`, the number `pattern`, and **every `__ENDF__` → a double-semicolon** that ends
-    the `@aql` formula. Don't otherwise restructure it — this exact `CombinationChart` is the
-    known-good form, and improvising it is what breaks rendering. Two other easy-to-miss
-    requirements: the `dataset:` property (required) and **commas between the `tooltips` array
-    elements**. (The `dataset:` inside the viz is separate from the `dataset_uname` you pass to
-    `execute_viz`.) It is a `CombinationChart` (not a `LineChart`): three line series on the left axis
-    plus a column series on a secondary 0..1 right axis. Keep the 6-digit `#DC2626` (the 8-digit alpha
-    hex `#DC26264D` can be rejected by the renderer).
-=======
     **Timeframe filter syntax:** write it exactly as `T matches @(last <N> <unit>)` — e.g. `mou_monthly_mrr.month matches @(last 24 months)`. The `@( … )` parentheses are mandatory; `matches @last 24 months` (no parens) fails with *"Syntax error … Expected one of …"*. Omit the `filters` block entirely only if the user asked for full history.
 
     ### Anomaly chart (CombinationChart template — Step 4)
@@ -323,7 +152,6 @@ Skill detect_anomaly {
     **The `calculation` blocks are MANDATORY — never drop them.** Every series/tooltip that uses `ref: '<name>'` resolves to the `calculation` of that name defined above it; omit them and the refs point at nothing and rendering fails (*"Referencing to an invalid biz calculation field"*). Emit all six. Do not reference the Step 3 result's internal column aliases (e.g. `mmm_m_dab06d`) — use the dataset field via `ref: r(<field>)` and calculations via `ref: '<calc_name>'`.
 
     **Emit the block below, substituting the placeholders** — `<dataset>`, `<M>`, `<T>`, `<W>`, `<metric label>`, the number `pattern`, and **every `__ENDF__` → a double-semicolon** that ends the `@aql` formula. Don't otherwise restructure it — this exact form is known-good, and improvising it is what breaks rendering. Two easy-to-miss requirements: the `dataset:` property (required, separate from the `dataset_uname` you pass to `execute_viz`) and commas between the `tooltips` array elements. It is a `CombinationChart` (not a `LineChart`): three line series on the left axis plus a column series on a secondary 0..1 right axis. Keep the 6-digit `#DC2626` (the 8-digit alpha hex `#DC26264D` can be rejected by the renderer).
->>>>>>> cloud:settings/ai/skills/detect_anomaly.skill.aml
 
     ```aml
     CombinationChart {
@@ -369,142 +197,6 @@ Skill detect_anomaly {
     }
     ```
 
-<<<<<<< local:settings/ai/skills/detect_anomaly.skill.aml
-    `execute_viz` with `title="Anomaly detection: <metric> (<resolved timeframe>)"`. This combination
-    chart — `actual` line, dashed expected-range band, and red anomaly columns — is the final
-    deliverable.
-
-    **On real failure only:** if `execute_viz` errors, consult `search_docs` for the correct viz
-    syntax, fix the AML, and retry **once**. If it still fails, fall back to the plain `execute_aql`
-    table from Step 3 + a prose summary — the anomalies are already known.
-
-    ### Step 5 — Summarize
-
-    **Present the Step 4 combination chart plus the prose below — nothing else.** The anomaly results
-    are internal state: read them to write the summary, but don't render them back as a table (the
-    user already sees the chart). Only show the raw table if the user explicitly asks for the numbers.
-
-    **Write for a business reader — professional and plain.** Avoid raw notation (no bare "σ",
-    "z = 3.4", "3σ", or "k" in the prose), but standard, widely-understood terms are welcome
-    (standard deviation, expected range).
-
-    **Open the summary with one sentence that defines an anomaly, then give the findings.** Lead
-    sentence (fill in `<k>` = the threshold, default 3; `<W>`; `<granularity>`):
-
-    > *An anomaly is any <granularity> whose value falls more than <k> standard deviations from its
-    > expected level — i.e. outside the range built from the previous <W> <granularity>s (their
-    > average, plus or minus that range's width).*
-
-    Read the Step 3 anomaly results. Each bucket is:
-
-    - **Unusual** when `is_anomaly = 1` — the value is **above** the expected range (`actual >
-      rolling_mean`) or **below** it.
-    - **Normal** when `is_anomaly = 0` and `z_score` is non-null — within the expected range.
-    - **Not enough history** when `z_score` is null — one of the first `<W>` buckets, before an
-      expected range can be built (shown on the chart without a band).
-
-    **Translate the statistics for the reader (don't print the raw fields):**
-    - **`z_score`** = how far a value sits from its expected level, measured in **standard
-      deviations** (the metric's typical variability). Render it as *"about <z> standard deviations
-      from expected"*, and only as a parenthetical — never as the headline number.
-    - **`k`** = the threshold, in standard deviations, a value must exceed to be flagged. Default
-      **3** — strict enough that only ~1 in 370 ordinary points is flagged by chance. A lower
-      threshold flags more (milder deviations); a higher one flags only the most extreme.
-
-    Use the numeric formatting in Reference.
-
-    **No focus date (primary path):**
-
-    > **Found <N> unusual <granularity>(s) in <metric label>** over **<resolved timeframe>**:
-    > - **<date>** — <value>: **<above|below>** the expected range of <lower_bound>–<upper_bound>
-    >   (about <z> standard deviations from expected).
-    > - … one bullet per flagged bucket, chronological
-
-    If `N = 0`: *"No unusual values in `<metric label>` over `<resolved timeframe>` — every value
-    stayed within its expected range."*
-
-    **Focus date given:** lead with the verdict on that bucket, then the same list.
-
-    - Unusual: *"**<metric label> on <date> = <value>** is unusual — **<above|below>** the expected
-      range of <lower_bound>–<upper_bound> (about <z> standard deviations from expected)."*
-    - Normal: *"**<metric label> on <date> = <value>** is within the expected range of
-      <lower_bound>–<upper_bound> — not unusual."*
-    - `actual` null at that bucket: *"No data for `<metric label>` on `<date>` with filters
-      `<filters>`."*
-    - bucket within the first `W` (no band): *"Not enough history to assess `<date>` — it falls in
-      the first <W> <granularity>s, before an expected range can be built; it's shown on the chart
-      without a band."*
-
-    Then: *"Across the full <resolved timeframe>, found <N> unusual <granularity>(s):"* + the list.
-
-    **Closing pointer (when N ≥ 1, both modes):** *why* an anomaly happened or *which
-    dimension* drove it is out of this skill — invite the user to investigate via a
-    dimensional breakdown and business context (marketing calendar, CRM, recent news).
-
-    **Post-run override (always offer last):** *"Want me to re-run with a **stricter or looser**
-    threshold? A looser threshold flags more <granularity>s (milder deviations); a stricter one flags
-    only the most extreme. A **seasonality-aware** version (a curved expected line for weekly/annual
-    patterns) is also available."* Under the hood the threshold is `k` standard deviations (looser =
-    `k = 2`, stricter = `k = 4`; default 3). This is the only way to change sensitivity or method —
-    never asked upfront. If the user accepts, re-run Steps 3–5 with the new `k` (the `3` in the
-    query) / method.
-
-    ## Reference
-
-    ### Tool chain
-
-    **Write the AML, then run it — no `generate_*`:**
-
-    1. Write the anomaly AQL — actual + rolling stats + band/z/flag, all in one (Step 3); `validate_aql`; `execute_aql` → anomaly results.
-    2. Write the `CombinationChart` over the anomaly results (Step 4); `execute_viz` (only `dataset_uname` + `viz` + `title`; no `aql`).
-
-    `generate_aql` / `generate_viz` are deliberately **not** used — you have exact templates above;
-    filling them in and running `execute_*` is faster and exact. `validate_aql` is your syntax
-    check before `execute_aql`.
-
-    **On an error, consult the docs once, then retry once.** If a step errors (especially an AQL
-    window-function or viz syntax error), call `search_docs` with the error message / the feature
-    in question, fix the AML, then `execute_*` **exactly once** more. If it still fails, stop and
-    use the step's fallback (Step 3 → surface the error; Step 4 → fall back to the Step 3
-    `execute_aql` table + prose). Never loop more than one doc-lookup + one retry per step.
-
-    **Titles.** `execute_aql` / `execute_viz` require a `title` (under ~60 chars; avoid
-    "query 1"/"untitled"):
-
-    | Call site | Title pattern |
-    |---|---|
-    | Step 3 anomaly results `execute_aql` | `<metric> anomaly results (<resolved timeframe>)` |
-    | Step 4 anomaly chart `execute_viz` | `Anomaly detection: <metric> (<resolved timeframe>)` |
-
-    **Handling truncated results.** If the MCP returns `@TruncatedContext:<chunk_id>`
-    placeholders, call `fetch_context(chunk_id=<id>)` for each before reasoning over the data.
-    Daily metrics over multi-year timeframes are the typical trigger.
-
-    ### Edge cases
-
-    In-flow stop conditions live at their step (insufficient history → Step 3; no data /
-    unclassifiable `focus_date` → Step 5). The cases below are cross-cutting:
-
-    | Situation | Behavior |
-    |---|---|
-    | `list_datasets()` errors (e.g., "not supported in development mode") | Ask the user to name the dataset explicitly. Do not proceed. |
-    | Metric name matches no measure | Show top-3 closest measure names with descriptions; ask the user. |
-    | Step 3 `execute_aql` errors | Fix the AML (use `validate_aql` / `search_docs` for the right syntax) and re-run `execute_aql` once; if it still fails, stop and surface the error. Don't pretend the detection completed. A transient `UNION types text and numeric cannot be matched (SQLSTATE 42804)` (from the rollup grand-total row) usually clears on a re-run — just retry once. |
-    | Step 4 chart: `Referencing to an invalid biz calculation field` / a reference error on `lower_bound`, `is_anomaly`, etc. | The chart is **missing the `calculation` block** for that field (or you referenced a Step-3 column alias like `mmm_m_dab06d`). Add all six `calculation` blocks inside the `CombinationChart` and reference dataset fields via `ref: r(<field>)`, calculations via `ref: '<calc_name>'`. Re-run `execute_viz` once. |
-    | Step 4 chart: `contains additional properties ["aql"]` | You passed `aql` to `execute_viz` — remove it; pass only `dataset_uname`, `viz`, `title` (the chart is self-contained). For viz-syntax errors, `search_docs` and re-run `execute_viz` once. If it still fails, fall back to the Step 3 `execute_aql` table + prose. |
-    | User asks "why did this happen?" or "what dimension drove it?" | Reply: "I can flag which points are statistically unusual, but identifying which dimension drove an anomaly — or its business cause — is outside this skill. Break the metric down by relevant dimensions in a dashboard, or check your marketing calendar / CRM / news for that window." |
-    | User asks to "show the raw numbers" or wants the per-bucket table | Show the `execute_aql` anomaly results directly (it is already a table) — `bucket`, `actual`, `rolling_mean`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`. Never group/pivot rows by `is_anomaly`. |
-    | Tempted to persist `rolling_mean` / `z` / `is_anomaly` as a `dimension` or `measure` on the model | Don't. They depend on windowed (post-aggregation) results; as model fields they evaluate in the wrong semantic layer. Keep them in the ad-hoc query / viz. |
-
-    ### Numeric formatting
-
-    - Currency-like measures (label/name contains `revenue`, `cost`, `price`, `arr`, `mrr`,
-      `gmv`, `amount`): `$` prefix, short suffix (`$500K`, `$1.2M`); use the dataset's stated
-      currency symbol if metadata provides it.
-    - Counts and rates: thousands separators (`1,234`); rates to two significant decimals
-      (`3.42%`).
-    - z-scores: one decimal place (`11.4`).
-=======
     ## Conventions
     - **Write the AML yourself — never `generate_aql` / `generate_viz`.** This skill gives you exact templates (Schema); filling them in and running `execute_*` is faster and exact, with `validate_aql` as the syntax check before `execute_aql`. The two-step chain: (1) the anomaly AQL — actual + rolling stats + band/z/flag, all in one — `validate_aql`, `execute_aql` → anomaly results; (2) the self-contained `CombinationChart`, `execute_viz`.
     - **On an error, consult the docs once, then retry once.** If a step errors (especially an AQL window-function or viz syntax error), call `search_docs` with the error / feature, fix the AML, then `execute_*` exactly once more. If it still fails, use the step's fallback: Step 3 → surface the error (don't pretend detection completed); Step 4 → fall back to the Step 3 `execute_aql` table + prose. Never loop more than one doc-lookup + one retry per step.
@@ -535,6 +227,5 @@ Skill detect_anomaly {
     | Step 4 chart: `contains additional properties ["aql"]` | You passed `aql` to `execute_viz` — remove it; pass only `dataset_uname`, `viz`, `title`. For viz-syntax errors, `search_docs` and re-run once, then fall back to the Step 3 table + prose. |
     | User asks "why did this happen?" or "what dimension drove it?" | Reply: "I can flag which points are statistically unusual, but identifying which dimension drove an anomaly — or its business cause — is outside this skill. Break the metric down by relevant dimensions in a dashboard, or check your marketing calendar / CRM / news for that window." |
     | User asks to "show the raw numbers" or wants the per-bucket table | Show the `execute_aql` anomaly results directly (already a table) — `bucket`, `actual`, `rolling_mean`, `lower_bound`, `upper_bound`, `z_score`, `is_anomaly`. Never group/pivot rows by `is_anomaly`. |
->>>>>>> cloud:settings/ai/skills/detect_anomaly.skill.aml
   ;;
 }
