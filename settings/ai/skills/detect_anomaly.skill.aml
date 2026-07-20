@@ -135,7 +135,7 @@ Skill detect_anomaly {
     ### Anomaly chart (generate_viz — Step 3)
     Don't hand-write the `CombinationChart` — pass the Step 2 explore (verbatim) to `generate_viz` and **state the decoration explicitly in the `query`** (generate_viz defaults its palette and `pattern: 'inherited'` unless told otherwise, so name the colours):
 
-    1. `generate_viz(dataset_uname: <dataset>, aql: <the Step 2 explore, verbatim>, query: "Combination chart of <metric label> by <grain>: actual as a solid #2563EB line; lower_bound and upper_bound as grey #9CA3AF dashed lines forming the expected band; is_anomaly as red #DC2626 columns on a secondary 0..1 right axis; x-axis is the <grain> bucket; format <metric label> as short-suffix currency like $500K; tooltips for expected, <metric label>, and z_score.")`.
+    1. `generate_viz(dataset_uname: <dataset>, aql: <the Step 2 explore, verbatim>, query: "Combination chart of <metric label> by <grain>: actual as a solid #255DD4 line; lower_bound and upper_bound as grey #9CA3AF dashed lines forming the expected band; is_anomaly as red #FCB8B8 columns on a secondary 0..1 right axis; x-axis is the <grain> bucket; format <metric label> as short-suffix currency like $500K; tooltips for expected, <metric label>, and z_score.")`.
     2. Keep the structure `generate_viz` produced (axes, series, calculations); adjust only decoration. Keep 6-digit hex (an 8-digit alpha hex can be rejected).
     3. `execute_viz(dataset_uname: <dataset>, viz: <the adjusted viz>, title: …)` — pass only these three, no `aql` property.
 
