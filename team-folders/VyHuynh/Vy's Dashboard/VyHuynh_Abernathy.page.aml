@@ -15,7 +15,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      height: 1683
+      height: 2100
       grid_size: 20
       block v3 {
         position: pos(20, 820, 1160, 420)
@@ -84,6 +84,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       block v_ldg1 {
         position: pos(600, 1260, 580, 400)
         layer: 17
+      }
+      block v_94af {
+        position: pos(20, 1680, 580, 400)
+        layer: 18
       }
       mobile {
         mode: 'auto'
@@ -3360,6 +3364,180 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block v_94af: VizBlock {
+    label: '''Anomaly detection: Revenue Won (Oct 2019-Nov 2021)
+'''
+    viz: CombinationChart {
+      dataset: vy_pbi_dts
+      calculation rolling_mean {
+        label: 'Rolling Mean'
+        formula: @aql window_avg(revenue_won, -12..-1, order: vy_opportunity_calendar_csv.year_month | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation rolling_stddev {
+        label: 'Rolling Stddev'
+        formula: @aql window_stdev(revenue_won, -12..-1, order: vy_opportunity_calendar_csv.year_month | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation lower_bound {
+        label: 'Lower Bound'
+        formula: @aql rolling_mean - 3 * rolling_stddev;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation upper_bound {
+        label: 'Upper Bound'
+        formula: @aql rolling_mean + 3 * rolling_stddev;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation z_score {
+        label: 'Z Score'
+        formula: @aql safe_divide(revenue_won - rolling_mean, rolling_stddev);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_anomaly {
+        label: 'Is Anomaly'
+        formula: @aql case(when: abs(z_score) > 3, then: 1, else: 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        label: 'Period'
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+        uname: 'bucket'
+      }
+      y_axis {
+        label: 'Revenue Won'
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Actual'
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#2563EB'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Lower Bound'
+            ref: 'lower_bound'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#9CA3AF'
+            line_style: 'dashed'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Upper Bound'
+            ref: 'upper_bound'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#6B7280'
+            line_style: 'dashed'
+          }
+        }
+      }
+      y_axis {
+        label: 'Anomaly'
+        settings {
+          alignment: 'right'
+          axis_min: 0
+          axis_max: 1
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'Is Anomaly'
+            ref: 'is_anomaly'
+            format {
+              type: 'number'
+              pattern: '#,###0'
+            }
+          }
+          settings {
+            color: '#FCA5A5'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Actual'
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Rolling Mean'
+            ref: 'rolling_mean'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Z Score'
+            ref: 'z_score'
+            format {
+              type: 'number'
+              pattern: '#,###0.0'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Is Anomaly'
+            ref: 'is_anomaly'
+            format {
+              type: 'number'
+              pattern: '#,###0'
+            }
+          }
+        }
+      ]
+      settings {
+        connect_discontinuous_points: false
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'xaxis'
+        }
+        x_axis_label: 'Period'
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v3'
@@ -4190,7 +4368,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v_m2xo',
-            'v_ldg1'
+            'v_ldg1',
+            'v_94af'
           ]
           disabled: true
         }
@@ -4202,7 +4381,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v_m2xo',
-            'v_ldg1'
+            'v_ldg1',
+            'v_94af'
           ]
           disabled: true
         }
@@ -4270,6 +4450,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     },
     FilterInteraction {
       from: 'v_ldg1'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_94af'
       to: [
         CustomMapping {
           block: [
