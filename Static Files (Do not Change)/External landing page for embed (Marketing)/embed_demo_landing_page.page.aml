@@ -33,7 +33,6 @@ Dashboard embed_demo_landing_page {
       hide_label: true
     }
   }
-
   block override_css: TextBlock {
     content: @md <style>
       .dac-text-block {
@@ -349,7 +348,7 @@ ecommerce_users.sign_up_date
     type: 'date'
     default {
       operator: 'matches'
-      value: 'last 2 years'
+      value: '$H_NIL$'
     }
   }
   block t5: TextBlock {
@@ -639,4 +638,10 @@ ecommerce_users.sign_up_date
       ]
     }
   ]
+  settings {
+    timezone: 'Etc/UTC'
+    cache_duration: 1440
+    autorun_on_open: true
+    autorun_on_changes: true
+  }
 }
