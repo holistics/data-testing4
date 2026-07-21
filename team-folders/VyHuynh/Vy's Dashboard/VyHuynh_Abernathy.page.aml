@@ -15,7 +15,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      width: 1220
       height: 1680
       grid_size: 20
       block v3 {
@@ -83,7 +82,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 16
       }
       block v_i4x9 {
-        position: pos(620, 1260, 580, 400)
+        position: pos(620, 1260, 560, 400)
         layer: 17
       }
       mobile {
