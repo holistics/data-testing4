@@ -514,7 +514,7 @@ ecommerce_users.sign_up_date
     width: 1440
     height: 1080
     block v1 {
-      position: pos(240, 27, 300, 60)
+      position: pos(244, 26, 300, 60)
     }
     block override_css {
       position: pos(-490, 100, 465, 160)
