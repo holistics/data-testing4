@@ -87,4 +87,12 @@ when {{ name }} in ('Skin Care'
     description: "This is the description"
     aggregation_type: "count"
   }
+  measure measure_aaac7b5 {
+    label: "Count of Categories Id"
+    type: "number"
+    description: ""
+    hidden: false
+    definition: @aql count(bhx_ecommerce_categories.id);;
+    aggregation_type: "custom"
+  }
 }

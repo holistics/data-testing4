@@ -1,0 +1,46 @@
+Dataset vyhuynh_ecommerce_dataset {
+  label: 'Ecommerce Dataset'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    vyht_ecommerce_order_items,
+    vyht_ecommerce_orders_1,
+    vyht_ecommerce_products,
+    vyht_ecommerce_users_1
+    ,
+    vy_sales_revenue_demo_csv
+    ,
+    revenue_by_country_csv
+    ,
+    sales_rep_uc_3_outlier_csv
+    ,
+    publift_test_data_csv
+  ]
+  relationships: [
+    relationship(vyht_ecommerce_orders_1.user_id > vyht_ecommerce_users_1.id, true),
+    relationship(vyht_ecommerce_order_items.order_id > vyht_ecommerce_orders_1.id, true),
+    relationship(vyht_ecommerce_order_items.product_id > vyht_ecommerce_products.id, true)
+  ]
+  owner: 'vy.ht@holistics.io'
+  metric total_revenue {
+    label: "Total Revenue"
+    type: "number"
+    description: ""
+    definition: @aql vyht_ecommerce_order_items
+  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
+  }
+  metric currency_symbol {
+    label: 'Currency Symbol'
+    type: 'text'
+    definition: @aql
+      case(
+        when: count_distinct(publift_test_data_csv.currency) > 1, then: ' ',
+        when: max(publift_test_data_csv.currency) == 'AUD', then: 'A$',
+        when: max(publift_test_data_csv.currency) == 'USD', then: '$',
+        when: max(publift_test_data_csv.currency) == 'EUR', then: '€',
+        when: max(publift_test_data_csv.currency) == 'MYR', then: 'RM',
+        else: ''
+      )
+    ;;
+  }
+}
