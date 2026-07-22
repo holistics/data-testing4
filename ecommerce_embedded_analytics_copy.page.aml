@@ -403,7 +403,7 @@ Dashboard ecommerce_embedded_analytics_copy {
   view: CanvasLayout {
     label: 'View 1'
     width: 1240
-    height: 860
+    height: 820
     block f1 {
       position: pos(-320, 10, 300, 80)
     }
