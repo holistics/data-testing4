@@ -81,24 +81,13 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(20, 1260, 560, 400)
         layer: 16
       }
-<<<<<<< HEAD
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       block d_date_drill {
         position: pos(20, 200, 300, 80)
         layer: 1
-=======
-      block p_period_comparison {
-        position: pos(20, 200, 300, 80)
-        layer: 2
       }
-      block v_i4x9 {
-        position: pos(620, 4560, 580, 400)
-=======
       block v_0725 {
         position: pos(600, 1260, 580, 400)
         layer: 17
->>>>>>> origin/master
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       }
       mobile {
         mode: 'auto'
@@ -616,14 +605,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-<<<<<<< HEAD
   block v_711g: VizBlock {
     label: 'Number of Order by Continent'
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
     viz: ColumnChart {
-=======
-    viz: LineChart {
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       dataset: demo_ecommerce
       x_axis: VizFieldFull {
         ref: r(order_master.order_created_month)
@@ -661,8 +645,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-=======
->>>>>>> origin/master
   block v_ztqi: VizBlock {
     label: 'Table 1'
     viz: PivotTable {
@@ -3106,7 +3088,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       hide_label: true
     }
   }
-<<<<<<< HEAD
   block v_fb2g: VizBlock {
     label: 'Campaign, Revenue Won and 2 more'
     viz: DataTable {
@@ -3360,7 +3341,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-=======
   block v_m2xo: VizBlock {
     label: '''Revenue Won Change by Owner: February 2021 vs January 2021
 '''
@@ -3639,135 +3619,16 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
       settings {
         connect_discontinuous_points: false
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
         row_limit: 5000
         sort {
           field_index: 0
           direction: 'asc'
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
-          type: 'tooltip'
-        }
-        x_axis_label: 'Product Category'
-=======
           type: 'xaxis'
         }
         x_axis_label: 'Period'
       }
     }
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
-  }
-  block v_m2xo: VizBlock {
-    label: '''Revenue Won Change by Owner: February 2021 vs January 2021
-'''
-    viz: CombinationChart {
-      dataset: vy_pbi_dts
-      calculation base_value_raw {
-        label: 'Base Value Raw'
-        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(February 2021));;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation comparison_value_raw {
-        label: 'Comparison Value Raw'
-        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(January 2021));;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation base_value {
-        label: 'February 2021'
-        formula: @aql coalesce(base_value_raw, 0);;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation comparison_value {
-        label: 'January 2021'
-        formula: @aql coalesce(comparison_value_raw, 0);;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation delta_value {
-        label: 'Δ Change'
-        formula: @aql base_value - comparison_value;;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation pct_delta {
-        label: 'Pct Delta'
-        formula: @aql safe_divide(delta_value, comparison_value_raw) * 100.0;;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      conditions: [
-        'vy_opportunity_calendar_csv.year_month is @(January 2021 - February 2021)'
-      ]
-      x_axis: VizFieldFull {
-        label: 'Owner'
-        ref: r(vy_owners_csv.owner)
-        format {
-          type: 'text'
-        }
-      }
-      y_axis {
-        label: 'Revenue'
-        series {
-          mark_type: 'column'
-          field: VizFieldFull {
-            label: 'February 2021'
-            ref: 'base_value'
-            format {
-              type: 'number'
-              pattern: '[$$]#,###0.00'
-            }
-          }
-          settings {
-            color: '#255DD4'
-          }
-        }
-        series {
-          mark_type: 'column'
-          field: VizFieldFull {
-            label: 'January 2021'
-            ref: 'comparison_value'
-            format {
-              type: 'number'
-              pattern: '[$$]#,###0.00'
-            }
-          }
-          settings {
-            color: '#92AEEA'
-          }
-        }
-      }
-      y_axis {
-        label: 'Δ Change'
-        settings {
-          alignment: 'right'
-        }
-        series {
-          mark_type: 'line'
-          field: VizFieldFull {
-            label: 'Δ Change'
-            ref: 'delta_value'
-            format {
-              type: 'number'
-              pattern: '[$$]#,###0.00'
-            }
-          }
-          settings {
-            color: '#1F3864'
-            line_interpolation: 'smooth'
-          }
-        }
-      }
-      settings {
-        sort {
-          field_index: 2
-          direction: 'asc'
-          type: 'series'
-        }
-        legend_label: 'top'
-        x_axis_label: 'Owner'
-      }
+
   }
   block p_period_comparison: PopBlock {
     label: 'Period Comparison'
@@ -3776,8 +3637,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       duration: 1
       granularity: 'year'
       show_growth_rate: true
-=======
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
     }
   }
   block d_date_drill: DateDrillBlock {
@@ -4615,14 +4474,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       to: [
         CustomMapping {
           block: [
-<<<<<<< HEAD
             'v_wxn2',
             'v_m2xo',
-            'v_i4x9'
-=======
-            'v_m2xo',
             'v_0725'
->>>>>>> origin/master
           ]
           disabled: true
         }
@@ -4633,14 +4487,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       to: [
         CustomMapping {
           block: [
-<<<<<<< HEAD
             'v_wxn2',
             'v_m2xo',
-            'v_i4x9'
-=======
-            'v_m2xo',
             'v_0725'
->>>>>>> origin/master
           ]
           disabled: true
         }
@@ -4730,15 +4579,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           field: ref('ecommerce_countries', 'continent_name')
         }
       ]
-<<<<<<< HEAD
     },
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
     DateDrillInteraction {
       from: 'd_date_drill'
-=======
-    PopInteraction {
-      from: 'p_period_comparison'
->>>>>>> cloud:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
       to: [
         CustomMapping {
           block: [
@@ -4761,12 +4604,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: 'v_jbl8'
           field: ref('ecommerce_orders', 'created_date')
-<<<<<<< local:team-folders/VyHuynh/Vy's Dashboard/VyHuynh_Abernathy.page.aml
-=======
         }
       ]
-=======
->>>>>>> origin/master
     }
   ]
   settings {
