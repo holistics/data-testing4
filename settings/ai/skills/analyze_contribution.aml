@@ -177,7 +177,8 @@ Options:
 
 Run the overall delta query (no segment grouping):
 - `overall_base_value = coalesce(metric | where([date_field] is base_period_literal), 0)`
-- `overall_comparison_value = coalesce(metric | where([date_field] is base_period_literal) | relative_period([date_field], interval_expression, strict: true), 0)`
+- Derive `comparison_period_literal` inline by applying `interval_expression` to `base_period_literal` (e.g. `@(2021-01)` + `interval(-1 month)` → `@(2020-12)`). Do not store it — compute it only for use in this query.
+- `overall_comparison_value = coalesce(metric | where([date_field] is [derived comparison_period_literal]), 0)`
 - `overall_delta_value = overall_base_value - overall_comparison_value`
 - `pct_change = coalesce(safe_divide(abs(overall_delta_value), overall_comparison_value), 0) × 100`
 
@@ -291,15 +292,22 @@ Always show this, even when the user accepted the proposed list without changes.
 
        CombinationChart {
          dataset: [dataset_uname]
+         filters {
+           filter {
+             field: r([date_field])
+             operator: 'is'
+             value: [base_period_literal]
+           }
+         }
          calculation base_value_raw {
            label: 'Base Value Raw'
-           formula: @aql [metric_formula] | where([date_field] is [base_period_literal])[END]
+           formula: @aql [metric_formula][END]
            calc_type: 'measure'
            data_type: 'number'
          }
          calculation comparison_value_raw {
            label: 'Comparison Value Raw'
-           formula: @aql [metric_formula] | where([date_field] is [base_period_literal]) | relative_period([date_field], [interval_expression], strict: true)[END]
+           formula: @aql [metric_formula] | relative_period([date_field], [interval_expression], strict: true)[END]
            calc_type: 'measure'
            data_type: 'number'
          }
@@ -493,8 +501,9 @@ For the **Contribution to change** column, apply the same threshold rule as the 
 
 ## Implementation Notes for Holistics / AQL
 
-- `base_period_literal` is resolved in Phase 1 and used as the anchor in every query. There is no `comparison_period_literal` — the comparison period is always derived from `base_period_literal` + `interval_expression`, both in queries and in display.
-- All comparison period values — in both Phase 2 and Phase 3 — are computed via `relative_period()`. Chain it after the base period filter: `[metric_formula] | where([date_field] is [base_period_literal]) | relative_period([date_field], [interval_expression], strict: true)`. Always wrap with `coalesce(..., 0)`.
+- `base_period_literal` is resolved in Phase 1 and used as the anchor in every query. There is no stored `comparison_period_literal` — the comparison period is always derived from `base_period_literal` + `interval_expression`.
+- **Phase 2 (pure AQL, no explore context):** derive `comparison_period_literal` inline (e.g. `@(2021-01)` + `interval(-1 month)` → `@(2020-12)`) and use it in an explicit `where([date_field] is [derived_comparison_literal])`. Do not use `relative_period()` here — there is no explore-level context for it to shift from.
+- **Phase 3 (CombinationChart via `execute_viz`):** set `base_period_literal` as an explore-level `filters` block on the chart. Then write `base_value_raw` as `[metric_formula]` (no `where()` — the explore filter scopes it) and `comparison_value_raw` as `[metric_formula] | relative_period([date_field], [interval_expression], strict: true)`. This is the correct pattern: `relative_period()` shifts from the explore-level base period context, not from a metric-level `where()` filter. Never chain `where()` before `relative_period()` in Phase 3 — doing so locks the metric scope and causes the comparison to return the same period as the base.
 - `@()` literals must match the period granularity: `@(YYYY-MM-DD)` for days, `@(YYYY-WNN)` for weeks, `@(YYYY-MM)` for months, `@(YYYY-QN)` for quarters, `@(YYYY)` for years. Never use a day literal `@(YYYY-MM-DD)` for a month or quarter period — it filters only a 2-day window, not the full period.
 - Before generating any query, derive `base_period_name` and `comparison_period_name` (human-readable labels) from `base_period_literal` and `interval_expression` — reuse these display names throughout
 - Reuse existing dataset metric definitions whenever possible; inspect before deciding how to compute segment values. Exception: for ratio metrics, do not reference the pre-built ratio field directly in the query — pre-built ratios often lack per-component null handling and will silently return null when any component is null. Instead, inspect the metric definition to identify its numerator and denominator components, then rebuild the formula inline using `coalesce(safe_divide(coalesce(num_component, 0), coalesce(den_A, 0) + coalesce(den_B, 0) + ...), 0)`
