@@ -10,7 +10,6 @@ Skill detect_anomaly {
 
     Do NOT trigger for: dimensional attribution (which segment or dimension drove an anomaly), explaining the business cause, or ongoing/scheduled monitoring & alerting. This skill flags which points are statistically unusual and shows them; it does not explain why.
   ;;
-  invocation: 'auto'
   allow_switching_invocation: true
 
   // version 2.0.0 — chart-first + trend-aware redesign. (1) Input is resolved by ONE prioritized-fill funnel (active chart's Viz AML → user's words → dataset defaults → ask), typed-metric as the fallback, not a separate path; confirmation is confidence-based (confirm guessed fields, accept read ones). (2) Detection method replaced: was a flat level band (mean ± kσ of the value) that false-flagged the ramp on any trending metric and emitted negative expected ranges; now a trend-following band — expected = previous value + drift (recent average change), band = ± k·stddev of the CHANGE — so a steady climb reads as normal and only a break from the trend is flagged. (3) Warm-up gate via window_count (first W buckets: no band, never flagged); AQL DRY'd with intermediate metrics; single explore (nested window validated). (4) generate_viz query states decoration (colors + short-suffix currency) explicitly, since it defaults its palette otherwise. Method spike-validated against demo_bigquery_ecommerce/gmv — steady ramp no longer flagged, genuine break (Feb 2023 drop) caught (workspace notes 2026-07-17).
