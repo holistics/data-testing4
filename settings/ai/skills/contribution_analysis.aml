@@ -133,6 +133,19 @@ Detect granularity and apply the correct `@()` literal format:
 
 Store as `base_period_literal` and `comparison_period_literal` — these must be used verbatim in every subsequent query. Do not generate any query yet.
 
+<<<<<<< local:settings/ai/skills/contribution_analysis.aml
+Also compute `interval_expression` — the relative offset from base period back to comparison period, expressed for use in `relative_period()`:
+- Month granularity, 1 month apart → `interval(-1 month)`
+- Quarter granularity, 1 quarter apart → `interval(-1 quarter)`
+- Year granularity, 1 year apart → `interval(-1 year)`
+- Week granularity, 1 week apart → `interval(-1 week)`
+- Day granularity → `interval(-N day)` where N = number of days between the two periods
+- For non-standard offsets (e.g. comparing Jan to March of the same year), compute the exact number of months or days and express accordingly (e.g. `interval(-2 month)`)
+
+Store as `interval_expression` — reuse in every subsequent query.
+
+=======
+>>>>>>> cloud:settings/ai/skills/contribution_analysis.aml
 **Show:**
 
 Determine whether confirmation is required before proceeding:
@@ -274,6 +287,10 @@ Always show this, even when the user accepted the proposed list without changes.
    - `[metric_formula]` — for additive metrics: the raw field reference (e.g., `revenue_won`). For ratio metrics: rebuild inline with coalesced components — `safe_divide(coalesce(num, 0), coalesce(den_A, 0) + coalesce(den_B, 0) + ...)` — applied before the `where()` filter
    - `[dimension_label]` — display name of the dimension
    - `[dimension_field_ref]` — field ref from dataset schema in `table.field` format (e.g., `owners_csv.owner`), used inside `r(...)` in the AML
+<<<<<<< local:settings/ai/skills/contribution_analysis.aml
+   - `[interval_expression]` — the relative offset from base period back to comparison period (e.g. `interval(-1 month)` for MoM, `interval(-1 quarter)` for QoQ, `interval(-1 year)` for YoY, `interval(-1 week)` for WoW). Computed in Phase 1. Always fill in the actual value — never leave as a placeholder
+=======
+>>>>>>> cloud:settings/ai/skills/contribution_analysis.aml
    - `[sort_direction]` — `'asc'` for drops, `'desc'` for increases. Always fill in the actual value — never leave as a placeholder
 
    **Note:** In the template below, each `formula:` line ends with `[END]` as a placeholder. Replace every `[END]` with two semicolons (`; ;` without the space) when writing the actual AML block. (Literal double-semicolons cannot appear in this skill file as they are the AML content terminator.)
@@ -288,7 +305,11 @@ Always show this, even when the user accepted the proposed list without changes.
          }
          calculation comparison_value_raw {
            label: 'Comparison Value Raw'
+<<<<<<< local:settings/ai/skills/contribution_analysis.aml
+           formula: @aql [metric_formula] | where([date_field] is [base_period_literal]) | relative_period([date_field], [interval_expression], strict: true)[END]
+=======
            formula: @aql [metric_formula] | where([date_field] is [comparison_period_literal])[END]
+>>>>>>> cloud:settings/ai/skills/contribution_analysis.aml
            calc_type: 'measure'
            data_type: 'number'
          }
@@ -483,7 +504,11 @@ For the **Contribution to change** column, apply the same threshold rule as the 
 ## Implementation Notes for Holistics / AQL
 
 - `base_period_literal` and `comparison_period_literal` are resolved and confirmed in Phase 1 — every query must use these exact values for period filtering, with no exceptions
+<<<<<<< local:settings/ai/skills/contribution_analysis.aml
+- Use `relative_period()` for the comparison period value — chain it after the base period filter: `[metric_formula] | where([date_field] is [base_period_literal]) | relative_period([date_field], [interval_expression], strict: true)`. Always wrap with `coalesce(..., 0)`. The base period continues to use an explicit `where([date_field] is [base_period_literal])` filter.
+=======
 - Never use `relative_period()` for period filtering — it does not reliably resolve ratio metrics across all dimensions and can produce NULL measures. Always filter with explicit `where(date_field is @(literal))` using the confirmed literals
+>>>>>>> cloud:settings/ai/skills/contribution_analysis.aml
 - `@()` literals must match the period granularity: `@(YYYY-MM-DD)` for days, `@(YYYY-WNN)` for weeks, `@(YYYY-MM)` for months, `@(YYYY-QN)` for quarters, `@(YYYY)` for years. Never use a day literal `@(YYYY-MM-DD)` for a month or quarter period — it filters only a 2-day window, not the full period.
 - Before generating any query, define `base_period_name`, `comparison_period_name`, `base_period_literal`, `comparison_period_literal` — reuse these exact aliases throughout
 - Reuse existing dataset metric definitions whenever possible; inspect before deciding how to compute segment values. Exception: for ratio metrics, do not reference the pre-built ratio field directly in the query — pre-built ratios often lack per-component null handling and will silently return null when any component is null. Instead, inspect the metric definition to identify its numerator and denominator components, then rebuild the formula inline using `coalesce(safe_divide(coalesce(num_component, 0), coalesce(den_A, 0) + coalesce(den_B, 0) + ...), 0)`
