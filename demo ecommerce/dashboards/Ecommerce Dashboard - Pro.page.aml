@@ -2664,7 +2664,11 @@ abc;;
         position: pos(130, 550, 320, 140)
       }
       block v_pho6 {
+<<<<<<< local:demo ecommerce/dashboards/Ecommerce Dashboard - Pro.page.aml
+        position: pos(530, 390, 1000, 300)
+=======
         position: pos(540, 400, 1000, 300)
+>>>>>>> cloud:demo ecommerce/dashboards/Ecommerce Dashboard - Pro.page.aml
         layer: -1
       }
       block t_iy6i {

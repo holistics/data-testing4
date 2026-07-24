@@ -2,11 +2,11 @@ Skill detect_anomaly {
   label: "Detect anomaly"
   invocation: 'auto'
   description: @md
-    Detect statistical anomalies in a metric over time and visualize them — points whose movement departs sharply from where the metric's own recent trend was heading. Trend-aware: a steady climb or decline reads as normal; a real break from that trend (up or down) is flagged.
+    Detect statistical anomalies across a metric's history and visualize them — unusual spikes, drops, and deviations flagged against an expected range built from the metric's own recent history.
 
-    Use when the user asks whether a metric's values or recent movement are normal or unusual — words like anomaly, unusual, spike, drop, dip, outlier, "out of the ordinary", "anything weird". Also triggers on chart-anchored questions asked while viewing a chart: "is this normal?", "is this movement/change normal or expected?", "did anything weird happen here?", "does this look right?". A specific focus date is optional; the skill always scans the series in view.
+    Use when the user wants to find or check for unusual values in a metric — words like anomaly, unusual, spike, drop, dip, outlier, "out of the ordinary", "anything weird". A specific date is optional; the skill always scans the whole series.
 
-    Typical phrasings: is this normal (while viewing a chart), detect anomalies in revenue, any outliers in daily signups, has anything looked unusual in MRR lately, were there spikes or drops in active users this quarter, is revenue on May 20 unusual (a focus date), or /detect_anomaly with no args.
+    Typical phrasings: detect anomalies in revenue, any outliers in daily signups, has anything looked unusual in MRR lately, were there spikes or drops in active users this quarter, is revenue on May 20 unusual (a focus date — still scans the full series), or /detect_anomaly with no args (the skill asks for the metric).
 
     Do NOT trigger for: dimensional attribution (which segment or dimension drove an anomaly), explaining the business cause, or ongoing/scheduled monitoring & alerting. This skill flags which points are statistically unusual and shows them; it does not explain why.
   ;;
@@ -19,7 +19,7 @@ Skill detect_anomaly {
     ## What a good input looks like
     An anomaly task scans one metric's time series against a trend-following band built from its own recent history. The primary path is **chart-anchored**: the user is viewing a chart and asks whether its movement is normal, so the fields below are read from that chart's Viz AML. Only `metric` is truly required — derive or default the rest, then echo everything back (with the resolved timeframe as an absolute range) so the user can correct a mis-parse.
 
-    - **`metric` (`M`)** — *required*. From the viewed chart's y-axis measure; else the user's words. If missing, ask — don't guess.
+    - **`metric` (`M`)** — *required*. From the viewed chart's y-axis measure; else the user's words. If missing, ask — don't guess. If the chart carries **more than one** y-axis measure, ask which one to analyze (don't default to the first).
     - **`dataset`** — *required*. From the chart's `dataset:`; else a ranked measure search. If missing, ask.
     - **`time axis` (`T`) + `granularity`** — inferred from the chart's x-axis field and its `datetrunc` transformation. If the x-axis isn't a time field, ask for the metric + time grain.
     - **`filters`** — optional. The chart's dimensional filters (not its time range).
@@ -49,7 +49,7 @@ Skill detect_anomaly {
 
     **Reading the chart's Viz AML** (source 1) — pull each field out of the attached AML:
     - `dataset` ← the viz `dataset:`.
-    - `M` ← the y-axis measure. If several y-axis series exist, take the **primary** (first y-axis series) and say which; if the user named one, use that. If `M` is a viz-level `calculation` rather than a dataset measure, carry its `@aql` formula and inline it as `metric M = <formula>;` in the Step 2 query.
+    - `M` ← the y-axis measure. If the chart has **more than one** y-axis measure, don't pick for the user — **ask which one** to analyze (list them and wait), unless the user already named one in their words. Anomaly detection runs on a single series, and silently choosing the wrong one wastes the whole run. With exactly one y-axis measure, use it. If `M` is a viz-level `calculation` rather than a dataset measure, carry its `@aql` formula and inline it as `metric M = <formula>;` in the Step 2 query.
     - `T` + `granularity` ← the x-axis field and its `transformation` (`datetrunc month` → grain = month). If the x-axis is **not** a time field, this isn't a time series → fall back to typed/ask.
     - `filters` ← the viz `filter` / `filter_groups` / `conditions`, **excluding** the time-range filter.
     - **Legend/breakdown** → collapse to the total (drop the legend) unless the user explicitly asks per-segment (per-segment is out of scope — Conventions → *Edge cases*).
@@ -189,6 +189,7 @@ Skill detect_anomaly {
     | Situation | Behavior |
     |---|---|
     | Viz AML x-axis is not a time field | Not a time series — fall back to typed/ask for the metric + time grain. Don't proceed. |
+    | Viz has more than one y-axis measure | Ask the user which single measure to analyze (list them); don't default to the first. Skip the ask only if the user already named one. |
     | Viz has a legend/breakdown | Collapse to the total (drop the legend) unless the user asks per-segment. |
     | Series too short even with the lead-in (starts inside the window) | Earliest buckets show without a band (`n_prior < W`); if < 8 usable points, stop with the insufficient-history message. |
     | Flat series (spread = 0) | `safe_divide` → `z_score` null; not flagged (never divide by zero). |
