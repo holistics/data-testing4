@@ -89,6 +89,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(600, 1260, 580, 400)
         layer: 17
       }
+      block v_nd9q {
+        position: pos(20, 1680, 580, 400)
+        layer: 18
+      }
       mobile {
         mode: 'auto'
       }
@@ -3720,6 +3724,158 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block v_nd9q: VizBlock {
+    label: '''Close % by Owner — Delta on Second Y-Axis
+'''
+    viz: CombinationChart {
+      dataset: vy_pbi_dts
+      calculation won_opportunity_count {
+        label: 'Won Opportunity Count'
+        formula: @aql vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won');;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation lost_opportunity_count {
+        label: 'Lost Opportunity Count'
+        formula: @aql vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost');;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation q4_2020_won_count {
+        label: 'Q4 2020 Won Count'
+        formula: @aql won_opportunity_count | where(vy_opportunity_calendar_csv.year_month is @(2020-10 until 2021-01));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation q4_2020_lost_count {
+        label: 'Q4 2020 Lost Count'
+        formula: @aql lost_opportunity_count | where(vy_opportunity_calendar_csv.year_month is @(2020-10 until 2021-01));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation q1_2021_won_count {
+        label: 'Q1 2021 Won Count'
+        formula: @aql won_opportunity_count | where(vy_opportunity_calendar_csv.year_month is @(2021-01 until 2021-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation q1_2021_lost_count {
+        label: 'Q1 2021 Lost Count'
+        formula: @aql lost_opportunity_count | where(vy_opportunity_calendar_csv.year_month is @(2021-01 until 2021-04));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_q4_2020 {
+        label: 'Q4 2020 Close %'
+        formula: @aql safe_divide(coalesce(q4_2020_won_count, 0), coalesce(q4_2020_won_count, 0) + coalesce(q4_2020_lost_count, 0));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value_q1_2021 {
+        label: 'Q1 2021 Close %'
+        formula: @aql safe_divide(coalesce(q1_2021_won_count, 0), coalesce(q1_2021_won_count, 0) + coalesce(q1_2021_lost_count, 0));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Δ Change'
+        formula: @aql base_value_q1_2021 - comparison_value_q4_2020;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        label: 'Owner'
+        ref: r(vy_owners_csv.owner)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Close %'
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'Q1 2021 Close %'
+            ref: 'base_value_q1_2021'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'Q4 2020 Close %'
+            ref: 'comparison_value_q4_2020'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        }
+      }
+      y_axis {
+        label: 'Δ Change'
+        settings {
+          alignment: 'right'
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Δ Change'
+            ref: 'delta_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Q1 2021 Close %'
+            ref: 'base_value_q1_2021'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Q4 2020 Close %'
+            ref: 'comparison_value_q4_2020'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Δ Change'
+            ref: 'delta_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        }
+      ]
+      settings {
+        show_data_points: true
+        sort {
+          field_index: 1
+          direction: 'asc'
+          type: 'yaxis'
+        }
+        legend_label: 'top'
+        x_axis_label: 'Owner'
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v3'
@@ -4551,7 +4707,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           block: [
             'v_wxn2',
             'v_m2xo',
-            'v_0725'
+            'v_0725',
+            'v_nd9q'
           ]
           disabled: true
         }
@@ -4564,7 +4721,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           block: [
             'v_wxn2',
             'v_m2xo',
-            'v_0725'
+            'v_0725',
+            'v_nd9q'
           ]
           disabled: true
         }
@@ -4619,6 +4777,24 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
     },
     FilterInteraction {
+      from: 'v_fb2g'
+      to: [
+        CustomMapping {
+          block: 'v_nd9q'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_wxn2'
+      to: [
+        CustomMapping {
+          block: 'v_nd9q'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
       from: 'v_m2xo'
       to: [
         CustomMapping {
@@ -4653,7 +4829,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           block: [
             'v_wxn2',
             'v_m2xo',
-            'v_0725'
+            'v_0725',
+            'v_nd9q'
           ]
           disabled: true
         }
@@ -4666,7 +4843,24 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           block: [
             'v_wxn2',
             'v_m2xo',
-            'v_0725'
+            'v_0725',
+            'v_nd9q'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_nd9q'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070',
+            'v_fb2g',
+            'v_wxn2',
+            'v_kgry',
+            'v_7a6x'
           ]
           disabled: true
         }
