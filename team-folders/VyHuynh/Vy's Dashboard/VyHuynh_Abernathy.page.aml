@@ -15,10 +15,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      height: 2100
+      height: 2160
       grid_size: 20
       block v3 {
-        position: pos(20, 820, 1160, 420)
+        position: pos(20, 880, 1160, 420)
         layer: 3
       }
       block t3 {
@@ -58,7 +58,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 9
       }
       block v8 {
-        position: pos(20, 220, 1160, 580)
+        position: pos(20, 280, 1160, 580)
         layer: 1
       }
       block t_4ttu {
@@ -78,7 +78,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 4
       }
       block v_m2xo {
-        position: pos(20, 1260, 560, 400)
+        position: pos(20, 1320, 560, 400)
         layer: 16
       }
       block d_date_drill {
@@ -86,11 +86,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 1
       }
       block v_0725 {
-        position: pos(600, 1260, 580, 400)
+        position: pos(600, 1320, 580, 400)
         layer: 17
       }
       block v_nd9q {
-        position: pos(20, 1680, 580, 400)
+        position: pos(20, 1740, 580, 400)
         layer: 18
       }
       mobile {
