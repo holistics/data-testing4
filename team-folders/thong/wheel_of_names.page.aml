@@ -1,0 +1,291 @@
+Dashboard wheel_of_names {
+  title: 'wheel_of_names'
+  description: ''
+  owner: 'thong.do@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+
+  view: HTMLLayout  {
+    content: @html
+    
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Name Wheel</title>
+<style>
+  :root {
+    --ink: #f5f0e6;
+    --bg: #1b1f2a;
+    --panel: #232838;
+    --gold: #e8b64c;
+    --gold-dim: #b3893a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 20%, #262c3d 0%, var(--bg) 70%);
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    color: var(--ink);
+    padding: 40px 16px;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: normal;
+  }
+
+  /* hide the radio inputs that drive all state */
+  .state { display: none; }
+
+  .stage {
+    position: relative;
+    width: 320px;
+    height: 320px;
+  }
+
+  .pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-top: 26px solid var(--gold);
+    z-index: 3;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4));
+  }
+
+  .rim {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--panel);
+    padding: 10px;
+    box-shadow: 0 0 0 4px var(--gold-dim), 0 12px 30px rgba(0,0,0,0.5);
+  }
+
+  .wheel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      #c1443c 0deg 45deg,
+      #d98a2b 45deg 90deg,
+      #3f7d5c 90deg 135deg,
+      #2f6b8f 135deg 180deg,
+      #6a4c93 180deg 225deg,
+      #b5426e 225deg 270deg,
+      #7c8b3f 270deg 315deg,
+      #b8862f 315deg 360deg
+    );
+    transform: rotate(0deg);
+    transition: none;
+  }
+
+  .name {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+  }
+
+  .name span {
+    position: absolute;
+    display: block;
+    left: -60px;
+    top: -132px;
+    width: 120px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #fff8ec;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  }
+
+  .n0 { transform: rotate(22.5deg); }
+  .n1 { transform: rotate(67.5deg); }
+  .n2 { transform: rotate(112.5deg); }
+  .n3 { transform: rotate(157.5deg); }
+  .n4 { transform: rotate(202.5deg); }
+  .n5 { transform: rotate(247.5deg); }
+  .n6 { transform: rotate(292.5deg); }
+  .n7 { transform: rotate(337.5deg); }
+
+  .hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    transform: translate(-50%, -50%);
+    background: var(--bg);
+    border: 3px solid var(--gold);
+    border-radius: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+
+  /* --- rotation per spin state, ever-increasing so it always turns forward --- */
+  #s1:checked ~ .stage .wheel { transform: rotate(1912.5deg); }
+  #s2:checked ~ .stage .wheel { transform: rotate(3937.5deg); }
+  #s3:checked ~ .stage .wheel { transform: rotate(5467.5deg); }
+  #s4:checked ~ .stage .wheel { transform: rotate(7402.5deg); }
+  #s5:checked ~ .stage .wheel { transform: rotate(9022.5deg); }
+  #s6:checked ~ .stage .wheel { transform: rotate(11092.5deg); }
+  #s7:checked ~ .stage .wheel { transform: rotate(12757.5deg); }
+  #s8:checked ~ .stage .wheel { transform: rotate(14647.5deg); }
+
+  #s1:checked ~ .stage .wheel,
+  #s2:checked ~ .stage .wheel,
+  #s3:checked ~ .stage .wheel,
+  #s4:checked ~ .stage .wheel,
+  #s5:checked ~ .stage .wheel,
+  #s6:checked ~ .stage .wheel,
+  #s7:checked ~ .stage .wheel,
+  #s8:checked ~ .stage .wheel {
+    transition: transform 4s cubic-bezier(.15,.7,.25,1);
+  }
+
+  .controls { min-height: 52px; }
+
+  .spin-btn {
+    display: none;
+    padding: 12px 30px;
+    background: var(--gold);
+    color: #1b1f2a;
+    border-radius: 999px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 14px rgba(232,182,76,0.35);
+  }
+
+  .spin-btn:hover { background: #f2c364; }
+
+  #s0:checked ~ .controls label[for="s1"] { display: inline-block; }
+  #s1:checked ~ .controls label[for="s2"] { display: inline-block; }
+  #s2:checked ~ .controls label[for="s3"] { display: inline-block; }
+  #s3:checked ~ .controls label[for="s4"] { display: inline-block; }
+  #s4:checked ~ .controls label[for="s5"] { display: inline-block; }
+  #s5:checked ~ .controls label[for="s6"] { display: inline-block; }
+  #s6:checked ~ .controls label[for="s7"] { display: inline-block; }
+  #s7:checked ~ .controls label[for="s8"] { display: inline-block; }
+
+  .done-msg {
+    display: none;
+    font-size: 0.8rem;
+    color: #9aa0b4;
+    font-style: italic;
+  }
+  #s8:checked ~ .controls .done-msg { display: block; }
+
+  .result { min-height: 30px; font-size: 1.15rem; }
+  .result p { display: none; margin: 0; }
+  #s0:checked ~ .result .r0 { display: block; color: #9aa0b4; font-size: 0.9rem; font-style: italic; }
+  #s1:checked ~ .result .r1,
+  #s2:checked ~ .result .r2,
+  #s3:checked ~ .result .r3,
+  #s4:checked ~ .result .r4,
+  #s5:checked ~ .result .r5,
+  #s6:checked ~ .result .r6,
+  #s7:checked ~ .result .r7,
+  #s8:checked ~ .result .r8 { display: block; color: var(--gold); font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <h1>Spin the Wheel</h1>
+
+  <input type="radio" name="spin" id="s0" class="state" checked>
+  <input type="radio" name="spin" id="s1" class="state">
+  <input type="radio" name="spin" id="s2" class="state">
+  <input type="radio" name="spin" id="s3" class="state">
+  <input type="radio" name="spin" id="s4" class="state">
+  <input type="radio" name="spin" id="s5" class="state">
+  <input type="radio" name="spin" id="s6" class="state">
+  <input type="radio" name="spin" id="s7" class="state">
+  <input type="radio" name="spin" id="s8" class="state">
+
+  <div class="stage">
+    <div class="pointer"></div>
+    <div class="rim">
+      <div class="wheel">
+        <div class="name n0"><span>Alex</span></div>
+        <div class="name n1"><span>Jordan</span></div>
+        <div class="name n2"><span>Sam</span></div>
+        <div class="name n3"><span>Taylor</span></div>
+        <div class="name n4"><span>Morgan</span></div>
+        <div class="name n5"><span>Casey</span></div>
+        <div class="name n6"><span>Riley</span></div>
+        <div class="name n7"><span>Drew</span></div>
+      </div>
+    </div>
+    <div class="hub">SPIN</div>
+  </div>
+
+  <div class="result">
+    <p class="r0">Click spin to pick a name</p>
+    <p class="r1">🎉 Casey</p>
+    <p class="r2">🎉 Alex</p>
+    <p class="r3">🎉 Riley</p>
+    <p class="r4">🎉 Taylor</p>
+    <p class="r5">🎉 Drew</p>
+    <p class="r6">🎉 Jordan</p>
+    <p class="r7">🎉 Morgan</p>
+    <p class="r8">🎉 Sam</p>
+  </div>
+
+  <div class="controls">
+    <label for="s1" class="spin-btn">Spin</label>
+    <label for="s2" class="spin-btn">Spin</label>
+    <label for="s3" class="spin-btn">Spin</label>
+    <label for="s4" class="spin-btn">Spin</label>
+    <label for="s5" class="spin-btn">Spin</label>
+    <label for="s6" class="spin-btn">Spin</label>
+    <label for="s7" class="spin-btn">Spin</label>
+    <label for="s8" class="spin-btn">Spin</label>
+    <p class="done-msg">Out of spins — refresh the page to reset.</p>
+  </div>
+</div>
+
+</body>
+</html>
+
+     ;;
+  }
+
+  theme: H.themes.vanilla
+
+}
