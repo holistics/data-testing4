@@ -139,6 +139,10 @@ Dashboard tri_test {
       block v_7kq4 {
         position: pos(1260, 7400, 400, 300)
       }
+      block v_vr4k {
+        position: pos(660, 430, 800, 300)
+        layer: 7
+      }
       mobile {
         mode: 'auto'
       }
@@ -1797,6 +1801,63 @@ Dashboard tri_test {
       settings {
         row_limit: 5000
         x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_vr4k: VizBlock {
+    label: 'vggg copy'
+    viz: DataTable {
+      dataset: demo_ecommerce_metrics
+      calculation pop_comparison_of_total_order_value {
+        label: 'PoP Comparison of Total Order Value'
+        formula: @aql safe_divide(total_order_value, total_order_value | relative_period(order_master.order_created_at, -1, strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+        format {
+          type: 'number'
+          pattern: '#,###0.00%'
+        }
+      }
+      calculation pop_comparison_of_total_order_value_01 {
+        label: 'PoP Comparison of Total Order Value 01'
+        formula: @aql safe_divide(total_order_value, total_order_value | relative_period(order_master.order_created_at, -1, strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
+        format {
+          type: 'number'
+          pattern: '#,###0.00%'
+        }
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce_countries.continent_name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_cities.country_code)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(demo_ecommerce_metrics.total_order_value)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        wrap_header_text: true
+        wrap_cell_text: true
+        show_row_number: true
+        row_limit: 5000
         aggregate_awareness {
           enabled: true
           debug_comments: true
