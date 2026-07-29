@@ -361,7 +361,6 @@ Dashboard tri_test {
         wrap_header_text: true
         wrap_cell_text: true
         show_row_number: true
-        row_limit: 5000
         aggregate_awareness {
           enabled: true
           debug_comments: true
