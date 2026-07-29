@@ -18,7 +18,7 @@ Dashboard tri_test {
         layer: 3
       }
       block v2 {
-        position: pos(900, 20, 800, 300)
+        position: pos(900, 20, 800, 280)
         layer: 4
       }
       block f2 {
@@ -140,7 +140,7 @@ Dashboard tri_test {
         position: pos(1260, 7400, 400, 300)
       }
       block v_vr4k {
-        position: pos(660, 430, 800, 300)
+        position: pos(240, 600, 800, 300)
         layer: 7
       }
       mobile {
@@ -342,6 +342,11 @@ Dashboard tri_test {
           type: 'number'
           pattern: '#,###0.00%'
         }
+      }
+      filter {
+        field: r(ecommerce_countries.continent_name)
+        operator: 'is'
+        value: 'Asia'
       }
       rows: [
         VizFieldFull {
