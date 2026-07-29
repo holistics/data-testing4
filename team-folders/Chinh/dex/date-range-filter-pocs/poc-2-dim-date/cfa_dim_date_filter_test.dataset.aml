@@ -1,0 +1,42 @@
+Dataset cfa_dim_date_filter_test {
+  label: 'CFA Dim Date Filter Test'
+  description: 'POC using a date dimension to derive selected lower and upper bounds from one dashboard date filter.'
+  data_source_name: 'data_staging'
+  owner: 'chinh.dm@holistics.io'
+
+  models: [
+    cfa_model,
+    cfa_date_bridge,
+    cfa_dim_date
+  ]
+
+  metric selected_start_date {
+    label: 'Selected Start Date'
+    type: 'date'
+    hidden: true
+    definition: @aql min(cfa_dim_date.date_day) | of_all(cfa_model, keep_filters: true) ;;
+  }
+
+  metric selected_end_date {
+    label: 'Selected End Date'
+    type: 'date'
+    hidden: true
+    definition: @aql max(cfa_dim_date.date_day) | of_all(cfa_model, keep_filters: true) ;;
+  }
+
+  metric total_cfa_amount_dim_date_period {
+    label: 'Total CFA Amount (Dim Date Period)'
+    description: 'Sums CFA amount where Field A is on/after the selected start date and Field B is on/before the selected end date.'
+    type: 'number'
+    definition: @aql
+      sum(cfa_model.cfa_amount)
+      | where(cfa_model.field_a_start_date >= selected_start_date)
+      | where(cfa_model.field_b_end_date <= selected_end_date)
+    ;;
+  }
+
+  relationships: [
+    relationship(cfa_date_bridge.cfa_id > cfa_model.cfa_id, true, direction='two_way'),
+    relationship(cfa_date_bridge.date_day > cfa_dim_date.date_day, true, direction='two_way'),
+  ]
+}
