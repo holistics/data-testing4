@@ -1,0 +1,42 @@
+Dataset animal_shelter_demo {
+  label: 'animal_shelter_demo'
+  description: ''
+  data_source_name: 'demo_public'
+
+  models: [
+    animals_csv,
+    daily_shelter_census_csv,
+    donations_csv,
+    foster_placements_csv,
+    locations_csv,
+    medical_events_csv,
+    people_csv,
+    shelter_stays_csv,
+    staff_csv
+  ]
+
+  relationships: [
+    relationship(shelter_stays_csv.animal_id > animals_csv.id, true),
+    relationship(shelter_stays_csv.location_id > locations_csv.id, true),
+
+    relationship(medical_events_csv.stay_id > shelter_stays_csv.id, true),
+    relationship(medical_events_csv.animal_id > animals_csv.id, true),
+    relationship(medical_events_csv.performed_by_id > staff_csv.id, true),
+
+    relationship(foster_placements_csv.stay_id > shelter_stays_csv.id, true),
+    relationship(foster_placements_csv.foster_person_id > people_csv.id, true),
+
+    relationship(donations_csv.location_id > locations_csv.id, true),
+    relationship(donations_csv.person_id > people_csv.id, true),
+
+    relationship(daily_shelter_census_csv.location_id > locations_csv.id, true),
+
+    relationship(shelter_stays_csv.intake_staff_id > staff_csv.id, true),
+    relationship(shelter_stays_csv.outcome_staff_id > staff_csv.id, true),
+
+    relationship(shelter_stays_csv.intake_from_person_id > people_csv.id, true),
+    relationship(shelter_stays_csv.outcome_to_person_id > people_csv.id, true),
+
+    relationship(staff_csv.location_id > locations_csv.id, true)
+  ]
+}
