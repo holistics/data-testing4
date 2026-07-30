@@ -1,3 +1,4 @@
+@tag('Owner/Product', 'Status/Active')
 Dashboard squad_command_center {
   title: 'Squad Reporting - Project Management'
   description: 'Engineering delivery metrics · Bottleneck analysis · Team health'
@@ -2990,7 +2991,6 @@ case(
         data_type: 'number'
       }
       theme {
-
       }
       date_field: VizFieldFull {
         ref: r(reporting_issues.completed_at)

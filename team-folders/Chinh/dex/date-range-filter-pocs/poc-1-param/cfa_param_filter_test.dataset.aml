@@ -1,0 +1,34 @@
+Dataset cfa_param_filter_test {
+  label: 'CFA Param Filter Test'
+  description: 'Mock dataset to test one date range filter across two CFA date fields.'
+  data_source_name: 'data_staging'
+  owner: 'chinh.dm@holistics.io'
+
+  models: [
+    cfa_model
+  ]
+
+  metric total_cfa_amount {
+    label: 'Total CFA Amount'
+    type: 'number'
+    definition: @aql sum(cfa_model.cfa_amount) ;;
+  }
+
+  metric total_cfa_amount_param_period {
+    label: 'Total CFA Amount (Param Period)'
+    description: 'Tests using one date range parameter as lower bound for Field A and upper bound workaround for Field B.'
+    type: 'number'
+    definition: @aql
+      total_cfa_amount
+      | where(
+        cfa_model.field_a_start_date >= first(cfa_model.cfa_period_param)
+        and (
+          cfa_model.field_b_end_date < first(cfa_model.cfa_period_param)
+          or cfa_model.field_b_end_date match first(cfa_model.cfa_period_param)
+        )
+      )
+    ;;
+  }
+
+  relationships: []
+}

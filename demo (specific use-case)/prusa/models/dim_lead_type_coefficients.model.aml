@@ -1,0 +1,22 @@
+Model dim_lead_type_coefficients {
+  type: 'query'
+  label: 'Lead type coefficients'
+  data_source_name: 'data_staging'
+  query: @sql
+SELECT * FROM UNNEST([
+  STRUCT('outbound' AS lead_type, 1.0 AS coefficient),
+  STRUCT('inbound_unqualified' AS lead_type, 0.75 AS coefficient),
+  STRUCT('inbound_qualified' AS lead_type, 0.5 AS coefficient),
+  STRUCT('shared_ownership_lead' AS lead_type, 0.5 AS coefficient),
+  STRUCT('upsell' AS lead_type, 0.5 AS coefficient)
+]);;
+  dimension lead_type {
+    label: 'Lead type'
+    type: 'text'
+    primary_key: true
+  }
+  dimension coefficient {
+    label: 'coefficient'
+    type: 'number'
+  }
+}

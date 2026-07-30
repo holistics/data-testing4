@@ -87,4 +87,21 @@ when {{ name }} in ('Skin Care'
     description: "This is the description"
     aggregation_type: "count"
   }
+  measure measure_aaac7b5 {
+    label: "Count of Categories Id"
+    type: "number"
+    description: ""
+    hidden: false
+    definition: @aql count(bhx_ecommerce_categories.id);;
+    aggregation_type: "custom"
+  }
+  measure running_total_of_categories_total_categories {
+    label: "Running total of Categories Total Categories"
+    type: "number"
+    description: ""
+    hidden: false
+    definition: @aql bhx_ecommerce_categories.total_categories | running_total();;
+    aggregation_type: "custom"
+    format: "none"
+  }
 }
