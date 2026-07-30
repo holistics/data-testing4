@@ -2,7 +2,7 @@ Model medical_events_csv {
   type: 'table'
   label: 'Medical events csv'
   description: ''
-  data_source_name: 'data_staging'
+  data_source_name: 'demo_public'
   dimension id {
     label: 'Id'
     description: ''

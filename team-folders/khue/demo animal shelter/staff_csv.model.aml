@@ -2,7 +2,7 @@ Model staff_csv {
   type: 'table'
   label: 'Staff csv'
   description: ''
-  data_source_name: 'data_staging'
+  data_source_name: 'demo_public'
   dimension id {
     label: 'Id'
     description: ''

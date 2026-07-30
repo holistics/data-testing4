@@ -2,7 +2,7 @@ Model shelter_stays_csv {
   type: 'table'
   label: 'Shelter stays csv'
   description: ''
-  data_source_name: 'data_staging'
+  data_source_name: 'demo_public'
   dimension id {
     label: 'Id'
     description: ''
