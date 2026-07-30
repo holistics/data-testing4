@@ -181,5 +181,5 @@ Model shelter_stays_csv {
     ]
   }
   owner: 'khue.pm@holistics.io'
-  table_name: '"Clari"."holistics_shelter_stays_d4089_202607300440"'
+  table_name: 'Clari.holistics_shelter_stays_d4089_202607300440'
 }
