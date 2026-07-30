@@ -1,0 +1,89 @@
+Model donations_csv {
+  type: 'table'
+  label: 'Donations csv'
+  description: ''
+  data_source_name: 'data_staging'
+  dimension id {
+    label: 'Id'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension person_id {
+    label: 'Person'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.person_id }};;
+  }
+  dimension location_id {
+    label: 'Location'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.location_id }};;
+  }
+  dimension donation_date {
+    label: 'Donation date'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.donation_date }};;
+  }
+  dimension amount {
+    label: 'Amount'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.amount }};;
+  }
+  dimension channel {
+    label: 'Channel'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.channel }};;
+  }
+  dimension campaign {
+    label: 'Campaign'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.campaign }};;
+  }
+  dimension is_recurring {
+    label: 'Is recurring'
+    description: ''
+    type: 'truefalse'
+    hidden: false
+    definition: @sql {{ #SOURCE.is_recurring }};;
+  }
+  dimension created_at {
+    label: 'Created at'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'donations.csv'
+    uploaded_at: '2026-07-30 04:39:23'
+    hash: '708005fd1d017d8adb70d23ef9537133e460f1fbee2451e5377535011c5f63da'
+    column_configs: [
+      H.imports.column_config("id", "id", "text"),
+      H.imports.column_config("person_id", "person_id", "text"),
+      H.imports.column_config("location_id", "location_id", "text"),
+      H.imports.column_config("donation_date", "donation_date", "datetime"),
+      H.imports.column_config("amount", "amount", "number"),
+      H.imports.column_config("channel", "channel", "text"),
+      H.imports.column_config("campaign", "campaign", "text"),
+      H.imports.column_config("is_recurring", "is_recurring", "truefalse"),
+      H.imports.column_config("created_at", "created_at", "datetime")
+    ]
+  }
+  owner: 'khue.pm@holistics.io'
+  table_name: '`Clari`.`holistics_donations_csv_481ce_202607300439`'
+}

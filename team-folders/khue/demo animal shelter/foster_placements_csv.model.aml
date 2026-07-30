@@ -1,0 +1,89 @@
+Model foster_placements_csv {
+  type: 'table'
+  label: 'Foster placements csv'
+  description: ''
+  data_source_name: 'data_staging'
+  dimension id {
+    label: 'Id'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension stay_id {
+    label: 'Stay'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.stay_id }};;
+  }
+  dimension foster_person_id {
+    label: 'Foster person'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.foster_person_id }};;
+  }
+  dimension start_date {
+    label: 'Start date'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.start_date }};;
+  }
+  dimension end_date {
+    label: 'End date'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.end_date }};;
+  }
+  dimension placement_reason {
+    label: 'Placement reason'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.placement_reason }};;
+  }
+  dimension nights_in_foster {
+    label: 'Nights in foster'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.nights_in_foster }};;
+  }
+  dimension is_foster_to_adopt {
+    label: 'Is foster to adopt'
+    description: ''
+    type: 'truefalse'
+    hidden: false
+    definition: @sql {{ #SOURCE.is_foster_to_adopt }};;
+  }
+  dimension created_at {
+    label: 'Created at'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'foster_placements.csv'
+    uploaded_at: '2026-07-30 04:46:51'
+    hash: '22e6f09d10d01d671583bc8df046928bcb94b1255de427c4e7f0368c8e2e53aa'
+    column_configs: [
+      H.imports.column_config("id", "id", "text"),
+      H.imports.column_config("stay_id", "stay_id", "text"),
+      H.imports.column_config("foster_person_id", "foster_person_id", "text"),
+      H.imports.column_config("start_date", "start_date", "datetime"),
+      H.imports.column_config("end_date", "end_date", "datetime"),
+      H.imports.column_config("placement_reason", "placement_reason", "text"),
+      H.imports.column_config("nights_in_foster", "nights_in_foster", "number"),
+      H.imports.column_config("is_foster_to_adopt", "is_foster_to_adopt", "truefalse"),
+      H.imports.column_config("created_at", "created_at", "datetime")
+    ]
+  }
+  owner: 'khue.pm@holistics.io'
+  table_name: '`Clari`.`holistics_foster_placem_56847_202607300446`'
+}

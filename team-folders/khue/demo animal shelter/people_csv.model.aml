@@ -1,0 +1,105 @@
+Model people_csv {
+  type: 'table'
+  label: 'People csv'
+  description: ''
+  data_source_name: 'data_staging'
+  dimension id {
+    label: 'Id'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension first_name {
+    label: 'First name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.first_name }};;
+  }
+  dimension last_name {
+    label: 'Last name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.last_name }};;
+  }
+  dimension email {
+    label: 'Email'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.email }};;
+  }
+  dimension phone {
+    label: 'Phone'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.phone }};;
+  }
+  dimension city {
+    label: 'City'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.city }};;
+  }
+  dimension state {
+    label: 'State'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.state }};;
+  }
+  dimension postal_code {
+    label: 'Postal code'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.postal_code }};;
+  }
+  dimension person_type {
+    label: 'Person type'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.person_type }};;
+  }
+  dimension first_contact_date {
+    label: 'First contact date'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.first_contact_date }};;
+  }
+  dimension created_at {
+    label: 'Created at'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'people.csv'
+    uploaded_at: '2026-07-30 04:24:19'
+    hash: 'a23537cf07c077daec6ad6f210b1d39e83dcfaf695c3bffc04e8139235fda5c0'
+    column_configs: [
+      H.imports.column_config("id", "id", "text"),
+      H.imports.column_config("first_name", "first_name", "text"),
+      H.imports.column_config("last_name", "last_name", "text"),
+      H.imports.column_config("email", "email", "text"),
+      H.imports.column_config("phone", "phone", "text"),
+      H.imports.column_config("city", "city", "text"),
+      H.imports.column_config("state", "state", "text"),
+      H.imports.column_config("postal_code", "postal_code", "text"),
+      H.imports.column_config("person_type", "person_type", "text"),
+      H.imports.column_config("first_contact_date", "first_contact_date", "datetime"),
+      H.imports.column_config("created_at", "created_at", "datetime")
+    ]
+  }
+  owner: 'khue.pm@holistics.io'
+  table_name: '`Clari`.`holistics_people_csv_ade34_202607300424`'
+}

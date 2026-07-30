@@ -1,0 +1,121 @@
+Model animals_csv {
+  type: 'table'
+  label: 'Animals csv'
+  description: ''
+  data_source_name: 'data_staging'
+  dimension id {
+    label: 'Id'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension name {
+    label: 'Name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.name }};;
+  }
+  dimension species {
+    label: 'Species'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.species }};;
+  }
+  dimension primary_breed {
+    label: 'Primary breed'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.primary_breed }};;
+  }
+  dimension secondary_breed {
+    label: 'Secondary breed'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.secondary_breed }};;
+  }
+  dimension is_mixed_breed {
+    label: 'Is mixed breed'
+    description: ''
+    type: 'truefalse'
+    hidden: false
+    definition: @sql {{ #SOURCE.is_mixed_breed }};;
+  }
+  dimension color {
+    label: 'Color'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.color }};;
+  }
+  dimension sex {
+    label: 'Sex'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.sex }};;
+  }
+  dimension size {
+    label: 'Size'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.size }};;
+  }
+  dimension date_of_birth {
+    label: 'Date of birth'
+    description: ''
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date_of_birth }};;
+  }
+  dimension is_microchipped {
+    label: 'Is microchipped'
+    description: ''
+    type: 'truefalse'
+    hidden: false
+    definition: @sql {{ #SOURCE.is_microchipped }};;
+  }
+  dimension is_spayed_neutered {
+    label: 'Is spayed neutered'
+    description: ''
+    type: 'truefalse'
+    hidden: false
+    definition: @sql {{ #SOURCE.is_spayed_neutered }};;
+  }
+  dimension created_at {
+    label: 'Created at'
+    description: ''
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'animals.csv'
+    uploaded_at: '2026-07-30 04:27:08'
+    hash: 'dfc37ac7c93fc8363b2f4c9620359f79b793f191ffc448c454cb4d59345892da'
+    column_configs: [
+      H.imports.column_config("id", "id", "text"),
+      H.imports.column_config("name", "name", "text"),
+      H.imports.column_config("species", "species", "text"),
+      H.imports.column_config("primary_breed", "primary_breed", "text"),
+      H.imports.column_config("secondary_breed", "secondary_breed", "text"),
+      H.imports.column_config("is_mixed_breed", "is_mixed_breed", "truefalse"),
+      H.imports.column_config("color", "color", "text"),
+      H.imports.column_config("sex", "sex", "text"),
+      H.imports.column_config("size", "size", "text"),
+      H.imports.column_config("date_of_birth", "date_of_birth", "date"),
+      H.imports.column_config("is_microchipped", "is_microchipped", "truefalse"),
+      H.imports.column_config("is_spayed_neutered", "is_spayed_neutered", "truefalse"),
+      H.imports.column_config("created_at", "created_at", "datetime")
+    ]
+  }
+  owner: 'khue.pm@holistics.io'
+  table_name: '`Clari`.`holistics_animals_csv_d32a2_202607300427`'
+}
