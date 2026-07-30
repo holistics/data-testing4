@@ -1,11 +1,11 @@
 PreAggregate agg_daily {
   dimension timestamp {
-    for: ref('order_master','order_created_at')
+    for: r(order_master.order_created_at)
     time_granularity: 'day'
   }
 
   measure order_count {
-    for: ref('order_master','order_id')
+    for: r(order_master.order_id)
     aggregation_type: 'count'
   }
 
@@ -43,68 +43,68 @@ pre_aggregates: {
     param_model_nam
   ]
 
-  // view {
-  //   model ecommerce_users {
-  //     field users_signed_up_count
-  //     field total_users
-  //     group segmentation {
-  //       field age_group
-  //       field gender
-  //     }
+  view {
+    model ecommerce_users {
+      field users_signed_up_count
+      field total_users
+      group segmentation {
+        field age_group
+        field gender
+      }
       
       
-  //     group PII {
-  //       field id
-  //       field first_name
-  //       field last_name
-  //       field full_name
-  //       field email_pii
-  //       field phone
-  //       field birth_date
-  //     }
-  //     group others {
-  //       field sign_up_date
-  //       field sign_up_at
-  //     }
-  // //   }
-  //   model order_master {
-  //     group measures {
-  //       field order_count
-  //       field aov
-  //       field cancel_value_ratio
-  //       field cancelled_order_ratio
-  //       field cancelled_orders_count
-  //       field cancelled_value
-  //       field completed_order_count
-  //       field count_distinct_users
-  //       field delivered_orders_count
-  //       field gmv
-  //       field nmv
-  //       field refunded_orders_count
-  //       field revenue
-  //       field revenue_delivered
-  //       field users_count
-  //     }
+      group PII {
+        field id
+        field first_name
+        field last_name
+        field full_name
+        field email_pii
+        field phone
+        field birth_date
+      }
+      group others {
+        field sign_up_date
+        field sign_up_at
+      }
+    }
+    model order_master {
+      group measures {
+        field order_count
+        field aov
+        field cancel_value_ratio
+        field cancelled_order_ratio
+        field cancelled_orders_count
+        field cancelled_value
+        field completed_order_count
+        field count_distinct_users
+        field delivered_orders_count
+        field gmv
+        field nmv
+        field refunded_orders_count
+        field revenue
+        field revenue_delivered
+        field users_count
+      }
 
-  //     group order_info {
-  //       field order_id
-  //       field status
-  //       field order_created_at
-  //       field quantity
-  //       field delivery_attempts
-  //       field discount
-  //       field last_order_value
-  //     }
+      group order_info {
+        field order_id
+        field status
+        field order_created_at
+        field quantity
+        field delivery_attempts
+        field discount
+        field last_order_value
+      }
 
-  //     group product {
-  //       field price
-  //       field product_id
+      group product {
+        field price
+        field product_id
 
-  //     }
-  //   }
-  //   model ecommerce_products
-  //   model ecommerce_countries
-  // }
+      }
+    }
+    model ecommerce_products { }
+    model ecommerce_countries { }
+  }
 
   dimension cohort_month {
     model: order_master
@@ -138,7 +138,7 @@ pre_aggregates: {
     ecommerce_cities.name,
     '--',
     ecommerce_countries.name,
-    '/experiences',
+    '/experiences'
     );;
   }
 
@@ -148,7 +148,7 @@ pre_aggregates: {
     type: 'text'
     definition: @aql concat(
     'https://www.instagram.com/explore/search/keyword/?q=',
-    ecommerce_users.first_name,
+    ecommerce_users.first_name
     );;
   }
 
@@ -160,7 +160,7 @@ pre_aggregates: {
     'https://www.facebook.com/search/top/?q=',
     ecommerce_users.first_name,
     '%20',
-    ecommerce_users.last_name,
+    ecommerce_users.last_name
     );;
   }
 
@@ -170,7 +170,7 @@ pre_aggregates: {
     type: 'text'
     definition: @aql concat(
     'https://x.com/search?q=%40',
-    ecommerce_users.first_name,
+    ecommerce_users.first_name
     );;
   }
 
@@ -190,7 +190,7 @@ pre_aggregates: {
       '+who+is+going+to+',ecommerce_cities.name,
       '+in+',
       ecommerce_users.visit_time,
-      '.+Categorize+by+Place+To+Visit+,+Event+to+go+to+during+that+month+,+Place+to+Dine+and+Wine+and+Place+to+book+hotel',
+      '.+Categorize+by+Place+To+Visit+,+Event+to+go+to+during+that+month+,+Place+to+Dine+and+Wine+and+Place+to+book+hotel'
       );;
   }
 
@@ -218,7 +218,7 @@ pre_aggregates: {
       '.+The+GMV+for+this+product+is+',
       order_master.gmv_by_product,
       '+and+the+AOV+for+this+product+is+',
-      order_master.aov_by_product,
+      order_master.aov_by_product
       )
      ;;
   }
@@ -305,22 +305,14 @@ pre_aggregates: {
   }
 
   dimension breakdown_dim {
-      label: 'Dynamic Breakdown Dimension'
-      type: 'text'
-      model: order_master
-      definition: @aql case(
-        when: 'Country Names' in param_model_nam.dim_selections
-        , then: ecommerce_countries.name
-
-        , when: 'Age Demographic' in param_model_nam.dim_selections
-        , then: ecommerce_users.age_group
-
-        , when: 'Order Status' in param_model_nam.dim_selections
-        , then: order_master.status
-
-        , when: 'Product Categories' in param_model_nam.dim_selections
-        , then: map_categories.category
-      ) ;;
-    }
-
+    label: 'Dynamic Breakdown Dimension'
+    type: 'text'
+    model: order_master
+    definition: @aql case(
+      when: 'Country Names' in param_model_nam.dim_selections, then: ecommerce_countries.name,
+      when: 'Age Demographic' in param_model_nam.dim_selections, then: ecommerce_users.age_group,
+      when: 'Order Status' in param_model_nam.dim_selections, then: order_master.status,
+      when: 'Product Categories' in param_model_nam.dim_selections, then: map_categories.category
+    ) ;;
+  }
 }
