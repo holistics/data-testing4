@@ -148,13 +148,37 @@ Dashboard tri_test {
       }
     }
     tab tab_ub8w: CanvasLayout {
-      label: 'Tab 2'
-      width: 1300
-      height: 800
+      label: 'Cross-model date filter'
+      width: 1200
+      height: 980
       grid_size: 20
       auto_expand_vertically: true
       mobile {
         mode: 'auto'
+      }
+      block f_cross_raw {
+        position: pos(20, 20, 360, 100)
+        layer: 1
+      }
+      block f_cross_first {
+        position: pos(400, 20, 360, 100)
+        layer: 2
+      }
+      block t_cross_note {
+        position: pos(780, 20, 400, 100)
+        layer: 3
+      }
+      block v_cross_raw {
+        position: pos(20, 140, 560, 360)
+        layer: 4
+      }
+      block v_cross_first {
+        position: pos(600, 140, 560, 360)
+        layer: 5
+      }
+      block v_cross_joined {
+        position: pos(20, 520, 1140, 400)
+        layer: 6
       }
     }
   }
@@ -1855,6 +1879,154 @@ Dashboard tri_test {
       }
     }
   }
+  block f_cross_raw: FilterBlock {
+    label: 'Order Date (raw orders)'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: bhx_demo_cross_model_date_filter
+      field: r(bhx_demo_raw_orders.order_date_param)
+    }
+    default {
+      operator: 'matches'
+      value: 'last 90 days'
+    }
+  }
+  block f_cross_first: FilterBlock {
+    label: 'Order Date (first order state)'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: bhx_demo_cross_model_date_filter
+      field: r(bhx_demo_first_order_state.order_date_param)
+    }
+    default {
+      operator: 'matches'
+      value: 'last 90 days'
+    }
+  }
+  block t_cross_note: TextBlock {
+    content: @md **Looker-style pushdown demo**
+Set the same date on both filters. Joined viz needs two filters (1 param per widget mapping).;;
+  }
+  block v_cross_raw: VizBlock {
+    label: 'Raw orders (param in SQL)'
+    viz: DataTable {
+      dataset: bhx_demo_cross_model_date_filter
+      fields: [
+        VizFieldFull {
+          ref: r(bhx_demo_raw_orders.order_id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(bhx_demo_raw_orders.user_id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(bhx_demo_raw_orders.status)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(bhx_demo_raw_orders.created_at)
+          format {
+            type: 'datetime'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_cross_first: VizBlock {
+    label: 'First order state (param before GROUP BY)'
+    viz: DataTable {
+      dataset: bhx_demo_cross_model_date_filter
+      fields: [
+        VizFieldFull {
+          ref: r(bhx_demo_first_order_state.user_id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(bhx_demo_first_order_state.first_order_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(bhx_demo_first_order_state.orders_in_window)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_cross_joined: VizBlock {
+    label: 'Joined explore (needs both filters)'
+    viz: DataTable {
+      dataset: bhx_demo_cross_model_date_filter
+      fields: [
+        VizFieldFull {
+          ref: r(bhx_demo_raw_orders.order_id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(bhx_demo_raw_orders.created_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(bhx_demo_first_order_state.first_order_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(bhx_demo_first_order_state.orders_in_window)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'f1'
@@ -1889,6 +2061,30 @@ Dashboard tri_test {
         CustomMapping {
           block: 'f1'
           disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_cross_raw'
+      to: [
+        CustomMapping {
+          block: [
+            'v_cross_raw',
+            'v_cross_joined'
+          ]
+          field: r(bhx_demo_raw_orders.order_date_param)
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_cross_first'
+      to: [
+        CustomMapping {
+          block: [
+            'v_cross_first',
+            'v_cross_joined'
+          ]
+          field: r(bhx_demo_first_order_state.order_date_param)
         }
       ]
     }

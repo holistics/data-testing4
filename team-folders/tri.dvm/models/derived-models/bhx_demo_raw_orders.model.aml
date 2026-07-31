@@ -1,0 +1,60 @@
+// Demo: stands in for Looker "raw events" / filter-only date field.
+// Own param is injected into this model's SQL.
+Model bhx_demo_raw_orders {
+  type: 'query'
+  label: '[Demo] Raw Orders (events stand-in)'
+  description: 'Query model wrapping orders with a date param — analogous to Looker filter-only event_date_filter on raw events.'
+  data_source_name: 'demodb'
+  owner: 'tri.dvm@holistics.io'
+
+  models: [
+    bhx_ecommerce_orders
+  ]
+
+  param order_date_param {
+    label: 'Order Date (raw orders)'
+    type: 'date'
+  }
+
+  query: @sql
+    SELECT
+      {{ #o.id }} AS order_id
+      , {{ #o.user_id }} AS user_id
+      , {{ #o.status }} AS status
+      , {{ #o.created_at }} AS created_at
+      , {{ #o.created_at }}::date AS created_date
+    FROM {{ #bhx_ecommerce_orders o }}
+    WHERE {% filter(order_date_param) %} {{ #o.created_at }} {% end %}
+  ;;
+
+  dimension order_id {
+    label: 'Order Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.order_id }};;
+  }
+
+  dimension user_id {
+    label: 'User Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.user_id }};;
+  }
+
+  dimension status {
+    label: 'Status'
+    type: 'text'
+    definition: @sql {{ #SOURCE.status }};;
+  }
+
+  dimension created_at {
+    label: 'Created At'
+    type: 'datetime'
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  dimension created_date {
+    label: 'Created Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.created_date }};;
+  }
+}
