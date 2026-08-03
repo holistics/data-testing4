@@ -12,6 +12,8 @@ Dataset ecommerce_khue {
     khue_ecommerce_fct_inventory,
     khue_ecommerce_countries,
     khue_ecommerce_cities
+    ,
+    khue_date_dim
   ]
   relationships: [
     relationship(khue_ecommerce_cities.country_code > khue_ecommerce_countries.code, true),
@@ -22,6 +24,8 @@ Dataset ecommerce_khue {
     relationship(khue_ecommerce_fct_inventory.product_id > khue_ecommerce_products.id, true),
     relationship(khue_ecommerce_products.category_id > khue_ecommerce_categories.id, true),
     relationship(khue_ecommerce_order_items.product_id > khue_ecommerce_products.id, true)
+    ,
+    relationship(khue_ecommerce_merchants.city_id > khue_ecommerce_cities.id, false)
   ]
   metric total_sales {
     label: "Total Sales "
@@ -58,5 +62,18 @@ Dataset ecommerce_khue {
 /
 count_distinct(khue_ecommerce_orders.id);;
     format: "none"
+  }
+  metric sales_by_merchant_city {
+    label: "Sales by Merchant City"
+    type: "number"
+    description: ""
+    definition: @aql sum(
+  khue_ecommerce_order_items,
+  khue_ecommerce_order_items.quantity * khue_ecommerce_products.price
+)
+| with_relationships(
+    khue_ecommerce_merchants.city_id > khue_ecommerce_cities.id
+  );;
+    format: "[\$\$]#,###"
   }
 }

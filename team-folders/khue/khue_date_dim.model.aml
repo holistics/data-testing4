@@ -1,0 +1,91 @@
+Model khue_date_dim {
+  type: 'query'
+  label: 'Khue Date Dim'
+  description: ''
+  data_source_name: 'demodb'
+  dimension date {
+    primary_key: true
+    label: 'Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date }};;
+  }
+  dimension year {
+    label: 'Year'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.year }};;
+  }
+  dimension quarter {
+    label: 'Quarter'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.quarter }};;
+  }
+  dimension month_number {
+    label: 'Month Number'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.month_number }};;
+  }
+  dimension month_name {
+    label: 'Month Name'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.month_name }};;
+  }
+  dimension year_month {
+    label: 'Year Month'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.year_month }};;
+  }
+  dimension day_of_week_number {
+    label: 'Day Of Week Number'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.day_of_week_number }};;
+  }
+  dimension day_of_week_name {
+    label: 'Day Of Week Name'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.day_of_week_name }};;
+  }
+
+  owner: 'khue.pm@holistics.io'
+  query: @sql
+    SELECT
+      date_day :: date AS date,
+      EXTRACT(
+        YEAR
+        FROM
+          date_day
+      ) :: integer AS year,
+      EXTRACT(
+        QUARTER
+        FROM
+          date_day
+      ) :: integer AS quarter,
+      EXTRACT(
+        MONTH
+        FROM
+          date_day
+      ) :: integer AS month_number,
+      TRIM(TO_CHAR(date_day, 'Month')) AS month_name,
+      TO_CHAR(date_day, 'YYYY-MM') AS year_month,
+      EXTRACT(
+        ISODOW
+        FROM
+          date_day
+      ) :: integer AS day_of_week_number,
+      TRIM(TO_CHAR(date_day, 'Day')) AS day_of_week_name
+    FROM
+      generate_series(
+        '2020-01-01' :: date,
+        '2030-12-31' :: date,
+        '1 day' :: interval
+      ) AS date_day;;
+  models: [
+  ]
+}

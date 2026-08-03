@@ -193,11 +193,42 @@ Dashboard khue_ecomm_dashboard {
       }
     }
   }
+  block v_ghid: VizBlock {
+    label: 'Sales by Merchant City by Name'
+    viz: BarChart {
+      dataset: ecommerce_khue
+      x_axis: VizFieldFull {
+        ref: r(khue_ecommerce_cities.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: r(ecommerce_khue.sales_by_merchant_city)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
 
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
-    height: 1860
+    height: 1700
     grid_size: 20
     auto_expand_vertically: true
     block title {
@@ -220,32 +251,35 @@ Dashboard khue_ecomm_dashboard {
       layer: 4
     }
     block v_duuk {
-      position: pos(20, 240, 600, 420)
+      position: pos(20, 220, 600, 420)
       layer: 5
     }
     block v_88u0 {
-      position: pos(640, 240, 620, 420)
+      position: pos(640, 220, 620, 420)
       layer: 6
     }
     block v_zexm {
-      position: pos(0, 720, 1300, 440)
+      position: pos(0, 660, 1300, 440)
       layer: 7
+    }
+    block v_ghid {
+      position: pos(0, 1120, 1300, 560)
+      layer: 8
     }
     mobile {
       mode: 'auto'
     }
   }
-
-  theme: H.themes.vanilla
+  theme: H.themes.metropolitan
   interactions: [
     FilterInteraction {
       from: 'v_8jkz'
       to: [
         CustomMapping {
           block: [
-            'v_1a84',
-            'v_0e8a',
-            'v_88u0'
+            'v_ikpj',
+            'v_duuk',
+            'v_zexm'
           ]
           disabled: true
         }
@@ -256,9 +290,9 @@ Dashboard khue_ecomm_dashboard {
       to: [
         CustomMapping {
           block: [
-            'v_8jkz',
-            'v_0e8a',
-            'v_88u0'
+            'v_ikpj',
+            'v_duuk',
+            'v_zexm'
           ]
           disabled: true
         }
@@ -269,8 +303,10 @@ Dashboard khue_ecomm_dashboard {
       to: [
         CustomMapping {
           block: [
-            'v_0e8a',
-            'v_88u0'
+            'v_8jkz',
+            'v_1a84',
+            'v_duuk',
+            'v_zexm'
           ]
           disabled: true
         }
@@ -281,10 +317,8 @@ Dashboard khue_ecomm_dashboard {
       to: [
         CustomMapping {
           block: [
-            'v_8jkz',
-            'v_1a84',
-            'v_ikpj',
-            'v_88u0'
+            'v_duuk',
+            'v_zexm'
           ]
           disabled: true
         }
@@ -294,7 +328,13 @@ Dashboard khue_ecomm_dashboard {
       from: 'v_duuk'
       to: [
         CustomMapping {
-          block: 'v_88u0'
+          block: [
+            'v_8jkz',
+            'v_1a84',
+            'v_ikpj',
+            'v_0e8a',
+            'v_zexm'
+          ]
           disabled: true
         }
       ]
@@ -303,12 +343,22 @@ Dashboard khue_ecomm_dashboard {
       from: 'v_88u0'
       to: [
         CustomMapping {
+          block: 'v_zexm'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_zexm'
+      to: [
+        CustomMapping {
           block: [
             'v_8jkz',
             'v_1a84',
             'v_ikpj',
             'v_0e8a',
-            'v_duuk'
+            'v_duuk',
+            'v_88u0'
           ]
           disabled: true
         }
