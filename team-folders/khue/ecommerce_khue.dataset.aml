@@ -1,0 +1,62 @@
+Dataset ecommerce_khue {
+  label: 'ecommerce_khue'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    khue_ecommerce_categories,
+    khue_ecommerce_users,
+    khue_ecommerce_products,
+    khue_ecommerce_orders,
+    khue_ecommerce_order_items,
+    khue_ecommerce_merchants,
+    khue_ecommerce_fct_inventory,
+    khue_ecommerce_countries,
+    khue_ecommerce_cities
+  ]
+  relationships: [
+    relationship(khue_ecommerce_cities.country_code > khue_ecommerce_countries.code, true),
+    relationship(khue_ecommerce_users.city_id > khue_ecommerce_cities.id, true),
+    relationship(khue_ecommerce_products.merchant_id > khue_ecommerce_merchants.id, true),
+    relationship(khue_ecommerce_orders.user_id > khue_ecommerce_users.id, true),
+    relationship(khue_ecommerce_order_items.order_id > khue_ecommerce_orders.id, true),
+    relationship(khue_ecommerce_fct_inventory.product_id > khue_ecommerce_products.id, true),
+    relationship(khue_ecommerce_products.category_id > khue_ecommerce_categories.id, true),
+    relationship(khue_ecommerce_order_items.product_id > khue_ecommerce_products.id, true)
+  ]
+  metric total_sales {
+    label: "Total Sales "
+    type: "number"
+    description: ""
+    definition: @aql sum(
+  khue_ecommerce_order_items,
+  khue_ecommerce_order_items.quantity * khue_ecommerce_products.price
+);;
+    format: "[\$\$]#,###"
+  }
+  metric total_orders {
+    label: "Total Orders"
+    type: "number"
+    description: ""
+    definition: @aql count_distinct(khue_ecommerce_orders.id);;
+    format: "none"
+  }
+  metric items_sold {
+    label: "Items Sold"
+    type: "number"
+    description: ""
+    definition: @aql sum(khue_ecommerce_order_items.quantity);;
+    format: "none"
+  }
+  metric average_order_value {
+    label: "Average Order Value"
+    type: "number"
+    description: ""
+    definition: @aql sum(
+  khue_ecommerce_order_items,
+  khue_ecommerce_order_items.quantity * khue_ecommerce_products.price
+) * 1.0
+/
+count_distinct(khue_ecommerce_orders.id);;
+    format: "none"
+  }
+}
