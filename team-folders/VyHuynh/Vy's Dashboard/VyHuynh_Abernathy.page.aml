@@ -385,7 +385,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         series {
           mark_type: 'column'
           field: VizFieldFull {
-            //label: 'Custom label Revenue'
+            //label: ''
             ref: r(vyhuynh_ecommerce_dataset.total_revenue)
             format {
               type: 'number'
@@ -588,6 +588,19 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
               type: 'number'
               pattern: 'inherited'
             }
+          }
+        }
+        series {
+          field: ConstantVizField {
+            label: 'Reference line of GMV'
+            value: 2000000
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            line_style: 'dashed'
           }
         }
         series {
