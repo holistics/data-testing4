@@ -1,4 +1,4 @@
-Model ecommerce_fct_inventory {
+Model khue_ecommerce_fct_inventory {
   type: 'table'
   label: 'Fct Inventory'
   description: ''

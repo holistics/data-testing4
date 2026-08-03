@@ -1,4 +1,4 @@
-Model ecommerce_countries {
+Model khue_ecommerce_countries {
   type: 'table'
   label: 'Countries'
   description: ''

@@ -1,4 +1,4 @@
-Model ecommerce_merchants {
+Model khue_ecommerce_merchants {
   type: 'table'
   label: 'Merchants'
   description: ''

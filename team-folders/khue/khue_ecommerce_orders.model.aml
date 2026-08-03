@@ -1,4 +1,4 @@
-Model ecommerce_orders {
+Model khue_ecommerce_orders {
   type: 'table'
   label: 'Orders'
   description: ''

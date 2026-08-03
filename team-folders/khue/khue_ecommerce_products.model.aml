@@ -1,4 +1,4 @@
-Model ecommerce_products {
+Model khue_ecommerce_products {
   type: 'table'
   label: 'Products'
   description: ''

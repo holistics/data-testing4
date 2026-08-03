@@ -1,4 +1,4 @@
-Model ecommerce_cities {
+Model khue_ecommerce_cities {
   type: 'table'
   label: 'Cities'
   description: ''

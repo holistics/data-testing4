@@ -1,4 +1,4 @@
-Model ecommerce_users {
+Model khue_ecommerce_users {
   type: 'table'
   label: 'Users'
   description: ''
