@@ -26,6 +26,10 @@ Dataset ecommerce_khue {
     relationship(khue_ecommerce_order_items.product_id > khue_ecommerce_products.id, true)
     ,
     relationship(khue_ecommerce_merchants.city_id > khue_ecommerce_cities.id, false)
+    ,
+    relationship(khue_ecommerce_orders.created_date > khue_date_dim.date, true)
+    ,
+    relationship(khue_ecommerce_users.sign_up_date > khue_date_dim.date, false)
   ]
   metric total_sales {
     label: "Total Sales "

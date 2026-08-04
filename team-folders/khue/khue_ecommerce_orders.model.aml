@@ -45,7 +45,7 @@ Model khue_ecommerce_orders {
     hidden: false
     definition: @sql {{ #SOURCE.applied_promo_codes }};;
   }
-  dimension untitled_dimension {
+  dimension created_date {
     label: "Created Date"
     type: "date"
     description: ""
