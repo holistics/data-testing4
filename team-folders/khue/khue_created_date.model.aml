@@ -1,0 +1,3 @@
+Model khue_created_date = khue_date_dim.extend({
+  label: 'Created Date'
+})

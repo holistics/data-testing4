@@ -224,11 +224,62 @@ Dashboard khue_ecomm_dashboard {
       }
     }
   }
+  block v_zlde: VizBlock {
+    label: 'Year, Quarter and 3 more'
+    viz: DataTable {
+      dataset: ecommerce_khue
+      fields: [
+        VizFieldFull {
+          ref: r(khue_date_dim.year)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(khue_date_dim.quarter)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_khue.order_created)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_khue.orders_delivered)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_khue.orders_cancelled)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
 
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
-    height: 1700
+    height: 2140
     grid_size: 20
     auto_expand_vertically: true
     block title {
@@ -266,6 +317,10 @@ Dashboard khue_ecomm_dashboard {
       position: pos(0, 1120, 1300, 560)
       layer: 8
     }
+    block v_zlde {
+      position: pos(20, 1700, 620, 420)
+      layer: 9
+    }
     mobile {
       mode: 'auto'
     }
@@ -277,9 +332,10 @@ Dashboard khue_ecomm_dashboard {
       to: [
         CustomMapping {
           block: [
-            'v_ikpj',
-            'v_duuk',
-            'v_zexm'
+            'v_1a84',
+            'v_0e8a',
+            'v_88u0',
+            'v_ghid'
           ]
           disabled: true
         }
@@ -290,9 +346,10 @@ Dashboard khue_ecomm_dashboard {
       to: [
         CustomMapping {
           block: [
-            'v_ikpj',
-            'v_duuk',
-            'v_zexm'
+            'v_8jkz',
+            'v_0e8a',
+            'v_88u0',
+            'v_ghid'
           ]
           disabled: true
         }
@@ -303,10 +360,9 @@ Dashboard khue_ecomm_dashboard {
       to: [
         CustomMapping {
           block: [
-            'v_8jkz',
-            'v_1a84',
-            'v_duuk',
-            'v_zexm'
+            'v_0e8a',
+            'v_88u0',
+            'v_ghid'
           ]
           disabled: true
         }
@@ -317,8 +373,11 @@ Dashboard khue_ecomm_dashboard {
       to: [
         CustomMapping {
           block: [
-            'v_duuk',
-            'v_zexm'
+            'v_8jkz',
+            'v_1a84',
+            'v_ikpj',
+            'v_88u0',
+            'v_ghid'
           ]
           disabled: true
         }
@@ -329,11 +388,8 @@ Dashboard khue_ecomm_dashboard {
       to: [
         CustomMapping {
           block: [
-            'v_8jkz',
-            'v_1a84',
-            'v_ikpj',
-            'v_0e8a',
-            'v_zexm'
+            'v_88u0',
+            'v_ghid'
           ]
           disabled: true
         }
@@ -343,7 +399,14 @@ Dashboard khue_ecomm_dashboard {
       from: 'v_88u0'
       to: [
         CustomMapping {
-          block: 'v_zexm'
+          block: [
+            'v_8jkz',
+            'v_1a84',
+            'v_ikpj',
+            'v_0e8a',
+            'v_duuk',
+            'v_ghid'
+          ]
           disabled: true
         }
       ]
@@ -352,13 +415,23 @@ Dashboard khue_ecomm_dashboard {
       from: 'v_zexm'
       to: [
         CustomMapping {
+          block: 'v_ghid'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_ghid'
+      to: [
+        CustomMapping {
           block: [
             'v_8jkz',
             'v_1a84',
             'v_ikpj',
             'v_0e8a',
             'v_duuk',
-            'v_88u0'
+            'v_88u0',
+            'v_zexm'
           ]
           disabled: true
         }

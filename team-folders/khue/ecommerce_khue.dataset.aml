@@ -94,8 +94,12 @@ count_distinct(khue_ecommerce_orders.id);;
   metric orders_delivered {
     label: "Orders Delivered "
     type: "number"
+    hidden: false
     description: ""
     definition: @aql count_distinct(khue_ecommerce_orders.id)
+| where(
+    khue_ecommerce_orders.delivered_at is not null
+  )
 | with_relationships(
     khue_ecommerce_orders.delivered_at > khue_date_dim.date
   );;
@@ -104,8 +108,12 @@ count_distinct(khue_ecommerce_orders.id);;
   metric orders_cancelled {
     label: "Orders Cancelled "
     type: "number"
+    hidden: false
     description: ""
     definition: @aql count_distinct(khue_ecommerce_orders.id)
+| where(
+    khue_ecommerce_orders.cancelled_at is not null
+  )
 | with_relationships(
     khue_ecommerce_orders.cancelled_at > khue_date_dim.date
   );;
