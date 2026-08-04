@@ -54,6 +54,20 @@ Model khue_ecommerce_orders {
     primary_key: false
     format: "LLL dd yyyy"
   }
+  dimension cancelled_at {
+    label: "Cancelled At"
+    type: "date"
+    description: ""
+    definition: @sql CASE WHEN {{ status }} = 'cancelled' THEN {{ created_at }}::date + (floor(random() * 10 + 1)::int || ' day')::interval END;;
+  }
+  dimension delivered_at {
+    label: "Delivered At"
+    type: "date"
+    description: ""
+    hidden: false
+    definition: @sql CASE WHEN {{ status }} in ('delivered', 'refunded') THEN {{ created_at }}::date + (floor(random() * 10 + 1)::int || ' day')::interval END;;
+    primary_key: false
+  }
 
   owner: 'khue.pm@holistics.io'
   table_name: '"ecommerce"."orders"'
