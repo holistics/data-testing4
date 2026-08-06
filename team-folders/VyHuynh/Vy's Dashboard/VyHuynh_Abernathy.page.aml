@@ -385,7 +385,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         series {
           mark_type: 'column'
           field: VizFieldFull {
-            label: 'Total Revenue'
+            //label: ''
             ref: r(vyhuynh_ecommerce_dataset.total_revenue)
             format {
               type: 'number'
@@ -564,7 +564,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block t9: H.blocks.line(2, '#8F99A3')
   block v8: VizBlock {
-    label: 'GMV - Gross Merchandise Value by Month'
+    label: 'GMV by Month'
     viz: AreaChart {
       dataset: demo_ecommerce
       x_axis: VizFieldFull {
@@ -582,6 +582,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
         series {
           field: VizFieldFull {
+            label: 'GMV'
             ref: r(order_master.gmv)
             format {
               type: 'number'
@@ -590,8 +591,21 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           }
         }
         series {
+          field: ConstantVizField {
+            label: 'Reference line of GMV'
+            value: 2000000
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            line_style: 'dashed'
+          }
+        }
+        series {
           field: VizFieldFull {
-            label: 'Untitled Trend line'
+            label: 'GMV Trend'
             ref: r(order_master.gmv)
             format {
               type: 'number'

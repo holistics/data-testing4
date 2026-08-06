@@ -2517,7 +2517,7 @@ abc;;
         layer: 2
       }
       block t2 {
-        position: pos(40, 100, 660, 50)
+        position: pos(40, 81, 660, 60)
       }
       block t5 {
         position: pos(40, 220, 1460, 80)
