@@ -49,36 +49,4 @@ Dashboard classic_bi_tool_ssspf {
       }
     }
   }
-  block v_dpdc: VizBlock {
-    label: 'Untitled Report'
-    viz: DataTable {
-      dataset: dynamic_schema_dataset
-      theme {
-
-      }
-      fields: [
-        VizFieldFull {
-          ref: r(dynamic_schema_ecommerce_orders.id)
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-        },
-        VizFieldFull {
-          ref: r(dynamic_schema_ecommerce_orders.status)
-          format {
-            type: 'text'
-          }
-        }
-      ]
-      settings {
-        show_row_number: true
-        row_limit: 5000
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-      }
-    }
-  }
 }

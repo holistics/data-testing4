@@ -18,7 +18,6 @@ Dashboard khai_personal_xnpsd {
             type: 'text'
           }
         },
-        r(khai_ecommerce, countries.is_country),
         VizFieldFull {
           ref: r(khai_ecommerce.gmv)
           format {
