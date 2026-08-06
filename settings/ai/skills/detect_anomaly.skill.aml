@@ -1,4 +1,5 @@
 Skill detect_anomaly {
+  disabled: true
   label: "Detect anomaly"
   invocation: 'auto'
   description: @md
