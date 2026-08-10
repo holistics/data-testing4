@@ -928,7 +928,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     default {
       operator: 'matches'
-      value: '$H_NIL$'
+      value: '2026'
     }
     settings {
       drillthrough: Drillthrough {
