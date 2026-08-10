@@ -1,5 +1,4 @@
-Skill detect_anomaly {
-  disabled: true
+Skill detect_anomaly_local {
   label: "Detect anomaly"
   invocation: 'auto'
   description: @md
