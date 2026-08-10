@@ -69,7 +69,7 @@ Skill analyze_changes_local {
     Fetch `current_value` (value in `base_period`) and `comparison_value` (value in `comparison_period`)
     from the dataset. Compute `delta` = current_value − comparison_value.
 
-    Echo a one-line confirmation with the actual values:
+    post a one-line update to confirm the actual values:
     > "Got it — you're seeing a [drop/increase] in **[metric]** from **[comparison_value]**
     > ([comparison_period]) to **[current_value]** ([base_period]), [formatted delta]."
 
@@ -92,7 +92,7 @@ Skill analyze_changes_local {
 
     Execution:
     * Add task to Plan
-    * Delegate this task to a sub-agent (only do it yourself if delegation is unavailable), alongside with an update message to the user:
+    * Delegate this task to a sub-agent (only do it yourself if delegation is unavailable), alongside with post and update message to the user:
     > "Before we look at what drove this, let me first check whether this [drop/increase] in
     > **[metric]** is actually unusual — or just normal variation. Running the anomaly check
     > now..."
