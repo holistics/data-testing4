@@ -334,28 +334,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         mode: 'auto'
       }
     }
-    tab tab_kamz: CanvasLayout {
-      label: 'draft'
-      width: 1300
-      height: 800
-      grid_size: 20
-      auto_expand_vertically: true
-      mobile {
-        mode: 'auto'
-      }
-      block v_91yu {
-        position: pos(40, 100, 260, 140)
-      }
-      block v_nir7 {
-        position: pos(320, 100, 220, 140)
-      }
-      block f_publift_test_data_csv_currency {
-        position: pos(40, 20, 300, 80)
-      }
-      block v_15s1 {
-        position: pos(40, 260, 260, 160)
-      }
-    }
   }
   theme: H.themes.vanilla
   block v3: VizBlock {
@@ -2874,177 +2852,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block v_91yu: VizBlock {
-    label: 'This month Revenue copy'
-    viz: MetricKpi {
-      dataset: vyhuynh_ecommerce_dataset
-      calculation monthly_revenue {
-        label: 'Monthly Revenue'
-        formula: @aql vyht_ecommerce_order_items
-  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation max_of_orders_status {
-        label: 'Max of Orders Status'
-        formula: @aql max(vyht_ecommerce_orders_1.status);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation max_of_orders_status_01 {
-        label: 'Max of Orders Status 01'
-        formula: @aql max(vyht_ecommerce_orders_1.status);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      value: VizFieldFull {
-        ref: r(publift_test_data_csv.earning)
-        aggregation: 'sum'
-        format {
-          type: 'number'
-          pattern: 'inherited'
-        }
-      }
-      settings {
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-        alignment: 'left'
-      }
-    }
-    settings {
-      hide_label: true
-    }
-  }
-  block v_nir7: VizBlock {
-    label: 'Currency Symbol'
-    viz: MetricKpi {
-      dataset: vyhuynh_ecommerce_dataset
-      calculation monthly_revenue {
-        label: 'Monthly Revenue'
-        formula: @aql vyht_ecommerce_order_items
-  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation max_of_orders_status {
-        label: 'Max of Orders Status'
-        formula: @aql max(vyht_ecommerce_orders_1.status);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation max_of_orders_status_01 {
-        label: 'Max of Orders Status 01'
-        formula: @aql max(vyht_ecommerce_orders_1.status);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      value: VizFieldFull {
-        label: ' Currency Symbol'
-        ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
-        format {
-          type: 'text'
-        }
-      }
-      settings {
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-        alignment: 'left'
-      }
-    }
-    settings {
-      hide_label: true
-    }
-  }
-  block f_publift_test_data_csv_currency: FilterBlock {
-    label: 'Currency'
-    type: 'field'
-    source: FieldFilterSource {
-      dataset: vyhuynh_ecommerce_dataset
-      field: r(publift_test_data_csv.currency)
-    }
-    default {
-      operator: 'is'
-      value: 'USD'
-    }
-    settings {
-      input_type: 'single'
-    }
-  }
-  block v_15s1: VizBlock {
-    theme: BlockTheme {
-      background {
-        bg_color: 'transparent'
-      }
-      border {
-        border_width: 0
-        border_color: 'transparent'
-      }
-      shadow: 'none'
-    }
-    label: 'Sum of Earning'
-    viz: MarkdownViz {
-      dataset: vyhuynh_ecommerce_dataset
-      values: [
-        VizFieldFull {
-          ref: r(publift_test_data_csv.earning)
-          aggregation: 'sum'
-          format {
-            type: 'number'
-            pattern: '#,###'
-          }
-        },
-        VizFieldFull {
-          ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
-          format {
-            type: 'text'
-          }
-        }
-      ]
-      content: @md <style>
-
-  .kpi-title {
-    margin: 0;
-    color: #8e94a5;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .kpi-value {
-    font-size: 52px;
-    font-weight: 500;
-    color: #5DB88F;
-    line-height: 1;
-  }
-
-  
-</style>
-
-<div>
-  <p class="kpi-title">Sum of Earning</p>
-  <div class="kpi-value">
-    {{ rows[0].values.`Sum of Earning` }}
-    {{ rows[0].values.`Currency Symbol` }}
-  </div>
-
-</div>                ;;
-      settings {
-        show_row_total: true
-        show_column_total: true
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-      }
-    }
-    settings {
-      hide_label: true
-    }
-  }
   block v_fb2g: VizBlock {
     label: 'Campaign, Revenue Won and 2 more'
     viz: DataTable {
@@ -3870,12 +3677,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       from: 'v3'
       to: [
         CustomMapping {
-          block: [
-            'v_8fpj',
-            'v_91yu',
-            'v_nir7',
-            'v_15s1'
-          ]
+          block: 'v_8fpj'
           disabled: true
         }
       ]
@@ -4305,12 +4107,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       from: 'v_8fpj'
       to: [
         CustomMapping {
-          block: [
-            'v3',
-            'v_91yu',
-            'v_nir7',
-            'v_15s1'
-          ]
+          block: 'v3'
           disabled: true
         }
       ]
@@ -4727,54 +4524,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_m2xo',
             'v_0725',
             'v_nd9q'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_91yu'
-      to: [
-        CustomMapping {
-          block: [
-            'v3',
-            'v_8fpj'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_nir7'
-      to: [
-        CustomMapping {
-          block: [
-            'v3',
-            'v_8fpj'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'f_publift_test_data_csv_currency'
-      to: [
-        CustomMapping {
-          block: [
-            'v3',
-            'v_8fpj'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_15s1'
-      to: [
-        CustomMapping {
-          block: [
-            'v3',
-            'v_8fpj'
           ]
           disabled: true
         }
