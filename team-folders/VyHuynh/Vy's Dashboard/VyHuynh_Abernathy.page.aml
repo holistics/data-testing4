@@ -15,7 +15,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      height: 2100
+      height: 1680
       grid_size: 20
       block v3 {
         position: pos(20, 820, 1160, 420)
@@ -3388,38 +3388,61 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
               pattern: '[$]#,###0'
             }
           }
-          settings { color: '#2563EB' }
+          settings {
+            color: '#2563EB'
+          }
         }
         series {
           mark_type: 'line'
           field: VizFieldFull {
             label: 'Lower Bound'
             ref: 'lower_bound'
-            format { type: 'number' pattern: '[$]#,###0' }
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
           }
-          settings { color: '#9CA3AF' line_style: 'dashed' }
+          settings {
+            color: '#9CA3AF'
+            line_style: 'dashed'
+          }
         }
         series {
           mark_type: 'line'
           field: VizFieldFull {
             label: 'Upper Bound'
             ref: 'upper_bound'
-            format { type: 'number' pattern: '[$]#,###0' }
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
           }
-          settings { color: '#6B7280' line_style: 'dashed' }
+          settings {
+            color: '#6B7280'
+            line_style: 'dashed'
+          }
         }
       }
       y_axis {
         label: 'Anomaly'
-        settings { alignment: 'right' axis_min: 0 axis_max: 1 }
+        settings {
+          alignment: 'right'
+          axis_min: 0
+          axis_max: 1
+        }
         series {
           mark_type: 'column'
           field: VizFieldFull {
             label: 'Is Anomaly'
             ref: 'is_anomaly'
-            format { type: 'number' pattern: '#,###0' }
+            format {
+              type: 'number'
+              pattern: '#,###0'
+            }
           }
-          settings { color: '#FCA5A5' }
+          settings {
+            color: '#FCA5A5'
+          }
         }
       }
       settings {
@@ -3550,11 +3573,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         },
         VizTooltip {
           field: VizFieldFull {
-            label: 'Is Anomaly'
-            ref: 'is_anomaly'
+            label: '% Change'
+            ref: 'pct_delta'
             format {
               type: 'number'
-              pattern: '#,###0'
+              pattern: '#,###0.0\\%'
             }
           }
         }
