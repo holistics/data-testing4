@@ -1,6 +1,6 @@
 Skill detect_anomaly_aql_local {
   label: "Detect anomaly AQL"
-  invocation: 'none'
+  invocation: 'manual'
   description: @md
     Guidelines for writing detect-anomaly queries. ONLY use this skill when explicitly asked to do so.
   ;;
