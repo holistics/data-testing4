@@ -17,6 +17,8 @@ Skill detect_anomaly_aql_local {
 
     **Warm-up gate (required).** A bucket is only banded/flagged once it has a **full `W`-bucket window** of prior history. Partial-frame window stats return values (not null), so gate explicitly on `n_prior = window_count(...) ≥ W`: buckets with `n_prior < W` get **no band** and are **never flagged** — the leading `W` lead-in buckets are exactly these, shown as context.
 
+    **Use these W values exactly.** Only shrink W if the total available history is shorter than W+1 — and if you do, state the reason explicitly in your response. Never silently use a smaller W.
+
     Window `W` by grain — a whole number of cycles:
 
     | Grain | `W` |
@@ -42,7 +44,7 @@ Skill detect_anomaly_aql_local {
     metric m_drift  = window_avg(m_delta, -W..-1,  order: T | <grain>() | asc(), partition: []);
     metric m_spread = window_stdev(m_delta, -W..-1, order: T | <grain>() | asc(), partition: []);
     metric m_expected = m_prev + m_drift;
-    metric m_z      = safe_divide(M - m_expected, m_spread);
+    metric m_z      = case(when: m_n >= W, then: safe_divide(M - m_expected, m_spread), else: null);
     metric m_lower  = case(when: m_n >= W, then: m_expected - k * m_spread, else: null);
     metric m_upper  = case(when: m_n >= W, then: m_expected + k * m_spread, else: null);
     metric m_anom   = case(when: and(m_n >= W, abs(m_z) > k), then: 1, else: 0);
@@ -74,5 +76,6 @@ Skill detect_anomaly_aql_local {
     - The `n_prior ≥ W` gate is mandatory (partial windows return values, not null, and would false-flag the first `W` buckets).
     - `case(when: …, else: null)` is valid and is how the band is hidden in the lead-in.
     - The nested window (`window_stdev(m_delta, …)` where `m_delta` contains a window) compiles directly — one explore, no two-stage query.
+    - `is_anomaly` must always return `0` or `1`, **never `null`** — the `else: 0` in the case expression is mandatory. It is plotted as a column on a 0..1 axis; nulls cause rendering gaps instead of clean zeros.
   ;;
 }

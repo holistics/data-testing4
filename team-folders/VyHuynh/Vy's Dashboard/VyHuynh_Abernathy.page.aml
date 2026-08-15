@@ -97,7 +97,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     tab tab_5auh: CanvasLayout {
       label: 'Raw Data Table'
-      height: 1840
+      height: 2460
       grid_size: 20
       auto_expand_vertically: true
       block v_ztqi {
@@ -122,6 +122,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
       block d_date_drill_kv7g {
         position: pos(20, 20, 300, 80)
+        layer: 1
+      }
+      block v_cohort_vy {
+        position: pos(20, 1860, 1180, 580)
         layer: 1
       }
       mobile {
@@ -5275,6 +5279,113 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
     }
   ]
+  block v_cohort_vy: VizBlock {
+    label: 'Customer Cohort Retention'
+    viz: PivotTable {
+      dataset: demo_ecommerce
+      calculation cohort_month_c {
+        label: 'Cohort Month'
+        formula: @aql min(order_master.order_created_at | month()) | exact_grains(order_master.user_id);;
+        calc_type: 'dimension'
+        data_type: 'date'
+        model: order_master
+      }
+      calculation month_no_c {
+        label: 'Month No'
+        formula: @aql date_diff('month', order_master.cohort_month_c, order_master.order_created_at | month());;
+        calc_type: 'dimension'
+        data_type: 'number'
+        model: order_master
+      }
+      filter {
+        field: ref('order_master', 'cohort_month_c')
+        operator: 'matches'
+        value: 'last 2 years'
+      }
+      rows: [
+        VizFieldFull {
+          ref: ref('order_master', 'cohort_month_c')
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+          uname: 'cohort_month'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_users.gender)
+          format {
+            type: 'text'
+          }
+          uname: 'gender'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_countries.name)
+          format {
+            type: 'text'
+          }
+          uname: 'country_name'
+        }
+      ]
+      columns: [
+        VizFieldFull {
+          ref: ref('order_master', 'month_no_c')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Customers'
+          ref: r(order_master.count_distinct_users)
+          format {
+            type: 'number'
+            pattern: '#,###0'
+          }
+          uname: 'customers_count'
+        }
+      ]
+      settings {
+        show_row_total: false
+        show_column_total: false
+        row_limit: 5000
+        conditional_formats: [
+          ConditionalFormat {
+            key: 'customers_count'
+            format: ScaleFormat {
+              min {
+                value: 0
+                color: '#FFFFFF'
+              }
+              max {
+                value: 1
+                color: '#1070CA'
+              }
+            }
+          }
+        ]
+        column_styles: [
+          ColumnStyle {
+            key: 'cohort_month'
+            width: 120
+          },
+          ColumnStyle {
+            key: 'gender'
+            width: 100
+          },
+          ColumnStyle {
+            key: 'country_name'
+            width: 140
+          }
+        ]
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   settings {
     timezone: 'Etc/UTC'
     cache_duration: 1440
