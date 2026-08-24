@@ -5,7 +5,7 @@ Skill analysis_workflow {
   description: '''
     Collaborative analytics investigation that routes to the right Gartner analytics level based
     on the user's intent, then offers a contextual menu so the user steers the investigation.
-    Replaces change_analysis v1.
+    Replaces analyze_changes v1.
 
     Auto-trigger on:
       • Observation — "What happened to revenue recently?", "Show me the trend in signups",
@@ -116,7 +116,7 @@ Skill analysis_workflow {
     4. Offer a follow-up prompt:
        > **Want to dig deeper?** I can compare this to a prior period to show what changed — just say the word.
 
-    Do NOT write a stage block. Do NOT call `contribution_analysis`.
+    Do NOT write a stage block. Do NOT call `analyze_contribution`.
 
     ---
 
@@ -156,14 +156,14 @@ Skill analysis_workflow {
 
     ### 2c. Dimensional breakdown
 
-    Call `load_skill("contribution_analysis")`. It reads `Base period` and `Comparison period` from
+    Call `load_skill("analyze_contribution")`. It reads `Base period` and `Comparison period` from
     the stage block.
 
     If those fields are absent (user jumped here from Descriptive without running anomaly
     check first): resolve periods using the same logic as 2b, write a new stage block with
-    those fields set, then call `load_skill("contribution_analysis")`.
+    those fields set, then call `load_skill("analyze_contribution")`.
 
-    When contribution_analysis finishes: write a new stage block appending `contribution_analysis`.
+    When analyze_contribution finishes: write a new stage block appending `analyze_contribution`.
     Show **Menu E**, then stop.
 
     ### 2d. Metric decomposition
@@ -233,7 +233,7 @@ Skill analysis_workflow {
     - Base period: [resolved literal, e.g. "@(2026-06)"]       ← omit if not yet resolved
     - Comparison period: [resolved literal, e.g. "@(2025-06)"] ← omit if not yet resolved
     - Anomaly verdict: [Anomalous / Within normal range]        ← omit if anomaly check not run
-    - Completed diagnostics: [comma-separated: anomaly_check, yoy_comparison, contribution_analysis, decomposition]
+    - Completed diagnostics: [comma-separated: anomaly_check, yoy_comparison, analyze_contribution, decomposition]
     ---
     ```
 
@@ -255,24 +255,24 @@ Skill analysis_workflow {
     > **Want to dig deeper?**
     > 1. Is this change normal? *(anomaly_check)*
     > 2. How does this compare to the same period last year? *(yoy_comparison)*
-    > 3. Which segments are driving this? *(contribution_analysis)*
+    > 3. Which segments are driving this? *(analyze_contribution)*
     > 4. What will this look like going forward? *(Predictive — coming soon)*
 
     **Menu B — after anomaly check, anomalous:**
     > **The change is unusual. Want to find what drove it?**
-    > 1. Break it down by dimensions *(contribution_analysis)*
+    > 1. Break it down by dimensions *(analyze_contribution)*
     > 2. Decompose the metric — see which component shifted *(decomposition)*
     > 3. Compare to the same period last year *(yoy_comparison)*
     > 4. What should we do? *(Prescriptive — coming soon)*
 
     **Menu C — after anomaly check, within normal range:**
     > **This looks like normal variation. Anything else you'd like to check?**
-    > 1. Break it down by dimensions anyway *(contribution_analysis)*
+    > 1. Break it down by dimensions anyway *(analyze_contribution)*
     > 2. Decompose the metric *(decomposition)*
     > 3. Compare to the same period last year *(yoy_comparison)*
 
     **Menu D — after YoY comparison:**
-    > 1. Break it down by dimensions *(contribution_analysis)*
+    > 1. Break it down by dimensions *(analyze_contribution)*
     > 2. Decompose the metric *(decomposition)*
     > 3. Check if this is statistically unusual *(anomaly_check)*
     > 4. What should we do? *(Prescriptive — coming soon)*
@@ -284,7 +284,7 @@ Skill analysis_workflow {
     > 4. What should we do? *(Prescriptive — coming soon)*
 
     **Menu F — after metric decomposition:**
-    > 1. Break it down by dimensions to find which segment drove the component shift *(contribution_analysis)*
+    > 1. Break it down by dimensions to find which segment drove the component shift *(analyze_contribution)*
     > 2. Compare to the same period last year *(yoy_comparison)*
     > 3. Check if this is statistically unusual *(anomaly_check)*
     > 4. What should we do? *(Prescriptive — coming soon)*
@@ -301,7 +301,7 @@ Skill analysis_workflow {
 
     - Never re-run a diagnostic already in `Completed diagnostics`
     - Always confirm the metric before any analysis if ambiguous
-    - `detect_anomaly` and `contribution_analysis` are called with `load_skill()`, never re-implemented inline
+    - `detect_anomaly` and `analyze_contribution` are called with `load_skill()`, never re-implemented inline
     - For YoY and decomposition: validate AQL with `validate_aql` before `execute_aql` / `execute_viz`
     - Pass only `dataset_uname`, `viz`, and `title` to `execute_viz` — never an `aql` property
     - The escalation menu is the only path to the next diagnostic — never auto-proceed
