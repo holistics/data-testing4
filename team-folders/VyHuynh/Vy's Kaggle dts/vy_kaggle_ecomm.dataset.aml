@@ -27,7 +27,7 @@ Dataset vy_kaggle_ecomm {
   metric order_revenue {
     label: 'Order Revenue'
     type: 'number'
-    definition: @aql (vy_kaggle_order_items | sum(vy_kaggle_order_items.price + vy_kaggle_order_items.freight_value)) | where(vy_kaggle_orders.order_status == 'delivered');;
+    definition: @aql ((vy_kaggle_order_items | sum(vy_kaggle_order_items.price + vy_kaggle_order_items.freight_value)) | where(vy_kaggle_orders.order_status == 'delivered')) / 2;;
     format: '[\$\$]#,###0.00'
     description: 'Sum of item price and freight value for delivered orders only.'
   }
