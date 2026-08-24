@@ -1,5 +1,5 @@
 Dashboard ecommerce_dashboard_tai {
-  title: dict('dashboard_title')('eng')
+  title: 'E-commerce Dashboard'
   owner: 'hien.nt@holistics.io'
   block v_l8pg: VizBlock {
     label: dict('gmv_block_label')('eng')
@@ -130,5 +130,6 @@ Dashboard ecommerce_dashboard_tai {
   theme: H.themes.vanilla
   settings {
     cache_duration: 1440
+    autorun_on_open: true
   }
 }
