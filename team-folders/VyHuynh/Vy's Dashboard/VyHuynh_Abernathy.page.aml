@@ -1,3 +1,5 @@
+
+
 Dashboard vy_huynh_abernathy {
   title: 'Abernathy - Sales Overview'
   description: @md Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et massa vehicula, lobortis tortor bibendum, molestie velit. Morbi iaculis augue et pulvinar tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin lacus arcu, aliquam at elit at, porta suscipit libero. Integer euismod, urna vitae rhoncus tristique, tortor odio condimentum lacus, sit amet accumsan sem eros a sapien. Quisque commodo hendrerit dui, et fermentum nibh consectetur id. Maecenas convallis fringilla cursus. Fusce urna justo, lacinia a ipsum eu, lacinia vehicula dui. Vestibulum sagittis quam est, a posuere lorem suscipit sit amet.
@@ -409,7 +411,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v5: VizBlock {
-    label: 'GMV by Continent (2024)'
+    label: 'GMV by Continent New Palette (2024)'
     description: 'This is description of the block'
     viz: ColumnChart {
       dataset: demo_ecommerce
@@ -425,10 +427,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         operator: 'matches'
         value: '2024'
       }
-      theme {
-      }
       x_axis: VizFieldFull {
         ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_users.gender)
         format {
           type: 'text'
         }
@@ -439,11 +445,15 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
         series {
           field: VizFieldFull {
+            label: 'GMV'
             ref: r(order_master.gmv)
             format {
               type: 'number'
               pattern: '#,###'
             }
+          }
+          settings {
+            color_palette: H.color_palettes.pastel_1
           }
         }
       }
@@ -1727,6 +1737,24 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   block v_7vcf: VizBlock {
     label: 'Total GMV (2024)'
     description: 'This is description of the block'
+    theme: BlockTheme {
+      background {
+        bg_color: "#1a2540"
+      }
+      border {
+        border_width: 2
+        border_style: "solid"
+        border_color: "#3b82f6"
+        border_radius: 14
+      }
+      shadow: "md"
+      padding: 20
+      label {
+        font_color: "#3b82f6"
+        font_size: 15
+        font_weight: "semibold"
+      }
+    }
     viz: MetricKpi {
       dataset: demo_ecommerce
       calculation adhoc_dim {
@@ -1748,6 +1776,31 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         value: '2025'
       }
       theme {
+        metric_kpi {
+          label {
+            font_color: "#9ca3af"
+          }
+          value {
+            font_color: "#9ca3af"
+          }
+          trend {
+            positive {
+              text {
+                font_color: "#9ca3af"
+              }
+            }
+            negative {
+              text {
+                font_color: "#9ca3af"
+              }
+            }
+            neutral {
+              text {
+                font_color: "#9ca3af"
+              }
+            }
+          }
+        }
       }
       value: VizFieldFull {
         ref: r(order_master.gmv)
