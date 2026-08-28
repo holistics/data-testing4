@@ -1,0 +1,43 @@
+Dataset rlp_sales_dataset {
+  label: 'RLP Sales (CF-13963)'
+  description: '''
+    Reproduction of the teveo RLP question (CF-13963): dim_roles ---> fct_sales <--- dim_influencers.
+    `h_role` stands in for country so permissions are easy to verify with a real user attribute.
+
+    Setup under test:
+    - `has_role_access` on fct_sales holds the OR itself (destination role = h_role OR influencer target role
+      = h_role) with the user attribute baked in, so the RLP rule is a plain `is true`. Exact equality — the
+      concat + contains workaround is only needed when you cannot join the two dims into the fact model.
+    NO rule on rlp_dim_influencers here, on purpose. A rule on the dim propagates dim -> fact and would drop
+    sale 2 (admin destination, analyst influencer), which the OR rule is supposed to keep. The influencer list
+    is restricted in a separate dataset instead: see rlp_influencers.dataset.aml.
+
+    Inside this dataset an admin manager does see influencer 2's name on sale 2 - unavoidable, they are allowed
+    to see that sale and it belongs to that influencer. If the name itself must be hidden, group by
+    `rlp_dim_influencers.visible_name`, which masks influencers outside the user's own role.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    rlp_fct_sales,
+    rlp_dim_roles,
+    rlp_dim_influencers,
+  ]
+
+  relationships: [
+    relationship(rlp_fct_sales.role_id > rlp_dim_roles.id, true),
+    relationship(rlp_fct_sales.influencer_id > rlp_dim_influencers.id, true),
+  ]
+
+  permission sales_role_access {
+    field: r(rlp_fct_sales.has_role_access)
+    operator: 'is'
+    value: true
+  }
+
+  view {
+    model rlp_fct_sales {}
+    model rlp_dim_roles {}
+    model rlp_dim_influencers {}
+  }
+}

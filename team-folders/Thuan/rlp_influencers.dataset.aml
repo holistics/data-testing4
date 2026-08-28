@@ -1,0 +1,31 @@
+Dataset rlp_influencers_dataset {
+  label: 'RLP Influencer Directory (CF-13963)'
+  description: '''
+    The influencer lookup, deliberately separated from rlp_sales_dataset.
+
+    Only rlp_dim_influencers is in here, so the `is_my_role is true` rule has nothing to propagate to:
+    - h_role = admin   -> influencer 1 only
+    - h_role = analyst -> influencer 2 only
+    - h_role = viewer  -> influencer 3 only
+
+    Putting this same rule in rlp_sales_dataset is what breaks the OR: it propagates dim -> fact and drops
+    sale 2 (admin destination / analyst influencer). One dataset cannot both keep sale 2 and hide influencer 2,
+    because sale 2 IS influencer 2's row. Splitting the datasets is what makes both requirements satisfiable.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    rlp_dim_influencers,
+  ]
+  relationships: []
+
+  permission influencer_role_access {
+    field: r(rlp_dim_influencers.is_my_role)
+    operator: 'is'
+    value: true
+  }
+
+  view {
+    model rlp_dim_influencers {}
+  }
+}
