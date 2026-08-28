@@ -1,0 +1,10 @@
+EmbedPortal localization {
+  description: ''
+  objects: [
+    ecommerce_dashboard_tai,
+    demo_ecommerce_internal_training
+  ]
+  required_permissions: [
+    demo_ecommerce_internal_training.permission.country_access
+  ]
+}
