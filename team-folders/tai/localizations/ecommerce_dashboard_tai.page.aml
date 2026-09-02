@@ -133,6 +133,7 @@ Dashboard ecommerce_dashboard_tai {
     mobile {
       mode: 'auto'
     }
+    default_zoom: 'fit_to_width'
   }
   settings {
     cache_duration: 1440
