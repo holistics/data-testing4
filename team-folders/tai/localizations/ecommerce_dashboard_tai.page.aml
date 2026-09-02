@@ -1,6 +1,13 @@
 Dashboard ecommerce_dashboard_tai {
   title: 'E-commerce Dashboard'
   owner: 'hien.nt@holistics.io'
+  theme {
+    custom_css: @css
+      .h-dac-toolbar:where(.embed *) {
+          display:none;
+      }
+    ;;
+  }
   block v_l8pg: VizBlock {
     label: dict('gmv_block_label')('eng')
     viz: MetricKpi {
@@ -127,7 +134,6 @@ Dashboard ecommerce_dashboard_tai {
       mode: 'auto'
     }
   }
-  theme: H.themes.vanilla
   settings {
     cache_duration: 1440
     autorun_on_open: true
