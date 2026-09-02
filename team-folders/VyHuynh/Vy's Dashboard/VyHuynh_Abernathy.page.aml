@@ -101,7 +101,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       grid_size: 20
       auto_expand_vertically: true
       block v_ztqi {
-        position: pos(20, 700, 1180, 420)
+        position: pos(20, 700, 440, 420)
         layer: 1
       }
       block v_856v {
@@ -126,6 +126,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
       block v_cohort_vy {
         position: pos(20, 100, 1180, 580)
+        layer: 1
+      }
+      block v_od3a {
+        position: pos(500, 700, 540, 420)
         layer: 1
       }
       mobile {
@@ -4342,6 +4346,66 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       value: '2021'
     }
   }
+  block v_od3a: VizBlock {
+    label: 'Table 1 copy'
+    viz: PivotTable {
+      dataset: demo_ecommerce
+      rows: [
+        VizFieldFull {
+          ref: r(order_master.order_created_at)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+          uname: 'datetrunc_month_order_created_at'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_users.sign_up_date)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+          uname: 'datetrunc_month_sign_up_date'
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: r(order_master.user_id)
+          aggregation: 'count distinct'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'count_distinct_user_id_1'
+        }
+      ]
+      settings {
+        show_row_total: true
+        show_column_total: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'count_distinct_user_id_1'
+            width: 100
+          },
+          ColumnStyle {
+            key: 'datetrunc_month_order_created_at'
+            width: 191
+          },
+          ColumnStyle {
+            key: 'datetrunc_month_sign_up_date'
+            width: 168
+          }
+        ]
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v3'
@@ -4396,6 +4460,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
+            'v_od3a',
             'f2'
           ]
           disabled: true
@@ -4432,6 +4497,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_vk4x',
             'v_ufmq',
             'v_t8f9',
+            'v_od3a',
             'f1',
             'f_zwa4'
           ]
@@ -4474,7 +4540,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
-            'v_oa26'
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4501,7 +4568,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_0sbb',
             'v_58pi',
             'v_vk4x',
-            'v_ufmq'
+            'v_ufmq',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4516,7 +4584,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_j83d',
             'v_ji80',
             'v_n0qr',
-            'v_oa26'
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4611,7 +4680,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_vk4x',
             'v_ufmq',
             'v_t8f9',
-            'v_cohort_vy'
+            'v_cohort_vy',
+            'v_od3a'
           ]
           disabled: true
         },
@@ -4679,7 +4749,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_vk4x',
             'v_ufmq',
             'v_t8f9',
-            'v_oa26'
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4865,7 +4936,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_vk4x',
             'v_ufmq',
             'v_t8f9',
-            'v_oa26'
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4919,7 +4991,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_vk4x',
             'v_ufmq',
             'v_t8f9',
-            'v_oa26'
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -5190,6 +5263,19 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
       ]
     },
+    FilterInteraction {
+      from: 'v_od3a'
+      to: [
+        CustomMapping {
+          block: [
+            'v_hk4u',
+            'v_wsww',
+            'v_oa26'
+          ]
+          disabled: true
+        }
+      ]
+    },
     DateDrillInteraction {
       from: 'd_date_drill'
       to: [
@@ -5214,21 +5300,21 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_p9dt',
             'v_segi'
           ]
-          field: ref('vy_kaggle_orders', 'order_purchase_timestamp')
+          field: r(vy_kaggle_orders.order_purchase_timestamp)
         },
         CustomMapping {
           block: [
             'v_d9k9',
             'v_zspi'
           ]
-          field: ref('reporting_issues', 'completed_at')
+          field: r(reporting_issues.completed_at)
         },
         CustomMapping {
           block: [
             'v_j070',
             'v_qpsb'
           ]
-          field: ref('vy_opportunity_calendar_csv', 'year_month')
+          field: r(vy_opportunity_calendar_csv.year_month)
         }
       ]
     },
