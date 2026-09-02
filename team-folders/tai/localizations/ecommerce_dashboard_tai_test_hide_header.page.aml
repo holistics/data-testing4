@@ -108,30 +108,43 @@ Dashboard ecommerce_dashboard_tai_copy_2 {
       }
     }
   }
-  view: CanvasLayout {
-    label: 'Canvas Layout'
-    width: 1220
-    height: 2720
-    grid_size: 20
-    auto_expand_vertically: true
-    block t_gtay {
-      position: pos(20, 20, 1180, 80)
-      layer: 1
+  view: TabLayout {
+    label: 'View 1'
+    tab view_1: CanvasLayout {
+      label: 'Tab 1'
+      width: 1220
+      height: 2720
+      grid_size: 20
+      auto_expand_vertically: true
+      block t_gtay {
+        position: pos(20, 20, 1180, 80)
+        layer: 1
+      }
+      block v_cbn7 {
+        position: pos(20, 320, 500, 180)
+        layer: 1
+      }
+      block v_l8pg {
+        position: pos(20, 120, 500, 180)
+        layer: 1
+      }
+      block v_21s9 {
+        position: pos(560, 100, 580, 400)
+        layer: 1
+      }
+      mobile {
+        mode: 'auto'
+      }
     }
-    block v_cbn7 {
-      position: pos(20, 320, 500, 180)
-      layer: 1
-    }
-    block v_l8pg {
-      position: pos(20, 120, 500, 180)
-      layer: 1
-    }
-    block v_21s9 {
-      position: pos(560, 100, 580, 400)
-      layer: 1
-    }
-    mobile {
-      mode: 'auto'
+    tab tab_6z31: CanvasLayout {
+      label: 'Tab 2'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
     }
   }
   settings {
