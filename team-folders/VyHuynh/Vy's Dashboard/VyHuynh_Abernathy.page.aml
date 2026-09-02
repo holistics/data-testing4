@@ -4350,6 +4350,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'Table 1 copy'
     viz: PivotTable {
       dataset: demo_ecommerce
+      calculation order_master_user_id_prev_1mo {
+        label: 'Order Master User Id (prev. 1mo)'
+        formula: @aql count_distinct(order_master, order_master.user_id) | relative_period(order_master.order_created_at, interval(-1 month), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation order_master_user_id_prev_1mo_01 {
+        label: 'Order Master User Id (prev. 1mo) 01'
+        formula: @aql count_distinct(order_master, order_master.user_id) | relative_period(ecommerce_users.sign_up_date, interval(-1 month), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
       rows: [
         VizFieldFull {
           ref: r(order_master.order_created_at)
@@ -4379,6 +4391,20 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             pattern: 'inherited'
           }
           uname: 'count_distinct_user_id_1'
+        },
+        VizFieldFull {
+          ref: 'order_master_user_id_prev_1mo'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: 'order_master_user_id_prev_1mo_01'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
         }
       ]
       settings {
@@ -4395,12 +4421,12 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             width: 100
           },
           ColumnStyle {
-            key: 'datetrunc_month_order_created_at'
-            width: 191
-          },
-          ColumnStyle {
             key: 'datetrunc_month_sign_up_date'
             width: 168
+          },
+          ColumnStyle {
+            key: 'datetrunc_month_order_created_at'
+            width: 191
           }
         ]
       }
