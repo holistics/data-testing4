@@ -1,5 +1,3 @@
-
-
 Dashboard vy_huynh_abernathy {
   title: 'Abernathy - Sales Overview'
   description: @md Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et massa vehicula, lobortis tortor bibendum, molestie velit. Morbi iaculis augue et pulvinar tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin lacus arcu, aliquam at elit at, porta suscipit libero. Integer euismod, urna vitae rhoncus tristique, tortor odio condimentum lacus, sit amet accumsan sem eros a sapien. Quisque commodo hendrerit dui, et fermentum nibh consectetur id. Maecenas convallis fringilla cursus. Fusce urna justo, lacinia a ipsum eu, lacinia vehicula dui. Vestibulum sagittis quam est, a posuere lorem suscipit sit amet.
@@ -283,46 +281,51 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab_yzia: CanvasLayout {
       label: 'Key Driver'
       width: 1300
-      height: 2480
+      height: 2500
       grid_size: 20
       auto_expand_vertically: true
       block v_bj6j {
-        position: pos(20, 580, 620, 420)
+        position: pos(20, 600, 620, 420)
       }
       block v_segi {
-        position: pos(660, 1020, 620, 420)
+        position: pos(660, 1040, 620, 420)
       }
       block v_c1ru {
-        position: pos(20, 1020, 620, 420)
+        position: pos(20, 1040, 620, 420)
       }
       block v_3pqe {
-        position: pos(20, 1460, 620, 420)
+        position: pos(20, 1480, 620, 420)
       }
       block v_p9dt {
-        position: pos(660, 580, 620, 420)
+        position: pos(660, 600, 620, 420)
       }
       block t_uje2 {
-        position: pos(20, 1960, 520, 60)
+        position: pos(20, 1980, 520, 60)
       }
       block v_d9k9 {
-        position: pos(20, 2040, 620, 420)
+        position: pos(20, 2060, 620, 420)
       }
       block v_zspi {
-        position: pos(660, 2040, 620, 420)
-      }
-      block t_io0f {
-        position: pos(20, 500, 520, 60)
+        position: pos(660, 2060, 620, 420)
       }
       block t_wymk {
-        position: pos(20, 20, 520, 60)
+        position: pos(20, 120, 520, 60)
       }
       block v_j070 {
-        position: pos(660, 80, 600, 400)
+        position: pos(660, 180, 600, 400)
         layer: 2
       }
       block v_qpsb {
-        position: pos(20, 80, 600, 400)
+        position: pos(20, 180, 600, 400)
         layer: 1
+      }
+      block f_date {
+        position: pos(380, 20, 300, 80)
+        layer: 2
+      }
+      block p_period_comparison_l7d4 {
+        position: pos(20, 20, 300, 80)
+        layer: 2
       }
       mobile {
         mode: 'auto'
@@ -2827,9 +2830,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block t_io0f: TextBlock {
-    content: @md ## **Kaggle Olist Ecomm Dataset**;;
-  }
   block t_wymk: TextBlock {
     content: @md ## **Regional Sales**;;
   }
@@ -2839,8 +2839,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       dataset: vy_pbi_dts
       x_axis: VizFieldFull {
         ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
         format {
           type: 'date'
+          pattern: 'LLL yyyy'
         }
       }
       y_axis {
@@ -2871,8 +2873,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       dataset: vy_pbi_dts
       x_axis: VizFieldFull {
         ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
         format {
           type: 'date'
+          pattern: 'LLL yyyy'
         }
       }
       y_axis {
@@ -4322,6 +4326,22 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block p_period_comparison_l7d4: PopBlock {
+    label: 'Period Comparison'
+    default {
+      type: 'relative'
+      duration: 1
+      granularity: 'year'
+    }
+  }
+  block f_date: FilterBlock {
+    label: 'Date'
+    type: 'date'
+    default {
+      operator: 'matches'
+      value: '2021'
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v3'
@@ -4597,7 +4617,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         },
         CustomMapping {
           block: 'v3'
-          field: ref('vyht_ecommerce_orders_1', 'created_at')
+          field: r(vyht_ecommerce_orders_1.created_at)
         }
       ]
     },
@@ -5175,11 +5195,52 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       to: [
         CustomMapping {
           block: 'v3'
-          field: ref('vyht_ecommerce_orders_1', 'created_at')
+          field: r(vyht_ecommerce_orders_1.created_at)
         },
         CustomMapping {
           block: 'v_711g'
-          field: ref('order_master', 'order_created_month')
+          field: r(order_master.order_created_month)
+        }
+      ]
+    },
+    PopInteraction {
+      from: 'p_period_comparison_l7d4'
+      to: [
+        CustomMapping {
+          block: [
+            'v_3pqe',
+            'v_bj6j',
+            'v_c1ru',
+            'v_p9dt',
+            'v_segi'
+          ]
+          field: ref('vy_kaggle_orders', 'order_purchase_timestamp')
+        },
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi'
+          ]
+          field: ref('reporting_issues', 'completed_at')
+        },
+        CustomMapping {
+          block: [
+            'v_j070',
+            'v_qpsb'
+          ]
+          field: ref('vy_opportunity_calendar_csv', 'year_month')
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_date'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070'
+          ]
+          field: r(vy_opportunity_calendar_csv.year_month)
         }
       ]
     }
