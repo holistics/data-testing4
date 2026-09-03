@@ -8,7 +8,6 @@ Model users {
     type: 'number'
     hidden: false
     definition: @sql {{ #SOURCE.id }};;
-    primary_key: true
   }
   dimension sign_up_date {
     label: 'Sign Up Date'
@@ -65,19 +64,10 @@ Model users {
     definition: @sql {{ #SOURCE.full_name }};;
   }
 
-  dimension email_pii {
-    label: 'Email Pii'
-    description: 'The email for the user. [sensitive data may be restricted]'
-    type: 'text'
-    hidden: false
-    definition: @aql
-      case(
-        when:
-          in('some_email@test.com', H.current_user.h_email),
-        then: users.email,
-        else: '(redacted)'
-      )
-    ;;
+  measure total_users {
+    label: 'Total Users'
+    type: 'number'
+    definition: @aql count(users.id);; 
   }
 
   measure total_users {

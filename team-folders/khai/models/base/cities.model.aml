@@ -21,6 +21,12 @@ Model cities {
     hidden: false
     definition: @sql {{ #SOURCE.country_code }};;
   }
+  measure total_city {
+    label: 'Total City'
+    type: 'text'
+    hidden: false
+    definition: @aql count(cities.id) ;;
+  }
 
   measure total_city {
     label: 'Total City'

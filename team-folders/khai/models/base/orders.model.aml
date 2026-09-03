@@ -6,7 +6,6 @@ Model orders {
   dimension id {
     label: 'Id'
     type: 'number'
-    primary_key: true
     hidden: false
     definition: @sql {{ #SOURCE.id }};;
   }

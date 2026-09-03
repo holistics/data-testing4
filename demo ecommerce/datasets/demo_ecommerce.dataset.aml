@@ -26,12 +26,6 @@ pre_aggregates: {
   daily: agg_daily
 }
 
-  permission country_access {
-    field: ref('ecommerce_countries', 'continent_name')
-    operator: 'matches_user_attribute'
-    value: 'region'
-  }
-
 
   models: [
     order_master,
@@ -254,24 +248,22 @@ pre_aggregates: {
     label: "Total Orders"
     type: "number"
     hidden: false
-    description: "Total number of order after `01-2025`"
+    description: ""
     definition: @aql count(ecommerce_orders.id);;
-    format: "#,###"
   }
   metric total_orders_across_all {
     label: "Total Orders Across All"
     type: "number"
     hidden: false
-    description: "Counts the total number of orders across all records in the ecommerce_orders table, ignoring any grouping or filtering by dimensions"
+    description: ""
     definition: @aql count(ecommerce_orders.id) | of_all(ecommerce_orders);;
   }
   metric percent_of_total {
     label: "Percent Of Total"
     type: "number"
     hidden: false
-    description: "Calculates the percentage of total orders represented by the current context, by dividing the total number of orders by the total number of orders across all records"
+    description: ""
     definition: @aql total_orders * 1.0 / total_orders_across_all;;
-    format: "#,###0.0\%"	
   }
   // metric abc {
   //   label: "Abc"
@@ -291,37 +283,26 @@ pre_aggregates: {
     label: "Running Total"
     type: "number"
     hidden: false
-    description: "Calculates the cumulative sum of total orders over time, grouped by year based on the ecommerce_orders.created_at field."
+    description: ""
     definition: @aql running_total(total_orders, ecommerce_orders.created_at | year());;
   }
 
   metric dynamic_metric {
     label: 'Dynamic Metric'
     type: 'number'
-    description: "Depending on the selection, this metric outputs total users, total products, total orders, percent of total, average order value, or revenue"
     definition: @aql
       case(
         when: 'total users' in param_model_nam.metric_selections
         , then: ecommerce_users.total_users
 
-        , when: 'total products' in param_model_nam.metric_selections
-        , then: ecommerce_products.total_products
-
         , when: 'total orders' in param_model_nam.metric_selections
         , then: total_orders
 
-        , when: 'pot' in param_model_nam.metric_selections
-        , then: percent_of_total
-
-        , when: 'aov' in param_model_nam.metric_selections
-        , then: order_master.aov
-
-        , when: 'revenue' in param_model_nam.metric_selections
-        , then: order_master.revenue
+        , when: 'total products' in param_model_nam.metric_selections
+        , then: ecommerce_products.total_products
       )
      ;;
   }
-
 
   dimension breakdown_dim {
     label: 'Dynamic Breakdown Dimension'

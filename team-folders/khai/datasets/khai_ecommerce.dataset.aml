@@ -20,7 +20,7 @@ Func time_compare(metric_name: String, metric_label: String, format: String) {
 
 Dataset khai_ecommerce {
   __engine__: 'aql'
-  label: 'Ecommerce (from Khai)'
+  label: 'Khai Ecommerce'
   description: "This is Dataset for AQL testing"
   data_source_name: "demodb"
   models: [
@@ -33,108 +33,40 @@ Dataset khai_ecommerce {
     cities,
     khai_date_d,
     param_model
-    ,
-    khai_categories
-    ,
-    time_type
   ]
 
   relationships: [
-    relationship(orders.user_id > users.id, true, 'two_way'),
-    relationship(order_items.order_id > orders.id, true, 'two_way'),
-    relationship(cities.country_code > countries.code, true, 'two_way'),
-    relationship(users.city_id > cities.id, true, 'two_way'),
-    relationship(order_items.product_id > products.id, true, 'two_way'),
-    relationship(products.merchant_id > merchants.id, true, 'two_way'),
-    relationship(merchants.city_id > cities.id, true, 'two_way'),
-    relationship(orders.created_date > khai_date_d.date_key, true, 'two_way')
+    relationship(orders.user_id > users.id, true),
+    relationship(order_items.order_id > orders.id, true),
+    relationship(cities.country_code > countries.code, true),
+    relationship(users.city_id > cities.id, true),
+    relationship(order_items.product_id > products.id, true),
+    relationship(products.merchant_id > merchants.id, true),
+    relationship(merchants.city_id > cities.id, true)
     ,
-    relationship(products.category_id > khai_categories.id, true, 'two_way')
+    relationship(orders.created_date > khai_date_d.date_key, true)
+    ,
+    relationship(merchants.admin_id - users.id, true)
   ]
 
   owner: 'khai.to+demo4@holistics.io'
-
-  permission vendor_access {
-    field: r(countries.name)
-    operator: 'matches_user_attribute'
-    value: 'country_attribute' // user attribute
-  }
-
-  dimension user_acquired_at {
-    model: users
-    label: 'User Acquired At'
-    type: 'datetime'
-    definition: @aql min(orders.created_at) | dimensionalize(users.id) ;;
-  }
-
-  dimension user_order_frequency {
-    model: users
-    label: 'User Order Frequency'
-    type: 'text'
-    hidden: false
-    definition: @aql 
-      case(
-        when: total_orders < 10, then: '< 10 orders'
-        , when: total_orders > 10 and total_orders < 50, then: 'between 10 and 50 orders'
-        , when: total_orders > 50, then: '> 50 orders'
-        , else: null
-      )
-      | where(orders.created_at matches (param_model.date_param | first()))
-      | dimensionalize(users.id)
-     ;;
-  }
 
   metric revenue {
     label: 'Revenue'
     type: 'number'
     definition: @aql sum(order_items, order_items.quantity * products.price) ;;
-    format: "[\$\$]#,###"
   }
 
   metric total_orders {
     label: 'Total Orders'
     type: 'number'
     definition: @aql count(orders.id) ;;
-    format: "#,###"
-  }
-
-  metric total_delivered_orders {
-    label: "Total Delivered Orders"
-    type: "number"
-    hidden: false
-    description: "Count of all orders that were successfully delivered."
-    definition: @aql total_orders | where(orders.status is 'delivered');;
-  }
-
-  metric total_refunded_orders {
-    label: "Total Refunded Orders"
-    type: "number"
-    hidden: false
-    description: "Count of all orders that were refunded after fulfillment."
-    definition: @aql total_orders | where(orders.status is 'refunded');;
-  }
-  metric total_cancelled_orders {
-    label: "Total Cancelled Orders"
-    type: "number"
-    hidden: false
-    description: "Count of orders that were cancelled before fulfillment."
-    definition: @aql total_orders | where(orders.status is 'cancelled');;
-  }
-
-  metric cancelled_order_ratio {
-    label: "Cancelled Order Ratio"
-    type: "number"
-    hidden: false
-    description: "Percentage of orders that were cancelled - Total number of cancelled orders/Total numbers of orders"
-    definition: @aql total_cancelled_orders / total_orders;;
-    format: "#,###0.00%"
   }
 
   metric total_users {
     label: 'Total Users'
     type: 'number'
     definition: @aql count(users.id) ;;
-    format: "#,###"
   }
 
   metric dynamic_metric {
@@ -216,5 +148,4 @@ Dataset khai_ecommerce {
   metric total_cancelled_orders_time_compare: time_compare('total_cancelled_orders', 'Total Cancelled Orders', '#,###')
 
   metric cancelled_order_ratio_time_compare: time_compare('cancelled_order_ratio', 'Cancelled Orders Ratio', '#,###0.00%')
-
 }

@@ -88,6 +88,12 @@ Model dynamic_dim_model {
     definition: @sql {{ #SOURCE.country_name }};;
   }
 
+  param dim_choice {
+    label: 'Dim Choice'
+    type: 'text'
+    allowed_values: ['Countries', 'Cities', 'Gender']
+  }
+
   dimension dynamic_dim {
     label: 'Dynamic Breakdown Dimension'
     type: 'text'
@@ -99,16 +105,6 @@ Model dynamic_dim_model {
       , when: 'Gender' in dynamic_dim_model.dim_choice
       , then: dynamic_dim_model.gender
     ) ;;
-  }
-
-  param dim_choice {
-    label: 'Dim Choice'
-    type: 'text'
-    allowed_values: [
-      'Countries',
-      'Cities',
-      'Gender'
-    ]
   }
 
   owner: 'khai.to@holistics.io'
@@ -142,11 +138,4 @@ Model dynamic_dim_model {
     ecommerce_countries,
     ecommerce_order_items
   ]
-  measure total_quantity {
-    label: "Total Quantity"
-    type: "number"
-    description: ""
-    definition: @aql sum(dynamic_dim_model.quantity);;
-    format: "#,###,\"K\""
-  }
 }

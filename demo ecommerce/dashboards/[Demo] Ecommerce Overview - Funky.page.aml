@@ -1,5 +1,19 @@
 Dashboard demo_ecommerce_overview_funky {
   title: '[Demo] Ecommerce Overview - Funky'
+
+
+  block user_country: FilterBlock {
+    label: 'Country'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: ref('ecommerce_countries', 'name')
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
   block user_gender: FilterBlock {
     label: 'User Gender'
     type: 'field'
@@ -9,7 +23,7 @@ Dashboard demo_ecommerce_overview_funky {
     }
     default {
       operator: 'is'
-      value: 'Female'
+      value: []
     }
   }
   block age_demographic: FilterBlock {
@@ -24,7 +38,9 @@ Dashboard demo_ecommerce_overview_funky {
       value: []
     }
   }
+
   block v123: age_demographic
+
   block v1: VizBlock {
     label: 'GMV'
     viz: MetricKpi {
@@ -676,12 +692,51 @@ display: block;
   }
   interactions: [
     FilterInteraction {
+      from: 'user_country'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v10'
+          ]
+          disabled: true
+        },
+        CustomMapping {
+          block: 'v3'
+          field: ref('ecommerce_countries', 'name')
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'user_country'
+      to: [
+        CustomMapping {
+          block: [
+            'user_gender',
+            'age_demographic'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
       from: 'user_gender'
       to: [
         CustomMapping {
           block: [
             'v7',
-            'v8',
+            'v8'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'user_gender'
+      to: [
+        CustomMapping {
+          block: [
+            'user_country',
             'age_demographic'
           ]
           disabled: true
@@ -694,14 +749,25 @@ display: block;
         CustomMapping {
           block: [
             'v7',
-            'v8',
-            'user_gender'
+            'v8'
           ]
           disabled: true
         },
         CustomMapping {
           block: 'v3'
           field: ref('ecommerce_users', 'age_group')
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'age_demographic'
+      to: [
+        CustomMapping {
+          block: [
+            'user_country',
+            'user_gender'
+          ]
+          disabled: true
         }
       ]
     }
@@ -791,6 +857,10 @@ display: block;
     }
     block user_gender {
       position: pos(640, 30, 270, 100)
+      layer: 1
+    }
+    block user_country {
+      position: pos(20, 800, 520, 100)
       layer: 1
     }
     block age_demographic {

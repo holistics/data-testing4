@@ -1,0 +1,404 @@
+Dashboard test_amyra {
+  title: 'Ecommerce Dashboard - Pro'
+  block hd1: TextBlock {
+    content: @md 
+    <img style="margin-bottom:0 !important;overflow:hidden;" src="https://cdn.holistics.io/logos/holistics-logo-white.svg" alt="demo" width="255">;;
+  }
+  block hd3: TextBlock {
+    content: @md <p></p>;;
+    theme {
+      background {
+        bg_image: 'linear-gradient(97deg, #051527 20%, #071945 80%)'
+      }
+    }
+  }
+  block t2: TextBlock {
+    content: @md <div style="color:#fff; font-size: 16px">
+<p>
+This dashboard tracks the KPIs of all managers for their respective teams. This will also be presented in our monthly presentation to our board and investors.</a>
+</p>
+
+</div>;;
+  }
+  block v1: VizBlock {
+    label: ' KPI Overview'
+    viz: MetricSheet {
+      dataset: demo_ecommerce
+      filter {
+        field: ref('dim_dates', 'date_key')
+        operator: 'matches'
+        value: '12 months ago to last month end'
+      }
+      date_field: VizFieldFull {
+        ref: ref('dim_dates', 'date_key')
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+        }
+      }
+      rows: [
+        MetricHeading {
+          label: '🎯Orders'
+          settings {
+            background_color: '#255DD4'
+            text_color: '#FFFFFF'
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: ref('ecommerce_orders', 'total_orders_count')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: ref('ecommerce_orders', 'cancelled_orders_count')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: ref('ecommerce_orders', 'refunded_orders_count')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: ref('ecommerce_orders', 'delivered_orders_count')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricHeading {
+          label: '💰 Revenue'
+          settings {
+            background_color: '#255DD4'
+            text_color: '#FFFFFF'
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: ref('order_master', 'nmv')
+            format {
+              type: 'number'
+              pattern: '[$$]#,###0.00'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: ref('order_master', 'gmv')
+            format {
+              type: 'number'
+              pattern: '[$$]#,###0.00'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: ref('order_master', 'aov')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      ]
+      settings {
+        max_column: 3
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v2: VizBlock {
+    label: 'GMV'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      // calculation f_2fb1cc3 {
+      //   label: 'GMT last year'
+      //   formula: @aml order_master.gmv * 0.87;;
+      //   calc_type: 'measure'
+      //   data_type: 'number'
+      // }
+      filter {
+        field: ref('order_master', 'order_created_at')
+        operator: 'matches'
+        value: '2023'
+      }
+      value: VizFieldFull {
+        label: 'Gross Merchandise Value'
+        ref: ref('order_master', 'gmv')
+        format {
+          type: 'number'
+          pattern: '[$$]#,###'
+        }
+      }
+      compare_value: VizPopSettings {
+        field: ref('order_master', 'order_created_at')
+        duration: 1
+        granularity: 'year'
+      }
+    }
+    settings {
+      hide_label: true
+    }
+  }
+  block v10: VizBlock {
+    label: 'Total Users compared with Target Users'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      calculation f_d80427a {
+        label: 'Target Users'
+        formula: @aml ecommerce_users.users_signed_up_count * 1.38;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      value: VizFieldFull {
+        ref: ref('ecommerce_users', 'total_users')
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      compare_value: VizFieldFull {
+        ref: 'f_d80427a'
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      settings {
+        display_mode: 'progress'
+      }
+    }
+    settings {
+      hide_label: true
+      hide_controls: true
+    }
+  }
+  block v12: VizBlock {
+    label: 'Daily GMV vs. 7-day Moving Average'
+    viz: CombinationChart {
+      dataset: demo_ecommerce
+      filter {
+        field: ref('order_master', 'order_created_at')
+        operator: 'matches'
+        value: '2023'
+      }
+      x_axis: VizFieldFull {
+        ref: ref('order_master', 'order_created_at')
+        transformation: 'datetrunc day'
+        format {
+          type: 'date'
+          pattern: 'LLL dd, yyyy'
+        }
+      }
+      y_axis {
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            ref: ref('order_master', 'gmv')
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+          settings {
+            color: '#D1EDEC'
+            line_interpolation: 'smooth'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: '7-day MovAvg of GMV'
+            ref: ref('order_master', 'gmv')
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+            analytic: MovingCalculationField {
+              type: 'avg'
+              order: 'row'
+              range {
+                previous: 7
+                next: 0
+              }
+              null_if_not_enough_values: true
+            }
+          }
+          settings {
+            color: '#18A59E'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        legend_label: 'right'
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+    description: @md # Description
+abc;;
+  }
+  block t5: TextBlock {
+    content: @md <h1 style =" font-size:40px; color: #022658;padding-bottom:24px;border-bottom: 1px solid #022658" id="overview">Overview</h1>;;
+  }
+  block t10: TextBlock {
+    content: @md <a href="#overview">
+    <button style="
+      background-color: #70bfb9;
+      color: #000;
+      font-weight:700;
+      width: 100%;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    ">Overview</button>
+    </a>;;
+  }
+  block t11: TextBlock {
+    content: @md   <a href="#regional-analysis">
+    <button style="
+    background-color: #4eb2ab;
+    color: #000;
+    font-weight:700;
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+  ">Regional Analysis</button>
+    </a>;;
+  }
+  block t12: TextBlock {
+    content: @md <a href="#users-analysis">
+    <button style="
+    background-color: #18a59e;
+    color: #000;
+    font-weight:700;
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+  ">Users Analysis</button>
+  </a>;;
+  }
+  block t49: TextBlock {
+    content: @md <div style="
+        width:100%;
+        height:100%;
+        border-radius: 4px;
+        background: #fafafa;"
+    </div>;;
+  }
+  block t52: TextBlock {
+    content: @md <div style="
+        width:100%;
+        height:100%;
+        border-radius: 4px;
+        background: #fafafa;"
+    </div>;;
+  }
+  block t53: TextBlock {
+    content: @md <div style="
+        width:100%;
+        height:100%;
+        border-radius: 4px;
+        background: #fafafa;"
+    </div>;;
+  }
+  view: TabLayout {
+    label: 'View 1'
+    tab tab1: CanvasLayout {
+      label: 'Overview'
+      width: 1380
+      height: 1160
+      grid_size: 20
+      block hd1 {
+        position: pos(1160, 20, 180, 60)
+      }
+      block hd3 {
+        position: pos(0, 0, 1380, 200)
+        layer: -1
+      }
+      block t2 {
+        position: pos(40, 100, 660, 50)
+      }
+      block v1 {
+        position: pos(60, 700, 780, 380)
+      }
+      block v2 {
+        position: pos(80, 340, 300, 140)
+      }
+      block v10 {
+        position: pos(80, 500, 300, 140)
+      }
+      block v12 {
+        position: pos(440, 340, 880, 300)
+        layer: -1
+      }
+      block t5 {
+        position: pos(40, 220, 1300, 80)
+      }
+      block t10 {
+        position: pos(760, 100, 180, 60)
+      }
+      block t11 {
+        position: pos(960, 100, 180, 60)
+      }
+      block t12 {
+        position: pos(1160, 100, 180, 60)
+      }
+      block t49 {
+        position: pos(40, 680, 1300, 420)
+        layer: -2
+      }
+      block t52 {
+        position: pos(420, 320, 920, 340)
+        layer: -2
+      }
+      block t53 {
+        position: pos(40, 320, 400, 340)
+        layer: -2
+      }
+    }
+    tab tab2: CanvasLayout {
+      label: 'Country'
+      height: 800
+      grid_size: 20
+      mobile {
+        mode: 'auto'
+      }
+    }
+  }
+  settings {
+    timezone: 'America/Los_Angeles'
+    cache_duration: 10
+  }
+}

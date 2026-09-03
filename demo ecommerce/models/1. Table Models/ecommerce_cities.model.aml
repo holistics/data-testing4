@@ -33,4 +33,3 @@ Model ecommerce_cities {
   owner: 'ha.pham+demo4@holistics.io and vincent'
   table_name: '"ecommerce"."cities"'
 }
-   // hehe
