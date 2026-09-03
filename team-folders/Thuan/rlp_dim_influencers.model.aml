@@ -1,0 +1,58 @@
+Model rlp_dim_influencers {
+  type: 'query'
+  label: 'RLP Dim Influencers'
+  description: 'Stand-in for teveo dim_influencers (CF-13963). target_role plays the role of target_country.'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 'Influencer Admin' as name, 'admin' as target_role
+    union all
+    select 2 as id, 'Influencer Analyst' as name, 'analyst' as target_role
+    union all
+    -- no sales at all: should stay hidden for an admin manager
+    select 3 as id, 'Influencer Viewer' as name, 'viewer' as target_role
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension name {
+    label: 'Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.name }} ;;
+  }
+
+  dimension target_role {
+    label: 'Target Role'
+    type: 'text'
+    definition: @sql {{ #SOURCE.target_role }} ;;
+  }
+
+  dimension visible_name {
+    label: 'Visible Name'
+    description: '''
+      Column-level masking instead of row removal: influencers outside the current user role show as
+      'Restricted'. Use this in the sales dataset when a manager may see the sale but not who made it.
+      Safe to expose because it never removes rows, so it cannot break the OR rule on fct_sales.
+    '''
+    type: 'text'
+    definition: @sql
+      case
+        when {{ #SOURCE.target_role }} = '${H.current_user.h_role}' then {{ #SOURCE.name }}
+        else 'Restricted'
+      end
+    ;;
+  }
+
+  dimension is_my_role {
+    label: 'Is My Role'
+    description: 'Attribute baked into the field so RLP can be a plain "is true" rule.'
+    type: 'truefalse'
+    hidden: true
+    definition: @sql {{ #SOURCE.target_role }} = '${H.current_user.h_role}' ;;
+  }
+}

@@ -15,10 +15,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      height: 2160
+      height: 1680
       grid_size: 20
       block v3 {
-        position: pos(20, 880, 1160, 420)
+        position: pos(20, 820, 1160, 420)
         layer: 3
       }
       block t3 {
@@ -58,7 +58,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 9
       }
       block v8 {
-        position: pos(20, 280, 1160, 580)
+        position: pos(20, 220, 1160, 580)
         layer: 1
       }
       block t_4ttu {
@@ -78,7 +78,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 4
       }
       block v_m2xo {
-        position: pos(20, 1320, 560, 400)
+        position: pos(20, 1260, 560, 400)
         layer: 16
       }
       block d_date_drill {
@@ -86,12 +86,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 1
       }
       block v_0725 {
-        position: pos(600, 1320, 580, 400)
+        position: pos(600, 1260, 580, 400)
         layer: 17
-      }
-      block v_nd9q {
-        position: pos(20, 1740, 580, 400)
-        layer: 18
       }
       mobile {
         mode: 'auto'
@@ -101,31 +97,39 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     tab tab_5auh: CanvasLayout {
       label: 'Raw Data Table'
-      height: 1840
+      height: 2420
       grid_size: 20
       auto_expand_vertically: true
       block v_ztqi {
-        position: pos(20, 120, 1180, 420)
+        position: pos(20, 700, 440, 420)
         layer: 1
       }
       block v_856v {
-        position: pos(20, 560, 1180, 420)
+        position: pos(20, 1140, 1180, 420)
         layer: 1
       }
       block v_9oui {
-        position: pos(20, 1000, 580, 400)
+        position: pos(20, 1580, 580, 400)
         layer: 2
       }
       block v_02lk {
-        position: pos(20, 1420, 580, 400)
+        position: pos(20, 2000, 580, 400)
         layer: 4
       }
       block v_lrzt {
-        position: pos(620, 1000, 580, 400)
+        position: pos(620, 1580, 580, 400)
         layer: 3
       }
       block d_date_drill_kv7g {
         position: pos(20, 20, 300, 80)
+        layer: 1
+      }
+      block v_cohort_vy {
+        position: pos(20, 100, 1180, 580)
+        layer: 1
+      }
+      block v_od3a {
+        position: pos(500, 700, 540, 420)
         layer: 1
       }
       mobile {
@@ -281,79 +285,54 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     tab tab_yzia: CanvasLayout {
       label: 'Key Driver'
       width: 1300
-      height: 2940
+      height: 2500
       grid_size: 20
       auto_expand_vertically: true
       block v_bj6j {
-        position: pos(20, 1040, 620, 420)
+        position: pos(20, 600, 620, 420)
       }
       block v_segi {
-        position: pos(660, 1480, 620, 420)
-      }
-      block v_c1ru {
-        position: pos(20, 1480, 620, 420)
-      }
-      block v_3pqe {
-        position: pos(20, 1920, 620, 420)
-      }
-      block v_p9dt {
         position: pos(660, 1040, 620, 420)
       }
+      block v_c1ru {
+        position: pos(20, 1040, 620, 420)
+      }
+      block v_3pqe {
+        position: pos(20, 1480, 620, 420)
+      }
+      block v_p9dt {
+        position: pos(660, 600, 620, 420)
+      }
       block t_uje2 {
-        position: pos(20, 2420, 520, 60)
+        position: pos(20, 1980, 520, 60)
       }
       block v_d9k9 {
-        position: pos(20, 2500, 620, 420)
+        position: pos(20, 2060, 620, 420)
       }
       block v_zspi {
-        position: pos(660, 2500, 620, 420)
-      }
-      block t_io0f {
-        position: pos(20, 960, 520, 60)
+        position: pos(660, 2060, 620, 420)
       }
       block t_wymk {
-        position: pos(20, 20, 520, 60)
+        position: pos(20, 120, 520, 60)
       }
       block v_j070 {
-        position: pos(660, 80, 600, 400)
+        position: pos(660, 180, 600, 400)
         layer: 2
       }
       block v_qpsb {
-        position: pos(20, 80, 600, 400)
+        position: pos(20, 180, 600, 400)
         layer: 1
       }
-      block v_7a6x {
-        position: pos(660, 500, 600, 400)
+      block f_date {
+        position: pos(380, 20, 300, 80)
         layer: 2
       }
-      block v_kgry {
-        position: pos(20, 500, 600, 400)
-        layer: 1
+      block p_period_comparison_l7d4 {
+        position: pos(20, 20, 300, 80)
+        layer: 2
       }
       mobile {
         mode: 'auto'
-      }
-    }
-    tab tab_kamz: CanvasLayout {
-      label: 'draft'
-      width: 1300
-      height: 800
-      grid_size: 20
-      auto_expand_vertically: true
-      mobile {
-        mode: 'auto'
-      }
-      block v_91yu {
-        position: pos(40, 100, 260, 140)
-      }
-      block v_nir7 {
-        position: pos(320, 100, 220, 140)
-      }
-      block f_publift_test_data_csv_currency {
-        position: pos(40, 20, 300, 80)
-      }
-      block v_15s1 {
-        position: pos(40, 260, 260, 160)
       }
     }
   }
@@ -385,7 +364,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         series {
           mark_type: 'column'
           field: VizFieldFull {
-            //label: ''
             ref: r(vyhuynh_ecommerce_dataset.total_revenue)
             format {
               type: 'number'
@@ -431,7 +409,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v5: VizBlock {
-    label: 'GMV by Continent (2024)'
+    label: 'GMV by Continent New Palette (2024)'
     description: 'This is description of the block'
     viz: ColumnChart {
       dataset: demo_ecommerce
@@ -447,10 +425,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         operator: 'matches'
         value: '2024'
       }
-      theme {
-      }
       x_axis: VizFieldFull {
         ref: r(ecommerce_countries.continent_name)
+        format {
+          type: 'text'
+        }
+      }
+      legend: VizFieldFull {
+        ref: r(ecommerce_users.gender)
         format {
           type: 'text'
         }
@@ -461,11 +443,15 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
         series {
           field: VizFieldFull {
+            label: 'GMV'
             ref: r(order_master.gmv)
             format {
               type: 'number'
               pattern: '#,###'
             }
+          }
+          settings {
+            color_palette: H.color_palettes.pastel_1
           }
         }
       }
@@ -563,74 +549,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block t9: H.blocks.line(2, '#8F99A3')
-  block v8: VizBlock {
-    label: 'GMV by Month'
-    viz: AreaChart {
-      dataset: demo_ecommerce
-      x_axis: VizFieldFull {
-        ref: r(ecommerce_orders.created_at)
-        transformation: 'datetrunc month'
-        format {
-          type: 'date'
-          pattern: 'LLL yyyy'
-        }
-      }
-      y_axis {
-        label: 'GMV'
-        settings {
-          show_data_label_by: 'value'
-        }
-        series {
-          field: VizFieldFull {
-            label: 'GMV'
-            ref: r(order_master.gmv)
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
-          }
-        }
-        series {
-          field: ConstantVizField {
-            label: 'Reference line of GMV'
-            value: 2000000
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
-          }
-          settings {
-            line_style: 'dashed'
-          }
-        }
-        series {
-          field: VizFieldFull {
-            label: 'GMV Trend'
-            ref: r(order_master.gmv)
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
-            analytic: RegressionLine {
-              type: 'linear'
-            }
-          }
-          settings {
-            line_style: 'dashed'
-          }
-        }
-      }
-      settings {
-        show_rows_with_no_data: true
-        row_limit: 5000
-        x_axis_show_null_datetime: false
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-      }
-    }
-  }
   block v_711g: VizBlock {
     label: 'Number of Order by Continent'
     viz: ColumnChart {
@@ -997,7 +915,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
     default {
       operator: 'matches'
-      value: '$H_NIL$'
+      value: '2026'
     }
     settings {
       drillthrough: Drillthrough {
@@ -1817,6 +1735,24 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   block v_7vcf: VizBlock {
     label: 'Total GMV (2024)'
     description: 'This is description of the block'
+    theme: BlockTheme {
+      background {
+        bg_color: "#1a2540"
+      }
+      border {
+        border_width: 2
+        border_style: "solid"
+        border_color: "#3b82f6"
+        border_radius: 14
+      }
+      shadow: "md"
+      padding: 20
+      label {
+        font_color: "#3b82f6"
+        font_size: 15
+        font_weight: "semibold"
+      }
+    }
     viz: MetricKpi {
       dataset: demo_ecommerce
       calculation adhoc_dim {
@@ -1838,6 +1774,31 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         value: '2025'
       }
       theme {
+        metric_kpi {
+          label {
+            font_color: "#9ca3af"
+          }
+          value {
+            font_color: "#9ca3af"
+          }
+          trend {
+            positive {
+              text {
+                font_color: "#9ca3af"
+              }
+            }
+            negative {
+              text {
+                font_color: "#9ca3af"
+              }
+            }
+            neutral {
+              text {
+                font_color: "#9ca3af"
+              }
+            }
+          }
+        }
       }
       value: VizFieldFull {
         ref: r(order_master.gmv)
@@ -2873,9 +2834,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block t_io0f: TextBlock {
-    content: @md ## **Kaggle Olist Ecomm Dataset**;;
-  }
   block t_wymk: TextBlock {
     content: @md ## **Regional Sales**;;
   }
@@ -2885,8 +2843,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       dataset: vy_pbi_dts
       x_axis: VizFieldFull {
         ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
         format {
           type: 'date'
+          pattern: 'LLL yyyy'
         }
       }
       y_axis {
@@ -2917,8 +2877,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       dataset: vy_pbi_dts
       x_axis: VizFieldFull {
         ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
         format {
           type: 'date'
+          pattern: 'LLL yyyy'
         }
       }
       y_axis {
@@ -2943,178 +2905,116 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block v_91yu: VizBlock {
-    label: 'This month Revenue copy'
-    viz: MetricKpi {
-      dataset: vyhuynh_ecommerce_dataset
-      calculation monthly_revenue {
-        label: 'Monthly Revenue'
-        formula: @aql vyht_ecommerce_order_items
-  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
+  block v_fb2g: VizBlock {
+    label: 'Campaign, Revenue Won and 2 more'
+    viz: DataTable {
+      dataset: vy_pbi_dts
+      calculation revenue_won_mar_2021 {
+        label: 'Revenue Won Mar 2021'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(2021-03));;
         calc_type: 'measure'
         data_type: 'number'
       }
-      calculation max_of_orders_status {
-        label: 'Max of Orders Status'
-        formula: @aql max(vyht_ecommerce_orders_1.status);;
+      calculation revenue_won_apr_2021 {
+        label: 'Revenue Won Apr 2021'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(2021-04));;
         calc_type: 'measure'
-        data_type: 'text'
+        data_type: 'number'
       }
-      calculation max_of_orders_status_01 {
-        label: 'Max of Orders Status 01'
-        formula: @aql max(vyht_ecommerce_orders_1.status);;
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql coalesce(revenue_won_mar_2021, 0);;
         calc_type: 'measure'
-        data_type: 'text'
+        data_type: 'number'
       }
-      value: VizFieldFull {
-        ref: r(publift_test_data_csv.earning)
-        aggregation: 'sum'
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql coalesce(revenue_won_apr_2021, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Delta Value'
+        formula: @aql comparison_value - base_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation campaigns_in_either_month {
+        label: 'Campaigns In Either Month'
+        formula: @aql unique(vy_campaigns_csv.campaign)
+  | filter(revenue_won_mar_2021 is not null or revenue_won_apr_2021 is not null);;
+        calc_type: 'measure'
+        data_type: 'json'
+      }
+      calculation lm_revenue_won {
+        label: 'LM Revenue Won'
+        formula: @aql revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation _lm_revenue_won {
+        label: '% LM Revenue Won'
+        formula: @aql safe_divide(revenue_won, revenue_won | relative_period(vy_opportunities_csv.close_date, interval(-1 month), strict: true)) - 1;;
+        calc_type: 'measure'
+        data_type: 'number'
         format {
           type: 'number'
-          pattern: 'inherited'
+          pattern: '#,###0.00%'
         }
       }
-      settings {
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-        alignment: 'left'
+      filter {
+        field: r(vy_opportunities_csv.close_date)
+        operator: 'matches'
+        value: 'april 2021'
       }
-    }
-    settings {
-      hide_label: true
-    }
-  }
-  block v_nir7: VizBlock {
-    label: 'Currency Symbol'
-    viz: MetricKpi {
-      dataset: vyhuynh_ecommerce_dataset
-      calculation monthly_revenue {
-        label: 'Monthly Revenue'
-        formula: @aql vyht_ecommerce_order_items
-  | sum(vyht_ecommerce_order_items.quantity * vyht_ecommerce_products.price);;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation max_of_orders_status {
-        label: 'Max of Orders Status'
-        formula: @aql max(vyht_ecommerce_orders_1.status);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      calculation max_of_orders_status_01 {
-        label: 'Max of Orders Status 01'
-        formula: @aql max(vyht_ecommerce_orders_1.status);;
-        calc_type: 'measure'
-        data_type: 'text'
-      }
-      value: VizFieldFull {
-        label: ' Currency Symbol'
-        ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
-        format {
-          type: 'text'
-        }
-      }
-      settings {
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-        alignment: 'left'
-      }
-    }
-    settings {
-      hide_label: true
-    }
-  }
-  block f_publift_test_data_csv_currency: FilterBlock {
-    label: 'Currency'
-    type: 'field'
-    source: FieldFilterSource {
-      dataset: vyhuynh_ecommerce_dataset
-      field: r(publift_test_data_csv.currency)
-    }
-    default {
-      operator: 'is'
-      value: 'USD'
-    }
-    settings {
-      input_type: 'single'
-    }
-  }
-  block v_15s1: VizBlock {
-    theme: BlockTheme {
-      background {
-        bg_color: 'transparent'
-      }
-      border {
-        border_width: 0
-        border_color: 'transparent'
-      }
-      shadow: 'none'
-    }
-    label: 'Sum of Earning'
-    viz: MarkdownViz {
-      dataset: vyhuynh_ecommerce_dataset
-      values: [
+      fields: [
         VizFieldFull {
-          ref: r(publift_test_data_csv.earning)
-          aggregation: 'sum'
-          format {
-            type: 'number'
-            pattern: '#,###'
-          }
-        },
-        VizFieldFull {
-          ref: r(vyhuynh_ecommerce_dataset.currency_symbol)
+          label: 'Campaign'
+          ref: r(vy_campaigns_csv.campaign)
           format {
             type: 'text'
           }
+        },
+        VizFieldFull {
+          ref: r(vy_pbi_dts.revenue_won)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: 'lm_revenue_won'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: '_lm_revenue_won'
+          format {
+            type: 'number'
+            pattern: '#,###0.00%'
+          }
+          uname: 'custom__lm_revenue_won_1'
         }
       ]
-      content: @md <style>
-
-  .kpi-title {
-    margin: 0;
-    color: #8e94a5;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .kpi-value {
-    font-size: 52px;
-    font-weight: 500;
-    color: #5DB88F;
-    line-height: 1;
-  }
-
-  
-</style>
-
-<div>
-  <p class="kpi-title">Sum of Earning</p>
-  <div class="kpi-value">
-    {{ rows[0].values.`Sum of Earning` }}
-    {{ rows[0].values.`Currency Symbol` }}
-  </div>
-
-</div>                ;;
       settings {
-        show_row_total: true
-        show_column_total: true
+        pagination_size: 100
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'custom__lm_revenue_won_1'
+            direction: 'desc'
+          }
+        ]
         aggregate_awareness {
           enabled: true
           debug_comments: true
         }
       }
     }
-    settings {
-      hide_label: true
-    }
   }
-  block v_fb2g: VizBlock {
+  block v_fb2g_conflict_copy: VizBlock {
     label: 'Campaign, Revenue Won and 2 more'
     viz: DataTable {
       dataset: vy_pbi_dts
@@ -3601,6 +3501,403 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           }
         }
       }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_wxn2_conflict_copy: VizBlock {
+    label: 'Jan 2021, Dec 2020 and 2 more by Product Category'
+    viz: ColumnChart {
+      dataset: vy_pbi_dts
+      calculation base_won_count {
+        label: 'Base Won Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') | where(vy_opportunity_calendar_csv.year_month is @(2021-01)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_lost_count {
+        label: 'Base Lost Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') | where(vy_opportunity_calendar_csv.year_month is @(2021-01)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_won_count {
+        label: 'Comparison Won Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Won') | where(vy_opportunity_calendar_csv.year_month is @(2020-12)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_lost_count {
+        label: 'Comparison Lost Count'
+        formula: @aql coalesce(vy_opportunities_csv | count(vy_opportunities_csv.opportunity_seq) | where(vy_opportunities_csv.status == 'Lost') | where(vy_opportunity_calendar_csv.year_month is @(2020-12)), 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value_raw {
+        label: 'Base Value Raw'
+        formula: @aql safe_divide(base_won_count, base_won_count + base_lost_count);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_raw {
+        label: 'Comparison Value Raw'
+        formula: @aql safe_divide(comparison_won_count, comparison_won_count + comparison_lost_count);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value {
+        label: 'Base Value'
+        formula: @aql coalesce(base_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'Comparison Value'
+        formula: @aql coalesce(comparison_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Delta Value'
+        formula: @aql base_value - comparison_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation pct_delta {
+        label: 'Pct Delta'
+        formula: @aql safe_divide(delta_value, comparison_value) * 100.0;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(vy_opportunity_calendar_csv.year_month)
+        operator: 'matches'
+        value: '2020-12 - 2021-01'
+      }
+      x_axis: VizFieldFull {
+        label: 'Product Category'
+        ref: r(vy_products_csv.product_category)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Close %'
+        series {
+          field: VizFieldFull {
+            label: 'Jan 2021'
+            ref: 'base_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#0891F2'
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Dec 2020'
+            ref: 'comparison_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+          settings {
+            color: '#F1434B'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            label: 'Δ'
+            ref: 'delta_value'
+            format {
+              type: 'number'
+              pattern: '#,###0.0%'
+            }
+          }
+        },
+        VizTooltip {
+          field: VizFieldFull {
+            label: '% Change'
+            ref: 'pct_delta'
+            format {
+              type: 'number'
+              pattern: '#,###0.0\\%'
+            }
+          }
+        }
+      ]
+      settings {
+        row_limit: 5000
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'xaxis'
+        }
+        x_axis_label: 'Period'
+      }
+    }
+  }
+  block p_period_comparison: PopBlock {
+    label: 'Period Comparison'
+    default {
+      type: 'relative'
+      duration: 1
+      granularity: 'year'
+      show_growth_rate: true
+    }
+  }
+  block d_date_drill: DateDrillBlock {
+    label: 'Date Drill'
+  }
+  block d_date_drill_kv7g: DateDrillBlock {
+    label: 'Date Drill'
+  }
+  block v_m2xo_conflict_copy: VizBlock {
+    label: '''Revenue Won Change by Owner: February 2021 vs January 2021
+'''
+    viz: CombinationChart {
+      dataset: vy_pbi_dts
+      calculation base_value_raw {
+        label: 'Base Value Raw'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(February 2021));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value_raw {
+        label: 'Comparison Value Raw'
+        formula: @aql revenue_won | where(vy_opportunity_calendar_csv.year_month is @(January 2021));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation base_value {
+        label: 'February 2021'
+        formula: @aql coalesce(base_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation comparison_value {
+        label: 'January 2021'
+        formula: @aql coalesce(comparison_value_raw, 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation delta_value {
+        label: 'Δ Change'
+        formula: @aql base_value - comparison_value;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation pct_delta {
+        label: 'Pct Delta'
+        formula: @aql safe_divide(delta_value, comparison_value_raw) * 100.0;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      conditions: [
+        'vy_opportunity_calendar_csv.year_month is @(January 2021 - February 2021)'
+      ]
+      x_axis: VizFieldFull {
+        label: 'Owner'
+        ref: r(vy_owners_csv.owner)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        label: 'Revenue'
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'February 2021'
+            ref: 'base_value'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0.00'
+            }
+          }
+          settings {
+            color: '#255DD4'
+          }
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'January 2021'
+            ref: 'comparison_value'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0.00'
+            }
+          }
+          settings {
+            color: '#92AEEA'
+          }
+        }
+      }
+      y_axis {
+        label: 'Δ Change'
+        settings {
+          alignment: 'right'
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Δ Change'
+            ref: 'delta_value'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0.00'
+            }
+          }
+          settings {
+            color: '#1F3864'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        sort {
+          field_index: 2
+          direction: 'asc'
+          type: 'series'
+        }
+        legend_label: 'top'
+        x_axis_label: 'Owner'
+      }
+    }
+  }
+  block v_0725_conflict_copy: VizBlock {
+    label: '''Anomaly detection: Revenue Won (Oct 2019-Nov 2021)
+'''
+    viz: CombinationChart {
+      dataset: vy_pbi_dts
+      calculation rolling_mean {
+        label: 'Rolling Mean'
+        formula: @aql window_avg(revenue_won, -12..-1, order: vy_opportunity_calendar_csv.year_month | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation rolling_stddev {
+        label: 'Rolling Stddev'
+        formula: @aql window_stdev(revenue_won, -12..-1, order: vy_opportunity_calendar_csv.year_month | asc(), partition: []);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation lower_bound {
+        label: 'Lower Bound'
+        formula: @aql rolling_mean - 3 * rolling_stddev;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation upper_bound {
+        label: 'Upper Bound'
+        formula: @aql rolling_mean + 3 * rolling_stddev;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation z_score {
+        label: 'Z Score'
+        formula: @aql safe_divide(revenue_won - rolling_mean, rolling_stddev);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation is_anomaly {
+        label: 'Is Anomaly'
+        formula: @aql case(when: abs(z_score) > 3, then: 1, else: 0);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        label: 'Period'
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+        uname: 'bucket'
+      }
+      y_axis {
+        label: 'Revenue Won'
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Actual'
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#2563EB'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Lower Bound'
+            ref: 'lower_bound'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#9CA3AF'
+            line_style: 'dashed'
+          }
+        }
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'Upper Bound'
+            ref: 'upper_bound'
+            format {
+              type: 'number'
+              pattern: '[$]#,###0'
+            }
+          }
+          settings {
+            color: '#6B7280'
+            line_style: 'dashed'
+          }
+        }
+      }
+      y_axis {
+        label: 'Anomaly'
+        settings {
+          alignment: 'right'
+          axis_min: 0
+          axis_max: 1
+        }
+        series {
+          mark_type: 'column'
+          field: VizFieldFull {
+            label: 'Is Anomaly'
+            ref: 'is_anomaly'
+            format {
+              type: 'number'
+              pattern: '#,###0'
+            }
+          }
+          settings {
+            color: '#FCA5A5'
+          }
+        }
+      }
       tooltips: [
         VizTooltip {
           field: VizFieldFull {
@@ -3644,7 +3941,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
       ]
       settings {
-        connect_discontinuous_points: false
         row_limit: 5000
         sort {
           field_index: 0
@@ -3655,7 +3951,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block p_period_comparison: PopBlock {
+  block p_period_comparison_conflict_copy: PopBlock {
     label: 'Period Comparison'
     default {
       type: 'relative'
@@ -3664,13 +3960,13 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       show_growth_rate: true
     }
   }
-  block d_date_drill: DateDrillBlock {
+  block d_date_drill_conflict_copy: DateDrillBlock {
     label: 'Date Drill'
   }
-  block d_date_drill_kv7g: DateDrillBlock {
+  block d_date_drill_kv7g_conflict_copy: DateDrillBlock {
     label: 'Date Drill'
   }
-  block v_kgry: VizBlock {
+  block v_kgry_conflict_copy: VizBlock {
     label: 'Close % by month copy'
     viz: LineChart {
       dataset: vy_pbi_dts
@@ -3704,7 +4000,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block v_7a6x: VizBlock {
+  block v_7a6x_conflict_copy: VizBlock {
     label: 'Revenue Won by month copy'
     viz: LineChart {
       dataset: vy_pbi_dts
@@ -3890,17 +4186,258 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block v_oa26: VizBlock {
+    label: 'GMV over time copy'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      x_axis: VizFieldFull {
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_cohort_vy: VizBlock {
+    label: 'Customer Cohort Retention'
+    viz: PivotTable {
+      dataset: demo_ecommerce
+      calculation cohort_month_c {
+        label: 'Cohort Month'
+        formula: @aql min(order_master.order_created_at | month()) | exact_grains(order_master.user_id);;
+        calc_type: 'dimension'
+        data_type: 'date'
+        model: order_master
+      }
+      calculation month_no_c {
+        label: 'Month No'
+        formula: @aql date_diff('month', order_master.cohort_month_c, order_master.order_created_at | month());;
+        calc_type: 'dimension'
+        data_type: 'number'
+        model: order_master
+      }
+      rows: [
+        VizFieldFull {
+          ref: ref('order_master', 'cohort_month_c')
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+          uname: 'cohort_month'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_users.gender)
+          format {
+            type: 'text'
+          }
+          uname: 'gender'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_countries.name)
+          format {
+            type: 'text'
+          }
+          uname: 'country_name'
+        }
+      ]
+      columns: [
+        VizFieldFull {
+          ref: ref('order_master', 'month_no_c')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: 'Customers'
+          ref: r(order_master.count_distinct_users)
+          format {
+            type: 'number'
+            pattern: '#,###0'
+          }
+          uname: 'customers_count'
+        }
+      ]
+      settings {
+        conditional_formats: [
+          ConditionalFormat {
+            key: 'customers_count'
+            format: ScaleFormat {
+              min {
+                value: 0
+                color: '#FFFFFF'
+              }
+              max {
+                value: 1
+                color: '#1070CA'
+              }
+            }
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'cohort_month'
+            width: 120
+          },
+          ColumnStyle {
+            key: 'gender'
+            width: 100
+          },
+          ColumnStyle {
+            key: 'country_name'
+            width: 140
+          }
+        ]
+      }
+    }
+  }
+  block p_period_comparison_l7d4: PopBlock {
+    label: 'Period Comparison'
+    default {
+      type: 'relative'
+      duration: 1
+      granularity: 'year'
+    }
+  }
+  block f_date: FilterBlock {
+    label: 'Date'
+    type: 'date'
+    default {
+      operator: 'matches'
+      value: '2021'
+    }
+  }
+  block v_od3a: VizBlock {
+    label: 'Table 1 copy'
+    viz: PivotTable {
+      dataset: demo_ecommerce
+      calculation order_master_user_id_prev_1mo {
+        label: 'Order Master User Id (prev. 1mo)'
+        formula: @aql count_distinct(order_master, order_master.user_id) | relative_period(order_master.order_created_at, interval(-1 month), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation order_master_user_id_prev_1mo_01 {
+        label: 'Order Master User Id (prev. 1mo) 01'
+        formula: @aql count_distinct(order_master, order_master.user_id) | relative_period(ecommerce_users.sign_up_date, interval(-1 month), strict: true);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      rows: [
+        VizFieldFull {
+          ref: r(order_master.order_created_at)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+          uname: 'datetrunc_month_order_created_at'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_users.sign_up_date)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+          uname: 'datetrunc_month_sign_up_date'
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: r(order_master.user_id)
+          aggregation: 'count distinct'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'count_distinct_user_id_1'
+        },
+        VizFieldFull {
+          ref: 'order_master_user_id_prev_1mo'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: 'order_master_user_id_prev_1mo_01'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_total: true
+        show_column_total: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'count_distinct_user_id_1'
+            width: 100
+          },
+          ColumnStyle {
+            key: 'datetrunc_month_sign_up_date'
+            width: 168
+          },
+          ColumnStyle {
+            key: 'datetrunc_month_order_created_at'
+            width: 191
+          }
+        ]
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'v3'
       to: [
         CustomMapping {
-          block: [
-            'v_8fpj',
-            'v_91yu',
-            'v_nir7',
-            'v_15s1'
-          ]
+          block: 'v_8fpj'
           disabled: true
         }
       ]
@@ -3919,7 +4456,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -3931,7 +4469,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v5',
-            'v8',
             'v_ztqi',
             'v_hk4u',
             'v_wsww',
@@ -3949,6 +4486,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
+            'v_od3a',
             'f2'
           ]
           disabled: true
@@ -3961,7 +4499,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v5',
-            'v8',
             'v_ztqi',
             'v_hk4u',
             'v_wsww',
@@ -3986,36 +4523,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_vk4x',
             'v_ufmq',
             'v_t8f9',
+            'v_od3a',
             'f1',
             'f_zwa4'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v8'
-      to: [
-        CustomMapping {
-          block: [
-            'v5',
-            'v_ztqi',
-            'v_hk4u',
-            'v_wsww',
-            'v_j83d',
-            'v_350o',
-            'v_qnug',
-            'v_tq6d',
-            'v_wwiv',
-            'v_6o9d',
-            'v_ji80',
-            'v_7vcf',
-            'v_n0qr',
-            'v_jpzg',
-            'v_0sbb',
-            'v_58pi',
-            'v_vk4x',
-            'v_ufmq'
           ]
           disabled: true
         }
@@ -4027,7 +4537,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v_hk4u',
-            'v_wsww'
+            'v_wsww',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4039,7 +4550,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v5',
-            'v8',
             'v_ztqi',
             'v_wsww',
             'v_j83d',
@@ -4055,7 +4565,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_0sbb',
             'v_58pi',
             'v_vk4x',
-            'v_ufmq'
+            'v_ufmq',
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4067,7 +4579,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v5',
-            'v8',
             'v_ztqi',
             'v_hk4u',
             'v_j83d',
@@ -4083,7 +4594,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_0sbb',
             'v_58pi',
             'v_vk4x',
-            'v_ufmq'
+            'v_ufmq',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4097,7 +4609,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_ztqi',
             'v_j83d',
             'v_ji80',
-            'v_n0qr'
+            'v_n0qr',
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4126,7 +4640,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_0sbb',
             'v_58pi',
             'v_vk4x',
-            'v_ufmq'
+            'v_ufmq',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4156,7 +4671,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4168,7 +4684,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v5',
-            'v8',
             'v_ztqi',
             'v_856v',
             'v_qctn',
@@ -4190,13 +4705,15 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
-            'v_t8f9'
+            'v_t8f9',
+            'v_cohort_vy',
+            'v_od3a'
           ]
           disabled: true
         },
         CustomMapping {
           block: 'v3'
-          field: ref('vyht_ecommerce_orders_1', 'created_at')
+          field: r(vyht_ecommerce_orders_1.created_at)
         }
       ]
     },
@@ -4224,7 +4741,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4236,7 +4754,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v5',
-            'v8',
             'v_ztqi',
             'v_hk4u',
             'v_wsww',
@@ -4257,7 +4774,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4297,28 +4816,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       from: 'v_5dpt'
       to: [
         CustomMapping {
-          block: [
-            'v5',
-            'v_qctn',
-            'v_9rhg',
-            'v_tusm',
-            'v_j83d',
-            'v_nyr1',
-            'v_350o',
-            'v_qnug',
-            'v_tq6d',
-            'v_wwiv',
-            'v_6o9d',
-            'v_ji80',
-            'v_7vcf',
-            'v_n0qr',
-            'v_jpzg',
-            'v_0sbb',
-            'v_58pi',
-            'v_vk4x',
-            'v_ufmq',
-            'v_t8f9'
-          ]
+          block: 'v_oa26'
           disabled: true
         }
       ]
@@ -4327,12 +4825,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       from: 'v_8fpj'
       to: [
         CustomMapping {
-          block: [
-            'v3',
-            'v_91yu',
-            'v_nir7',
-            'v_15s1'
-          ]
+          block: 'v3'
           disabled: true
         }
       ]
@@ -4351,7 +4844,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4371,7 +4865,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4391,7 +4886,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4411,7 +4907,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4431,7 +4928,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4443,7 +4941,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v5',
-            'v8',
             'v_ztqi',
             'v_hk4u',
             'v_wsww',
@@ -4464,7 +4961,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4484,7 +4983,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4496,7 +4996,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v5',
-            'v8',
             'v_ztqi',
             'v_hk4u',
             'v_wsww',
@@ -4517,7 +5016,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_58pi',
             'v_vk4x',
             'v_ufmq',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26',
+            'v_od3a'
           ]
           disabled: true
         }
@@ -4537,7 +5038,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4557,7 +5059,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4577,7 +5080,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4597,7 +5101,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4617,7 +5122,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_5dpt',
             'v_ji80',
             'v_n0qr',
-            'v_t8f9'
+            'v_t8f9',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4646,7 +5152,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
             'v_0sbb',
             'v_58pi',
             'v_vk4x',
-            'v_ufmq'
+            'v_ufmq',
+            'v_oa26'
           ]
           disabled: true
         }
@@ -4721,8 +5228,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           block: [
             'v_wxn2',
             'v_m2xo',
-            'v_0725',
-            'v_nd9q'
+            'v_0725'
           ]
           disabled: true
         }
@@ -4735,56 +5241,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           block: [
             'v_wxn2',
             'v_m2xo',
-            'v_0725',
-            'v_nd9q'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_91yu'
-      to: [
-        CustomMapping {
-          block: [
-            'v3',
-            'v_8fpj'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_nir7'
-      to: [
-        CustomMapping {
-          block: [
-            'v3',
-            'v_8fpj'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'f_publift_test_data_csv_currency'
-      to: [
-        CustomMapping {
-          block: [
-            'v3',
-            'v_8fpj'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_15s1'
-      to: [
-        CustomMapping {
-          block: [
-            'v3',
-            'v_8fpj'
+            'v_0725'
           ]
           disabled: true
         }
@@ -4814,9 +5271,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v_qpsb',
-            'v_j070',
-            'v_kgry',
-            'v_7a6x'
+            'v_j070'
           ]
           disabled: true
         }
@@ -4828,68 +5283,22 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         CustomMapping {
           block: [
             'v_qpsb',
-            'v_j070',
-            'v_kgry',
-            'v_7a6x'
+            'v_j070'
           ]
           disabled: true
         }
       ]
     },
     FilterInteraction {
-      from: 'v_kgry'
+      from: 'v_od3a'
       to: [
         CustomMapping {
           block: [
-            'v_wxn2',
-            'v_m2xo',
-            'v_0725',
-            'v_nd9q'
+            'v_hk4u',
+            'v_wsww',
+            'v_oa26'
           ]
           disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_7a6x'
-      to: [
-        CustomMapping {
-          block: [
-            'v_wxn2',
-            'v_m2xo',
-            'v_0725',
-            'v_nd9q'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'v_nd9q'
-      to: [
-        CustomMapping {
-          block: [
-            'v_qpsb',
-            'v_j070',
-            'v_fb2g',
-            'v_wxn2',
-            'v_kgry',
-            'v_7a6x'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'f_countries_continent_name'
-      to: [
-        CustomMapping {
-          block: [
-            'v_059z',
-            'v_3mef',
-            'v_ck6w'
-          ]
-          field: ref('ecommerce_countries', 'continent_name')
         }
       ]
     },
@@ -4898,15 +5307,52 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       to: [
         CustomMapping {
           block: 'v3'
-          field: ref('vyht_ecommerce_orders_1', 'created_at')
-        },
-        CustomMapping {
-          block: 'v8'
-          field: ref('ecommerce_orders', 'created_at')
+          field: r(vyht_ecommerce_orders_1.created_at)
         },
         CustomMapping {
           block: 'v_711g'
-          field: ref('order_master', 'order_created_month')
+          field: r(order_master.order_created_month)
+        }
+      ]
+    },
+    PopInteraction {
+      from: 'p_period_comparison_l7d4'
+      to: [
+        CustomMapping {
+          block: [
+            'v_3pqe',
+            'v_bj6j',
+            'v_c1ru',
+            'v_p9dt',
+            'v_segi'
+          ]
+          field: r(vy_kaggle_orders.order_purchase_timestamp)
+        },
+        CustomMapping {
+          block: [
+            'v_d9k9',
+            'v_zspi'
+          ]
+          field: r(reporting_issues.completed_at)
+        },
+        CustomMapping {
+          block: [
+            'v_j070',
+            'v_qpsb'
+          ]
+          field: r(vy_opportunity_calendar_csv.year_month)
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_date'
+      to: [
+        CustomMapping {
+          block: [
+            'v_qpsb',
+            'v_j070'
+          ]
+          field: r(vy_opportunity_calendar_csv.year_month)
         }
       ]
     }
@@ -4914,5 +5360,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   settings {
     timezone: 'Etc/UTC'
     cache_duration: 1440
+    autorun_on_open: true
+    autorun_on_changes: true
   }
 }

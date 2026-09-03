@@ -2,161 +2,144 @@ Dashboard tri_test {
   title: 'BHX Tri Test'
   description: ''''''
 
-  view: TabLayout {
+  view: CanvasLayout {
     label: 'View 1'
-    tab view_1: CanvasLayout {
-      label: 'Tab 1'
-      width: 2240
-      height: 8380
-      grid_size: 20
-      block v1 {
-        position: pos(100, 20, 400, 300)
-        layer: 2
-      }
-      block f1 {
-        position: pos(520, 20, 300, 100)
-        layer: 3
-      }
-      block v2 {
-        position: pos(900, 20, 800, 280)
-        layer: 4
-      }
-      block f2 {
-        position: pos(720, 500, 300, 100)
-        layer: 5
-      }
-      block f3 {
-        position: pos(880, 460, 300, 100)
-        layer: 6
-      }
-      block v3 {
-        position: pos(480, 640, 680, 2500)
-        layer: 7
-      }
-      block v4 {
-        position: pos(40, 380, 400, 300)
-        layer: 8
-      }
-      block f4 {
-        position: pos(460, 260, 340, 100)
-        layer: 9
-      }
-      block v_cx59 {
-        position: pos(20, 940, 400, 300)
-        layer: 10
-      }
-      block f_rfyo {
-        position: pos(140, 1380, 300, 100)
-        layer: 11
-      }
-      block v_2e00 {
-        position: pos(1380, 700, 400, 300)
-        layer: 1
-      }
-      block v_7q0t {
-        position: pos(1400, 400, 400, 300)
-        layer: 1
-      }
-      block v_revenue30d {
-        position: pos(1820, 20, 380, 200)
-        layer: 12
-      }
-      block v_qjiy {
-        position: pos(300, 3150, 400, 300)
-      }
-      block v_2qey {
-        position: pos(460, 3460, 400, 300)
-        layer: 7
-      }
-      block v_foi4 {
-        position: pos(920, 3660, 400, 300)
-      }
-      block v_7wzb {
-        position: pos(580, 3960, 400, 300)
-        layer: 7
-      }
-      block v_bjrk {
-        position: pos(980, 4200, 400, 300)
-        layer: 7
-      }
-      block v_5vsg {
-        position: pos(440, 4400, 400, 300)
-        layer: 7
-      }
-      block v_p4od {
-        position: pos(1080, 4840, 400, 300)
-        layer: 7
-      }
-      block v_dteb {
-        position: pos(40, 5060, 400, 300)
-        layer: 7
-      }
-      block v_bvvg {
-        position: pos(720, 5180, 400, 300)
-        layer: 7
-      }
-      block v_rygc {
-        position: pos(1240, 5280, 400, 300)
-        layer: 7
-      }
-      block v_qopv {
-        position: pos(840, 4520, 400, 300)
-        layer: 7
-      }
-      block v_fpmq {
-        position: pos(1760, 5260, 400, 300)
-        layer: 7
-      }
-      block v_sfjs {
-        position: pos(940, 5620, 400, 300)
-        layer: 7
-      }
-      block v_3w4m {
-        position: pos(300, 5740, 400, 300)
-        layer: 7
-      }
-      block v_dvdk {
-        position: pos(920, 6070, 400, 300)
-      }
-      block v_qrg6 {
-        position: pos(140, 6260, 400, 300)
-      }
-      block v_meuy {
-        position: pos(340, 6760, 400, 300)
-      }
-      block v_2lxj {
-        position: pos(1040, 6680, 400, 300)
-      }
-      block v_ttvl {
-        position: pos(1440, 7840, 400, 300)
-      }
-      block v_ujwn {
-        position: pos(420, 7900, 400, 300)
-      }
-      block v_8g5c {
-        position: pos(560, 7380, 400, 300)
-      }
-      block v_7kq4 {
-        position: pos(1260, 7400, 400, 300)
-      }
-      block v_vr4k {
-        position: pos(240, 600, 800, 300)
-        layer: 7
-      }
-      mobile {
-        mode: 'auto'
-      }
+    height: 8380
+    grid_size: 20
+    mobile {
+      mode: 'auto'
     }
-    tab tab_ub8w: CanvasLayout {
-      label: 'Tab 2'
-      width: 1300
-      height: 800
-      grid_size: 20
-      auto_expand_vertically: true
-      mobile {
-        mode: 'auto'
-      }
+    block v1 {
+      position: pos(100, 20, 400, 300)
+      layer: 2
     }
+    block f1 {
+      position: pos(520, 20, 300, 100)
+      layer: 3
+    }
+    block v2 {
+      position: pos(820, 20, 400, 300)
+      layer: 4
+    }
+    block f2 {
+      position: pos(720, 500, 300, 100)
+      layer: 5
+    }
+    block f3 {
+      position: pos(880, 460, 300, 100)
+      layer: 6
+    }
+    block v3 {
+      position: pos(480, 640, 680, 2500)
+      layer: 7
+    }
+    block v4 {
+      position: pos(40, 380, 400, 300)
+      layer: 8
+    }
+    block f4 {
+      position: pos(460, 260, 340, 100)
+      layer: 9
+    }
+    block v_cx59 {
+      position: pos(20, 940, 400, 300)
+      layer: 10
+    }
+    block f_rfyo {
+      position: pos(140, 1380, 300, 100)
+      layer: 11
+    }
+    block v_2e00 {
+      position: pos(1380, 700, 400, 300)
+      layer: 1
+    }
+    block v_7q0t {
+      position: pos(1400, 400, 400, 300)
+      layer: 1
+    }
+    block v_revenue30d {
+      position: pos(1820, 20, 380, 200)
+      layer: 12
+    }
+    block v_qjiy {
+      position: pos(300, 3150, 400, 300)
+    }
+    block v_2qey {
+      position: pos(460, 3460, 400, 300)
+      layer: 7
+    }
+    block v_foi4 {
+      position: pos(920, 3660, 400, 300)
+    }
+    block v_7wzb {
+      position: pos(580, 3960, 400, 300)
+      layer: 7
+    }
+    block v_bjrk {
+      position: pos(980, 4200, 400, 300)
+      layer: 7
+    }
+    block v_5vsg {
+      position: pos(440, 4400, 400, 300)
+      layer: 7
+    }
+    block v_p4od {
+      position: pos(1080, 4840, 400, 300)
+      layer: 7
+    }
+    block v_dteb {
+      position: pos(40, 5060, 400, 300)
+      layer: 7
+    }
+    block v_bvvg {
+      position: pos(720, 5180, 400, 300)
+      layer: 7
+    }
+    block v_rygc {
+      position: pos(1240, 5280, 400, 300)
+      layer: 7
+    }
+    block v_qopv {
+      position: pos(840, 4520, 400, 300)
+      layer: 7
+    }
+    block v_fpmq {
+      position: pos(1760, 5260, 400, 300)
+      layer: 7
+    }
+    block v_sfjs {
+      position: pos(940, 5620, 400, 300)
+      layer: 7
+    }
+    block v_3w4m {
+      position: pos(300, 5740, 400, 300)
+      layer: 7
+    }
+    block v_dvdk {
+      position: pos(920, 6070, 400, 300)
+    }
+    block v_qrg6 {
+      position: pos(140, 6260, 400, 300)
+    }
+    block v_meuy {
+      position: pos(340, 6760, 400, 300)
+    }
+    block v_2lxj {
+      position: pos(1040, 6680, 400, 300)
+    }
+    block v_ttvl {
+      position: pos(1440, 7840, 400, 300)
+    }
+    block v_ujwn {
+      position: pos(420, 7900, 400, 300)
+    }
+    block v_8g5c {
+      position: pos(560, 7380, 400, 300)
+    }
+    block v_7kq4 {
+      position: pos(1260, 7400, 400, 300)
+    }
+    width: 2240
   }
 
   theme: H.themes.classic.extend(
@@ -343,24 +326,33 @@ Dashboard tri_test {
           pattern: '#,###0.00%'
         }
       }
-      filter {
-        field: r(ecommerce_countries.continent_name)
-        operator: 'is'
-        value: 'Asia'
-      }
       fields: [
         VizFieldFull {
-          ref: r(ecommerce_orders.id)
+          ref: r(order_master.order_created_at)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+        },
+        VizFieldFull {
+          ref: r(demo_ecommerce_metrics.total_order_value)
           format {
             type: 'number'
             pattern: 'inherited'
           }
+        },
+        VizFieldFull {
+          ref: 'pop_comparison_of_total_order_value_01'
+          format {
+            type: 'number'
+            pattern: '#,###0.00%'
+          }
         }
       ]
       settings {
-        wrap_header_text: true
-        wrap_cell_text: true
         show_row_number: true
+        row_limit: 5000
         aggregate_awareness {
           enabled: true
           debug_comments: true
@@ -1791,63 +1783,6 @@ Dashboard tri_test {
       settings {
         row_limit: 5000
         x_axis_show_null_datetime: false
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-      }
-    }
-  }
-  block v_vr4k: VizBlock {
-    label: 'vggg copy'
-    viz: DataTable {
-      dataset: demo_ecommerce_metrics
-      calculation pop_comparison_of_total_order_value {
-        label: 'PoP Comparison of Total Order Value'
-        formula: @aql safe_divide(total_order_value, total_order_value | relative_period(order_master.order_created_at, -1, strict: true)) - 1;;
-        calc_type: 'measure'
-        data_type: 'number'
-        format {
-          type: 'number'
-          pattern: '#,###0.00%'
-        }
-      }
-      calculation pop_comparison_of_total_order_value_01 {
-        label: 'PoP Comparison of Total Order Value 01'
-        formula: @aql safe_divide(total_order_value, total_order_value | relative_period(order_master.order_created_at, -1, strict: true)) - 1;;
-        calc_type: 'measure'
-        data_type: 'number'
-        format {
-          type: 'number'
-          pattern: '#,###0.00%'
-        }
-      }
-      fields: [
-        VizFieldFull {
-          ref: r(ecommerce_countries.continent_name)
-          format {
-            type: 'text'
-          }
-        },
-        VizFieldFull {
-          ref: r(ecommerce_cities.country_code)
-          format {
-            type: 'text'
-          }
-        },
-        VizFieldFull {
-          ref: r(demo_ecommerce_metrics.total_order_value)
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-        }
-      ]
-      settings {
-        wrap_header_text: true
-        wrap_cell_text: true
-        show_row_number: true
-        row_limit: 5000
         aggregate_awareness {
           enabled: true
           debug_comments: true

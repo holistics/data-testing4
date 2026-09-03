@@ -23,7 +23,7 @@ Dataset vyhuynh_ecommerce_dataset {
   ]
   owner: 'vy.ht@holistics.io'
   metric total_revenue {
-    label: "Field Label: Revenue"
+    label: "Total Revenue"
     type: "number"
     description: ""
     definition: @aql vyht_ecommerce_order_items
