@@ -31,11 +31,11 @@ Model rlp_fct_sales {
       select 3 as id, 'viewer' as role_name
     ),
     influencers as (
-      select 1 as id, 'admin' as target_role
+      select 1 as id, 'Influencer Admin' as name, 'admin' as target_role
       union all
-      select 2 as id, 'analyst' as target_role
+      select 2 as id, 'Influencer Analyst' as name, 'analyst' as target_role
       union all
-      select 3 as id, 'viewer' as target_role
+      select 3 as id, 'Influencer Viewer' as name, 'viewer' as target_role
     )
     select
       s.id,
@@ -43,7 +43,8 @@ Model rlp_fct_sales {
       s.influencer_id,
       s.amount,
       r.role_name as destination_role,
-      i.target_role as influencer_target_role
+      i.target_role as influencer_target_role,
+      i.name as influencer_name
     from sales s
     left join roles r on s.role_id = r.id
     left join influencers i on s.influencer_id = i.id
@@ -84,6 +85,24 @@ Model rlp_fct_sales {
     label: 'Influencer Target Role'
     type: 'text'
     definition: @sql {{ #SOURCE.influencer_target_role }} ;;
+  }
+
+  dimension influencer_name {
+    label: 'Influencer Name'
+    description: '''
+      Column-level permission (redaction), not row filtering. Influencers outside the current user role come
+      back as '(redacted)'. This is what lets the sales dataset expose influencer identity without needing the
+      influencer dim model in the dataset at all - so there is no un-ruled model for a user to query directly.
+      Redaction is applied in the field definition, so it holds no matter how the field is reached.
+    '''
+    type: 'text'
+    definition: @sql
+      case
+        when {{ #SOURCE.influencer_target_role }} = '${H.current_user.h_role}'
+          then {{ #SOURCE.influencer_name }}
+        else '(redacted)'
+      end
+    ;;
   }
 
   dimension has_role_access {
