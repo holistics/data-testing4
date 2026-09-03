@@ -1,0 +1,64 @@
+Dataset rls_bench_dataset {
+  label: 'RLS + Benchmark (CF-14071)'
+  description: '''
+    Proposed graph for CF-14071: store-restricted core facts + unrestricted benchmark facts in ONE dataset,
+    with a single permission rule.
+
+    Design rules, in order of importance:
+
+    1. ONE rule, on rls_dim_store.is_permitted. Every model in the dataset must be reachable from it, because
+       Holistics blocks any Explore where a rule cannot reach a model ("Some permission rules are not applied
+       in this Explore"). There is no way to mark a model out of scope.
+
+    2. Every fact hangs DIRECTLY off rls_dim_store (single hop, dim -> fact). Core facts join on the real store
+       key; benchmark facts join on the synthetic -1 member. Single-hop tier-1 edges, so path selection has
+       nothing to choose between.
+
+    3. Core facts never propagate RLP upward (no rlp_propagation on their edges). If the store restriction
+       climbed into a shared dim like date, it would flow back down into the benchmark fact and silently
+       narrow the cohort to the permitted stores' dates.
+
+    4. Shared / benchmark dims that must stay COMPLETE are made reachable through exactly ONE upward edge,
+       from the BENCHMARK fact (which passes the rule wholesale, so nothing is removed).
+
+    5. rls_dim_store is kept out of the view. If a user could filter on it, filtering store_key = 3 would drop
+       the -1 row and wipe out every benchmark number. Users filter stores via store_name / state /
+       store_format instead.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    rls_dim_store,
+    rls_dim_date,
+    rls_dim_format_bench,
+    rls_fact_sales_core,
+    rls_fact_sales_bench,
+  ]
+
+  relationships: [
+    // (2) facts hang directly off the RLS dim, single hop
+    relationship(rls_fact_sales_core.store_key > rls_dim_store.store_key, true, 'one_way'),
+    relationship(rls_fact_sales_bench.store_key > rls_dim_store.store_key, true, 'one_way'),
+
+    // (3) core fact -> shared date: NO rlp_propagation. Restriction must not climb up here.
+    relationship(rls_fact_sales_core.date_key > rls_dim_date.date_key, true, 'one_way'),
+
+    // (4) the single upward edge that makes shared/benchmark dims reachable, via the unrestricted fact
+    relationship(rls_fact_sales_bench.date_key > rls_dim_date.date_key, true, 'one_way', rlp_propagation: 'two_way'),
+    relationship(rls_fact_sales_bench.store_format > rls_dim_format_bench.store_format, true, 'one_way', rlp_propagation: 'two_way'),
+  ]
+
+  permission store_access {
+    field: r(rls_dim_store.is_permitted)
+    operator: 'is'
+    value: true
+  }
+
+  view {
+    // (5) rls_dim_store deliberately NOT exposed
+    model rls_fact_sales_core {}
+    model rls_fact_sales_bench {}
+    model rls_dim_date {}
+    model rls_dim_format_bench {}
+  }
+}
