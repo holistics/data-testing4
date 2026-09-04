@@ -1,0 +1,25 @@
+Model dim_categories {
+  type: 'query'
+  label: 'Dim Categories'
+  description: 'Docs RLP example, verbatim.'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 'Category A' as name
+    union all
+    select 2 as id, 'Category B' as name
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension name {
+    label: 'Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.name }} ;;
+  }
+}
