@@ -1,0 +1,70 @@
+Dataset cf14071_repro {
+  label: 'CF-14071 repro (customer diagram)'
+  description: '''
+    The customer's diagram, box for box and line for line. 8 models, 8 relationships, nothing else.
+
+      Dim Store            -> Fact Sales, Fact SOH
+      Dim Region           -> Fact Sales, Fact SOH
+      Dim Date             -> Fact Sales, Fact Sales (Benchmark)
+      Dim Region (Benchmark) -> Fact Sales (Benchmark), Fact SOH (Benchmark)
+
+    The RLS rule is on Dim Store. There is deliberately NO relationship from Dim Store to either benchmark
+    fact - the diagram's "No Path" arrow. Every relationship is left at the two_way default, with no
+    filter_direction and no rlp_propagation, which is the customer's current state.
+
+    The diagram marks three boxes with "Error as this path can't be resolved through RLS via Dim Store":
+    Fact Sales (Benchmark), Fact SOH (Benchmark) and Dim Region (Benchmark).
+
+    Worth watching when you check, because it may NOT match all three pink boxes: filter_direction defaults
+    to two_way and rlp_propagation defaults to inherit, so RLP can travel
+    Dim Store -> Fact Sales -> UP into Dim Date -> DOWN into Fact Sales (Benchmark).
+    If it does, that model is reachable and will not error - it will be silently narrowed to the permitted
+    stores' dates instead, which is a wrong number rather than an error. Fact SOH (Benchmark) and Dim Region
+    (Benchmark) have no shared-dim bridge, so those two should still be unreachable and error.
+
+    Fixtures. Stores 1-5 (Store A-E); Fact SOH only carries stores 1-3.
+    With vendor_id = 3 (Store C):
+      Sales $           = 500   (100 + 400)
+      Benchmark Sales $ = 20500 if correctly unrestricted; anything less means it was narrowed.
+
+    RLP is not enforced in dev and Admins bypass it - publish to production and use "View and Edit as" a
+    non-admin with vendor_id set.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    dim_store,
+    dim_region,
+    dim_date,
+    dim_region_benchmark,
+    fact_sales,
+    fact_soh,
+    fact_sales_benchmark,
+    fact_soh_benchmark,
+  ]
+
+  relationships: [
+    // Dim Store -> core facts. The RLS rule enters here and can go no further.
+    relationship(fact_sales.store_key > dim_store.store_key, true),
+    relationship(fact_soh.store_key > dim_store.store_key, true),
+
+    // Dim Region -> core facts.
+    relationship(fact_sales.region_key > dim_region.region_key, true),
+    relationship(fact_soh.region_key > dim_region.region_key, true),
+
+    // Dim Date -> Fact Sales and Fact Sales (Benchmark). Neither SOH fact connects.
+    relationship(fact_sales.date_key > dim_date.date_key, true),
+    relationship(fact_sales_benchmark.date_key > dim_date.date_key, true),
+
+    // Dim Region (Benchmark) -> benchmark facts. Nothing here leads back to Dim Store.
+    relationship(fact_sales_benchmark.region_key > dim_region_benchmark.region_key, true),
+    relationship(fact_soh_benchmark.region_key > dim_region_benchmark.region_key, true),
+  ]
+
+  // vendor_id stands in for the customer's ga_sr_storeid, which does not exist in this workspace.
+  permission store_reporting_proprietor_permissions {
+    field: r(dim_store.store_key)
+    operator: 'matches_user_attribute'
+    value: 'vendor_id'
+  }
+}

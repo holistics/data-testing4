@@ -1,0 +1,31 @@
+Model dim_store {
+  type: 'query'
+  label: 'Dim Store'
+  description: 'CF-14071. The "Dim Store" box. The RLS rule sits here. Core facts only - nothing on the benchmark side joins it.'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as store_key, 'Store A' as store_name
+    union all
+    select 2 as store_key, 'Store B' as store_name
+    union all
+    select 3 as store_key, 'Store C' as store_name
+    union all
+    select 4 as store_key, 'Store D' as store_name
+    union all
+    select 5 as store_key, 'Store E' as store_name
+  ;;
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.store_key }} ;;
+  }
+
+  dimension store_name {
+    label: 'Store Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.store_name }} ;;
+  }
+}
