@@ -11,39 +11,38 @@ Dataset cf14071_repro {
     The RLS rule is on Dim Store. There is deliberately NO relationship from Dim Store to either benchmark
     fact - the diagram's "No Path" arrow.
 
-    EVERY RELATIONSHIP IS 'one_way'. This is what reproduces the customer's error, and it is the standard
-    galaxy-schema setting: users filter/group facts by dimensions (dim -> fact) but cannot combine benchmark
-    metrics with core store dimensions. rlp_propagation is left unset, so it defaults to 'inherit' and
-    follows filter_direction - meaning permission filters also flow one_way, from the 'one' side (dimension)
-    to the 'many' side (fact), and never back up.
+    EVERY RELATIONSHIP IS 'one_way' on filter_direction, with rlp_propagation left UNSET. This is the
+    standard galaxy-schema setting: users filter/group facts by dimensions (dim -> fact) but cannot combine
+    benchmark metrics with core store dimensions.
 
-    Consequence, which is exactly the customer's complaint. RLP leaves Dim Store, reaches Fact Sales and
-    Fact SOH, and STOPS. It cannot climb from Fact Sales up into Dim Date, so it never crosses to the
-    benchmark side. These three models are unreachable from the rule - the diagram's three pink boxes:
+    THIS DATASET DOES NOT RAISE THE CUSTOMER'S ERROR, and that turns out to be correct behaviour.
 
-      - Fact Sales (Benchmark)
-      - Fact SOH (Benchmark)
-      - Dim Region (Benchmark)
+    Per Khai (2026-09-04), the docs are wrong and he is updating them: when rlp_propagation is OMITTED it is
+    'two_way' by DEFAULT - it does NOT inherit filter_direction. The reachability error is only raised when
+    rlp_propagation is explicitly forced to 'one_way'. See cf14071_repro_rlp_oneway for that variant.
 
-    Any Explore touching them fails with:
-      "Some permission rules are not applied in this Explore. This is likely due to a missing relationship
-       between the models."
+    So here RLP propagation is two_way, every model is reachable from the rule, and there is nothing to
+    complain about. Do not read the absence of an error as a bug.
 
-    That is the blocker: the customer wants these three explicitly marked out-of-scope for the rule, and
-    there is no AML construct for that today.
+    OBSERVED, in production as an Explorer with vendor_id = 1:
+      dim_store lookup           -> only store 1, so the rule binds and RLP is enforced
+      Benchmark Sales $          -> 20500, the FULL cohort, unfiltered, no error
+      Sales $ + Benchmark Sales $ together -> no error
 
-    WHY NOT THE two_way DEFAULT. If you drop 'one_way' and let everything default to two_way, there is NO
-    error at all - RLP walks Dim Store -> Fact Sales -> UP into Dim Date -> DOWN into Fact Sales (Benchmark)
-    -> UP into Dim Region (Benchmark) -> DOWN into Fact SOH (Benchmark), so every model is reachable. But the
-    benchmark cohort then gets silently narrowed by the store entitlement, which is a wrong number instead of
-    an error. Both failure modes are unacceptable to the customer; this dataset shows the first one.
+    That is exactly the behaviour the customer asked for: core restricted, benchmark whole, both in one
+    report. No synthetic -1 member and no out-of-scope marker required.
+
+    ONE LOOSE END worth raising internally. If RLP propagation really is two_way by default, the store
+    filter should have travelled Dim Store -> Fact Sales -> UP into Dim Date -> DOWN into Fact Sales
+    (Benchmark), narrowing the benchmark to store 1's only date (20260102) and giving 13000 (7000 + 6000).
+    It returned 20500 instead. So either RLP does not traverse through an intermediate FACT table, or
+    two_way propagation governs reachability without applying the filter along that path.
 
     Fixtures. Stores 1-5 (Store A-E); Fact SOH only carries stores 1-3.
-    With vendor_id = 3 (Store C), Sales $ = 500 (100 + 400). The benchmark measures cannot be queried at all
-    here - that is the point.
+    With vendor_id = 1 (Store A): Sales $ = 300, SOH Qty = 10, Benchmark Sales $ = 20500.
 
-    RLP is not enforced in dev and Admins bypass it - publish to production and use "View and Edit as" a
-    non-admin with vendor_id set, or the error will not appear.
+    RLP as-code is production-only - not enforced in the dev workspace at all - and Admins plus Analysts
+    with data-source access bypass it. Publish and test as an Explorer or Viewer.
   '''
   data_source_name: 'demodb'
 

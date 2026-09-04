@@ -1,0 +1,40 @@
+Model fact_inventory {
+  type: 'query'
+  label: 'Fact Inventory'
+  description: '''
+    Docs RLP example, verbatim. Has NO path to dim_cities - it only joins dim_products. This is the doc
+    graph's equivalent of the customer's benchmark facts.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 1 as product_id, 50 as qty
+    union all
+    select 2 as id, 2 as product_id, 60 as qty
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension product_id {
+    label: 'Product Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.product_id }} ;;
+  }
+
+  dimension qty {
+    label: 'Qty'
+    type: 'number'
+    definition: @sql {{ #SOURCE.qty }} ;;
+  }
+
+  measure total_qty {
+    label: 'Total Qty'
+    type: 'number'
+    definition: @aql sum(fact_inventory.qty) ;;
+  }
+}

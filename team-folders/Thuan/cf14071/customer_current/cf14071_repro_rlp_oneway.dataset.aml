@@ -1,0 +1,88 @@
+Dataset cf14071_repro_rlp_oneway {
+  label: 'CF-14071 repro - forced rlp_propagation one_way'
+  description: '''
+    Same 8 models and same 8 edges as cf14071_repro (the customer's diagram). ONE difference: every
+    relationship carries an EXPLICIT rlp_propagation='one_way'.
+
+    WHY. Per Khai (2026-09-04), the docs are wrong on this point and he is updating them:
+
+      - When rlp_propagation is OMITTED, it is 'two_way' by DEFAULT. It does NOT inherit filter_direction.
+      - The reachability error is only raised when rlp_propagation is explicitly forced to 'one_way'.
+
+    That resolves why cf14071_repro does not error. It has filter_direction 'one_way' everywhere but no
+    rlp_propagation, so RLP propagation was two_way the whole time, every model was reachable, and there was
+    correctly nothing to complain about.
+
+    So THIS dataset is the one that should reproduce the customer's error. Forcing one_way pins RLP to
+    dimension -> fact, so it leaves Dim Store, reaches Fact Sales and Fact SOH, and cannot climb into Dim
+    Date to cross to the benchmark side. Expect the three pink boxes from the diagram to be unreachable:
+
+      - Fact Sales (Benchmark)
+      - Fact SOH (Benchmark)
+      - Dim Region (Benchmark)
+
+      "Some permission rules are not applied in this Explore. This is likely due to a missing relationship
+       between the models."
+
+    Per the doc's own logic it should also break the CORE side, since Dim Date and Dim Region also sit
+    behind one-way edges from the facts. Worth checking both:
+
+      1. Sales $ alone                     -> expect 300 (vendor_id = 1, store 1's only row).
+      2. Sales $ by Dim Date -> Date       -> error? This is the core-side equivalent of the doc's
+                                              "total_orders by dim_products.name" query.
+      3. Benchmark Sales $ alone           -> error, or 20500?
+      4. Sales $ + Benchmark Sales $        -> error?
+
+    OBSERVED IN cf14071_repro (rlp_propagation omitted, i.e. two_way), as an Explorer with vendor_id = 1:
+      Sales $ = restricted correctly, dim_store lookup showed only store 1
+      Benchmark Sales $ = 20500, UNFILTERED, no error
+      both metrics together = no error
+
+    Note that last result is itself worth raising: if RLP propagation really is two_way by default, the
+    store filter should have travelled Dim Store -> Fact Sales -> UP into Dim Date -> DOWN into Fact Sales
+    (Benchmark) and narrowed the benchmark to store 1's only date (20260102), giving 13000 (7000 + 6000),
+    not 20500. It did not. So either RLP does not traverse through an intermediate FACT table, or two_way
+    propagation governs reachability without actually applying the filter across that path.
+
+    Either way, the practical finding for CF-14071 is that the customer's requirement already works today:
+    filter_direction 'one_way' with rlp_propagation left at its default gives store-restricted core facts,
+    a fully unrestricted benchmark cohort, and both metrics in one report with no error.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    dim_store,
+    dim_region,
+    dim_date,
+    dim_region_benchmark,
+    fact_sales,
+    fact_soh,
+    fact_sales_benchmark,
+    fact_soh_benchmark,
+  ]
+
+  relationships: [
+    // Dim Store -> core facts. RLP forced one_way: dim -> fact only, no climbing back out.
+    relationship(fact_sales.store_key > dim_store.store_key, true, 'one_way', rlp_propagation='one_way'),
+    relationship(fact_soh.store_key > dim_store.store_key, true, 'one_way', rlp_propagation='one_way'),
+
+    // Dim Region -> core facts.
+    relationship(fact_sales.region_key > dim_region.region_key, true, 'one_way', rlp_propagation='one_way'),
+    relationship(fact_soh.region_key > dim_region.region_key, true, 'one_way', rlp_propagation='one_way'),
+
+    // Dim Date -> Fact Sales and Fact Sales (Benchmark). This is the edge whose blocked upward hop is
+    // supposed to strand the benchmark side.
+    relationship(fact_sales.date_key > dim_date.date_key, true, 'one_way', rlp_propagation='one_way'),
+    relationship(fact_sales_benchmark.date_key > dim_date.date_key, true, 'one_way', rlp_propagation='one_way'),
+
+    // Dim Region (Benchmark) -> benchmark facts.
+    relationship(fact_sales_benchmark.region_key > dim_region_benchmark.region_key, true, 'one_way', rlp_propagation='one_way'),
+    relationship(fact_soh_benchmark.region_key > dim_region_benchmark.region_key, true, 'one_way', rlp_propagation='one_way'),
+  ]
+
+  permission store_reporting_proprietor_permissions {
+    field: r(dim_store.store_key)
+    operator: 'matches_user_attribute'
+    value: 'vendor_id'
+  }
+}
