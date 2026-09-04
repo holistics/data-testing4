@@ -1,0 +1,72 @@
+Dataset ecommerce_rlp_oneway {
+  label: 'ecommerce (docs RLP example) - forced rlp_propagation one_way'
+  description: '''
+    The docs example again, identical to the `ecommerce` dataset except for ONE character-level change:
+
+      relationship(fact_orders_test.product_id > dim_products_test.id, true, 'one_way', rlp_propagation='one_way')
+
+    That is the "blocking relationship" the doc names. Everything else is byte-identical to `ecommerce`.
+
+    WHY. Per Khai, omitting rlp_propagation gives 'two_way', so the doc's example cannot error as written.
+    Forcing 'one_way' on that one edge is therefore the ONLY configuration in which the documented error can
+    appear. If it still does not error here, then the documented error condition does not exist on this
+    workspace at all, and the customer's error must come from something else entirely - at which point the
+    right move is Christo's actual dataset code, not more guessing on our side.
+
+    THE TEST, in production as an Explorer/Viewer, with the test user's `region` attribute set to 'North':
+
+      1. Total Orders, no breakdown.
+           2 -> RLP enforced. Baseline good.
+           4 -> not enforced. 0 -> region value does not match 'North'.
+
+      2. Total Orders broken down by Dim Products Test -> Name, with NO city field:
+
+           explore {
+             dimensions { dim_products_test.name }
+             measures   { total_orders }
+           }
+
+         This is the doc's failing query, on the doc's graph, with the doc's own prescribed blocking
+         relationship forced to one_way. It is the strongest possible test.
+
+           Errors   -> the error condition is real and needs an explicit rlp_propagation='one_way'. Then
+                       Christo must have that set somewhere in his real dataset, and that is the answer to
+                       CF-14071.
+           No error -> the error cannot be produced on this workspace in any configuration we can construct.
+                       Escalate: either it is version/flag dependent, or the trigger is something not in the
+                       docs at all.
+
+      3. For completeness: Total Qty from Fact Inventory (no path to dim_cities whatsoever). Expect 110.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    dim_users, dim_products_test, dim_cities,
+    dim_merchants, dim_categories,
+    fact_orders_test, fact_inventory
+  ]
+
+  relationships: [
+    relationship(fact_orders_test.user_id > dim_users.id, true, 'one_way'),
+
+    // The doc's "blocking relationship", with RLP propagation forced one_way.
+    relationship(fact_orders_test.product_id > dim_products_test.id, true, 'one_way', rlp_propagation='one_way'),
+
+    relationship(fact_inventory.product_id > dim_products_test.id, true, 'one_way'),
+    relationship(dim_users.city_id > dim_cities.id, true, 'one_way'),
+    relationship(dim_products_test.merchant_id > dim_merchants.id, true, 'one_way'),
+    relationship(dim_products_test.category_id > dim_categories.id, true, 'one_way')
+  ]
+
+  metric total_orders {
+    label: 'Total Orders'
+    type: 'number'
+    definition: @aql count(fact_orders_test.id);;
+  }
+
+  permission regional_access {
+    field: r(dim_cities.region)
+    operator: 'matches_user_attribute'
+    value: 'region' // user attribute
+  }
+}
