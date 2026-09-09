@@ -1,6 +1,6 @@
 Dataset tai_test {
   __engine__: 'aql'
-  label: '[Demo] Ecommerce (Official) Test'
+  label: 'Tai test ecommerce RLS'
   description: "Official dataset for demoing E-commerce use cases test"
   owner: 'ha.pham+demo4@holistics.io'
   data_source_name: 'demodb'
