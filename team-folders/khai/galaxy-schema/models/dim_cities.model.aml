@@ -1,4 +1,4 @@
-Model cities {
+Model dim_cities {
   type: 'table'
   label: 'Cities'
   description: ''
@@ -21,13 +21,7 @@ Model cities {
     hidden: false
     definition: @sql {{ #SOURCE.country_code }};;
   }
-  measure total_city {
-    label: 'Total City'
-    type: 'text'
-    hidden: false
-    definition: @aql count(cities.id) ;;
-  }
 
-  owner: 'khai.to+demo4@holistics.io'
+  owner: 'khai.to+staging+test@holistics.io'
   table_name: '"ecommerce"."cities"'
 }

@@ -1,4 +1,4 @@
-Model users {
+Model dim_users {
   type: 'table'
   label: 'Users'
   description: ''
@@ -64,12 +64,6 @@ Model users {
     definition: @sql {{ #SOURCE.full_name }};;
   }
 
-  measure total_users {
-    label: 'Total Users'
-    type: 'number'
-    definition: @aql count(users.id);; 
-  }
-
-  owner: 'khai.to+demo4@holistics.io'
+  owner: 'khai.to+staging+test@holistics.io'
   table_name: '"ecommerce"."users"'
 }
