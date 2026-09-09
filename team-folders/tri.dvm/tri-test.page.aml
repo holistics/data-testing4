@@ -1,0 +1,235 @@
+Dashboard tri_test {
+  title: 'Tri Test'
+  description: ''''''
+
+  view: CanvasLayout {
+    label: 'View 1'
+    height: 840
+    grid_size: 20
+    mobile {
+      mode: 'auto'
+    }
+    block v1 {
+      position: pos(100, 20, 400, 300)
+      layer: 2
+    }
+    block f1 {
+      position: pos(520, 20, 300, 100)
+      layer: 3
+    }
+    block v2 {
+      position: pos(520, 140, 400, 300)
+      layer: 4
+    }
+    block f2 {
+      position: pos(720, 500, 300, 100)
+      layer: 5
+    }
+    block f3 {
+      position: pos(400, 500, 300, 100)
+      layer: 6
+    }
+    block v3 {
+      position: pos(20, 620, 400, 300)
+      layer: 7
+    }
+  }
+
+  theme: H.themes.classic
+  block v1: VizBlock {
+    label: 'CLV'
+    viz: DataTable {
+      dataset: demo_ecommerce
+      fields: [
+        VizFieldFull {
+          ref: ref('order_master', 'order_id')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: ref('order_master', 'user_id')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: ref('order_master', 'amount')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: ref('order_master', 'customer_lifetime_value')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f1: FilterBlock {
+    label: 'aaaa'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: ref('order_master', 'status')
+    }
+    default {
+      operator: 'is'
+      value: 'delivered'
+    }
+  }
+  block v2: VizBlock {
+    label: 'vggg'
+    viz: DataTable {
+      dataset: demo_ecommerce_metrics
+      fields: [
+        VizFieldFull {
+          ref: ref('order_master', 'order_id')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: ref('order_master', 'user_id')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: ref('order_master', 'amount')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: ref('order_master', 'clv_dimensionalized')
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f2: FilterBlock {
+    label: 'CLV Filter'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce_metrics
+      field: ref('order_master', 'clv_dimensionalized')
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block f3: FilterBlock {
+    label: 'CVN'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce_metrics
+      field: ref('order_master', 'customer_lifetime_value')
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block v3: VizBlock {
+    label: 'Test 1'
+    viz: DataTable {
+      dataset: buyers_sellers_transactions
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          label: 'Full Name (Team Lead)'
+          ref: ref('buyers', 'full_name')
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Full Name (Supervisor)'
+          ref: ref('sellers', 'full_name')
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Metric'
+          ref: ref('transactions_buyers_sellers', 'quantity')
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            field_index: 0
+            direction: 'asc'
+          },
+          SortSetting {
+            field_index: 1
+            direction: 'asc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  interactions: [
+    FilterInteraction {
+      from: 'f2'
+      to: [
+        CustomMapping {
+          block: 'f3'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f3'
+      to: [
+        CustomMapping {
+          block: 'f2'
+          disabled: true
+        }
+      ]
+    }
+  ]
+}

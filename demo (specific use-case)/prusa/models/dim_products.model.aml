@@ -1,5 +1,5 @@
 // Source of truth: BigQuery `keboola.products` (verified via Holistics MCP).
-Model dim_products {
+Model dim_productss {
   type: 'table'
   label: 'Products'
   data_source_name: 'data_staging'

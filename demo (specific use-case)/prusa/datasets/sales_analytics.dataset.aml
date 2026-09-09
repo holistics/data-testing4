@@ -34,12 +34,10 @@ Dataset sales_analytics {
 
   relationships: [
     relationship(fact_order_items.order_id > fact_orders.id, true),
-    relationship(fact_order_items.product_id > dim_products.product_id, true),
     relationship(fact_orders.customer_user_id > dim_customers.id, true),
     relationship(dim_customers.customer_properties_hashed > dim_customer_properties.customer_properties_hashed, true),
     relationship(fact_orders.order_properties_hashed > dim_order_properties.order_properties_hashed, true),
     relationship(fact_order_items.order_items_properties_hashed > dim_order_items_properties.order_items_properties_hashed, true),
-    relationship(dim_product_categories.product_id - dim_products.product_id, true),
     relationship(fact_orders.created_at_date > dim_dates_prusa.full_date, true),
     relationship(fact_orders.created_as_administrator_name > dim_admin_mapping.admin, true),
     relationship(fact_orders.lead_type > dim_lead_type_coefficients.lead_type, true),

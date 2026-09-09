@@ -1,0 +1,56 @@
+Dashboard ecommerce_dashboard_new {
+  title: 'Ecommerce Dashboard New'
+  description: ''
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block v1: VizBlock {
+    label: 'Total Orders Count by Name'
+    viz: ColumnChart {
+      dataset: simple_dataset
+      x_axis: VizFieldFull {
+        ref: ref('ecommerce_categories', 'name')
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: ref('ecommerce_orders', 'total_orders_count')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'View 1'
+    height: 840
+    grid_size: 20
+    block title {
+      position: pos(20, 20, 1160, 60)
+    }
+    block v1 {
+      position: pos(20, 100, 400, 300)
+      layer: 1
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+
+  theme: H.themes.vanilla
+}

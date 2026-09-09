@@ -1,6 +1,0 @@
-// DEFAULT WRITE SCHEMA FOR ALL DB
-// If not specified -> Holistics will choose a default schema for WRITE ops
-
- ImportSettings {
-  default_schema: 'public'
- }
