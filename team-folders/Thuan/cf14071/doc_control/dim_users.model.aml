@@ -1,0 +1,31 @@
+Model dim_users {
+  type: 'query'
+  label: 'Dim Users'
+  description: 'Docs RLP example, verbatim. Middle hop: dim_cities -> dim_users -> fact_orders.'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 'User One' as name, 1 as city_id
+    union all
+    select 2 as id, 'User Two' as name, 2 as city_id
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension name {
+    label: 'Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.name }} ;;
+  }
+
+  dimension city_id {
+    label: 'City Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.city_id }} ;;
+  }
+}

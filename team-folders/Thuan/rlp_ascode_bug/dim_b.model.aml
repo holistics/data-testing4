@@ -1,0 +1,25 @@
+Model dim_b {
+  type: 'query'
+  label: 'Dim B'
+  description: 'RLP as-code check. One of the two dims the has_access rule reads from.'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 'admin' as role
+    union all
+    select 2 as id, 'analyst' as role
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension role {
+    label: 'Role'
+    type: 'text'
+    definition: @sql {{ #SOURCE.role }} ;;
+  }
+}

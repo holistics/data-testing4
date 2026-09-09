@@ -1,0 +1,25 @@
+Model dim_cities {
+  type: 'query'
+  label: 'Dim Cities'
+  description: 'Docs RLP example, verbatim. Carries the permission rule.'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 'North' as region
+    union all
+    select 2 as id, 'South' as region
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension region {
+    label: 'Region'
+    type: 'text'
+    definition: @sql {{ #SOURCE.region }} ;;
+  }
+}

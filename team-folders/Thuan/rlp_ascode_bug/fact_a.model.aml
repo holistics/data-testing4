@@ -1,0 +1,46 @@
+Model fact_a {
+  type: 'query'
+  label: 'Fact A'
+  description: '''
+    RLP as-code check. has_access is NOT defined here - it is a cross-model dimension defined at dataset level
+    in rlp_ascode_check, referenced by the permission via ref('fact_a', 'has_access').
+
+    4 rows covering every combination of dim_b.role / dim_c.role.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 1 as b_id, 1 as c_id, 100 as amount
+    union all
+    select 2 as id, 1 as b_id, 2 as c_id, 200 as amount
+    union all
+    select 3 as id, 2 as b_id, 1 as c_id, 300 as amount
+    union all
+    select 4 as id, 2 as b_id, 2 as c_id, 400 as amount
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension b_id {
+    label: 'B Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.b_id }} ;;
+  }
+
+  dimension c_id {
+    label: 'C Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.c_id }} ;;
+  }
+
+  dimension amount {
+    label: 'Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.amount }} ;;
+  }
+}
