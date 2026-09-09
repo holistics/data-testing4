@@ -3,10 +3,11 @@ Dashboard ecommerce_dashboard_tai_copy_2 {
   owner: 'hien.nt@holistics.io'
   theme {
     custom_css: @css
-    .h-dac-toolbar:where(.embed *) {
-      background-color: transparent !important;
-      border-width: 0 !important;
-      ;;;
+      .h-dac-toolbar:where(.embed *) {
+        background-color: transparent !important;
+        border-width: 0 !important;
+      }
+    ;;
   }
   block v_l8pg: VizBlock {
     label: dict('gmv_block_label')('eng')
