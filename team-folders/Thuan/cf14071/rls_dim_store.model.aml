@@ -1,0 +1,71 @@
+Model rls_dim_store {
+  type: 'query'
+  label: 'RLS Dim Store'
+  description: '''
+    CF-14071 repro. The store dimension, carrying the RLS rule field.
+
+    Row -1 is the synthetic "all benchmark" member. Benchmark facts join to it, so they are reachable from
+    the permission rule (Holistics blocks any Explore where a rule cannot reach a model) while still passing
+    the rule unfiltered.
+
+    vendor_id stands in for the customer's ga_sr_storeid user attribute.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select -1 as store_key, '(all benchmark)' as store_name, '-' as state, '-' as store_format
+    union all
+    select 1 as store_key, 'Store A' as store_name, 'VIC' as state, 'Max' as store_format
+    union all
+    select 2 as store_key, 'Store B' as store_name, 'VIC' as state, 'Express' as store_format
+    union all
+    select 3 as store_key, 'Store C' as store_name, 'NSW' as state, 'Max' as store_format
+    union all
+    select 4 as store_key, 'Store D' as store_name, 'NSW' as state, 'Max' as store_format
+    union all
+    select 5 as store_key, 'Store E' as store_name, 'QLD' as state, 'Express' as store_format
+  ;;
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.store_key }} ;;
+  }
+
+  dimension store_name {
+    label: 'Store Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.store_name }} ;;
+  }
+
+  dimension state {
+    label: 'State'
+    type: 'text'
+    definition: @sql {{ #SOURCE.state }} ;;
+  }
+
+  dimension store_format {
+    label: 'Store Format'
+    type: 'text'
+    definition: @sql {{ #SOURCE.store_format }} ;;
+  }
+
+  dimension is_permitted {
+    label: 'Is Permitted'
+    description: '''
+      The RLS rule field. Two ways to pass:
+      - the store is in the user attribute (the real entitlement), or
+      - the row is the synthetic -1 benchmark member (always passes, for every user).
+
+      Written as a boolean rather than matches_user_attribute so the -1 bypass does not depend on -1 being
+      added to every user's attribute values.
+    '''
+    type: 'truefalse'
+    hidden: true
+    definition: @aql or(
+      rls_dim_store.store_key in H.current_user.vendor_id,
+      rls_dim_store.store_key == -1
+    ) ;;
+  }
+}
