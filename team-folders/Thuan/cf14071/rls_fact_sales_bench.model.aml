@@ -1,0 +1,60 @@
+Model rls_fact_sales_bench {
+  type: 'query'
+  label: 'RLS Fact Sales (Benchmark)'
+  description: '''
+    CF-14071 repro. Benchmark fact at cohort grain - NOT restricted by the user's stores.
+
+    store_key is hardcoded to -1 (the synthetic member in rls_dim_store). That join is what makes this model
+    reachable from the permission rule, so Explores that touch it are not blocked, while every row still
+    passes the rule.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, -1 as store_key, 'Max' as store_format, 20260101 as date_key, 1000 as amount
+    union all
+    select 2 as id, -1 as store_key, 'Max' as store_format, 20260102 as date_key, 1100 as amount
+    union all
+    select 3 as id, -1 as store_key, 'Express' as store_format, 20260101 as date_key, 500 as amount
+    union all
+    select 4 as id, -1 as store_key, 'Express' as store_format, 20260102 as date_key, 600 as amount
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension store_key {
+    label: 'Store Key (synthetic -1)'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.store_key }} ;;
+  }
+
+  dimension store_format {
+    label: 'Store Format'
+    type: 'text'
+    definition: @sql {{ #SOURCE.store_format }} ;;
+  }
+
+  dimension date_key {
+    label: 'Date Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.date_key }} ;;
+  }
+
+  dimension amount {
+    label: 'Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.amount }} ;;
+  }
+
+  measure bench_sales_amount {
+    label: 'Benchmark Sales $'
+    type: 'number'
+    definition: @aql sum(rls_fact_sales_bench.amount) ;;
+  }
+}

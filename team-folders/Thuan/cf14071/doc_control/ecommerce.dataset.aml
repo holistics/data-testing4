@@ -1,0 +1,77 @@
+Dataset ecommerce {
+  label: 'ecommerce (docs RLP example)'
+  description: '''
+    The Holistics docs example:
+    https://docs.holistics.io/docs/joins/filter-direction#the-problem-rlp-cannot-reach-dimensions-behind-a-one-way-relationship
+
+    Structure copied exactly: the same six one_way relationships, the same total_orders metric, the same
+    permission on dim_cities.region matching the `region` user attribute.
+
+    Only two model names differ from the doc, because the doc's names already exist elsewhere in this
+    project (demo (specific use-case)/prusa/models/) and the duplicates raise an error:
+      fact_orders  -> fact_orders_test
+      dim_products -> dim_products_test
+
+    THE TEST, in production as an Explorer/Viewer. Set the test user's `region` attribute to 'North' first,
+    or the baseline returns 0 instead of 2.
+
+      1. Total Orders, no breakdown.
+           2  -> RLP enforced (North only). Baseline confirmed.
+           4  -> RLP not enforced; nothing below is meaningful.
+           0  -> the user's region attribute value does not match 'North'.
+
+      2. Total Orders broken down by Dim Products Test -> Name, with NO city field. The doc's failing query:
+
+           explore {
+             dimensions { dim_products_test.name }
+             measures   { total_orders }
+           }
+
+         Docs say this must fail with "Some permission rules are not applied in this Explore. This is likely
+         due to a missing relationship between the models."
+
+         EXPECTED TO PASS, NOT FAIL. Per Khai (2026-09-04) the docs are wrong here and he is updating them:
+         omitting rlp_propagation means 'two_way', not inherit-from-filter_direction, so dim_products_test
+         IS reachable and no error should be raised. This dataset is now a control that DEMONSTRATES the
+         doc error rather than confirming the doc.
+
+           No error -> confirms Khai's correction. The doc's example, copied exactly, does not behave as
+                       the doc claims.
+           Errors   -> then the correction does not hold on this workspace and the behaviour is
+                       version-dependent. Report that.
+
+         To see the documented error, add rlp_propagation='one_way' to
+         relationship(fact_orders_test.product_id > dim_products_test.id, ...) and re-run.
+
+      3. Total Qty from Fact Inventory - that fact has no path to dim_cities at all, the doc graph's
+         equivalent of the customer's benchmark facts. Expect 110 (50 + 60), and note whether it errors.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    dim_users, dim_products_test, dim_cities,
+    dim_merchants, dim_categories,
+    fact_orders_test, fact_inventory
+  ]
+
+  relationships: [
+    relationship(fact_orders_test.user_id > dim_users.id, true, 'one_way'),
+    relationship(fact_orders_test.product_id > dim_products_test.id, true, 'one_way'),
+    relationship(fact_inventory.product_id > dim_products_test.id, true, 'one_way'),
+    relationship(dim_users.city_id > dim_cities.id, true, 'one_way'),
+    relationship(dim_products_test.merchant_id > dim_merchants.id, true, 'one_way'),
+    relationship(dim_products_test.category_id > dim_categories.id, true, 'one_way')
+  ]
+
+  metric total_orders {
+    label: 'Total Orders'
+    type: 'number'
+    definition: @aql count(fact_orders_test.id);;
+  }
+
+  permission regional_access {
+    field: r(dim_cities.region)
+    operator: 'matches_user_attribute'
+    value: 'region' // user attribute
+  }
+}
