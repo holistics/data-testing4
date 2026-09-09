@@ -1,4 +1,4 @@
-Dataset ecommerce {
+Dataset ecommerce_thuan {
   label: 'ecommerce (docs RLP example)'
   description: '''
     The Holistics docs example:
@@ -51,13 +51,13 @@ Dataset ecommerce {
   models: [
     dim_users, dim_products_test, dim_cities,
     dim_merchants, dim_categories,
-    fact_orders_test, fact_inventory
+    fact_orders_test, fact_inventory_thuan
   ]
 
   relationships: [
     relationship(fact_orders_test.user_id > dim_users.id, true, 'one_way'),
     relationship(fact_orders_test.product_id > dim_products_test.id, true, 'one_way'),
-    relationship(fact_inventory.product_id > dim_products_test.id, true, 'one_way'),
+    relationship(fact_inventory_thuan.product_id > dim_products_test.id, true, 'one_way'),
     relationship(dim_users.city_id > dim_cities.id, true, 'one_way'),
     relationship(dim_products_test.merchant_id > dim_merchants.id, true, 'one_way'),
     relationship(dim_products_test.category_id > dim_categories.id, true, 'one_way')
@@ -70,7 +70,7 @@ Dataset ecommerce {
   }
 
   permission regional_access {
-    field: r(dim_cities.region)
+    field: r(dim_cities_thuan.region)
     operator: 'matches_user_attribute'
     value: 'region' // user attribute
   }
