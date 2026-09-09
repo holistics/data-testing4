@@ -1,4 +1,4 @@
-Model dim_merchants {
+Model dim_merchants_thuan {
   type: 'query'
   label: 'Dim Merchants'
   description: 'Docs RLP example, verbatim.'

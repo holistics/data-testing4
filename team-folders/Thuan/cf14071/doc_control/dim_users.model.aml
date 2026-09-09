@@ -1,4 +1,4 @@
-Model dim_users {
+Model dim_users_thuan {
   type: 'query'
   label: 'Dim Users'
   description: 'Docs RLP example, verbatim. Middle hop: dim_cities -> dim_users -> fact_orders.'
