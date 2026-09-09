@@ -1,0 +1,57 @@
+Model mf_fact_sales {
+  type: 'query'
+  label: 'MF Fact Sales (filtered in model)'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select * from (
+      select 1 as id, 3 as store_key, 20260101 as date_key, 100 as amount
+      union all
+      select 2 as id, 4 as store_key, 20260101 as date_key, 200 as amount
+      union all
+      select 3 as id, 1 as store_key, 20260102 as date_key, 300 as amount
+      union all
+      select 4 as id, 3 as store_key, 20260102 as date_key, 400 as amount
+      union all 
+      select 5 as id, 5 as store_key, 20260101 as date_key, 150 as amount
+    ) t
+    where store_key in (${H.current_user.ga_sr_storeid})
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.store_key }} ;;
+  }
+
+  dimension date_key {
+    label: 'Date Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.date_key }} ;;
+  }
+
+  dimension amount {
+    label: 'Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.amount }} ;;
+  }
+
+  dimension attr_debug {
+    label: 'Attr Debug (interpolated ga_sr_storeid)'
+    type: 'text'
+    definition: @sql '${H.current_user.ga_sr_storeid}' ;;
+  }
+
+  measure sales_amount {
+    label: 'Sales $'
+    type: 'number'
+    definition: @aql sum(mf_fact_sales.amount) ;;
+  }
+}

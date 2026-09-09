@@ -1,0 +1,40 @@
+Model mf_fact_sales_benchmark {
+  type: 'query'
+  label: 'MF Fact Sales Benchmark (unfiltered)'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 20260101 as date_key, 5000 as amount
+    union all
+    select 2 as id, 20260102 as date_key, 7000 as amount
+    union all
+    select 3 as id, 20260102 as date_key, 6000 as amount
+    union all
+    select 4 as id, 20260101 as date_key, 2500 as amount
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension date_key {
+    label: 'Date Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.date_key }} ;;
+  }
+
+  dimension amount {
+    label: 'Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.amount }} ;;
+  }
+
+  measure bench_sales_amount {
+    label: 'Benchmark Sales $'
+    type: 'number'
+    definition: @aql sum(mf_fact_sales_benchmark.amount) ;;
+  }
+}
