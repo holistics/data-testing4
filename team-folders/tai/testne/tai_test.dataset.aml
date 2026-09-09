@@ -20,7 +20,8 @@ Dataset tai_test {
     relationship(ecommerce_products.category_id > ecommerce_categories.id, true)
   ]
   permission user_access {
-    field: r(ecommerce_users.id)
+    field: r(ecommerce_users.id),
+    operator: 'matches_user_attribute'
     value: 'user_id'
   }
 }
