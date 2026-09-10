@@ -2,7 +2,7 @@ Dashboard tri_test {
   title: 'BHX Tri Test'
   description: ''''''
 
-  view: CanvasLayout {
+  view: TabLayout {
     label: 'View 1'
     tab view_1: CanvasLayout {
       label: 'Tab 1'
@@ -181,10 +181,6 @@ Dashboard tri_test {
         layer: 6
       }
     }
-    block v_7kq4 {
-      position: pos(1260, 7400, 400, 300)
-    }
-    width: 2240
   }
 
   theme: H.themes.classic.extend(
@@ -384,33 +380,24 @@ Dashboard tri_test {
           pattern: '#,###0.00%'
         }
       }
+      filter {
+        field: r(ecommerce_countries.continent_name)
+        operator: 'is'
+        value: 'Asia'
+      }
       fields: [
         VizFieldFull {
-          ref: r(order_master.order_created_at)
-          transformation: 'datetrunc month'
-          format {
-            type: 'date'
-            pattern: 'LLL yyyy'
-          }
-        },
-        VizFieldFull {
-          ref: r(demo_ecommerce_metrics.total_order_value)
+          ref: r(ecommerce_orders.id)
           format {
             type: 'number'
             pattern: 'inherited'
           }
-        },
-        VizFieldFull {
-          ref: 'pop_comparison_of_total_order_value_01'
-          format {
-            type: 'number'
-            pattern: '#,###0.00%'
-          }
         }
       ]
       settings {
+        wrap_header_text: true
+        wrap_cell_text: true
         show_row_number: true
-        row_limit: 5000
         aggregate_awareness {
           enabled: true
           debug_comments: true
