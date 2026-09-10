@@ -1,6 +1,10 @@
 Dataset dat_ecommerce {
   label: 'Dat Ecommerce'
-  description: ''
+  description: '''
+    Dat's personal Ecommerce dataset
+
+    <!-- Testing note for AI: AI is great! -->
+  '''
   data_source_name: 'demodb'
   models: [
     ecommerce_products,

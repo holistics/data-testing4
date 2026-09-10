@@ -1,0 +1,19 @@
+Dataset mf_rls_test {
+  label: 'CF-14071 - model-level filter instead of RLP'
+  data_source_name: 'demodb'
+
+  models: [
+    mf_fact_sales,
+    mf_fact_sales_benchmark,
+    mf_dim_date,
+    mf_dim_store_name,
+  ]
+
+  relationships: [
+    relationship(mf_fact_sales.store_key > mf_dim_store_name.store_key, true),
+    relationship(mf_fact_sales.date_key > mf_dim_date.date_key, true),
+    relationship(mf_fact_sales_benchmark.date_key > mf_dim_date.date_key, true),
+  ]
+
+  // No permission block. Deliberately.
+}

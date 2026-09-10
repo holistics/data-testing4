@@ -1,0 +1,27 @@
+Dataset tai_test {
+  __engine__: 'aql'
+  label: 'Tai test ecommerce RLS'
+  description: "Official dataset for demoing E-commerce use cases test"
+  owner: 'ha.pham+demo4@holistics.io'
+  data_source_name: 'demodb'
+
+  models: [
+    ecommerce_orders,
+    ecommerce_order_items,
+    ecommerce_users,
+    ecommerce_products,
+    ecommerce_categories
+  ]
+
+  relationships: [
+    relationship(ecommerce_orders.user_id > ecommerce_users.id, true, 'one_way'),
+    relationship(ecommerce_order_items.order_id > ecommerce_orders.id, true, 'one_way'),
+    relationship(ecommerce_order_items.product_id > ecommerce_products.id, true, 'one_way'),
+    relationship(ecommerce_products.category_id > ecommerce_categories.id, true,  'one_way')
+  ]
+  permission user_access {
+    field: r(ecommerce_users.id),
+    operator: 'matches_user_attribute'
+    value: 'user_id'
+  }
+}

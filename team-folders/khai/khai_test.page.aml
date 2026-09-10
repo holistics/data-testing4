@@ -1003,13 +1003,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v_s6re',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j'
+            'v_6g2o',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1020,29 +1015,9 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v_s6re',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v1',
+            'v_6g2o',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1053,28 +1028,10 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v_s6re',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v1',
+            'v_6g2o',
+            'v_uc87',
+            'f_ml3q'
           ]
           disabled: true
         }
@@ -1085,27 +1042,11 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v_s6re',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v1',
+            'v_6g2o',
+            'v_uc87',
+            'f_ml3q',
+            'f_kmoy'
           ]
           disabled: true
         }
@@ -1115,16 +1056,7 @@ Dashboard khai_test {
       from: 'v_s6re'
       to: [
         CustomMapping {
-          block: [
-            'v1',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j'
-          ]
+          block: 'v_uc87'
           disabled: true
         }
       ]
@@ -1134,30 +1066,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_s6re',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1168,29 +1078,9 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_s6re',
+            'v_uc87',
+            'f_z363'
           ]
           disabled: true
         }
@@ -1201,28 +1091,10 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_s6re',
+            'v_uc87',
+            'f_z363',
+            'f_pofb'
           ]
           disabled: true
         }
@@ -1233,63 +1105,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
-          ]
-          disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'f_j1la'
-      to: [
-        CustomMapping {
-          block: [
             'v_s6re',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1300,13 +1117,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v_s6re',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j'
+            'v1',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1316,16 +1128,7 @@ Dashboard khai_test {
       from: 'v_52wr'
       to: [
         CustomMapping {
-          block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j'
-          ]
+          block: 'v_uc87'
           disabled: true
         }
       ]
@@ -1335,30 +1138,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_52wr',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1368,16 +1149,7 @@ Dashboard khai_test {
       from: 'v_c5p0'
       to: [
         CustomMapping {
-          block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j'
-          ]
+          block: 'v_uc87'
           disabled: true
         }
       ]
@@ -1387,30 +1159,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_c5p0',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1420,16 +1170,7 @@ Dashboard khai_test {
       from: 'v_okde'
       to: [
         CustomMapping {
-          block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_rqnl',
-            'v_1boj',
-            'v_dn8j'
-          ]
+          block: 'v_uc87'
           disabled: true
         }
       ]
@@ -1438,16 +1179,7 @@ Dashboard khai_test {
       from: 'v_rqnl'
       to: [
         CustomMapping {
-          block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_1boj',
-            'v_dn8j'
-          ]
+          block: 'v_uc87'
           disabled: true
         }
       ]
@@ -1457,30 +1189,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_rqnl',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1491,30 +1201,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_rqnl',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1525,30 +1213,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_1boj',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_jccu',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_rqnl',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1558,16 +1224,7 @@ Dashboard khai_test {
       from: 'v_1boj'
       to: [
         CustomMapping {
-          block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_dn8j'
-          ]
+          block: 'v_uc87'
           disabled: true
         }
       ]
@@ -1577,30 +1234,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_irwp',
-            'f_slux',
-            'f_408l'
+            'v_1boj',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1611,30 +1246,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_dn8j',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_slux',
-            'f_408l'
+            'v_1boj',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1644,16 +1257,7 @@ Dashboard khai_test {
       from: 'v_dn8j'
       to: [
         CustomMapping {
-          block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj'
-          ]
+          block: 'v_uc87'
           disabled: true
         }
       ]
@@ -1663,30 +1267,8 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
-            'v1',
-            'v_s6re',
-            'v_6g2o',
-            'v_52wr',
-            'v_c5p0',
-            'v_okde',
-            'v_rqnl',
-            'v_1boj',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_408l'
+            'v_dn8j',
+            'v_uc87'
           ]
           disabled: true
         }
@@ -1697,6 +1279,18 @@ Dashboard khai_test {
       to: [
         CustomMapping {
           block: [
+            'v_dn8j',
+            'v_uc87'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_uc87'
+      to: [
+        CustomMapping {
+          block: [
             'v1',
             'v_s6re',
             'v_6g2o',
@@ -1705,22 +1299,7 @@ Dashboard khai_test {
             'v_okde',
             'v_rqnl',
             'v_1boj',
-            'f_ml3q',
-            'f_kmoy',
-            'f_vs3y',
-            'f_z363',
-            'f_pofb',
-            'f_uuo1',
-            'f_m383',
-            'f_j1la',
-            'f_wimh',
-            'f_jmgl',
-            'f_oit3',
-            'f_th9g',
-            'f_1rlj',
-            'f_jccu',
-            'f_irwp',
-            'f_slux'
+            'v_dn8j'
           ]
           disabled: true
         }

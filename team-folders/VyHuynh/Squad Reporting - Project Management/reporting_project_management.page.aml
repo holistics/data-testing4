@@ -264,8 +264,8 @@ Dashboard squad_command_center {
       height: 800
       grid_size: 20
       auto_expand_vertically: true
-      block v_pzd3 {
-        position: pos(20, 20, 1260, 320)
+      block v_34t4 {
+        position: pos(20, 20, 1260, 360)
       }
       mobile {
         mode: 'auto'
@@ -2980,79 +2980,63 @@ case(
       }
     }
   }
-  block v_pzd3: VizBlock {
-    label: 'Metric sheet'
-    viz: MetricSheet {
+  block v_34t4: VizBlock {
+    label: 'Count of Id by Role, Name, and Name'
+    viz: PivotTable {
       dataset: reporting_project_management
-      calculation completion_rate {
-        label: 'Completion Rate'
-        formula: @aql completed_issue / count(reporting_issues.id);;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      theme {
-      }
-      date_field: VizFieldFull {
-        ref: r(reporting_issues.completed_at)
-        transformation: 'datetrunc month'
-        format {
-          type: 'date'
-          pattern: 'LLL yyyy'
-        }
-      }
       rows: [
-        MetricSeries {
-          field: VizFieldFull {
-            ref: r(reporting_issues.id)
-            aggregation: 'count'
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
+        VizFieldFull {
+          ref: r(reporting_team.role)
+          format {
+            type: 'text'
           }
+          uname: 'reporting_team_role'
         },
-        MetricSeries {
-          field: VizFieldFull {
-            ref: r(reporting_project_management.completed_issue)
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
+        VizFieldFull {
+          ref: r(reporting_team.name)
+          format {
+            type: 'text'
           }
-        },
-        MetricSeries {
-          field: VizFieldFull {
-            ref: r(reporting_project_management.number_of_bug)
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
+          uname: 'reporting_team_name'
+        }
+      ]
+      columns: [
+        VizFieldFull {
+          ref: r(reporting_project.name)
+          format {
+            type: 'text'
           }
-        },
-        MetricSeries {
-          field: VizFieldFull {
-            ref: 'completion_rate'
-            format {
-              type: 'number'
-              pattern: '#,###%'
-            }
-          }
-        },
-        MetricSeries {
-          field: VizFieldFull {
-            ref: r(reporting_project_management.bug_ratio)
-            format {
-              type: 'number'
-              pattern: '#,###%'
-            }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: r(reporting_issues.id)
+          aggregation: 'count'
+          format {
+            type: 'number'
+            pattern: 'inherited'
           }
         }
       ]
       settings {
+        show_row_total: true
+        show_column_total: true
+        show_sub_total: true
+        row_limit: 5000
         aggregate_awareness {
           enabled: true
           debug_comments: true
         }
+        column_styles: [
+          ColumnStyle {
+            key: 'reporting_team_role'
+            width: 85
+          },
+          ColumnStyle {
+            key: 'reporting_team_name'
+            width: 143
+          }
+        ]
       }
     }
   }
@@ -3065,7 +3049,8 @@ case(
           block: [
             'v_ipdo',
             'v_7dso',
-            'v_r2ma'
+            'v_r2ma',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3078,7 +3063,8 @@ case(
           block: [
             'v_ipdo',
             'v_7dso',
-            'v_r2ma'
+            'v_r2ma',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3091,7 +3077,8 @@ case(
           block: [
             'v_ipdo',
             'v_7dso',
-            'v_r2ma'
+            'v_r2ma',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3104,7 +3091,8 @@ case(
           block: [
             'v_ipdo',
             'v_7dso',
-            'v_r2ma'
+            'v_r2ma',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3117,7 +3105,8 @@ case(
           block: [
             'v_ipdo',
             'v_7dso',
-            'v_r2ma'
+            'v_r2ma',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3130,7 +3119,8 @@ case(
           block: [
             'v_ipdo',
             'v_7dso',
-            'v_r2ma'
+            'v_r2ma',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3144,8 +3134,18 @@ case(
             'v_ipdo',
             'v_7dso',
             'v_r2ma',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_project_name_ynq6'
+      to: [
+        CustomMapping {
+          block: 'v_34t4'
           disabled: true
         }
       ]
@@ -3158,7 +3158,8 @@ case(
             'v_ipdo',
             'v_7dso',
             'v_r2ma',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3172,7 +3173,8 @@ case(
             'v_ipdo',
             'v_7dso',
             'v_r2ma',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3182,7 +3184,10 @@ case(
       from: 'v_y7bo'
       to: [
         CustomMapping {
-          block: 'v_7gn4'
+          block: [
+            'v_7gn4',
+            'v_34t4'
+          ]
           disabled: true
         }
       ]
@@ -3191,7 +3196,10 @@ case(
       from: 'v_x2gw'
       to: [
         CustomMapping {
-          block: 'v_7gn4'
+          block: [
+            'v_7gn4',
+            'v_34t4'
+          ]
           disabled: true
         }
       ]
@@ -3204,7 +3212,8 @@ case(
             'v_ipdo',
             'v_7dso',
             'v_r2ma',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3218,7 +3227,8 @@ case(
             'v_ipdo',
             'v_7dso',
             'v_r2ma',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3232,7 +3242,8 @@ case(
             'v_ipdo',
             'v_7dso',
             'v_r2ma',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3246,7 +3257,8 @@ case(
             'v_ipdo',
             'v_7dso',
             'v_r2ma',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3260,7 +3272,8 @@ case(
             'v_ipdo',
             'v_7dso',
             'v_r2ma',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3285,7 +3298,8 @@ case(
             'v_hl2j',
             'v_7fkd',
             'v_45a6',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3310,7 +3324,8 @@ case(
             'v_hl2j',
             'v_7fkd',
             'v_45a6',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3335,7 +3350,8 @@ case(
             'v_hl2j',
             'v_7fkd',
             'v_45a6',
-            'v_7gn4'
+            'v_7gn4',
+            'v_34t4'
           ]
           disabled: true
         }
@@ -3358,7 +3374,38 @@ case(
             'v_45a6',
             'v_ipdo',
             'v_7dso',
-            'v_r2ma'
+            'v_r2ma',
+            'v_34t4'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_34t4'
+      to: [
+        CustomMapping {
+          block: [
+            'v_997c',
+            'v_gt75',
+            'v_sffe',
+            'v_jdaq',
+            'v_3qu5',
+            'v_gq0k',
+            'v_lvp5',
+            'v_d3sa',
+            'v_22mj',
+            'v_y7bo',
+            'v_x2gw',
+            'v_baqx',
+            'v_n6j9',
+            'v_hl2j',
+            'v_7fkd',
+            'v_45a6',
+            'v_ipdo',
+            'v_7dso',
+            'v_r2ma',
+            'v_7gn4'
           ]
           disabled: true
         }

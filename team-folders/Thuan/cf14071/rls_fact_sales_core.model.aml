@@ -1,0 +1,50 @@
+Model rls_fact_sales_core {
+  type: 'query'
+  label: 'RLS Fact Sales (Core)'
+  description: '''
+    CF-14071 repro. Store-restricted fact. Joins rls_dim_store on the real store key, so the RLS rule
+    reaches it and filters it down to the user's entitled stores.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 3 as store_key, 20260101 as date_key, 100 as amount
+    union all
+    select 2 as id, 4 as store_key, 20260101 as date_key, 200 as amount
+    union all
+    select 3 as id, 1 as store_key, 20260102 as date_key, 300 as amount
+    union all
+    select 4 as id, 3 as store_key, 20260102 as date_key, 400 as amount
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.store_key }} ;;
+  }
+
+  dimension date_key {
+    label: 'Date Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.date_key }} ;;
+  }
+
+  dimension amount {
+    label: 'Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.amount }} ;;
+  }
+
+  measure sales_amount {
+    label: 'Sales $'
+    type: 'number'
+    definition: @aql sum(rls_fact_sales_core.amount) ;;
+  }
+}
