@@ -14,10 +14,10 @@ Dataset tai_test {
   ]
 
   relationships: [
-    relationship(ecommerce_orders.user_id > ecommerce_users.id, true, 'one_way', rlp_propagation='two_way'),
-    relationship(ecommerce_order_items.order_id > ecommerce_orders.id, true, 'one_way', rlp_propagation='two_way'),
-    relationship(ecommerce_order_items.product_id > ecommerce_products.id, true, 'one_way', rlp_propagation='two_way'),
-    relationship(ecommerce_products.category_id > ecommerce_categories.id, true,  'one_way', rlp_propagation='two_way')
+    relationship(ecommerce_orders.user_id > ecommerce_users.id, true, 'one_way'),
+    relationship(ecommerce_order_items.order_id > ecommerce_orders.id, true, 'one_way',),
+    relationship(ecommerce_order_items.product_id > ecommerce_products.id, true, 'one_way'),
+    relationship(ecommerce_products.category_id > ecommerce_categories.id, true,  'one_way', )
   ]
   permission user_access {
     field: r(ecommerce_users.id),
