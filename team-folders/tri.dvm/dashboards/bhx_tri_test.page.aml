@@ -140,7 +140,7 @@ Dashboard tri_test {
         position: pos(1260, 7400, 400, 300)
       }
       block v_vr4k {
-        position: pos(240, 600, 800, 300)
+        position: pos(1440, 2080, 800, 300)
         layer: 7
       }
       mobile {
@@ -186,6 +186,19 @@ Dashboard tri_test {
   theme: H.themes.classic.extend(
     {
       custom_css: @css 
+           #block-v_vr4k .dac-viz-block::before {
+                 content: '';
+                       position: absolute;
+                             top: 4px;
+                                   right: 4px;
+                                         width: 60px;
+                                               height: 24px;
+                                                     background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSIyNCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjI0IiBmaWxsPSIjOTk5Ii8+PHRleHQgeD0iMzAiIHk9IjE2IiBmb250LXNpemU9IjEwIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MT0dPPC90ZXh0Pjwvc3ZnPg==');
+                                                           background-repeat: no-repeat;
+                                                                 z-index: 10;
+                                                                       pointer-events: none;
+                                                                            }
+                                                                            '
      .ci-download-tab-xlsx, .ci-download-excel {
       display:none;
      }
