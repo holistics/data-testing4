@@ -1,0 +1,17 @@
+Dataset data_dumbbell_dataset {
+  label: 'Data Dumbbell'
+  description: 'Dataset for dumbbell chart data by product.'
+  owner: 'khai.to@holistics.io'
+  data_source_name: 'demodb'
+
+  models: [
+    data_dumbbell
+  ]
+
+  relationships: [
+  ]
+
+  view {
+    model data_dumbbell { }
+  }
+}

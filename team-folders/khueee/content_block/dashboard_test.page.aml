@@ -1,0 +1,138 @@
+Dashboard dashboard_test {
+  title: 'dashboard_test'
+  description: ''
+  owner: 'khue.pm@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+
+  block product_conversion_performance: VizBlock {
+    label: 'Product Conversion Performance'
+    viz: MarkdownViz {
+      dataset: data_dumbbell_dataset
+      rows: [
+        VizFieldFull {
+          ref: r(data_dumbbell.product_name)
+          label: 'Product Name'
+          format { type: 'text' }
+          uname: 'product_name'
+        },
+        VizFieldFull {
+          ref: r(data_dumbbell.added_to_cart)
+          label: 'Added To Cart'
+          format { type: 'number' pattern: '#,###0' }
+        },
+        VizFieldFull {
+          ref: r(data_dumbbell.purchased)
+          label: 'Purchased'
+          format { type: 'number' pattern: '#,###0' }
+        },
+        VizFieldFull {
+          ref: r(data_dumbbell.cart_abandonment)
+          label: 'Cart Abandonment'
+          format { type: 'number' pattern: '#,###0' }
+        },
+        VizFieldFull {
+          ref: r(data_dumbbell.conversion_rate)
+          label: 'Conversion Rate'
+          format { type: 'number' pattern: '#,###0.0%' }
+        },
+        VizFieldFull {
+          ref: r(data_dumbbell.start_percent)
+          label: 'Start Percent'
+          format { type: 'number' pattern: '#,###0.0\%' }
+        },
+        VizFieldFull {
+          ref: r(data_dumbbell.end_percent)
+          label: 'End Percent'
+          format { type: 'number' pattern: '#,###0.0\%' }
+        },
+        VizFieldFull {
+          ref: r(data_dumbbell.bar_width)
+          label: 'Bar Width'
+          format { type: 'number' pattern: '#,###0.0\%' }
+        },
+      ]
+      content: @md
+        <style>
+          .conversion-list { display: grid; gap: 10px; max-width: 800px; font-family: inherit; }
+          .conversion-card { padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; background: #FFFFFF; }
+          .conversion-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+          .conversion-title { margin: 0; color: #111827; font-size: 15px; font-weight: 700; line-height: 1.3; }
+          .conversion-rate { color: #047857; font-size: 13px; font-weight: 700; white-space: nowrap; }
+          .conversion-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+          .conversion-metric { min-width: 0; padding: 8px 9px; border-radius: 7px; background: #F9FAFB; }
+          .conversion-metric.abandonment { background: #FFF7ED; }
+          .conversion-label { display: block; color: #6B7280; font-size: 11px; line-height: 1.25; }
+          .conversion-value { display: block; margin-top: 3px; color: #1F2937; font-size: 14px; font-weight: 700; }
+          .conversion-track-labels { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 6px; color: #6B7280; font-size: 11px; }
+          .conversion-track { position: relative; height: 10px; border-radius: 999px; background: #E5E7EB; }
+          .conversion-abandonment { position: absolute; top: 0; height: 10px; border-radius: 999px; background: #F97316; opacity: .9; }
+          .conversion-marker { position: absolute; top: 50%; width: 16px; height: 16px; box-sizing: border-box; border: 3px solid #FFFFFF; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 1px 3px rgba(0, 0, 0, .22); }
+          .conversion-marker.start { background: #6B7280; }
+          .conversion-marker.end { background: #2563EB; }
+          .conversion-track-note { display: flex; justify-content: space-between; margin-top: 8px; color: #6B7280; font-size: 10px; }
+          .pagination-treatment { display: flex; align-items: center; justify-content: flex-end; gap: 9px; padding: 6px 2px 0; color: #6B7280; font-size: 12px; }
+          .pagination-chevron { display: inline-flex; width: 24px; height: 24px; align-items: center; justify-content: center; border: 1px solid #E5E7EB; border-radius: 6px; color: #C4C9D1; background: #F9FAFB; font-size: 16px; line-height: 1; }
+          @media (max-width: 480px) { .conversion-metrics { grid-template-columns: 1fr; } .pagination-treatment { justify-content: center; flex-wrap: wrap; } }
+        </style>
+
+        <section class="conversion-list" aria-label="Product conversion performance">
+        {% map(rows) %}
+          <article class="conversion-card" aria-label="Conversion performance for {{ `Product Name` }}">
+            <header class="conversion-header">
+              <h3 class="conversion-title">{{ `Product Name` }}</h3>
+              <span class="conversion-rate">{{ `Conversion Rate` }} conversion</span>
+            </header>
+            <div class="conversion-metrics" aria-label="Conversion counts">
+              <div class="conversion-metric"><span class="conversion-label">Added to cart</span><span class="conversion-value">{{ `Added To Cart` }}</span></div>
+              <div class="conversion-metric"><span class="conversion-label">Purchased</span><span class="conversion-value">{{ `Purchased` }}</span></div>
+              <div class="conversion-metric abandonment"><span class="conversion-label">Cart abandonment</span><span class="conversion-value">{{ `Cart Abandonment` }}</span></div>
+            </div>
+            <div aria-label="Conversion comparison from {{ `Start Percent` }} to {{ `End Percent` }} with {{ `Bar Width` }} abandonment">
+              <div class="conversion-track-labels"><span>Start: {{ `Start Percent` }}</span><span>End: {{ `End Percent` }}</span></div>
+              <div class="conversion-track">
+                <span class="conversion-abandonment" style="left: {{ `Start Percent`.raw }}%; width: {{ `Bar Width`.raw }}%;" aria-hidden="true"></span>
+                <span class="conversion-marker start" style="left: {{ `Start Percent`.raw }}%;" aria-hidden="true"></span>
+                <span class="conversion-marker end" style="left: {{ `End Percent`.raw }}%;" aria-hidden="true"></span>
+              </div>
+              <div class="conversion-track-note" aria-hidden="true"><span>Neutral start marker</span><span>100% track</span></div>
+            </div>
+          </article>
+        {% end %}
+          <nav class="pagination-treatment" aria-label="Pagination display">
+            <span class="pagination-chevron" aria-disabled="true">‹</span>
+            <span>Page 1 of 2 • Showing 1–5 of 10</span>
+            <span class="pagination-chevron" aria-disabled="true">›</span>
+          </nav>
+        </section>
+      ;;
+      settings {
+        row_limit: 5
+        sorts: [
+          KeyBasedSortSetting { key: 'product_name' direction: 'asc' },
+        ]
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 900
+    grid_size: 20
+    auto_expand_vertically: true
+    block title {
+      position: pos(20, 20, 1260, 60)
+    }
+    block product_conversion_performance {
+      position: pos(20, 100, 1260, 760)
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+
+  theme: H.themes.vanilla
+
+}
