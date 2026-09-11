@@ -142,10 +142,6 @@ Dashboard tri_test {
         position: pos(1440, 2080, 800, 300)
         layer: 7
       }
-      block v_1iho {
-        position: pos(1180, 1020, 620, 420)
-        layer: 13
-      }
       mobile {
         mode: 'auto'
       }
@@ -2031,43 +2027,6 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       ]
       settings {
         show_row_number: true
-        row_limit: 5000
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-      }
-    }
-  }
-  block v_1iho: VizBlock {
-    label: 'Total price'
-    viz: DataTable {
-      dataset: bhx_demo_ecommerce
-      fields: [
-        VizFieldFull {
-          ref: r(bhx_ecommerce_products.total_price)
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-          uname: 'custom_total_price'
-        }
-      ]
-      settings {
-        show_row_number: true
-        conditional_formats: [
-          ConditionalFormat {
-            key: 'custom_total_price'
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than_equal'
-                value: 0
-              }
-              text_color: '#328159'
-              background_color: '#A50E43'
-            }
-          }
-        ]
         row_limit: 5000
         aggregate_awareness {
           enabled: true
