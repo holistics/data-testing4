@@ -1,4 +1,5 @@
 Skill analyze_contributions {
+  disabled: true
   label: "Analyze Changes"
   invocation: "auto"
   description: '''

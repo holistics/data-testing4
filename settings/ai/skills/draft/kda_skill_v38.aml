@@ -1,0 +1,831 @@
+Skill key_driver_v38 {
+
+label: 'Key Driver v38'
+description: 'Skill to identify which segment across all candidate dimensions contributed most to a metric change between two periods, ranked by ThirdEye significance score. Prioritizes and analyzes only the top 5 most relevant eligible dimensions for the selected metric, while explaining why the remaining dimensions are less useful. This version freezes one shared scoring definition across dimensions so scores remain cross-dimension comparable, and explicitly guards against null contribution and null score outputs. Use this only when user asks "Explain this increase / decrease between ... "'
+allow_switching_invocation: true
+
+content: @md
+
+## Description
+Identify which segment across all candidate dimensions contributed most to a metric change between two periods.
+
+This version strengthens execution reliability by requiring:
+- a **confirmed analyzed-dimension set**
+- a **mandatory execution loop** across **all confirmed dimensions**
+- one **merged per-dimension table artifact per analyzed dimension**
+- a **full appended cross-dimension significance table**
+- a **completion ledger**
+- a **no-early-summary rule**
+- strict **frozen scoring consistency** across all successful dimensions
+- strict null-handling for `contribution_all`, `contribution_weight`, and `significance_score`
+- strict **INCOMPLETE** handling if no successful comparable output can be produced
+
+Use this only when the user asks to explain an increase / decrease between two periods.
+
+---
+
+## Goal
+
+Identify which segment across all candidate dimensions contributed most to a metric change between two periods.
+
+For each segment, compute a **significance score** that measures how much the segment’s 
+change deviates from the overall trend, weighted by the segment’s size. 
+Rank all analyzed segments across all analyzed dimensions by this significance score.
+
+This skill must support both:
+- **additive metrics** such as revenue, orders, sessions
+- **ratio metrics** such as conversion rate, close rate, average order value
+
+This skill must produce:
+1. a **dimension inventory**
+2. a **dimension prioritization table**
+3. explicit **user confirmation** of the analyzed dimension set
+4. an **overall comparison row**
+5. one **merged per-dimension table per successful analyzed dimension**
+6. one **full appended cross-dimension significance table**
+7. a **ranked driver output**
+8. explicit **non-selected eligible dimension explanations**
+9. a **completion ledger**
+10. explicit **QA validation**
+11. strict **COMPLETE / INCOMPLETE** output handling
+
+---
+
+## Hard Completion Contract
+
+This task is **COMPLETE** only if all of the following exist:
+
+1. `Completion Status: COMPLETE`
+2. dimension inventory
+3. dimension prioritization table
+4. explicit user confirmation after prioritization
+5. frozen `confirmed_analyzed_dimensions`
+6. one declared frozen scoring definition
+7. overall comparison row
+8. one merged per-dimension table for every **successful** confirmed analyzed dimension, plus explicit failure tracking for failed dimensions
+9. full appended cross-dimension significance table built from successful dimensions only
+10. significance ranking derived from the appended table
+11. non-selected eligible dimension explanations
+12. completion ledger
+13. QA checklist with all required checks passing
+
+If any item is missing, output:
+- `Completion Status: INCOMPLETE`
+- `blocking_issue`
+- `missing_artifacts`
+- `completed_artifacts`
+
+Do **not** present a final executive summary as if analysis is complete unless all required artifacts exist.
+
+---
+
+## No Early Summary Rule
+
+The skill must **not** present:
+- “top driver”
+- “main cause”
+- executive summary bullets
+- ranked findings
+- causal-sounding conclusions
+
+until the **full appended cross-dimension significance table** has been produced successfully.
+
+Do not introduce or mention any intermediate artifacts.
+
+---
+
+## Inputs
+
+- **Dataset**: current dataset in context
+- **Target metric**: provided by user or inherited from referenced viz
+- **Base period**: provided by user
+- **Comparison period**: provided by user
+- **Candidate dimensions**:
+  - if user names dimensions, use those
+  - otherwise enumerate all eligible low-to-medium-cardinality business dimensions
+- **Current viz / referenced viz blocks**:
+  - reuse existing metric definitions whenever possible
+  - if the metric comes from an existing viz block, preserve that metric logic
+
+---
+
+## Core Rules
+
+### 1. Never fabricate structure
+Do not assume:
+- dimensions
+- metric internals
+- numerator / denominator
+- relationship paths
+- cardinality suitability
+
+Inspect the dataset and existing metric definitions first.
+
+### 2. Freeze the analyzed dimension set after confirmation
+After the user confirms the prioritization table, define:
+
+- `confirmed_analyzed_dimensions`
+
+This is the exact dimension set that must be attempted.
+
+No dimension may be silently dropped afterward.
+
+### 2a. Do not ask user to choose dimensions by default
+If the user did not explicitly specify dimensions, the skill must **not** ask the user to choose dimensions manually before prioritization.
+
+Default workflow:
+1. enumerate eligible dimensions
+2. rank them
+3. select the top 5 dimensions automatically
+4. present the prioritization table
+5. ask the user only whether to proceed with the proposed top 5 set
+
+Allowed user choices at this stage:
+- proceed with the proposed top 5 dimensions
+- stop
+- explicitly request an override to the proposed dimension set
+
+Not allowed by default:
+- asking the user `which dimensions do you want to analyze?`
+- asking the user to manually pick dimensions before the prioritization table is shown
+- pausing for dimension selection when the skill can rank dimensions itself
+
+Only ask the user to choose dimensions manually if:
+- the user explicitly asks to customize the analyzed dimensions
+- the user explicitly rejects the proposed prioritized set and requests a different set
+
+### 3. Exact confirmed dimension coverage rule
+The final analyzed dimension count does not need to equal the count of `confirmed_analyzed_dimensions`.
+Some confirmed dimensions may fail during execution and should be recorded explicitly instead of blocking the full workflow.
+
+Required outputs:
+- `confirmed_dimension_count`
+- `successful_dimension_count`
+- `failed_dimension_count`
+- `successful_dimension_list`
+- `failed_dimension_list`
+
+If at least one confirmed dimension succeeds and the final appended table is produced from successful dimensions, the workflow may still return `Completion Status: COMPLETE`.
+Return `INCOMPLETE` only if all confirmed dimensions fail, or if no final appended table can be produced from the successful dimensions.
+
+### 4. Mandatory execution loop
+After confirmation, the skill must execute this loop for **every** dimension in `confirmed_analyzed_dimensions`:
+
+0. declare and freeze the shared scoring definition
+1. build one merged per-dimension table using the frozen scoring definition unchanged
+2. validate merged schema completeness
+3. validate null-safety, period consistency, frozen-scoring consistency, and unexpected-null consistency
+4. mark dimension status as `done` or `failed`
+5. capture a short failure reason for any failed dimension
+
+This dimension-by-dimension workflow is the default and preferred execution pattern.
+The skill must not fail merely because a single multi-dimension appended query is unsafe.
+The skill must not stop the whole analysis when one dimension fails.
+
+Continue processing the remaining confirmed dimensions and produce the final appended table from successful dimensions only.
+Return `INCOMPLETE` only if no successful dimensions remain for the final append.
+
+### 5. Frozen scoring definition must not drift
+The skill must declare one frozen scoring definition before the per-dimension loop and reuse it unchanged across all confirmed dimensions.
+
+Required frozen elements:
+- one shared definition of `base_value`
+- one shared definition of `current_value`
+- one shared definition of `expected_current_value`
+- one shared definition of `change_difference`
+- one shared definition of `contribution_segment`
+- one shared definition of `contribution_all`
+- one shared definition of `contribution_weight`
+- one shared definition of `significance_score`
+- one shared set of guardrails
+- one shared zeroing rule for unstable rows
+
+Allowed variation:
+- only the analyzed segment field may change by dimension
+
+Not allowed:
+- changing the formula structure per dimension
+- changing guardrails per dimension
+- changing null-handling rules per dimension
+- changing zeroing behavior per dimension
+- simplifying the score formula differently per dimension to make one query execute
+
+If a dimension cannot run under the frozen scoring definition, mark it as `failed` and record a failure reason.
+
+### 6. Null-handling invariant
+For period comparisons, every filtered additive component must be wrapped with `coalesce(..., 0)` **before** any downstream math.
+
+Required order:
+1. filter additive component to period
+2. wrap with `coalesce(..., 0)`
+3. derive denominator from null-safe additive components
+4. recompute ratio using `safe_divide`
+
+Never patch only the final ratio.
+
+### 7. Period-label consistency invariant
+For every period-specific field:
+- field name
+- field label
+- time filter
+- intended business meaning
+
+must all refer to the same period.
+
+If inconsistent, the result is invalid.
+
+### 8. Merged per-dimension table is the canonical artifact
+The skill must produce one merged per-dimension table for each successful confirmed analyzed dimension.
+
+Use this merged per-dimension table as the only per-dimension artifact.
+Do not create, mention, or rely on any separate intermediate artifact.
+
+### 9. Append step is mandatory
+After all successful merged per-dimension tables are complete, append them directly into one full cross-dimension significance table.
+
+The appended table must include a failure-status view of all confirmed dimensions:
+- successful dimensions contribute scored rows to the appended table
+- failed dimensions must still appear in final dimension status tracking with a clear failed label and failure reason
+
+If the append step fails or is skipped, or if there are no successful dimensions to append:
+- return `INCOMPLETE`
+
+---
+
+## Canonical Period Aliasing
+
+Before generating any query, define:
+
+- `base_period_name`
+- `comparison_period_name`
+- `base_period_literal`
+- `comparison_period_literal`
+
+Example:
+- `base_period_name = Feb 2021`
+- `comparison_period_name = Mar 2021`
+- `base_period_literal = @(2021-02)`
+- `comparison_period_literal = @(2021-03)`
+
+All period-specific fields must reuse these exact aliases.
+
+---
+
+## Frozen Scoring Definition
+
+Before generating any per-dimension query, declare one shared scoring definition and reuse it unchanged across all confirmed analyzed dimensions.
+
+### Shared formula
+For every segment row:
+- `expected_current_value = r * base_value`
+- `change_difference = current_value - expected_current_value`
+- `contribution_all = sum(contribution_segment)` within each dimension
+- `contribution_weight = contribution_segment / contribution_all`
+
+Compute:
+
+```text
+significance_score =
+  (current_value - r * base_value)
+  × log(current_value / (r * base_value) - 1)
+  × (contribution_weight + 1)
+```
+
+### Shared guardrail set
+The exact same guardrail set must be applied across all dimensions.
+A row is unstable if any of the following is true:
+- zero baseline
+- zero expected value
+- undefined log input
+- zero denominator
+- tiny denominator
+- sparse data
+- `contribution_all` is null
+- `contribution_weight` is null
+- `significance_score` is null
+
+### Shared zeroing rule
+If a row is unstable under the shared guardrail set:
+- set `significance_score = 0`
+- if `significance_score` evaluates to null, set it to `0`
+- keep the same row schema
+- capture the issue in the dimension-level QA note section
+
+### Guarded evaluation rule
+The score must be computed using guarded evaluation, not fallback-after-evaluation.
+
+Required behavior:
+- evaluate the guardrail conditions first
+- compute the significance formula only for rows that pass the guardrails
+- emit `0` directly for rows that fail the guardrails
+- avoid evaluating invalid `log(...)`, division, or other unsafe intermediate expressions before the guardrail decision is made
+
+Not allowed:
+- computing a separate raw score first and then replacing it with `0`
+- relying on a post-evaluation fallback after an unsafe expression has already been evaluated
+- using a raw intermediate expression such as `raw_significance_score` if it can fail before the fallback applies
+
+### Safe conditional logic rule
+The significance score must be implemented as safe conditional logic.
+
+Required behavior:
+- express the score as a guarded conditional pattern
+- only evaluate the mathematical score expression inside the safe branch
+- keep the same guarded pattern across all dimensions
+
+This means the skill must prefer a structure equivalent to:
+- `if row passes all guardrails, then compute significance_score, else 0`
+
+and must not prefer a structure equivalent to:
+- `compute raw_significance_score first, then coalesce / overwrite / fallback to 0`
+
+### Enforcement rule
+If a dimension requires a different formula, different guardrails, different zeroing behavior, or unsafe pre-evaluation to execute safely:
+- do not customize the scoring definition for that dimension
+- mark the dimension as `failed`
+- record `failure_reason = frozen_scoring_definition_not_supported`
+
+---
+
+## Dimension Inventory
+
+Before scoring work, enumerate candidate dimensions into:
+
+- `analyzed_dimensions`
+- `not_analyzed_dimensions`
+- `excluded_dimensions`
+
+Each candidate dimension must be classified as exactly one of:
+- `analyzed_top_10`
+- `not_analyzed_lower_priority`
+- `excluded`
+
+Typical exclusion reasons:
+- `high_cardinality`
+- `time_dimension`
+- `primary_key`
+- `duplicate_business_meaning`
+- `unsupported_relationship_path`
+- `unsupported_metric_logic`
+- `other`
+
+Coverage is incomplete unless **every candidate dimension** is classified.
+
+---
+
+## Dimension Prioritization Table
+
+Before scoring:
+1. rank all eligible dimensions
+2. select top 5
+3. classify all other eligible dimensions as `not_analyzed_lower_priority`
+4. explain every non-selected eligible dimension
+5. stop and ask for confirmation
+
+### Required columns
+- `dimension_name`
+- `priority_rank`
+- `priority_status`
+- `why_this_dimension_matters`
+- `business_value`
+- `evidence`
+
+### Column guidance
+- `why_this_dimension_matters` must be a plain-English explanation of **why this dimension is useful for explaining the metric change**.
+- Write it for business users, not data modelers.
+- Keep it to **1 short sentence**.
+- Focus on one of these ideas:
+  - where the metric is likely to vary meaningfully
+  - where the business can take action
+  - where large segments could materially move the total
+  - where the dimension is close to the metric event or decision point
+- Avoid technical or vague wording such as:
+  - `metric proximity`
+  - `signal-to-noise`
+  - `eligible dimension`
+  - `stable for significance scoring`
+  - `good analytical coverage`
+- Prefer concrete business phrasing such as:
+  - `This shows whether the change came from specific customer groups.`
+  - `This helps separate product mix effects from overall demand changes.`
+  - `This is useful because teams can act on underperforming regions directly.`
+
+- `business_value` must summarize the practical question this dimension helps answer.
+- Keep it to **3 to 8 words**.
+- Examples:
+  - `Find impacted customer groups`
+  - `Spot regional performance shifts`
+  - `Separate channel mix effects`
+  - `Identify product mix changes`
+
+### Priority status values
+- `analyzed_top_10`
+- `not_analyzed_lower_priority`
+
+---
+
+## Mandatory Confirmation Gate
+
+After showing the prioritization table, stop and ask:
+
+**Do you want me to proceed with significance analysis using these proposed top 5 dimensions?**
+
+At this checkpoint, the skill should ask only for one of these actions:
+- proceed with the proposed top 5 dimensions
+- stop
+- override the proposed dimension set
+
+Accept only explicit confirmation such as:
+- yes
+- proceed
+- continue
+- analyze these
+
+If the user asks to override, the skill may then collect the user-requested dimension set explicitly.
+
+If not confirmed:
+- do not continue
+- return workflow status: `paused_pending_user_confirmation`
+
+---
+
+## Metric Type Determination
+
+Classify the target metric as:
+
+### A. Additive metric
+Examples:
+- revenue
+- orders
+- sessions
+- won count
+
+### B. Ratio metric
+Examples:
+- close %
+- conversion rate
+- AOV
+- churn rate
+
+If unclear:
+- inspect the metric definition
+- state uncertainty if needed
+- proceed cautiously
+
+---
+
+## Overall Comparison Row
+
+After confirmation, compute:
+- `overall_baseline`
+- `overall_current`
+- `overall_change`
+- `r = overall_current / overall_baseline`
+
+For ratio metrics:
+- recompute using null-safe additive components
+
+If `overall_baseline = 0`:
+- do not force the default significance approach
+- return `INCOMPLETE`
+
+If `overall_change = 0`:
+- state there is no net change to attribute
+- stop
+
+---
+
+## Field Semantics by Metric Type
+
+### For Additive Metrics (revenue, orders, sessions):
+- `base_value` = the sum of the metric in the base period for this segment
+- `current_value` = the sum of the metric in the current period for this segment
+- `expected_current_value` = r × base_value
+- `contribution_segment` = base_value + current_value
+
+### For Ratio Metrics (close rate, conversion rate, AOV):
+- `base_value` = the computed ratio for this segment in the base period
+  - Example: if segment had 10 won deals / 50 opportunities, base_value = 0.20
+- `current_value` = the computed ratio for this segment in the current period
+  - Example: if segment had 15 won deals / 40 opportunities, current_value = 0.375
+- `expected_current_value` = r × base_value
+  - Where r = overall_current / overall_baseline (both computed as ratios)
+  - Example: if overall rate went from 0.25 to 0.30, r = 1.20, so expected = 1.20 × 0.20 = 0.24
+- `contribution_segment` = base_denominator + current_denominator + base_numerator + current_numerator
+  - This weights segments by their total "volume of activity" across both periods
+  
+**Critical:** For ratio metrics, base_value and current_value are the METRIC VALUES (the ratios themselves),
+NOT the raw numerator or denominator counts. The underlying components are only used for:
+1. Computing the ratios safely (null-handling)
+2. Computing contribution_segment for weighting
+
+**Example for close rate by region:**
+- Region A: 20 won / 100 opps (base), 30 won / 90 opps (current)
+- base_value = 0.20
+- current_value = 0.333
+- contribution_segment = 100 + 90 + 20 + 30 = 240
+
+---
+
+## Exact Merged Per-Dimension Table Schema
+
+For **every** successful confirmed analyzed dimension, produce one per-dimension table artifact with this exact schema:
+
+- `segment`
+- `base_value`
+- `current_value`
+- `delta_value`
+- `abs_delta_value`
+- `expected_current_value`
+- `change_difference`
+- `contribution_segment`
+- `contribution_all`
+- `contribution_weight`
+- `significance_score`
+
+Do not include row-level diagnostic fields in the merged per-dimension schema.
+Data quality issues must be summarized separately in a dimension-level QA note section.
+
+### Required per-dimension artifact name
+- `segment_scored_<dimension_name>`
+
+The per-dimension table does not need a `dimension_name` column because the analyzed dimension is already identified by the artifact name.
+
+If any required field is missing:
+- the table is invalid
+- mark dimension status as `failed`
+
+Type consistency rule:
+- Every column that will later be appended across dimensions must keep the same data type in every branch.
+- Do not mix numeric fallback values with text labels in the same column.
+
+---
+
+## Ratio Metric Computation Rules
+
+For ratio metrics:
+1. compute null-safe additive components first
+2. derive ratio inputs from those components
+3. recompute ratio using `safe_divide`
+4. compute delta
+5. compute expected value and significance inputs
+
+The merged per-dimension schema is identical for both additive and ratio metrics.
+The difference is in what the value fields represent (see Field Semantics by Metric Type above).
+
+Numerator and denominator fields are NOT included in the output schema.
+They are used only during computation and weighting, then discarded.
+Never use only the pre-aggregated ratio as the primary basis of scoring.
+
+---
+
+## Expected Value and Significance
+
+Use the frozen scoring definition declared above without modification.
+Do not simplify the formula differently per dimension.
+
+For additive metrics:
+- `contribution_segment = base_value + current_value`
+
+For ratio metrics:
+- compute null-safe components first:
+  - `base_num_safe = coalesce(base_numerator, 0)`
+  - `base_denom_safe = coalesce(base_denominator, 0)`
+  - `current_num_safe = coalesce(current_numerator, 0)`
+  - `current_denom_safe = coalesce(current_denominator, 0)`
+- then: `contribution_segment = base_denom_safe + current_denom_safe + base_num_safe + current_num_safe`
+
+Then:
+- `contribution_all = sum(contribution_segment)` within each dimension
+- `contribution_weight = contribution_segment / contribution_all`
+
+If unstable under the frozen guardrail set:
+- set `significance_score = 0`
+- if `significance_score` evaluates to null, set it to `0`
+- capture the issue in the dimension-level QA note section
+- do not rewrite the formula differently for that dimension
+- do not evaluate a raw unsafe score expression before applying the guardrail decision
+
+---
+
+## Full Cross-Dimension Significance Table
+
+After all merged per-dimension tables have been attempted:
+1. verify which confirmed dimensions succeeded and which failed
+2. add `dimension_name` back during the append step using the per-dimension artifact identity
+3. append only the successful per-dimension scored tables into one table using a safe post-processing step after per-dimension execution
+4. add a `dimension_execution_status` field to the final appended output
+5. sort successful scored rows by `significance_score desc`
+
+This appended table is the **primary analytical output**.
+
+Required columns for successful scored rows:
+- `dimension_name`
+- all columns from the exact merged per-dimension schema
+- `dimension_execution_status`
+
+Rules:
+- use `dimension_execution_status = success` for scored rows from successful dimensions
+- failed dimensions do not contribute scored segment rows if no valid scored table was produced
+- failed dimensions must still be represented in a separate failed-dimension status table or ledger section with:
+  - `dimension_name`
+  - `dimension_execution_status = failed`
+  - `failure_reason`
+- do not append tables generated with a modified scoring formula
+
+Do not include row-level diagnostic columns in this appended table.
+Do not require the append to be generated in the same AQL step as the per-dimension scoring.
+The append may be produced only after all per-dimension artifacts have been completed and validated.
+
+If this table is missing, or if all confirmed dimensions failed:
+- return `INCOMPLETE`
+
+---
+
+## Ranked Driver Output
+
+Only after the full appended table exists:
+- identify top positive drivers
+- identify major negative / offsetting drivers
+- derive all ranked findings from the appended table only
+
+Do not infer ranking from any single per-dimension table.
+
+---
+
+## Non-selected Eligible Dimensions
+
+For every eligible dimension not selected into top 5, include:
+- `dimension_name`
+- `less_useful_reason`
+- `explanation`
+- `comparison_to_selected_dimensions`
+
+Writing rules:
+- Explain non-selection in plain business language.
+- Do not imply the dimension is bad or wrong; explain why it is less useful **for this specific metric change question**.
+- `explanation` should be 1 short sentence.
+- `comparison_to_selected_dimensions` should make the tradeoff clear in simple words.
+
+Allowed reasons:
+- `lower_metric_proximity`
+- `higher_cardinality_than_selected_dimensions`
+- `sparser_segments`
+- `weaker_business_actionability`
+- `redundant_with_selected_dimension`
+- `lower_expected_signal_to_noise`
+- `less_stable_for_significance_scoring`
+
+Preferred plain-English mappings:
+- `lower_metric_proximity` → `Less directly tied to where this metric changes`
+- `higher_cardinality_than_selected_dimensions` → `Too many small groups to give a clear summary`
+- `sparser_segments` → `Many segments have too little data`
+- `weaker_business_actionability` → `Harder for teams to act on directly`
+- `redundant_with_selected_dimension` → `Overlaps with a dimension already selected`
+- `lower_expected_signal_to_noise` → `More likely to add noise than clarity`
+- `less_stable_for_significance_scoring` → `Results may be less reliable because segment sizes are uneven`
+
+---
+
+## Mandatory Artifact Ledger
+
+Before final answer, produce a completion ledger containing:
+
+- `overall_comparison_row_status`
+- `confirmed_analyzed_dimensions`
+- `confirmed_dimension_count`
+- `successful_dimension_count`
+- `failed_dimension_count`
+- `successful_dimension_list`
+- `failed_dimension_list`
+- `merged_table_status_by_dimension`
+- `append_status`
+- `ranking_status`
+- `non_selected_dimension_explanations_status`
+- `qa_status`
+- `dimension_level_qa_notes_status`
+- `frozen_scoring_definition_status`
+- `formula_consistency_status`
+
+## Dimension-Level QA Notes
+
+For each confirmed analyzed dimension, include a small QA note section outside the scored table.
+
+Required fields:
+- `dimension_name`
+- `qa_issue_count`
+- `qa_issues`
+- `qa_summary`
+
+Rules:
+- This section is for dimension-level diagnostics only.
+- Do not append it into the cross-dimension significance table.
+- Keep `qa_summary` to 1 short sentence.
+- If there are no issues, use:
+  - `qa_issue_count = 0`
+  - `qa_issues = []`
+  - `qa_summary = No material data quality issues detected.`
+
+---
+
+## Mandatory QA Checklist
+
+Before answering, validate:
+
+- canonical periods declared first
+- frozen scoring definition declared before the per-dimension loop
+- every successful dimension uses the same frozen scoring definition
+- no dimension-specific scoring simplification was introduced
+- the score was computed with guarded evaluation, not fallback-after-evaluation
+- no successful dimension relied on a raw intermediate score that could fail before fallback
+- every field uses correct period alias
+- every filtered additive component wrapped in `coalesce(..., 0)`
+- ratios recomputed from null-safe additive components
+- no unexpected null additive values remain
+- same `r` reused across all analyzed dimensions
+- no successful dimension has unexpected null `contribution_all`
+- no successful dimension has unexpected null `contribution_weight`
+- no successful dimension has unexpected null `significance_score`
+- every candidate dimension accounted for in inventory
+- every eligible dimension ranked in prioritization table
+- the skill did not ask the user to choose dimensions by default before prioritization
+- explicit user confirmation obtained after the prioritization table was shown
+- every confirmed analyzed dimension is marked as either `done` or `failed`
+- every successful confirmed analyzed dimension has a valid normalized scored table
+- all successful normalized scored tables share exact schema
+- appended cross-dimension significance table exists when at least one dimension succeeds
+- final ranking derived from appended table only
+- dimension-level QA note exists for every confirmed analyzed dimension
+- every failed dimension has a recorded failure reason
+- failed dimensions were not rescued by changing the scoring logic
+
+If any check fails:
+- regenerate or return `INCOMPLETE`
+
+---
+
+## Output Format
+
+## 1. Completion Status
+One of:
+- `Completion Status: COMPLETE`
+- `Completion Status: INCOMPLETE`
+
+If incomplete, include:
+- `blocking_issue`
+- `missing_artifacts`
+- `completed_artifacts`
+
+## 2. Dimension Inventory
+Include all candidate dimensions and their classifications.
+
+## 3. Dimension Prioritization Table
+Include all eligible dimensions and ranking.
+
+## 4. User Confirmation Checkpoint
+If awaiting confirmation:
+- `workflow_status: paused_pending_user_confirmation`
+
+## 5. Overall Comparison Row
+Include:
+- `overall_baseline`
+- `overall_current`
+- `overall_change`
+- `r`
+
+## 6. Completion Ledger
+Required in both COMPLETE and INCOMPLETE outputs.
+
+## 7. Full Cross-Dimension Significance Table
+Required for COMPLETE.
+
+## 8. Per-Dimension Merged Tables
+One per successful confirmed analyzed dimension, each using the exact merged per-dimension schema.
+
+## 9. Ranked Driver Summary
+Only for COMPLETE.
+
+## 10. Non-selected Eligible Dimensions
+Required for COMPLETE and for post-prioritization outputs.
+
+---
+
+## Implementation Notes for Holistics / AQL
+
+- Reuse dataset metrics whenever possible
+- For ratio metrics, use null-safe additive components first
+- Build one dimension at a time
+- Build each dimension directly into the exact merged per-dimension schema before append
+- Do not ask AQL generation to build the full cross-dimension appended table in one query across unrelated dimensions
+- Generate and execute one scored table per confirmed analyzed dimension
+- Compute significance score with guarded conditional logic, not a raw intermediate score followed by fallback
+- Do not allow unsafe `log(...)` or division expressions to evaluate before the guardrail decision
+- Reject any per-dimension scoring output that changed the frozen scoring definition
+- Reject any successful per-dimension output with unexpected null `contribution_all`, `contribution_weight`, or `significance_score`
+- Build the final appended cross-dimension significance table only after all successful per-dimension tables exist
+- Do not skip the append step
+- Do not return a final causal summary before the append step
+- If tool/runtime limits prevent full completion, return `INCOMPLETE` with the ledger
+
+;;
+}

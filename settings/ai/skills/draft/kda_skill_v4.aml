@@ -1,0 +1,395 @@
+Skill key_driver_v4 {
+label: 'Key Driver v4'
+description: 'Skill to identify which segments within each dimension most contributed to a drop or increase in a ratio metric using a weighted impact method. For each segment, compare the metric value between two periods, weight by segment volume across both periods, then rank the most negative and most positive impacts. Use this only when user asks "Explain this increase / decrease between ... ".'
+allow_switching_invocation: true
+content: @md
+## Description
+Identify which segments within each dimension most contributed to a metric change between two periods using a simpler weighted impact method.
+This version is intentionally simpler than the stricter significance-based approach. Its goal is:
+- easier execution reliability
+- easier interpretation
+- comparable ranking within each analyzed dimension
+- optional caveated cross-dimension ranking when one frozen formula is used everywhere
+- practical usefulness for ratio metrics such as close rate / close %
+Use this only when the user asks to explain an increase or decrease between two periods and a simpler segment-impact method is preferred.
+---
+## Goal
+This skill must:
+1. enumerate eligible candidate dimensions
+2. prioritize the **top 5 dimensions** (or all eligible dimensions if fewer than 5 exist) based on semantic meaning and relevance to the target metric
+3. show the proposed dimensions to the user and ask for confirmation
+4. if the user confirms, analyze those confirmed dimensions only
+5. for each confirmed analyzed dimension, return **one regular table only** for that dimension
+6. for each confirmed analyzed dimension and each segment:
+- compute the metric value in the base period
+- compute the metric value in the comparison period
+- compute the segment's volume weight across the two periods
+- compute a weighted impact score
+- rank the segments within each dimension
+7. optionally append all confirmed dimension outputs into one caveated cross-dimension ranking table when the same frozen formula and weighting basis are used across all analyzed dimensions
+This skill supports both:
+- **ratio metrics** such as close rate, close %, and conversion rate
+- **additive metrics** such as revenue, orders, sessions, and won count
+---
+## Inputs
+- **Dataset**: current dataset in context
+- **Target metric**: provided by user or inherited from referenced viz
+- **Base period**: provided by user
+- **Comparison period**: provided by user
+- **Candidate dimensions**:
+- if user names dimensions, use those as the candidate pool
+- otherwise enumerate eligible low-to-medium-cardinality business dimensions
+- **Referenced viz / existing metric logic**:
+- reuse the existing metric definition whenever possible
+- do not redefine metric logic if the dataset already has the required metric
+---
+## Core Rules
+### 1. Never assume hidden metric structure
+Do not assume:
+- numerator field
+- denominator field
+- dimension list
+- relationship path
+- exact filter values
+Inspect the dataset and existing metric definitions first.
+If the metric is a ratio metric and the underlying additive components needed for weighting are unclear, say so explicitly and stop or ask for clarification.
+### 2. Use a generalized weighting rule by metric type
+This method supports both ratio metrics and additive metrics, but the weighting basis must be frozen consistently within the analysis.
+For ratio metrics, use this generalized weighting rule:
+- `segment_weight = base_denominator + comparison_denominator`
+This uses the denominator as the segment's business exposure or opportunity volume across the two periods.
+Examples:
+- close % -> opportunities
+- conversion rate -> visitors / sessions / opportunities, depending on the metric definition
+For additive metrics, use this generalized weighting rule:
+- `segment_weight = abs(base_value) + abs(comparison_value)`
+- if the additive metric can legitimately be negative, note this explicitly — large offsetting positive and negative values can affect interpretation of the weight
+For ratio metrics where the metric is already defined in the dataset: reuse the existing metric definition for the displayed value, but use the denominator-based additive components for `segment_weight`.
+If the metric cannot be classified reliably, or if the denominator for a ratio metric cannot be determined reliably from the dataset or metric definition, do not guess. State the gap clearly and stop or ask for clarification.
+### 3. Keep the formula simple and consistent
+For every analyzed dimension, use the same impact definition:
+- `base_value_raw` = segment metric value in base period before null handling
+- `current_value_raw` = segment metric value in comparison period before null handling
+- `base_value` = `coalesce(base_value_raw, 0)`
+- `current_value` = `coalesce(current_value_raw, 0)`
+- `delta_value` = `current_value - base_value`
+- `overall_base_value_raw` = overall metric value in base period before null handling
+- `overall_current_value_raw` = overall metric value in comparison period before null handling
+- `overall_base_value` = `coalesce(overall_base_value_raw, 0)`
+- `overall_current_value` = `coalesce(overall_current_value_raw, 0)`
+- `overall_delta_value` = `overall_current_value - overall_base_value`
+- `segment_weight` = frozen weight basis across both periods
+- `impact_score` = `delta_value × segment_weight`
+- `impact_direction` = direction of the segment's impact **relative to `overall_delta_value`**, not just the raw sign of `impact_score`
+- `change_role` = derived interpretation label based on `impact_direction`
+Strict null-handling rule:
+- `base_value` and `current_value` must always be produced via `coalesce(..., 0)`
+- `overall_base_value` and `overall_current_value` must always be produced via `coalesce(..., 0)`
+- do not leave base or current metric values as null at any stage used for downstream math or output
+- if a segment has no exposure in one period, represent that period value as `0`, not null
+The frozen weight basis must be selected once per analysis based on metric type and then reused unchanged across all analyzed dimensions.
+Interpretation rules:
+- if `overall_delta_value = 0`: stop. Inform the user that the metric did not change net between the two periods and that there is no increase or decrease to explain. Do not proceed with segment analysis.
+- if `overall_delta_value < 0`:
+- `impact_score < 0` -> `impact_direction = driver_of_change`
+- `impact_score > 0` -> `impact_direction = offset_to_change`
+- if `overall_delta_value > 0`:
+- `impact_score > 0` -> `impact_direction = driver_of_change`
+- `impact_score < 0` -> `impact_direction = offset_to_change`
+- if `impact_score = 0`, use `impact_direction = neutral`
+Derived label rule:
+- `change_role = impact_direction`
+Do not replace this with significance-score logic.
+Do not use different impact formulas across dimensions.
+### 4. Null safety first
+AQL-specific behavior that must be accounted for:
+- `where()` returns `null` when no rows match the filter — it does NOT return `0`
+- `safe_divide(n, d)` returns `null` when `d = 0`, even if `n` and `d` were already coalesced to `0`
+- therefore a segment that exists in only one period will produce null additive components AND a null ratio unless both layers are coalesced
+The required AQL pattern for additive components:
+- `coalesce(<aggregation> where(<period_filter> and <segment_filter>), 0)`
+The required AQL pattern for ratio metrics:
+- `coalesce(safe_divide(coalesce(numerator, 0), coalesce(denominator, 0)), 0)`
+- the outer `coalesce(..., 0)` is mandatory — `safe_divide` returns null when the denominator is zero even after the inner coalesces
+Before any downstream math, follow this ordering strictly:
+1. compute raw additive components per period using `where()` — do not coalesce yet (needed for new/disappeared segment detection)
+2. record `base_value_raw` and `current_value_raw` from the raw results for segment detection
+3. apply `coalesce(..., 0)` to all additive components
+4. for ratio metrics: derive the denominator from null-safe additive components, then compute the ratio using `coalesce(safe_divide(coalesce(num, 0), coalesce(den, 0)), 0)`
+5. apply `coalesce(..., 0)` to `base_value_raw`, `current_value_raw`, `overall_base_value_raw`, and `overall_current_value_raw` to produce null-safe metric values
+6. derive `delta_value`, `overall_delta_value`, `segment_weight`, `impact_score`
+Strict enforcement:
+- never output null `base_value`
+- never output null `current_value`
+- never compute `delta_value` from raw nullable values
+- never compute `overall_delta_value` from raw nullable values
+- never rely only on a final fallback after unsafe math has already been evaluated
+- never pass a raw `where()` result directly into `safe_divide()` without coalescing the additive components first
+New and disappeared segment detection:
+- after computing `base_value_raw` and `current_value_raw`, check each segment's raw values before coalescing
+- if `base_value_raw IS NULL` and `current_value_raw IS NOT NULL`: the segment is **new** — it entered during the comparison period
+- if `base_value_raw IS NOT NULL` and `current_value_raw IS NULL`: the segment **disappeared** — it was absent in the comparison period
+- retain this classification for use in the interpretation step; do not add it as a column in the output table
+### 5. Period consistency
+For every period-specific field:
+- field name
+- field label
+- time filter
+- intended business meaning
+must refer to the same period.
+### 6. Prioritize top 5 dimensions before analysis
+Before any calculation, the skill must produce exactly **one prioritization table** for user review.
+If the user did not explicitly specify the exact dimensions to analyze, the skill must:
+1. enumerate eligible candidate dimensions
+2. rank them using semantic meaning and relevance to the target metric
+3. select the top 5 dimensions automatically; if fewer than 5 eligible dimensions exist, include all of them — do not pad with irrelevant or low-quality dimensions to reach 5
+4. return exactly one table containing the proposed dimensions and the reason each was chosen
+5. after the table, add a brief confirmation prompt asking the user whether to proceed with these dimensions
+6. stop and wait for user confirmation
+Do not ask the user to manually pick dimensions before the prioritization table is shown.
+Use these prioritization principles:
+- prefer dimensions that are close to where the metric varies meaningfully
+- prefer dimensions with clearer business actionability
+- prefer dimensions where large segments could materially move the metric
+- avoid high-cardinality, sparse, duplicate, overly technical, or weakly relevant dimensions
+Cardinality guidance (use judgment — no hard cutoff):
+- **low-to-medium cardinality** (preferred): dimensions where the number of distinct values is small enough that each segment has meaningful business volume and a human can interpret the ranking — e.g. region, product category, customer segment, sales channel, plan tier
+- **high cardinality** (avoid): dimensions where most segments would have too little volume to be meaningful or where the ranking becomes uninterpretable — e.g. individual sales rep ID, account ID, email address, raw text fields, date at day granularity
+- when in doubt, prefer dimensions that a business stakeholder would naturally use to slice and act on the metric
+Required prioritization table columns:
+- `dimension_name`
+- `priority_rank`
+- `why_this_dimension_matters`
+- `business_value`
+- `evidence`
+Do not include non-selected dimensions, excluded dimensions, summaries, caveats, or methodology notes in the first response. After the table, include one brief confirmation prompt asking the user whether to proceed.
+If the user explicitly names dimensions, still return exactly one table for the final proposed analyzed set and the reason each dimension is included, then append a brief confirmation prompt and stop.
+### 7. Confirmation gate is mandatory
+After returning the prioritization table, stop.
+If the user confirms with an explicit yes / proceed / continue response:
+- freeze `confirmed_analyzed_dimensions`
+- produce all dimension tables, the ranked findings, and the final conclusion in one single continuous response
+- do not stop, pause, or wait for input between dimensions
+- do not return a partial response after the first dimension — all N confirmed dimensions must be fully analyzed before the response ends
+If the user does not confirm:
+- do not continue the calculation
+- stop and return a paused status
+### 8. Force table output for each analyzed dimension
+After confirmation, every confirmed analyzed dimension must return exactly **one regular table** — all in the same response.
+Required behavior:
+- process every confirmed dimension before ending the response — do not stop after the first or any intermediate dimension
+- return one table per dimension
+- do not return a pivot table for any dimension
+- do not return a chart instead of the table for any dimension
+- do not transpose rows into columns
+- keep the dimension result in row-based tabular form with one segment per row
+- the user-facing table must exclude `impact_direction` and `change_role`
+If a dimension output would naturally become a pivot table, rewrite the output so it remains a regular table.
+### 9. Rank within each dimension by default
+This method is primarily designed for **within-dimension ranking**.
+Default behavior:
+- compute and rank segments **within each confirmed analyzed dimension**
+- highlight the strongest `driver_of_change` segments and `offset_to_change` segments inside each dimension
+### 10. Caveated cross-dimension ranking is allowed
+Cross-dimension ranking is allowed only as a **practical heuristic**, not as a strictly comparable or statistically rigorous ranking.
+Requirements:
+- use one frozen formula across all analyzed dimensions
+- use one frozen weighting basis across all analyzed dimensions
+- use the same period definitions, null-handling rules, and output schema across all analyzed dimensions
+- append all successful per-dimension outputs into one final cross-dimension table
+Required formula:
+- `impact_score = (current_value - base_value) × segment_weight`
+Required generalized weighting rule:
+- for ratio metrics: `segment_weight = base_denominator + comparison_denominator`
+- for additive metrics: `segment_weight = abs(base_value) + abs(comparison_value)`
+Do not use one weighting definition for some dimensions and another weighting definition for others within the same analysis.
+Interpretation rules for cross-dimension ranking:
+- present it as `largest weighted impact under this method`
+- do not claim it is strictly comparable across dimensions
+- do not describe it as a formal significance ranking
+- do not describe the top row as the objectively most important driver or best explanatory dimension
+- state clearly that differences in segment granularity and partition structure can affect rank position
+- state clearly that `impact_score` magnitude is not normalized across dimensions — dimensions with larger denominators or higher absolute volumes will naturally produce larger absolute scores, so a higher-ranked dimension may simply reflect greater business volume rather than a more meaningful change
+If these conditions cannot be met, do not produce a cross-dimension ranking table.
+### 11. Keep scope practical
+This method is intended for descriptive impact analysis, not statistical significance.
+Be explicit:
+- this is a weighted descriptive ranking
+- it shows which segments moved the metric most after accounting for practical segment volume
+- it does not prove causation
+- it is not a formal significance test
+---
+## Weighted Impact Method
+For each dimension and each segment, compute:
+### Step 1. Metric values (null-safe)
+Follow this ordering strictly — do not skip steps or reorder:
+1. compute raw additive components per period using `where()` — do not coalesce yet; keep raw values for new/disappeared segment detection
+2. record `base_value_raw` and `current_value_raw` (and overall equivalents) from these raw results — null means the segment had no data in that period
+3. apply `coalesce(..., 0)` to all raw additive components
+4. for additive metrics: `base_value = coalesce(base_value_raw, 0)` and `current_value = coalesce(current_value_raw, 0)`
+5. for ratio metrics: compute using the two-layer AQL pattern — `coalesce(safe_divide(coalesce(numerator, 0), coalesce(denominator, 0)), 0)` — the outer `coalesce` is mandatory because `safe_divide` returns null when the denominator is zero even after the inner coalesces
+6. apply the same two-layer pattern to the overall metric values
+7. `delta_value = current_value - base_value`
+8. `overall_delta_value = overall_current_value - overall_base_value`
+Never compute `delta_value` or `overall_delta_value` from raw nullable values.
+Never use a bare `safe_divide()` without the outer `coalesce(..., 0)` wrapper.
+### Step 2. Segment weight
+Choose one frozen segment-weight rule based on metric type.
+For ratio metrics:
+- `segment_weight = base_denominator + comparison_denominator`
+For additive metrics:
+- `segment_weight = abs(base_value) + abs(comparison_value)`
+This gives larger importance to segments with more meaningful business volume across both periods.
+### Step 3. Impact score
+Compute:
+- `impact_score = delta_value × segment_weight`
+### Step 4. Ranking logic
+Within each dimension:
+- sort ascending by `impact_score` to find the biggest contributors to a drop
+- sort descending by `impact_score` to find the biggest positive offsets or contributors to an increase
+---
+## Required Per-Dimension Output Schema
+For each analyzed dimension, produce one segment impact table for user review with exactly these columns and no others:
+- `segment`
+- `base_value`
+- `current_value`
+- `delta_value`
+- `segment_weight`
+- `impact_score`
+Do not add any extra columns beyond the six above.
+Do not include `dimension_name` — each table already represents one dimension; adding it as a column is redundant.
+Do not include `impact_direction` or `change_role` — these are internal fields only.
+Recommended artifact naming:
+- `segment_impact_<dimension_name>`
+## Required Cross-Dimension Output Schema
+If cross-dimension ranking is used, append successful per-dimension outputs into one user-facing table with this schema:
+- `dimension_name`
+- `segment`
+- `base_value`
+- `current_value`
+- `delta_value`
+- `segment_weight`
+- `impact_score`
+Do not include `impact_direction` or `change_role` in the user-facing cross-dimension table.
+Those fields may be derived internally for interpretation, but they must not appear in the table shown to the user.
+Recommended artifact naming:
+- `segment_impact_all_dimensions`
+---
+## Ranking and Interpretation
+For each analyzed dimension, return:
+1. the segments with the strongest contribution in the same direction as the overall change (highest-magnitude negative `impact_score` for a drop; highest-magnitude positive `impact_score` for an increase)
+2. the segments with the strongest contribution against the overall change (highest-magnitude positive `impact_score` for a drop; highest-magnitude negative `impact_score` for an increase)
+3. a short interpretation in plain business language
+If cross-dimension ranking is used, also return:
+4. one appended cross-dimension table ranked by `impact_score`
+5. a short caveated interpretation of the top contributors in each direction
+Interpretation guidance (internal — do not expose these field names to the user):
+- `driver_of_change` means the segment moved in the same direction as the overall change and amplified it after accounting for segment volume; describe this to the user as "contributed to the drop/increase" or "drove the change"
+- `offset_to_change` means the segment moved against the overall change and softened it after accounting for segment volume; describe this to the user as "offset the drop/increase" or "softened the change"
+- `neutral` means limited contribution to the net change; describe this to the user as "had little impact on the change"
+When writing prose for the user, always use plain business language — never expose `driver_of_change`, `offset_to_change`, or `neutral` as user-facing labels.
+Do not overstate:
+- this is a weighted directional impact method
+- not a causal model
+- not a formal significance model
+- cross-dimension ranking is heuristic and directionally useful, not strictly comparable
+New and disappeared segment guidance:
+- after ranking, check whether any top-contributing segments are new or disappeared (detected in Rule 4)
+- if a top contributor is a new segment, note in the interpretation that it did not exist in the base period — its apparent contribution reflects entry into the data, not a change in behavior of an existing segment
+- if a top contributor is a disappeared segment, note in the interpretation that it was absent in the comparison period — its apparent contribution reflects exit from the data, not a behavioral change
+- do not suppress these segments from the ranking, but always flag their entry/exit status in the prose so the user can interpret the result correctly
+Volume-inflated scores guidance:
+- before calling out a segment as a top contributor, inspect both its `delta_value` and its `segment_weight`
+- if a segment ranks highly primarily because of a very large `segment_weight` but has a trivially small `delta_value` (i.e., the metric barely moved for that segment), note this explicitly in the interpretation — a high `impact_score` driven by volume alone does not indicate a meaningful change in the metric
+- use judgment: a large segment with a small but consistent directional move can still be a legitimate contributor; the concern is segments where `delta_value` is near zero but `segment_weight` is enormous
+---
+## Output Format
+## 1. Dimension Prioritization Table
+The first response must contain the prioritization table followed by a brief confirmation prompt.
+The table must use exactly these columns — every cell must be filled with specific content, not left blank or vague:
+- `dimension_name` — the name of the dimension as it appears in the dataset
+- `priority_rank` — 1 through N in descending priority order
+- `why_this_dimension_matters` — one sentence explaining why this dimension is relevant to the target metric
+- `business_value` — one sentence explaining what actionable insight analyzing this dimension could surface
+- `evidence` — specific field names, relationships, or dataset properties that support including this dimension
+Do not include any text before the table. After the table, include one short confirmation prompt — for example: "These are the proposed dimensions for analysis. Would you like to proceed?"
+## 2. User Confirmation Checkpoint
+After the first response table is shown, stop and wait for confirmation.
+Do not proceed with calculation or ranking before confirmation.
+## 3. Per-Dimension Impact Tables
+After confirmation, produce all per-dimension tables in one single continuous response — do not stop after any individual dimension.
+Work through every confirmed dimension in priority order: compute, rank, and output the table for dimension 1, then dimension 2, then dimension 3, and so on until all confirmed dimensions are done.
+Do not return a pivot table for any dimension.
+## 4. Optional Cross-Dimension Impact Table
+If the frozen formula and weighting basis are consistent across all confirmed analyzed dimensions, you may append all successful per-dimension outputs into one global ranking table.
+When included, explicitly label it as:
+- `Caveated cross-dimension ranking`
+- `Heuristic global ranking under one shared weighted-impact method`
+## 5. Ranked Findings
+For each dimension, summarize in plain business language:
+- segments that most contributed to the change (same direction as overall delta)
+- segments that offset the change (opposite direction to overall delta)
+- short business interpretation
+After all dimensions are scored, return one direct conclusion:
+- identify the single segment that contributed most to the change, including its dimension
+- derive this from the ranked outputs — do not guess
+- if cross-dimension ranking is available, use it; otherwise base the conclusion on the confirmed analyzed dimensions and state that clearly
+- if no segment qualifies clearly, say there is not enough evidence
+If cross-dimension ranking is included, also summarize:
+- top segments that drove the change across all dimensions
+- top segments that offset the change across all dimensions
+- one caveat that the ranking is directionally useful but not strictly comparable across dimensions
+## 6. Caveats
+Include brief caveats when relevant:
+- descriptive weighting, not formal significance
+- correlation / contribution pattern, not proof of causation
+- results depend on the chosen frozen weighting basis for the metric type
+- cross-dimension ranking, if shown, is heuristic and affected by segment granularity, partition structure, and the scale of the weighting basis — dimensions with larger denominators or volumes will produce larger absolute scores regardless of how meaningful the metric change is
+- the final strongest-contributor-to-the-change conclusion is limited to the confirmed analyzed dimensions, unless a cross-dimension table is explicitly produced
+---
+## Implementation Notes for Holistics / AQL
+- Before generating any query, define `base_period_name`, `comparison_period_name`, `base_period_literal`, and `comparison_period_literal` — reuse these exact aliases throughout the analysis
+- Reuse dataset metrics whenever possible
+- Inspect the metric definition before deciding how to compute the weight
+- For ratio metrics, recompute from additive components when needed for safe period comparison
+- In AQL, always wrap `where()` aggregations with `coalesce(..., 0)` — `where()` returns null, not 0, when nothing matches
+- In AQL, always wrap the full ratio with an outer `coalesce`: `coalesce(safe_divide(coalesce(num, 0), coalesce(den, 0)), 0)` — `safe_divide` returns null when the denominator is zero even after the inner coalesces
+- Prefer the generalized weighting rule by metric type
+- After confirmation, proceed automatically through all confirmed dimensions in the order they appear in the prioritization table — do not ask the user which dimension to run first or next; build them sequentially without further prompting
+- Keep output tables simple and readable
+- Do not introduce significance-score formulas in this skill
+- Cross-dimension ranking is allowed only when one frozen formula, one frozen weighting basis, and one shared schema are used across all analyzed dimensions
+- Do not claim strict cross-dimension score comparability
+---
+## Worked Examples
+### Example 1: Ratio metric with an overall drop
+User question:
+- `Why did close % drop from Feb to Mar?`
+Assume `overall_delta_value < 0`.
+AQL null-safe computation for segment `Enterprise` in dimension `customer_segment`:
+- `won_base = coalesce(count(won) where(month = @(2021-02) and segment = 'Enterprise'), 0)`
+- `opps_base = coalesce(count(opportunities) where(month = @(2021-02) and segment = 'Enterprise'), 0)`
+- `won_current = coalesce(count(won) where(month = @(2021-03) and segment = 'Enterprise'), 0)`
+- `opps_current = coalesce(count(opportunities) where(month = @(2021-03) and segment = 'Enterprise'), 0)`
+- `base_value = coalesce(safe_divide(won_base, opps_base), 0)` → `0.24`
+- `current_value = coalesce(safe_divide(won_current, opps_current), 0)` → `0.18`
+- `segment_weight = opps_base + opps_current = 120 + 140 = 260`
+- `impact_score = (0.18 - 0.24) × 260 = -15.6`
+- `impact_direction = driver_of_change`
+Interpretation:
+- `Enterprise` is one of the stronger drivers of the drop because its close % fell and it had meaningful denominator volume.
+### Example 2: Additive metric with an overall increase
+User question:
+- `Why did revenue increase from Feb to Mar?`
+Assume `overall_delta_value > 0`.
+For segment `Mid-Market` inside dimension `customer_segment`:
+- `base_value = 50000`
+- `current_value = 65000`
+- `segment_weight = abs(50000) + abs(65000) = 115000`
+- `impact_score = (65000 - 50000) × 115000 = 1725000000`
+- `impact_direction = driver_of_change`
+- `change_role = driver_of_change`
+Interpretation:
+- `Mid-Market` is one of the stronger drivers of the increase because revenue rose materially and the segment represented substantial business volume.
+;;
+}
