@@ -1,0 +1,55 @@
+// Demo: stands in for Looker "first user state" derived table.
+// Date param is applied INSIDE the SQL before aggregation (Looker {% condition %} pattern).
+Model bhx_demo_first_order_state {
+  type: 'query'
+  label: '[Demo] First Order State'
+  description: 'Per-user first-order snapshot. order_date_param is pushed into the inner WHERE before GROUP BY — same idea as Looker templated filter on another view.'
+  data_source_name: 'demodb'
+  owner: 'tri.dvm@holistics.io'
+
+  models: [
+    bhx_ecommerce_orders
+  ]
+
+  param order_date_param {
+    label: 'Order Date (first order state)'
+    type: 'date'
+  }
+
+  query: @sql
+    SELECT
+      {{ #o.user_id }} AS user_id
+      , MIN({{ #o.created_at }}) AS first_order_at
+      , MIN({{ #o.created_at }})::date AS first_order_date
+      , COUNT(*) AS orders_in_window
+    FROM {{ #bhx_ecommerce_orders o }}
+    -- Filter is applied BEFORE aggregation (critical for Looker-style pushdown)
+    WHERE {% filter(order_date_param) %} {{ #o.created_at }} {% end %}
+    GROUP BY 1
+  ;;
+
+  dimension user_id {
+    label: 'User Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.user_id }};;
+  }
+
+  dimension first_order_at {
+    label: 'First Order At'
+    type: 'datetime'
+    definition: @sql {{ #SOURCE.first_order_at }};;
+  }
+
+  dimension first_order_date {
+    label: 'First Order Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.first_order_date }};;
+  }
+
+  dimension orders_in_window {
+    label: 'Orders In Window'
+    type: 'number'
+    definition: @sql {{ #SOURCE.orders_in_window }};;
+  }
+}
