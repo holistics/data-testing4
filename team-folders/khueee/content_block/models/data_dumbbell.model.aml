@@ -1,0 +1,73 @@
+Model data_dumbbell {
+  type: 'query'
+  label: 'Data Dumbbell'
+  description: ''
+  data_source_name: 'demodb'
+  dimension product_name {
+    label: 'Product Name'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_name }};;
+  }
+  dimension added_to_cart {
+    label: 'Added To Cart'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.added_to_cart }};;
+  }
+  dimension purchased {
+    label: 'Purchased'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.purchased }};;
+  }
+  dimension cart_abandonment {
+    label: 'Cart Abandonment'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.cart_abandonment }};;
+  }
+  dimension conversion_rate {
+    label: 'Conversion Rate'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.conversion_rate }};;
+  }
+  dimension start_percent {
+    label: 'Start Percent'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.start_percent }};;
+  }
+  dimension end_percent {
+    label: 'End Percent'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.end_percent }};;
+  }
+  dimension bar_width {
+    label: 'Bar Width'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.bar_width }};;
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql
+    SELECT *
+    FROM (VALUES
+      ('Protein Powder',      490, 310, 180, 0.63, 63.265306122448976, 100,  36.734693877551024),
+      ('Dumbbells',           520, 500,  20, 0.96, 96.15384615384616,  100,   3.8461538461538463),
+      ('Wireless Headphones', 500, 420,  80, 0.84, 84.0,               100,  16.0),
+      ('Water Bottle',        520, 350, 170, 0.67, 67.3076923076923,   100,  32.69230769230769),
+      ('Running Shoes',       480, 380, 100, 0.79, 79.16666666666667,  100,  20.833333333333332),
+      ('Resistance Bands',    500, 260, 240, 0.52, 52.0,               100,  48.0),
+      ('Yoga Mat',            500, 290, 210, 0.58, 58.0,               100,  42.0),
+      ('Jump Rope',           480, 420,  60, 0.88, 87.5,               100,  12.5),
+      ('Fitness Tracker',     500, 450,  50, 0.90, 90.0,               100,  10.0),
+      ('Exercise Bike',       500, 180, 320, 0.36, 36.0,               100,  64.0)
+    ) AS t(product_name, added_to_cart, purchased, cart_abandonment,
+           conversion_rate, start_percent, end_percent, bar_width);;
+  models: [
+  ]
+}
