@@ -21,7 +21,7 @@ Dataset reporting_project_management {
     label: "Completed issue"
     type: "number"
     hidden: false
-    description: ""
+    description: "Count of issues whose current status is Deployed."
     definition: @aql count(reporting_issues.id) | where(reporting_issues.status == "Deployed");;
   }
 
@@ -29,6 +29,7 @@ Dataset reporting_project_management {
     label: "%LM - Completed issue"
     type: "number"
     hidden: false
+    description: "Percentage change in deployed issue count versus the prior month, using completed date for the comparison."
     definition: @aql safe_divide(completed_issue, completed_issue | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
   }
 
@@ -36,6 +37,7 @@ Dataset reporting_project_management {
     label: "%LM - Avg Cycle Time"
     type: "number"
     hidden: false
+    description: "Percentage change in average issue cycle time, in hours, versus the prior month using completed date."
     definition: @aql safe_divide(avg(reporting_issues, reporting_issues.cycle_time_hours), avg(reporting_issues, reporting_issues.cycle_time_hours) | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
   }
 
@@ -43,6 +45,7 @@ Dataset reporting_project_management {
     label: "%LM - Avg PR Review"
     type: "number"
     hidden: false
+    description: "Percentage change in average PR review duration, in hours, versus the prior month using completed date."
     definition: @aql safe_divide(avg(reporting_issue_duration, reporting_issue_duration.duration_hours), avg(reporting_issue_duration, reporting_issue_duration.duration_hours) | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
   }
 
@@ -50,6 +53,7 @@ Dataset reporting_project_management {
     label: "Percent Issue Completed"
     type: "number"
     hidden: false
+    description: "Share of all issues that currently have a Deployed status."
     definition: @aql completed_issue / count(reporting_issues.id);;
   }
 
@@ -57,6 +61,7 @@ Dataset reporting_project_management {
     label: "L2W - % Issue Completed"
     type: "number"
     hidden: false
+    description: "Issue completion rate from two weeks earlier, based on completed date."
     definition: @aql percent_completion | relative_period(reporting_issues.completed_at, interval(-2 week), strict: true);;
   }
 
@@ -64,34 +69,35 @@ Dataset reporting_project_management {
     label: "Delta - % Issue Completed"
     type: "number"
     hidden: false
+    description: "Percentage-point difference between the current issue completion rate and the rate from two weeks earlier."
     definition: @aql percent_completion - l2w_issue_completed;;
   }
   metric duration_day {
     label: "Duration Day"
     type: "number"
     hidden: false
-    description: ""
+    description: "Average time an issue spends in a recorded workflow stage, expressed in days."
     definition: @aql avg(reporting_stage_duration.duration_hours) / 24;;
   }
   metric number_of_bug {
     label: "Number of Bug"
     type: "number"
     hidden: false
-    description: ""
+    description: "Count of issues labeled Bug."
     definition: @aql count(reporting_issues.id) | where(reporting_issues.label == "Bug");;
   }
   metric bug_ratio {
     label: "Bug Ratio"
     type: "number"
     hidden: false
-    description: ""
+    description: "Share of all issues that are labeled Bug."
     definition: @aql number_of_bug / count(reporting_issues.id);;
   }
   metric metric_43b65e2 {
     label: "Count of Reporting issues Id (filtered)"
     type: "number"
     hidden: false
-    description: ""
+    description: "Count of issues whose current status is Deployed; equivalent to Completed issue."
     definition: @aql count(reporting_issues.id)
 | where(reporting_issues.status == "Deployed");;
     format: ""
