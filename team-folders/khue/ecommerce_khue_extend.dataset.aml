@@ -1,0 +1,109 @@
+Dataset ecommerce_khue_copy {
+  label: 'eEcommerce Khue - Extend Solution'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    khue_ecommerce_categories,
+    khue_ecommerce_users,
+    khue_ecommerce_products,
+    khue_ecommerce_orders,
+    khue_ecommerce_order_items,
+    khue_ecommerce_merchants,
+    khue_ecommerce_fct_inventory,
+    khue_ecommerce_countries,
+    khue_ecommerce_cities,
+    khue_created_date,
+    khue_delivered_date,
+    khue_cancelled_date
+  ]
+  relationships: [
+    relationship(khue_ecommerce_cities.country_code > khue_ecommerce_countries.code, true),
+    relationship(khue_ecommerce_users.city_id > khue_ecommerce_cities.id, true),
+    relationship(khue_ecommerce_products.merchant_id > khue_ecommerce_merchants.id, true),
+    relationship(khue_ecommerce_orders.user_id > khue_ecommerce_users.id, true),
+    relationship(khue_ecommerce_order_items.order_id > khue_ecommerce_orders.id, true),
+    relationship(khue_ecommerce_fct_inventory.product_id > khue_ecommerce_products.id, true),
+    relationship(khue_ecommerce_products.category_id > khue_ecommerce_categories.id, true),
+    relationship(khue_ecommerce_order_items.product_id > khue_ecommerce_products.id, true),
+    relationship(khue_ecommerce_merchants.city_id > khue_ecommerce_cities.id, false),
+    relationship(khue_ecommerce_orders.created_date > khue_created_date.date, true),
+    relationship(khue_ecommerce_orders.delivered_at > khue_delivered_date.date, true),
+    relationship(khue_ecommerce_orders.cancelled_at > khue_cancelled_date.date, true)
+  ]
+  metric total_sales {
+    label: "Total Sales "
+    type: "number"
+    description: ""
+    definition: @aql sum(
+  khue_ecommerce_order_items,
+  khue_ecommerce_order_items.quantity * khue_ecommerce_products.price
+);;
+    format: "[\$\$]#,###"
+  }
+  metric total_orders {
+    label: "Total Orders"
+    type: "number"
+    description: ""
+    definition: @aql count_distinct(khue_ecommerce_orders.id);;
+    format: "none"
+  }
+  metric items_sold {
+    label: "Items Sold"
+    type: "number"
+    description: ""
+    definition: @aql sum(khue_ecommerce_order_items.quantity);;
+    format: "none"
+  }
+  metric average_order_value {
+    label: "Average Order Value"
+    type: "number"
+    description: ""
+    definition: @aql sum(
+  khue_ecommerce_order_items,
+  khue_ecommerce_order_items.quantity * khue_ecommerce_products.price
+) * 1.0
+/
+count_distinct(khue_ecommerce_orders.id);;
+    format: "none"
+  }
+  metric sales_by_merchant_city {
+    label: "Sales by Merchant City"
+    type: "number"
+    description: ""
+    definition: @aql sum(
+  khue_ecommerce_order_items,
+  khue_ecommerce_order_items.quantity * khue_ecommerce_products.price
+)
+| with_relationships(
+    khue_ecommerce_merchants.city_id > khue_ecommerce_cities.id
+  );;
+    format: "[\$\$]#,###"
+  }
+  metric order_created {
+    label: "Order created "
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql count_distinct(khue_ecommerce_orders.id)
+| where(khue_ecommerce_orders.created_date is not null);;
+    format: "#,###"
+  }
+  metric orders_delivered {
+    label: "Orders Delivered "
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql count_distinct(khue_ecommerce_orders.id)
+| where(khue_ecommerce_orders.delivered_at is not null);;
+    format: "#,###"
+  }
+  metric orders_cancelled {
+    label: "Orders Cancelled "
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql count_distinct(khue_ecommerce_orders.id)
+| where(khue_ecommerce_orders.cancelled_at is not null);;
+    format: "#,###"
+  }
+}

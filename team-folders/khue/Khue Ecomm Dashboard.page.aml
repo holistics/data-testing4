@@ -275,11 +275,98 @@ Dashboard khue_ecomm_dashboard {
       }
     }
   }
+  block v_4gxf: VizBlock {
+    label: 'Revenue % of Total by Category and Total Revenue  by Name'
+    viz: PivotTable {
+      dataset: ecommerce_khue
+      rows: [
+        VizFieldFull {
+          ref: r(khue_ecommerce_categories.name)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: r(ecommerce_khue.revenue_of_total_by_category)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_khue.total_revenue)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_total: true
+        show_column_total: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_16mh: VizBlock {
+    label: 'Acquisition Month Cohort, Month Number and 2 more'
+    viz: DataTable {
+      dataset: ecommerce_khue
+      filter {
+        field: r(ecommerce_khue, khue_ecommerce_orders.month_number)
+        operator: 'greater_than'
+        value: '-1'
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce_khue, khue_ecommerce_users.acquisition_month_cohort)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_khue, khue_ecommerce_orders.month_number)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_khue.cohort_customers)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_khue.retention_rate)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
 
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
-    height: 2140
+    height: 2580
     grid_size: 20
     auto_expand_vertically: true
     block title {
@@ -321,6 +408,14 @@ Dashboard khue_ecomm_dashboard {
       position: pos(20, 1700, 620, 420)
       layer: 9
     }
+    block v_4gxf {
+      position: pos(660, 1700, 620, 420)
+      layer: 10
+    }
+    block v_16mh {
+      position: pos(20, 2140, 620, 420)
+      layer: 11
+    }
     mobile {
       mode: 'auto'
     }
@@ -335,7 +430,8 @@ Dashboard khue_ecomm_dashboard {
             'v_1a84',
             'v_0e8a',
             'v_88u0',
-            'v_ghid'
+            'v_ghid',
+            'v_4gxf'
           ]
           disabled: true
         }
@@ -349,7 +445,8 @@ Dashboard khue_ecomm_dashboard {
             'v_8jkz',
             'v_0e8a',
             'v_88u0',
-            'v_ghid'
+            'v_ghid',
+            'v_4gxf'
           ]
           disabled: true
         }
@@ -362,7 +459,8 @@ Dashboard khue_ecomm_dashboard {
           block: [
             'v_0e8a',
             'v_88u0',
-            'v_ghid'
+            'v_ghid',
+            'v_4gxf'
           ]
           disabled: true
         }
@@ -377,7 +475,8 @@ Dashboard khue_ecomm_dashboard {
             'v_1a84',
             'v_ikpj',
             'v_88u0',
-            'v_ghid'
+            'v_ghid',
+            'v_4gxf'
           ]
           disabled: true
         }
@@ -389,7 +488,8 @@ Dashboard khue_ecomm_dashboard {
         CustomMapping {
           block: [
             'v_88u0',
-            'v_ghid'
+            'v_ghid',
+            'v_4gxf'
           ]
           disabled: true
         }
@@ -405,7 +505,8 @@ Dashboard khue_ecomm_dashboard {
             'v_ikpj',
             'v_0e8a',
             'v_duuk',
-            'v_ghid'
+            'v_ghid',
+            'v_4gxf'
           ]
           disabled: true
         }
@@ -415,7 +516,10 @@ Dashboard khue_ecomm_dashboard {
       from: 'v_zexm'
       to: [
         CustomMapping {
-          block: 'v_ghid'
+          block: [
+            'v_ghid',
+            'v_4gxf'
+          ]
           disabled: true
         }
       ]
@@ -431,7 +535,36 @@ Dashboard khue_ecomm_dashboard {
             'v_0e8a',
             'v_duuk',
             'v_88u0',
-            'v_zexm'
+            'v_zexm',
+            'v_4gxf'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_zlde'
+      to: [
+        CustomMapping {
+          block: 'v_4gxf'
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_4gxf'
+      to: [
+        CustomMapping {
+          block: [
+            'v_8jkz',
+            'v_1a84',
+            'v_ikpj',
+            'v_0e8a',
+            'v_duuk',
+            'v_88u0',
+            'v_zexm',
+            'v_ghid',
+            'v_zlde'
           ]
           disabled: true
         }
