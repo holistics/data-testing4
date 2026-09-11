@@ -5,7 +5,7 @@ Dashboard khai_personal_xnpsd {
     content: @md # Your title goes here ;;
   }
   block v_f0xo: VizBlock {
-    label: 'Name, Is Country and 3 more'
+    label: 'Name, Is Country and 3 more more'
     viz: DataTable {
       dataset: khai_ecommerce
       theme {
