@@ -2,7 +2,7 @@ Dashboard uyen_jxwhs {
   title: 'uyen'
   owner: 'uyen.nm@holistics.io'
   block v_z1we: VizBlock {
-    label: 'Sum of Delivery Attempts'
+    label: 'Sum of Delivery Attempts 2'
     viz: MetricKpi {
       dataset: dynamic_schema_dataset
       value: VizFieldFull {
@@ -26,7 +26,7 @@ Dashboard uyen_jxwhs {
     }
   }
   block v_upmb: VizBlock {
-    label: 'Sum of Delivery Attempts'
+    label: 'Sum of Delivery Attempts 1'
     viz: DataTable {
       dataset: dynamic_schema_dataset
       fields: [
