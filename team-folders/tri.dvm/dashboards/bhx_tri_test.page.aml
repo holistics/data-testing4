@@ -1,7 +1,6 @@
 Dashboard tri_test {
   title: 'BHX Tri Test'
   description: ''''''
-
   view: TabLayout {
     label: 'View 1'
     tab view_1: CanvasLayout {
@@ -143,6 +142,10 @@ Dashboard tri_test {
         position: pos(1440, 2080, 800, 300)
         layer: 7
       }
+      block v_1iho {
+        position: pos(1180, 1020, 620, 420)
+        layer: 13
+      }
       mobile {
         mode: 'auto'
       }
@@ -182,10 +185,8 @@ Dashboard tri_test {
       }
     }
   }
-
-  theme: H.themes.classic.extend(
-    {
-      custom_css: @css 
+  theme: H.themes.classic.extend({
+    custom_css: @css 
            #block-v_vr4k .dac-viz-block::before {
                  content: '';
                        position: absolute;
@@ -297,9 +298,7 @@ Dashboard tri_test {
  
 
     ;;
-
-    }
-  )
+  })
   block v1: VizBlock {
     label: 'CLV'
     viz: DataTable {
@@ -2040,6 +2039,43 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       }
     }
   }
+  block v_1iho: VizBlock {
+    label: 'Total price'
+    viz: DataTable {
+      dataset: bhx_demo_ecommerce
+      fields: [
+        VizFieldFull {
+          ref: r(bhx_ecommerce_products.total_price)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'custom_total_price'
+        }
+      ]
+      settings {
+        show_row_number: true
+        conditional_formats: [
+          ConditionalFormat {
+            key: 'custom_total_price'
+            format: SingleFormat {
+              condition {
+                operator: 'greater_than_equal'
+                value: 0
+              }
+              text_color: '#328159'
+              background_color: '#A50E43'
+            }
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'f1'
@@ -2074,30 +2110,6 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
         CustomMapping {
           block: 'f1'
           disabled: true
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'f_cross_raw'
-      to: [
-        CustomMapping {
-          block: [
-            'v_cross_raw',
-            'v_cross_joined'
-          ]
-          field: r(bhx_demo_raw_orders.order_date_param)
-        }
-      ]
-    },
-    FilterInteraction {
-      from: 'f_cross_first'
-      to: [
-        CustomMapping {
-          block: [
-            'v_cross_first',
-            'v_cross_joined'
-          ]
-          field: r(bhx_demo_first_order_state.order_date_param)
         }
       ]
     }
