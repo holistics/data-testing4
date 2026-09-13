@@ -11,201 +11,252 @@ Dashboard dashboard_test {
       dataset: data_dumbbell_dataset
       rows: [
         VizFieldFull {
-          label: 'Product Name'
           ref: r(data_dumbbell.product_name)
+          label: 'Product Name'
           format {
             type: 'text'
           }
-          uname: 'product_name'
         },
         VizFieldFull {
-          label: 'Added To Cart'
           ref: r(data_dumbbell.added_to_cart)
+          label: 'Added To Cart'
           format {
             type: 'number'
             pattern: '#,###0'
           }
         },
         VizFieldFull {
-          label: 'Purchased'
           ref: r(data_dumbbell.purchased)
+          label: 'Purchased'
           format {
             type: 'number'
             pattern: '#,###0'
           }
         },
         VizFieldFull {
-          label: 'Cart Abandonment'
           ref: r(data_dumbbell.cart_abandonment)
+          label: 'Cart Abandonment'
           format {
             type: 'number'
             pattern: '#,###0'
           }
         },
         VizFieldFull {
-          label: 'Conversion Rate'
           ref: r(data_dumbbell.conversion_rate)
+          label: 'Conversion Rate'
           format {
             type: 'number'
             pattern: '#,###0.0%'
           }
         },
         VizFieldFull {
-          label: 'Start Percent'
           ref: r(data_dumbbell.start_percent)
+          label: 'Start Percent'
           format {
             type: 'number'
             pattern: '#,###0.0%'
           }
         },
         VizFieldFull {
-          label: 'End Percent'
           ref: r(data_dumbbell.end_percent)
+          label: 'End Percent'
           format {
             type: 'number'
             pattern: '#,###0.0%'
           }
         },
         VizFieldFull {
-          label: 'Bar Width'
           ref: r(data_dumbbell.bar_width)
+          label: 'Bar Width'
           format {
             type: 'number'
             pattern: '#,###0.0%'
           }
         }
       ]
-      content: @md <style>
-  .conversion-list { display: grid; gap: 10px; max-width: 800px; font-family: inherit; }
-  .conversion-card { padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 10px; background: #FFFFFF; }
-  .conversion-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-  .conversion-title { margin: 0; color: #111827; font-size: 15px; font-weight: 700; line-height: 1.3; }
-  .conversion-rate { color: #047857; font-size: 13px; font-weight: 700; white-space: nowrap; }
-  .conversion-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
-  .conversion-metric { min-width: 0; padding: 8px 9px; border-radius: 7px; background: #F9FAFB; }
-  .conversion-metric.abandonment { background: #FFF7ED; }
-  .conversion-label { display: block; color: #6B7280; font-size: 11px; line-height: 1.25; }
-  .conversion-value { display: block; margin-top: 3px; color: #1F2937; font-size: 14px; font-weight: 700; }
-  .conversion-track-labels { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 6px; color: #6B7280; font-size: 11px; }
-  .conversion-track { position: relative; height: 10px; border-radius: 999px; background: #E5E7EB; }
-  .conversion-abandonment { position: absolute; top: 0; height: 10px; border-radius: 999px; background: #F97316; opacity: .9; }
-  .conversion-marker { position: absolute; top: 50%; width: 16px; height: 16px; box-sizing: border-box; border: 3px solid #FFFFFF; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 1px 3px rgba(0, 0, 0, .22); }
-  .conversion-marker.start { background: #6B7280; }
-  .conversion-marker.end { background: #2563EB; }
-  .conversion-track-note { display: flex; justify-content: space-between; margin-top: 8px; color: #6B7280; font-size: 10px; }
-  .pagination-treatment { display: flex; align-items: center; justify-content: flex-end; gap: 9px; padding: 6px 2px 0; color: #6B7280; font-size: 12px; }
-  .pagination-chevron { display: inline-flex; width: 24px; height: 24px; align-items: center; justify-content: center; border: 1px solid #E5E7EB; border-radius: 6px; color: #C4C9D1; background: #F9FAFB; font-size: 16px; line-height: 1; }
-  @media (max-width: 480px) { .conversion-metrics { grid-template-columns: 1fr; } .pagination-treatment { justify-content: center; flex-wrap: wrap; } }
-</style>
+      content: @md
+    <style>
+      .conversion-list {
+        display: grid;
+        gap: 10px;
+        max-width: 800px;
+      }
+      .conversion-card {
+        padding: 14px 16px;
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+        background: #FFFFFF;
+      }
+      .conversion-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .conversion-title {
+        margin: 0;
+        color: #111827;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+      .conversion-rate {
+        color: #047857;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .conversion-metrics,
+      .conversion-details {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .conversion-metrics {
+        margin-bottom: 12px;
+      }
+      .conversion-metric,
+      .conversion-detail {
+        min-width: 0;
+        padding: 8px 9px;
+        border-radius: 7px;
+        background: #F9FAFB;
+      }
+      .conversion-metric.abandonment {
+        background: #FFF7ED;
+      }
+      .conversion-label {
+        display: block;
+        color: #6B7280;
+        font-size: 11px;
+        line-height: 1.25;
+      }
+      .conversion-value {
+        display: block;
+        margin-top: 3px;
+        color: #1F2937;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .pagination-treatment {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid #E5E7EB;
+      }
+      .pagination-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 88px;
+        height: 32px;
+        padding: 0 12px;
+        border: 1px solid #E5E7EB;
+        border-radius: 7px;
+        background: #FFFFFF;
+        color: #374151;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .pagination-button:hover {
+        background: #F9FAFB;
+        border-color: #D1D5DB;
+        color: #111827;
+      }
+      @media (max-width: 480px) {
+        .conversion-metrics,
+        .conversion-details {
+          grid-template-columns: 1fr;
+        }
+        .pagination-treatment {
+          justify-content: center;
+        }
+      }
+    </style>
 
-<section class="conversion-list" aria-label="Product conversion performance">
-{% map(rows) %}
-  <article class="conversion-card" aria-label="Conversion performance for {{ `Product Name` }}">
-    <header class="conversion-header">
-      <h3 class="conversion-title">{{ `Product Name` }}</h3>
-      <span class="conversion-rate">{{ `Conversion Rate` }} conversion</span>
-    </header>
-    <div class="conversion-metrics" aria-label="Conversion counts">
-      <div class="conversion-metric"><span class="conversion-label">Added to cart</span><span class="conversion-value">{{ `Added To Cart` }}</span></div>
-      <div class="conversion-metric"><span class="conversion-label">Purchased</span><span class="conversion-value">{{ `Purchased` }}</span></div>
-      <div class="conversion-metric abandonment"><span class="conversion-label">Cart abandonment</span><span class="conversion-value">{{ `Cart Abandonment` }}</span></div>
-    </div>
-    <div aria-label="Conversion comparison from {{ `Start Percent` }} to {{ `End Percent` }} with {{ `Bar Width` }} abandonment">
-      <div class="conversion-track-labels"><span>Start: {{ `Start Percent` }}</span><span>End: {{ `End Percent` }}</span></div>
-      <div class="conversion-track">
-        <span class="conversion-abandonment" style="left: {{ `Start Percent`.raw }}%; width: {{ `Bar Width`.raw }}%;" aria-hidden="true"></span>
-        <span class="conversion-marker start" style="left: {{ `Start Percent`.raw }}%;" aria-hidden="true"></span>
-        <span class="conversion-marker end" style="left: {{ `End Percent`.raw }}%;" aria-hidden="true"></span>
-      </div>
-      <div class="conversion-track-note" aria-hidden="true"><span>Neutral start marker</span><span>100% track</span></div>
-    </div>
-  </article>
-{% end %}
-<style>
-  .pagination-treatment {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid #E5E7EB;
-  }
+    <section class="conversion-list" aria-label="Product conversion performance">
+    {% map(rows) %}
+      <article class="conversion-card" aria-label="Product conversion card">
+        <header class="conversion-header">
+          <h3 class="conversion-title">{{ `Product Name` }}</h3>
+          <span class="conversion-rate">{{ `Conversion Rate` }} conversion</span>
+        </header>
+        <div class="conversion-metrics" aria-label="Conversion counts">
+          <div class="conversion-metric">
+            <span class="conversion-label">Added to cart</span>
+            <span class="conversion-value">{{ `Added To Cart` }}</span>
+          </div>
+          <div class="conversion-metric">
+            <span class="conversion-label">Purchased</span>
+            <span class="conversion-value">{{ `Purchased` }}</span>
+          </div>
+          <div class="conversion-metric abandonment">
+            <span class="conversion-label">Cart abandonment</span>
+            <span class="conversion-value">{{ `Cart Abandonment` }}</span>
+          </div>
+        </div>
+        <div class="conversion-details" aria-label="Conversion comparison">
+          <div class="conversion-detail">
+            <span class="conversion-label">Start percent</span>
+            <span class="conversion-value">{{ `Start Percent` }}</span>
+          </div>
+          <div class="conversion-detail">
+            <span class="conversion-label">End percent</span>
+            <span class="conversion-value">{{ `End Percent` }}</span>
+          </div>
+          <div class="conversion-detail">
+            <span class="conversion-label">Bar width</span>
+            <span class="conversion-value">{{ `Bar Width` }}</span>
+          </div>
+        </div>
+      </article>
+    {% end %}
+    </section>
 
-  .pagination-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-width: 88px;
-    height: 32px;
-    padding: 0 12px;
-
-    border: 1px solid #E5E7EB;
-    border-radius: 7px;
-    background: #FFFFFF;
-
-    color: #374151;
-    font-size: 13px;
-    font-weight: 500;
-
-    cursor: pointer;
-    transition:
-      background 0.15s ease,
-      border-color 0.15s ease,
-      color 0.15s ease,
-      box-shadow 0.15s ease;
-  }
-
-  .pagination-button:hover {
-    background: #F9FAFB;
-    border-color: #D1D5DB;
-    color: #111827;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  }
-
-  .pagination-button:active {
-    background: #F3F4F6;
-  }
-
-  .pagination-chevron {
-    font-size: 14px;
-    line-height: 1;
-  }
-</style>
-
-<nav class="pagination-treatment" aria-label="Product card pagination">
-
-  <h-pagination type="previous">
-    <span class="pagination-button">
-      <span class="pagination-chevron">‹</span>
-      Previous
-    </span>
-  </h-pagination>
-
-  <h-pagination type="next">
-    <span class="pagination-button">
-      Next
-      <span class="pagination-chevron">›</span>
-    </span>
-  </h-pagination>
-
-</nav>
-
-<h-pagination type="next">Next</h-pagination>
-</section> ;;
+    <nav class="pagination-treatment" aria-label="Product card pagination">
+      <h-pagination type="previous"><span class="pagination-button">&#8249; Previous</span></h-pagination>
+      <h-pagination type="next"><span class="pagination-button">Next &#8250;</span></h-pagination>
+    </nav>
+  ;;
       settings {
         pagination_size: 3
         sorts: [
-          SortSetting {
-            key: 'product_name'
+          KeyBasedSortSetting {
+            key: 'data_dumbbell.product_name'
+            direction: 'asc'
+          },
+          KeyBasedSortSetting {
+            key: 'data_dumbbell.added_to_cart'
+            direction: 'asc'
+          },
+          KeyBasedSortSetting {
+            key: 'data_dumbbell.purchased'
+            direction: 'asc'
+          },
+          KeyBasedSortSetting {
+            key: 'data_dumbbell.cart_abandonment'
+            direction: 'asc'
+          },
+          KeyBasedSortSetting {
+            key: 'data_dumbbell.conversion_rate'
+            direction: 'asc'
+          },
+          KeyBasedSortSetting {
+            key: 'data_dumbbell.start_percent'
+            direction: 'asc'
+          },
+          KeyBasedSortSetting {
+            key: 'data_dumbbell.end_percent'
+            direction: 'asc'
+          },
+          KeyBasedSortSetting {
+            key: 'data_dumbbell.bar_width'
             direction: 'asc'
           }
         ]
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
       }
     }
   }
@@ -213,7 +264,7 @@ Dashboard dashboard_test {
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
-    height: 900
+    height: 880
     grid_size: 20
     auto_expand_vertically: true
     block title {
