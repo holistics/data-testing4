@@ -1,7 +1,6 @@
 Dashboard tri_test {
   title: 'BHX Tri Test'
   description: ''''''
-
   view: TabLayout {
     label: 'View 1'
     tab view_1: CanvasLayout {
@@ -186,10 +185,8 @@ Dashboard tri_test {
       }
     }
   }
-
-  theme: H.themes.classic.extend(
-    {
-      custom_css: @css 
+  theme: H.themes.classic.extend({
+    custom_css: @css 
            #block-v_vr4k .dac-viz-block::before {
                  content: '';
                        position: absolute;
@@ -301,9 +298,7 @@ Dashboard tri_test {
  
 
     ;;
-
-    }
-  )
+  })
   block v1: VizBlock {
     label: 'CLV'
     viz: DataTable {
