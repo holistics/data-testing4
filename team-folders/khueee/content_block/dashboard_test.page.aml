@@ -124,7 +124,7 @@ Dashboard dashboard_test {
       position: pos(20, 20, 1260, 60)
     }
     block product_conversion_performance {
-      position: pos(20, 100, 1260, 760)
+      position: pos(20, 100, 840, 760)
     }
     mobile {
       mode: 'auto'
