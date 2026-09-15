@@ -111,7 +111,7 @@ Dashboard dashboard_test {
 {% end %}
 </div> ;;
       settings {
-        pagination_size: 10
+        pagination_size: 4
         aggregate_awareness {
           enabled: true
           debug_comments: true
@@ -127,7 +127,7 @@ Dashboard dashboard_test {
     grid_size: 20
     auto_expand_vertically: true
     block title {
-      position: pos(20, 20, 1240, 60)
+      position: pos(20, 20, 1265, 60)
     }
     block product_conversion_performance {
       position: pos(20, 80, 1264, 660)
