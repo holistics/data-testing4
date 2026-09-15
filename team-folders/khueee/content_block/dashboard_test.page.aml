@@ -117,12 +117,12 @@ Dashboard dashboard_test {
 
   view: CanvasLayout {
     label: 'View 1'
-    width: 1300
+    width: 1280
     height: 600
     grid_size: 20
     auto_expand_vertically: true
     block title {
-      position: pos(20, 20, 1260, 60)
+      position: pos(20, 20, 1240, 60)
     }
     block product_conversion_performance {
       position: pos(20, 100, 1240, 480)
