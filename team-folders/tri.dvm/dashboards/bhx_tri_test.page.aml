@@ -21,19 +21,19 @@ Dashboard tri_test {
         layer: 4
       }
       block f2 {
-        position: pos(720, 500, 300, 100)
+        position: pos(720, 1400, 300, 100)
         layer: 5
       }
       block f3 {
-        position: pos(880, 460, 300, 100)
+        position: pos(880, 1360, 300, 100)
         layer: 6
       }
       block v3 {
-        position: pos(480, 640, 680, 2500)
+        position: pos(480, 1540, 680, 2500)
         layer: 7
       }
       block v4 {
-        position: pos(40, 380, 400, 300)
+        position: pos(40, 1280, 400, 300)
         layer: 8
       }
       block f4 {
@@ -41,19 +41,19 @@ Dashboard tri_test {
         layer: 9
       }
       block v_cx59 {
-        position: pos(20, 940, 400, 300)
+        position: pos(20, 1840, 400, 300)
         layer: 10
       }
       block f_rfyo {
-        position: pos(140, 1380, 300, 100)
+        position: pos(140, 2280, 300, 100)
         layer: 11
       }
       block v_2e00 {
-        position: pos(1380, 700, 400, 300)
+        position: pos(1380, 1600, 400, 300)
         layer: 1
       }
       block v_7q0t {
-        position: pos(1400, 400, 400, 300)
+        position: pos(1400, 1300, 400, 300)
         layer: 1
       }
       block v_revenue30d {
@@ -61,89 +61,97 @@ Dashboard tri_test {
         layer: 12
       }
       block v_qjiy {
-        position: pos(300, 3150, 400, 300)
+        position: pos(300, 4050, 400, 300)
       }
       block v_2qey {
-        position: pos(460, 3460, 400, 300)
+        position: pos(460, 4360, 400, 300)
         layer: 7
       }
       block v_foi4 {
-        position: pos(920, 3660, 400, 300)
+        position: pos(920, 4560, 400, 300)
       }
       block v_7wzb {
-        position: pos(580, 3960, 400, 300)
+        position: pos(580, 4860, 400, 300)
         layer: 7
       }
       block v_bjrk {
-        position: pos(980, 4200, 400, 300)
+        position: pos(980, 5100, 400, 300)
         layer: 7
       }
       block v_5vsg {
-        position: pos(440, 4400, 400, 300)
+        position: pos(440, 5300, 400, 300)
         layer: 7
       }
       block v_p4od {
-        position: pos(1080, 4840, 400, 300)
+        position: pos(1080, 5740, 400, 300)
         layer: 7
       }
       block v_dteb {
-        position: pos(40, 5060, 400, 300)
+        position: pos(40, 5960, 400, 300)
         layer: 7
       }
       block v_bvvg {
-        position: pos(720, 5180, 400, 300)
+        position: pos(720, 6080, 400, 300)
         layer: 7
       }
       block v_rygc {
-        position: pos(1240, 5280, 400, 300)
+        position: pos(1240, 6180, 400, 300)
         layer: 7
       }
       block v_qopv {
-        position: pos(840, 4520, 400, 300)
+        position: pos(840, 5420, 400, 300)
         layer: 7
       }
       block v_fpmq {
-        position: pos(1760, 5260, 400, 300)
+        position: pos(1760, 6160, 400, 300)
         layer: 7
       }
       block v_sfjs {
-        position: pos(940, 5620, 400, 300)
+        position: pos(940, 6520, 400, 300)
         layer: 7
       }
       block v_3w4m {
-        position: pos(300, 5740, 400, 300)
+        position: pos(300, 6640, 400, 300)
         layer: 7
       }
       block v_dvdk {
-        position: pos(920, 6070, 400, 300)
+        position: pos(920, 6970, 400, 300)
       }
       block v_qrg6 {
-        position: pos(140, 6260, 400, 300)
+        position: pos(140, 7160, 400, 300)
       }
       block v_meuy {
-        position: pos(340, 6760, 400, 300)
+        position: pos(340, 7660, 400, 300)
       }
       block v_2lxj {
-        position: pos(1040, 6680, 400, 300)
+        position: pos(1040, 7580, 400, 300)
       }
       block v_ttvl {
-        position: pos(1440, 7840, 400, 300)
+        position: pos(1440, 8740, 400, 300)
       }
       block v_ujwn {
-        position: pos(420, 7900, 400, 300)
+        position: pos(420, 8800, 400, 300)
       }
       block v_8g5c {
-        position: pos(560, 7380, 400, 300)
+        position: pos(560, 8280, 400, 300)
       }
       block v_7kq4 {
-        position: pos(1260, 7400, 400, 300)
+        position: pos(1260, 8300, 400, 300)
       }
       block v_vr4k {
-        position: pos(1440, 2080, 800, 300)
+        position: pos(1440, 2980, 800, 300)
         layer: 7
       }
       block v_7a8t {
-        position: pos(990, 130, 620, 420)
+        position: pos(740, 1200, 620, 420)
+        layer: 6
+      }
+      block v_5891 {
+        position: pos(1340, 320, 620, 420)
+        layer: 6
+      }
+      block v_uzeq {
+        position: pos(680, 400, 620, 420)
         layer: 6
       }
       mobile {
@@ -2076,103 +2084,950 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       }
     }
   }
-  interactions: [
-    FilterInteraction {
-      from: 'f1'
-      to: [
-        CustomMapping {
-          block: 'f_rfyo'
-          disabled: true
+  block v_5891: VizBlock {
+    label: 'Day Created At and Count of [Demo] Raw Orders (events st... copy'
+    viz: PivotTable {
+      dataset: bhx_demo_cross_model_date_filter
+      calculation count_of_demo_raw_orders_events_stand_in_orde {
+        label: 'Count of [Demo] Raw Orders (events stand-in) Order Id'
+        formula: @aql count(bhx_demo_raw_orders.order_id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      rows: [
+        VizFieldFull {
+          ref: r(bhx_demo_raw_orders.created_at)
+          transformation: 'datetrunc day'
+          format {
+            type: 'date'
+            pattern: 'LLL dd, yyyy'
+          }
         }
       ]
-    },
-    FilterInteraction {
-      from: 'f2'
-      to: [
-        CustomMapping {
-          block: 'f3'
-          disabled: true
+      values: [
+        VizFieldFull {
+          ref: 'count_of_demo_raw_orders_events_stand_in_orde'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
         }
       ]
-    },
-    FilterInteraction {
-      from: 'f3'
-      to: [
-        CustomMapping {
-          block: 'f2'
-          disabled: true
+      settings {
+        show_row_total: true
+        show_column_total: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
         }
-      ]
-    },
-    FilterInteraction {
-      from: 'f_rfyo'
-      to: [
-        CustomMapping {
-          block: 'f1'
-          disabled: true
+      }
+    }
+  }
+  block v_uzeq: VizBlock {
+    label: 'Day Created At and Count of [Demo] Raw Orders (events st... copy copy'
+    viz: LineChart {
+      dataset: bhx_demo_cross_model_date_filter
+      calculation count_of_demo_raw_orders_events_stand_in_orde {
+        label: 'Count of [Demo] Raw Orders (events stand-in) Order Id'
+        formula: @aql count(bhx_demo_raw_orders.order_id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      x_axis: VizFieldFull {
+        ref: r(bhx_demo_raw_orders.created_at)
+        transformation: 'datetrunc day'
+        format {
+          type: 'date'
+          pattern: 'LLL dd, yyyy'
         }
-      ]
-    },
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'count_of_demo_raw_orders_events_stand_in_orde'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  settings {
+    autorun_on_open: true
+  }
+  explicit_interactions: [
     FilterInteraction {
       from: 'f_cross_raw'
       to: [
-        CustomMapping {
-          block: 'v_7a8t'
-          disabled: true
-        }
+        'f_cross_first'
       ]
+      field: r(bhx_demo_raw_orders.order_date_param)
     },
     FilterInteraction {
       from: 'f_cross_first'
       to: [
-        CustomMapping {
-          block: 'v_7a8t'
-          disabled: true
-        }
+        'f_cross_raw'
+      ]
+      field: r(bhx_demo_first_order_state.order_date_param)
+    },
+    FilterInteraction {
+      from: 'f1'
+      to: [
+        'v1',
+        'v_cx59'
+      ]
+      field: r(order_master.status)
+    },
+    FilterInteraction {
+      from: 'f2'
+      to: [
+        'v2',
+        'v_vr4k'
+      ]
+      field: r(demo_ecommerce_metrics, order_master.clv_dimensionalized)
+    },
+    FilterInteraction {
+      from: 'f3'
+      to: [
+        'v2',
+        'v_vr4k'
+      ]
+      field: r(order_master.customer_lifetime_value)
+    },
+    FilterInteraction {
+      from: 'f4'
+      to: [
+        'v3'
+      ]
+      field: r(transactions_buyers_sellers.transaction_date)
+    },
+    FilterInteraction {
+      from: 'f_rfyo'
+      to: [
+        'v1',
+        'v_cx59'
+      ]
+      field: r(order_master.status)
+    },
+    FilterInteraction {
+      from: 'f_cross_raw'
+      to: [
+        'v_cross_raw',
+        'v_cross_first',
+        'v_cross_joined'
+      ]
+      field: r(bhx_demo_raw_orders.order_date_param)
+    },
+    FilterInteraction {
+      from: 'f_cross_first'
+      to: [
+        'v_cross_raw',
+        'v_cross_first',
+        'v_cross_joined'
+      ]
+      field: r(bhx_demo_first_order_state.order_date_param)
+    },
+    FilterInteraction {
+      from: 'v1'
+      to: [
+        'v_cx59'
+      ]
+    },
+    FilterInteraction {
+      from: 'v2'
+      to: [
+        'v_vr4k'
+      ]
+    },
+    FilterInteraction {
+      from: 'v4'
+      to: [
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_cx59'
+      to: [
+        'v1'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_2e00'
+      to: [
+        'v4',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_7q0t'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_qjiy'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_2qey'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_foi4'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_7wzb'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_bjrk'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_5vsg'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_p4od'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_dteb'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_bvvg'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_rygc'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_qopv'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_fpmq'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_sfjs'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_3w4m'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_dvdk'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_qrg6'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_meuy'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_2lxj'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_ttvl'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ujwn',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_ujwn'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_8g5c',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_8g5c'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_7kq4'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_7kq4'
+      to: [
+        'v4',
+        'v_2e00',
+        'v_7q0t',
+        'v_qjiy',
+        'v_2qey',
+        'v_foi4',
+        'v_7wzb',
+        'v_bjrk',
+        'v_5vsg',
+        'v_p4od',
+        'v_dteb',
+        'v_bvvg',
+        'v_rygc',
+        'v_qopv',
+        'v_fpmq',
+        'v_sfjs',
+        'v_3w4m',
+        'v_dvdk',
+        'v_qrg6',
+        'v_meuy',
+        'v_2lxj',
+        'v_ttvl',
+        'v_ujwn',
+        'v_8g5c'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_vr4k'
+      to: [
+        'v2'
       ]
     },
     FilterInteraction {
       from: 'v_cross_raw'
       to: [
-        CustomMapping {
-          block: 'v_7a8t'
-          disabled: true
-        }
+        'v_cross_first',
+        'v_cross_joined'
       ]
     },
     FilterInteraction {
       from: 'v_cross_first'
       to: [
-        CustomMapping {
-          block: 'v_7a8t'
-          disabled: true
-        }
+        'v_cross_raw',
+        'v_cross_joined'
       ]
     },
     FilterInteraction {
       from: 'v_cross_joined'
       to: [
-        CustomMapping {
-          block: 'v_7a8t'
-          disabled: true
-        }
+        'v_cross_raw',
+        'v_cross_first'
       ]
     },
     FilterInteraction {
       from: 'v_7a8t'
       to: [
-        CustomMapping {
-          block: [
-            'v_cross_raw',
-            'v_cross_first',
-            'v_cross_joined'
-          ]
-          disabled: true
-        }
+        'v_5891',
+        'v_uzeq'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_5891'
+      to: [
+        'v_7a8t',
+        'v_uzeq'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_uzeq'
+      to: [
+        'v_7a8t',
+        'v_5891'
       ]
     }
   ]
-  settings {
-    autorun_on_open: true
-  }
 }
