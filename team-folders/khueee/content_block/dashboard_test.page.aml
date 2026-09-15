@@ -72,7 +72,7 @@ Dashboard dashboard_test {
         }
       ]
       content: @md <style>
-  .product-conversion-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 8px; }
+  .product-conversion-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; max-height: 540px; overflow-y: auto; overscroll-behavior: contain; padding: 8px 12px 8px 8px; }
   .product-conversion-card { overflow: hidden; border: 1px solid #E5E7EB; border-radius: 14px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 4px 10px rgba(15,23,42,0.04); }
   .product-conversion-card-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 18px; border-bottom: 1px solid #EEF2F6; background: #FAFBFC; }
   .product-conversion-card-title { margin: 0; color: #0F172A; font-size: 16px; font-weight: 700; line-height: 1.35; }
@@ -83,10 +83,19 @@ Dashboard dashboard_test {
   .product-conversion-metric.abandonment .product-conversion-value { color: #B45309; }
   .product-conversion-label { color: #64748B; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
   .product-conversion-value { margin-top: 4px; color: #0F172A; font-size: 17px; font-weight: 700; }
-  .pagination-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid #E5E7EB; }
-  h-pagination { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border: 1px solid #D8DEE6; border-radius: 999px; background: #FFFFFF; color: #334155; font-size: 13px; font-weight: 600; cursor: pointer; }
-  h-pagination:hover { background: #EFF6FF; border-color: #93C5FD; color: #1D4ED8; }
+  .pagination-row.top { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 18px; padding: 10px 12px; border: 1px solid #BFDBFE; border-radius: 12px; background: #F8FBFF; box-shadow: 0 4px 12px rgba(15,23,42,0.10); }
+  .pagination-label { color: #475569; font-size: 13px; font-weight: 700; }
+  .pagination-actions { display: flex; align-items: center; gap: 8px; }
+  h-pagination { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 0 14px; border: 1px solid #BFDBFE; border-radius: 8px; background: #FFFFFF; color: #1D4ED8; font-size: 13px; font-weight: 700; cursor: pointer; }
+  h-pagination:hover { background: #EFF6FF; border-color: #60A5FA; }
 </style>
+<div class="pagination-row top">
+  <span class="pagination-label">Browse product cards</span>
+  <div class="pagination-actions">
+    <h-pagination type="previous">← Previous</h-pagination>
+    <h-pagination type="next">Next →</h-pagination>
+  </div>
+</div>
 <div class="product-conversion-cards">
 {% map(rows) %}
   <article class="product-conversion-card">
@@ -100,13 +109,9 @@ Dashboard dashboard_test {
     </div>
   </article>
 {% end %}
-</div>
-<div class="pagination-row">
-<h-pagination type="previous">← Previous</h-pagination>
-<h-pagination type="next">Next →</h-pagination>
 </div> ;;
       settings {
-        pagination_size: 3
+        pagination_size: 10
         aggregate_awareness {
           enabled: true
           debug_comments: true
@@ -118,14 +123,14 @@ Dashboard dashboard_test {
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
-    height: 620
+    height: 780
     grid_size: 20
     auto_expand_vertically: true
     block title {
       position: pos(20, 20, 1260, 60)
     }
     block product_conversion_performance {
-      position: pos(20, 120, 1240, 480)
+      position: pos(20, 80, 1264, 660)
     }
     mobile {
       mode: 'auto'
