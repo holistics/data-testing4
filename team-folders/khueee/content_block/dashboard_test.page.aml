@@ -127,7 +127,7 @@ Dashboard dashboard_test {
     grid_size: 20
     auto_expand_vertically: true
     block title {
-      position: pos(20, 20, 1260, 60)
+      position: pos(20, 20, 1240, 60)
     }
     block product_conversion_performance {
       position: pos(20, 80, 1264, 660)
