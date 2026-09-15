@@ -118,19 +118,19 @@ Dashboard dashboard_test {
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
-    height: 980
+    height: 620
     grid_size: 20
     auto_expand_vertically: true
     block title {
       position: pos(20, 20, 1260, 60)
     }
     block product_conversion_performance {
-      position: pos(20, 120, 1240, 760)
+      position: pos(20, 120, 1240, 480)
     }
     mobile {
       mode: 'auto'
     }
   }
-  theme: H.themes.oasis
+  theme: ai_1773979634521_3
   explicit_interactions: []
 }
