@@ -1,0 +1,265 @@
+Dashboard truncation_ft_test {
+  title: 'Truncation FT test'
+  description: ''
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 760
+    grid_size: 20
+    auto_expand_vertically: true
+    mobile { mode: 'auto' }
+    block v_bar_240 { position: pos(20, 20, 240, 340) }
+    block v_bar_380 { position: pos(280, 20, 380, 340) }
+    block v_bar_580 { position: pos(680, 20, 580, 340) }
+    block v_col_240 { position: pos(20, 380, 240, 340) }
+    block v_col_380 { position: pos(280, 380, 380, 340) }
+    block v_col_580 { position: pos(680, 380, 580, 340) }
+  }
+
+  block v_bar_240: VizBlock {
+    label: 'BAR 240px (customer case)'
+    viz: BarChart {
+      dataset: bhx_demo_ecommerce
+      calculation long_category: VizCalculation {
+        label: 'Long Category Label'
+        calc_type: 'dimension'
+        data_type: 'text'
+        formula: @aql concat(bhx_ecommerce_products.name, ' - a deliberately very long category label for truncation testing');;
+        model: bhx_ecommerce_products
+      }
+      calculation order_count: VizCalculation {
+        label: 'Order Count'
+        calc_type: 'measure'
+        data_type: 'number'
+        formula: @aql count(bhx_ecommerce_orders.id);;
+        format {
+          type: 'number'
+          pattern: 'none'
+        }
+      }
+      x_axis: VizFieldFull {
+        ref: 'long_category'
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'order_count'
+          }
+        }
+      }
+      settings {
+        row_limit: 6
+        sort {
+          field_index: 1
+          direction: 'desc'
+        }
+      }
+    }
+  }
+
+  block v_bar_380: VizBlock {
+    label: 'BAR 380px (customer case)'
+    viz: BarChart {
+      dataset: bhx_demo_ecommerce
+      calculation long_category: VizCalculation {
+        label: 'Long Category Label'
+        calc_type: 'dimension'
+        data_type: 'text'
+        formula: @aql concat(bhx_ecommerce_products.name, ' - a deliberately very long category label for truncation testing');;
+        model: bhx_ecommerce_products
+      }
+      calculation order_count: VizCalculation {
+        label: 'Order Count'
+        calc_type: 'measure'
+        data_type: 'number'
+        formula: @aql count(bhx_ecommerce_orders.id);;
+        format {
+          type: 'number'
+          pattern: 'none'
+        }
+      }
+      x_axis: VizFieldFull {
+        ref: 'long_category'
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'order_count'
+          }
+        }
+      }
+      settings {
+        row_limit: 6
+        sort {
+          field_index: 1
+          direction: 'desc'
+        }
+      }
+    }
+  }
+
+  block v_bar_580: VizBlock {
+    label: 'BAR 580px (customer case)'
+    viz: BarChart {
+      dataset: bhx_demo_ecommerce
+      calculation long_category: VizCalculation {
+        label: 'Long Category Label'
+        calc_type: 'dimension'
+        data_type: 'text'
+        formula: @aql concat(bhx_ecommerce_products.name, ' - a deliberately very long category label for truncation testing');;
+        model: bhx_ecommerce_products
+      }
+      calculation order_count: VizCalculation {
+        label: 'Order Count'
+        calc_type: 'measure'
+        data_type: 'number'
+        formula: @aql count(bhx_ecommerce_orders.id);;
+        format {
+          type: 'number'
+          pattern: 'none'
+        }
+      }
+      x_axis: VizFieldFull {
+        ref: 'long_category'
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'order_count'
+          }
+        }
+      }
+      settings {
+        row_limit: 6
+        sort {
+          field_index: 1
+          direction: 'desc'
+        }
+      }
+    }
+  }
+
+  block v_col_240: VizBlock {
+    label: 'COLUMN 240px'
+    viz: ColumnChart {
+      dataset: bhx_demo_ecommerce
+      calculation long_category: VizCalculation {
+        label: 'Long Category Label'
+        calc_type: 'dimension'
+        data_type: 'text'
+        formula: @aql concat(bhx_ecommerce_products.name, ' - a deliberately very long category label for truncation testing');;
+        model: bhx_ecommerce_products
+      }
+      calculation order_count: VizCalculation {
+        label: 'Order Count'
+        calc_type: 'measure'
+        data_type: 'number'
+        formula: @aql count(bhx_ecommerce_orders.id);;
+        format {
+          type: 'number'
+          pattern: 'none'
+        }
+      }
+      x_axis: VizFieldFull {
+        ref: 'long_category'
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'order_count'
+          }
+        }
+      }
+      settings {
+        row_limit: 6
+        sort {
+          field_index: 1
+          direction: 'desc'
+        }
+      }
+    }
+  }
+
+  block v_col_380: VizBlock {
+    label: 'COLUMN 380px'
+    viz: ColumnChart {
+      dataset: bhx_demo_ecommerce
+      calculation long_category: VizCalculation {
+        label: 'Long Category Label'
+        calc_type: 'dimension'
+        data_type: 'text'
+        formula: @aql concat(bhx_ecommerce_products.name, ' - a deliberately very long category label for truncation testing');;
+        model: bhx_ecommerce_products
+      }
+      calculation order_count: VizCalculation {
+        label: 'Order Count'
+        calc_type: 'measure'
+        data_type: 'number'
+        formula: @aql count(bhx_ecommerce_orders.id);;
+        format {
+          type: 'number'
+          pattern: 'none'
+        }
+      }
+      x_axis: VizFieldFull {
+        ref: 'long_category'
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'order_count'
+          }
+        }
+      }
+      settings {
+        row_limit: 6
+        sort {
+          field_index: 1
+          direction: 'desc'
+        }
+      }
+    }
+  }
+
+  block v_col_580: VizBlock {
+    label: 'COLUMN 580px'
+    viz: ColumnChart {
+      dataset: bhx_demo_ecommerce
+      calculation long_category: VizCalculation {
+        label: 'Long Category Label'
+        calc_type: 'dimension'
+        data_type: 'text'
+        formula: @aql concat(bhx_ecommerce_products.name, ' - a deliberately very long category label for truncation testing');;
+        model: bhx_ecommerce_products
+      }
+      calculation order_count: VizCalculation {
+        label: 'Order Count'
+        calc_type: 'measure'
+        data_type: 'number'
+        formula: @aql count(bhx_ecommerce_orders.id);;
+        format {
+          type: 'number'
+          pattern: 'none'
+        }
+      }
+      x_axis: VizFieldFull {
+        ref: 'long_category'
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'order_count'
+          }
+        }
+      }
+      settings {
+        row_limit: 6
+        sort {
+          field_index: 1
+          direction: 'desc'
+        }
+      }
+    }
+  }
+}
