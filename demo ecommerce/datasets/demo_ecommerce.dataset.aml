@@ -336,11 +336,4 @@ Dataset demo_ecommerce {
       )
      ;;
   }
-  metric list_of_cities {
-    label: "List of Cities"
-    type: "json"
-    hidden: false
-    description: ""
-    definition: @aql ecommerce_cities;;
-  }
 }
