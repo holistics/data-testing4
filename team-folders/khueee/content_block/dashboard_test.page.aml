@@ -88,10 +88,12 @@ Dashboard dashboard_test {
   .pagination-actions { display: flex; align-items: center; gap: 8px; }
   h-pagination { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 0 14px; border: 1px solid #BFDBFE; border-radius: 8px; background: #FFFFFF; color: #1D4ED8; font-size: 13px; font-weight: 700; cursor: pointer; }
   h-pagination:hover { background: #EFF6FF; border-color: #60A5FA; }
+  .pagination-page-indicator { color: #1D4ED8; font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 8px; background: #EFF6FF; white-space: nowrap; }
 </style>
 <div class="pagination-row top">
   <span class="pagination-label">Browse product cards</span>
   <div class="pagination-actions">
+    <span class="pagination-page-indicator">Page {{ meta.page }} of {{ meta.page_count }}</span>
     <h-pagination type="previous">← Previous</h-pagination>
     <h-pagination type="next">Next →</h-pagination>
   </div>
@@ -109,7 +111,7 @@ Dashboard dashboard_test {
     </div>
   </article>
 {% end %}
-</div> ;;
+</div>;;
       settings {
         pagination_size: 4
         aggregate_awareness {
@@ -123,14 +125,14 @@ Dashboard dashboard_test {
   view: CanvasLayout {
     label: 'View 1'
     width: 1300
-    height: 780
+    height: 786
     grid_size: 20
     auto_expand_vertically: true
     block title {
       position: pos(20, 20, 1265, 60)
     }
     block product_conversion_performance {
-      position: pos(20, 80, 1264, 660)
+      position: pos(20, 106, 1264, 660)
     }
     mobile {
       mode: 'auto'
