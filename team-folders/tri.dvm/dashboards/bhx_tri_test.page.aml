@@ -154,6 +154,10 @@ Dashboard tri_test {
         position: pos(680, 400, 620, 420)
         layer: 6
       }
+      block v_huwn {
+        position: pos(20, 380, 620, 420)
+        layer: 13
+      }
       mobile {
         mode: 'auto'
       }
@@ -2163,6 +2167,52 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       }
     }
   }
+  block v_huwn: VizBlock {
+    label: 'Count of [Demo] Raw Orders (events st... by month '
+    viz: PivotTable {
+      dataset: bhx_demo_cross_model_date_filter
+      calculation month {
+        label: 'month '
+        formula: @aql bhx_demo_raw_orders.created_at | month();;
+        calc_type: 'dimension'
+        data_type: 'datetime'
+        model: bhx_demo_raw_orders
+      }
+      calculation count_of_demo_raw_orders_events_stand_in_orde {
+        label: 'Count of [Demo] Raw Orders (events stand-in) Order Id'
+        formula: @aql count(bhx_demo_raw_orders.order_id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      rows: [
+        VizFieldFull {
+          ref: ref('bhx_demo_raw_orders', 'month')
+          format {
+            type: 'date'
+            pattern: 'LLL dd'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: 'count_of_demo_raw_orders_events_stand_in_orde'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_total: true
+        show_column_total: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   settings {
     autorun_on_open: true
   }
@@ -3012,21 +3062,32 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       from: 'v_7a8t'
       to: [
         'v_5891',
-        'v_uzeq'
+        'v_uzeq',
+        'v_huwn'
       ]
     },
     FilterInteraction {
       from: 'v_5891'
       to: [
         'v_7a8t',
-        'v_uzeq'
+        'v_uzeq',
+        'v_huwn'
       ]
     },
     FilterInteraction {
       from: 'v_uzeq'
       to: [
         'v_7a8t',
-        'v_5891'
+        'v_5891',
+        'v_huwn'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_huwn'
+      to: [
+        'v_7a8t',
+        'v_5891',
+        'v_uzeq'
       ]
     }
   ]
