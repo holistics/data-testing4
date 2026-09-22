@@ -388,59 +388,56 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v5: VizBlock {
-    label: 'GMV by Continent New Palette (2024)'
+    label: 'GMV by Continent: 2023 vs 2024'
     description: 'This is description of the block'
     viz: ColumnChart {
       dataset: demo_ecommerce
-      calculation adhoc_dim {
-        label: 'My adhoc dim'
-        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+      calculation year_gender_label {
+        label: 'Year / Gender'
+        formula: @aql concat(
+      cast(date_part('year', order_master.order_created_at), 'text'),
+      ' - ',
+      ecommerce_users.gender
+    );;
         calc_type: 'dimension'
         data_type: 'text'
         model: order_master
       }
-      filter {
-        field: r(order_master.order_created_at)
-        operator: 'matches'
-        value: '2024'
-      }
+      conditions: [
+        'order_master.order_created_at matches @(2023 - 2024)'
+      ]
       x_axis: VizFieldFull {
+        label: 'Continent'
         ref: r(ecommerce_countries.continent_name)
-        format {
-          type: 'text'
-        }
       }
       legend: VizFieldFull {
-        ref: r(ecommerce_users.gender)
-        format {
-          type: 'text'
-        }
+        label: 'Year / Gender'
+        ref: ref('order_master', 'year_gender_label')
       }
       y_axis {
+        label: 'GMV by Continent: 2023 vs 2024'
         settings {
           show_data_label_by: 'value'
         }
         series {
           field: VizFieldFull {
-            label: 'GMV'
+            label: 'GMV by Continent: 2023 vs 2024'
             ref: r(order_master.gmv)
             format {
               type: 'number'
               pattern: '#,###'
             }
           }
-          settings {
-            color_palette: H.color_palettes.pastel_1
-          }
         }
       }
       settings {
         row_limit: 5000
-        x_axis_show_null_datetime: false
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'xaxis'
         }
+        x_axis_label: 'Continent'
       }
     }
   }
