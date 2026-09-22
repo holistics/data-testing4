@@ -392,50 +392,56 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     description: 'This is description of the block'
     viz: ColumnChart {
       dataset: demo_ecommerce
-      calculation year_gender_label {
-        label: 'Year / Gender'
-        formula: @aql concat(
-      cast(date_part('year', order_master.order_created_at), 'text'),
-      ' - ',
-      ecommerce_users.gender
-    );;
-        calc_type: 'dimension'
-        data_type: 'text'
-        model: order_master
+      calculation gmv_2024 {
+        label: '2024'
+        formula: @aql order_master.gmv | where(order_master.order_created_at is @2024);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation gmv_2023 {
+        label: '2023'
+        formula: @aql order_master.gmv | where(order_master.order_created_at is @2023);;
+        calc_type: 'measure'
+        data_type: 'number'
       }
       x_axis: VizFieldFull {
         label: 'Continent'
         ref: r(ecommerce_countries.continent_name)
       }
       y_axis {
-        label: 'GMV by Continent: 2023 vs 2024'
+        label: 'GMV by Continent: 2024 vs 2023'
         settings {
           show_data_label_by: 'value'
         }
         series {
           field: VizFieldFull {
-            label: 'GMV by Continent'
-            ref: r(order_master.gmv)
+            label: '2024'
+            ref: 'gmv_2024'
             format {
               type: 'number'
-              pattern: '#,###'
+              pattern: '#,###0.00'
+            }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: '2023'
+            ref: 'gmv_2023'
+            format {
+              type: 'number'
+              pattern: '#,###0.00'
             }
           }
         }
       }
       settings {
-        row_limit: 5000
         sort {
           field_index: 0
           direction: 'asc'
           type: 'xaxis'
         }
+        legend_label: 'top'
         x_axis_label: 'Continent'
-        x_axis_show_null_datetime: true
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
       }
     }
   }
