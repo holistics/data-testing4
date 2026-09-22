@@ -15,10 +15,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      height: 1680
+      height: 1160
       grid_size: 20
       block v3 {
-        position: pos(20, 820, 1160, 420)
+        position: pos(20, 280, 1160, 420)
         layer: 3
       }
       block t3 {
@@ -78,7 +78,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 4
       }
       block v_m2xo {
-        position: pos(20, 1260, 560, 400)
+        position: pos(20, 720, 560, 400)
         layer: 16
       }
       block d_date_drill {
@@ -86,7 +86,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 1
       }
       block v_0725 {
-        position: pos(600, 1260, 580, 400)
+        position: pos(600, 720, 580, 400)
         layer: 17
       }
       mobile {
@@ -325,11 +325,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'Total Revenue and Number of Order by Month'
     viz: CombinationChart {
       dataset: vyhuynh_ecommerce_dataset
-      filter {
-        field: r(vyht_ecommerce_orders_1.created_at)
-        operator: 'matches'
-        value: '2024'
-      }
       x_axis: VizFieldFull {
         label: 'Order Month'
         ref: r(vyht_ecommerce_orders_1.created_at)
