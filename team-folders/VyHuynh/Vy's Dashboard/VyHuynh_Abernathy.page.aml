@@ -388,7 +388,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v5: VizBlock {
-    label: 'GMV by Continent: 2023 vs 2024'
+    label: 'GMV by Continent'
     description: 'This is description of the block'
     viz: ColumnChart {
       dataset: demo_ecommerce
@@ -403,16 +403,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         data_type: 'text'
         model: order_master
       }
-      conditions: [
-        'order_master.order_created_at matches @(2023 - 2024)'
-      ]
       x_axis: VizFieldFull {
         label: 'Continent'
         ref: r(ecommerce_countries.continent_name)
-      }
-      legend: VizFieldFull {
-        label: 'Year / Gender'
-        ref: ref('order_master', 'year_gender_label')
       }
       y_axis {
         label: 'GMV by Continent: 2023 vs 2024'
@@ -421,7 +414,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         }
         series {
           field: VizFieldFull {
-            label: 'GMV by Continent: 2023 vs 2024'
+            label: 'GMV by Continent'
             ref: r(order_master.gmv)
             format {
               type: 'number'
@@ -438,6 +431,11 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           type: 'xaxis'
         }
         x_axis_label: 'Continent'
+        x_axis_show_null_datetime: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
       }
     }
   }
