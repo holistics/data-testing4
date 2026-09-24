@@ -1,0 +1,4 @@
+scenario=Raw SKU Is value-list after full dashboard navigation
+status=loaded
+elapsed_seconds=0.103
+[]

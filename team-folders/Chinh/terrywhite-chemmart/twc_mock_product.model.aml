@@ -1,0 +1,68 @@
+Model twc_mock_product {
+  type: 'query'
+  label: 'TWC Mock Product'
+  description: 'Product and buyer-group attributes visible in the Christo Rootman summary-table screenshot.'
+  data_source_name: 'demodb'
+
+  dimension product_key {
+    label: 'Product Key'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.product_key }};;
+  }
+
+  dimension product_buyer_group {
+    label: 'Buyer Group'
+    type: 'text'
+    definition: @sql {{ #SOURCE.product_buyer_group }};;
+  }
+
+  dimension brand {
+    label: 'Brand'
+    type: 'text'
+    definition: @sql {{ #SOURCE.brand }};;
+  }
+
+  dimension product_fos_disp {
+    label: 'Product FOS Display'
+    type: 'text'
+    definition: @sql {{ #SOURCE.product_fos_disp }};;
+  }
+
+  dimension buyer_group_sort {
+    label: 'Buyer Group Sort'
+    type: 'number'
+    definition: @sql {{ #SOURCE.buyer_group_sort }};;
+  }
+
+  dimension product_weight {
+    label: 'Product Weight'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.product_weight }};;
+  }
+
+  owner: 'chinh.dm@holistics.io'
+
+  query: @sql
+    select 'P001' as product_key, 'Cosmetics & Fragrance' as product_buyer_group, 'Glow Lab' as brand, 'FOS Product' as product_fos_disp, 1 as buyer_group_sort, 9500 as product_weight
+    union all select 'P002', 'Cosmetics & Fragrance', 'Aroma Co', 'FOS Product', 1, 8200
+    union all select 'P003', 'Daily Living', 'Care Plus', 'FOS Product', 2, 7000
+    union all select 'P004', 'Daily Living', 'Home Health', 'FOS Product', 2, 6300
+    union all select 'P005', 'Health Allergy', 'ClearAir', 'FOS Product', 3, 8800
+    union all select 'P006', 'Health Allergy', 'AllerFree', 'FOS Product', 3, 7600
+    union all select 'P007', 'Health Pain', 'ReliefMax', 'FOS Product', 4, 10400
+    union all select 'P008', 'Health Pain', 'PainAway', 'FOS Product', 4, 9100
+    union all select 'P009', 'Health Services', 'ClinicCare', 'FOS Product', 5, 5400
+    union all select 'P010', 'Health Services', 'ScriptAssist', 'FOS Product', 5, 4700
+    union all select 'P011', 'Skin Care', 'DermaSoft', 'FOS Product', 6, 9900
+    union all select 'P012', 'Skin Care', 'SunShield', 'FOS Product', 6, 8600
+    union all select 'P013', 'Weight & Sports Medicine', 'ActiveLife', 'FOS Product', 7, 7300
+    union all select 'P014', 'Weight & Sports Medicine', 'SportsRx', 'FOS Product', 7, 6500
+    union all select 'P015', 'Wellness', 'VitaWell', 'FOS Product', 8, 8100
+    union all select 'P016', 'Wellness', 'MindBody', 'FOS Product', 8, 6900
+    union all select 'P017', 'Prescription', 'Dispensary Core', 'Dispensary Product', 99, 12000;;
+
+  models: [
+  ]
+}

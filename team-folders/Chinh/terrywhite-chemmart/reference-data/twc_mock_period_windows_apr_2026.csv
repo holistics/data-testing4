@@ -1,0 +1,5 @@
+period_key,window_variant,window_label,window_start_date,window_end_date
+2026-04,selected,Selected Date Filter Summary,2026-04-01,2026-04-30
+2026-04,py,Previous Year,2025-04-01,2025-04-30
+2026-04,fytd,Financial Year to Date,2025-07-01,2026-04-30
+2026-04,pfytd,Previous Financial Year to Date,2024-07-01,2025-04-30

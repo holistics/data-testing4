@@ -1,0 +1,13 @@
+Dataset blueprint_prep_sku_filter {
+  label: 'Blueprint Prep SKU Regex Workaround'
+  description: 'Reproduces Tan Huynh’s regex query-parameter workaround separately from the original filter reproduction.'
+  data_source_name: 'demodb'
+  owner: 'chinh.dm@holistics.io'
+
+  models: [
+    blueprint_prep_sku_inventory,
+    blueprint_prep_query_params,
+  ]
+
+  relationships: []
+}

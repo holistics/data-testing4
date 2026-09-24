@@ -1,0 +1,18 @@
+product_key,product_buyer_group,brand,product_fos_disp,buyer_group_sort,product_weight
+P001,Cosmetics & Fragrance,Glow Lab,FOS Product,1,9500
+P002,Cosmetics & Fragrance,Aroma Co,FOS Product,1,8200
+P003,Daily Living,Care Plus,FOS Product,2,7000
+P004,Daily Living,Home Health,FOS Product,2,6300
+P005,Health Allergy,ClearAir,FOS Product,3,8800
+P006,Health Allergy,AllerFree,FOS Product,3,7600
+P007,Health Pain,ReliefMax,FOS Product,4,10400
+P008,Health Pain,PainAway,FOS Product,4,9100
+P009,Health Services,ClinicCare,FOS Product,5,5400
+P010,Health Services,ScriptAssist,FOS Product,5,4700
+P011,Skin Care,DermaSoft,FOS Product,6,9900
+P012,Skin Care,SunShield,FOS Product,6,8600
+P013,Weight & Sports Medicine,ActiveLife,FOS Product,7,7300
+P014,Weight & Sports Medicine,SportsRx,FOS Product,7,6500
+P015,Wellness,VitaWell,FOS Product,8,8100
+P016,Wellness,MindBody,FOS Product,8,6900
+P017,Prescription,Dispensary Core,Dispensary Product,99,12000

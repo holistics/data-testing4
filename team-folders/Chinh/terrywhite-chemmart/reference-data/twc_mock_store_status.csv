@@ -1,0 +1,5 @@
+store_key,store_name,store_region,historic_store_phase,historic_store_status,is_like_for_like,store_weight
+S001,TWC Metro Central,Metro,Operational,Active,Yes,1.00
+S002,TWC Regional North,Regional,Operational,Active,Yes,0.72
+S003,TWC New Trial,Metro,Operational,Active,No,0.35
+S004,TWC Closed Legacy,Regional,Closed,Inactive,Yes,0.25

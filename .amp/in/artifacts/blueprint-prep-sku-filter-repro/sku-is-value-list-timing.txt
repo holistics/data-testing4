@@ -1,0 +1,4 @@
+scenario=Raw SKU Is value-list open
+status=timeout
+visible_option_count=0
+elapsed_seconds=25.174

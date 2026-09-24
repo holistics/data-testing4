@@ -1,0 +1,61 @@
+Model twc_mock_store_status {
+  type: 'query'
+  label: 'TWC Mock Store Status'
+  description: 'Store-status attributes needed for Christo Rootman Operational, Active, Like-for-Like report filters.'
+  data_source_name: 'demodb'
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.store_key }};;
+  }
+
+  dimension store_name {
+    label: 'Store Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.store_name }};;
+  }
+
+  dimension store_region {
+    label: 'Store Region'
+    type: 'text'
+    definition: @sql {{ #SOURCE.store_region }};;
+  }
+
+  dimension historic_store_phase {
+    label: 'Historic Store Phase'
+    type: 'text'
+    definition: @sql {{ #SOURCE.historic_store_phase }};;
+  }
+
+  dimension historic_store_status {
+    label: 'Historic Store Status'
+    type: 'text'
+    definition: @sql {{ #SOURCE.historic_store_status }};;
+  }
+
+  dimension is_like_for_like {
+    label: 'Is Like For Like'
+    type: 'text'
+    definition: @sql {{ #SOURCE.is_like_for_like }};;
+  }
+
+  dimension store_weight {
+    label: 'Store Weight'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.store_weight }};;
+  }
+
+  owner: 'chinh.dm@holistics.io'
+
+  query: @sql
+    select 'S001' as store_key, 'TWC Metro Central' as store_name, 'Metro' as store_region, 'Operational' as historic_store_phase, 'Active' as historic_store_status, 'Yes' as is_like_for_like, 1.00 as store_weight
+    union all select 'S002', 'TWC Regional North', 'Regional', 'Operational', 'Active', 'Yes', 0.72
+    union all select 'S003', 'TWC New Trial', 'Metro', 'Operational', 'Active', 'No', 0.35
+    union all select 'S004', 'TWC Closed Legacy', 'Regional', 'Closed', 'Inactive', 'Yes', 0.25;;
+
+  models: [
+  ]
+}

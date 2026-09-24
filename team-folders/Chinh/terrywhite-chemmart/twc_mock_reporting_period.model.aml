@@ -1,0 +1,131 @@
+Model twc_mock_reporting_period {
+  type: 'query'
+  label: 'TWC Mock Reporting Period'
+  description: 'User-facing reporting period selector for the TerryWhite Chemmart dynamic financial date reproduction.'
+  data_source_name: 'demodb'
+
+  dimension period_key {
+    label: 'Period Key'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.period_key }};;
+  }
+
+  dimension period_label {
+    label: 'Period Label'
+    type: 'text'
+    definition: @sql {{ #SOURCE.period_label }};;
+  }
+
+  dimension period_start_date {
+    label: 'Period Start Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.period_start_date }};;
+  }
+
+  dimension period_end_date {
+    label: 'Period End Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.period_end_date }};;
+  }
+
+  dimension fy_start_date {
+    label: 'FY Start Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.fy_start_date }};;
+  }
+
+  dimension py_start_date {
+    label: 'PY Start Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.py_start_date }};;
+  }
+
+  dimension py_end_date {
+    label: 'PY End Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.py_end_date }};;
+  }
+
+  dimension pfytd_start_date {
+    label: 'PFYTD Start Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.pfytd_start_date }};;
+  }
+
+  dimension pfytd_end_date {
+    label: 'PFYTD End Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.pfytd_end_date }};;
+  }
+
+  dimension fy_number {
+    label: 'FY Number'
+    type: 'number'
+    definition: @sql {{ #SOURCE.fy_number }};;
+  }
+
+  dimension period_sort {
+    label: 'Period Sort'
+    type: 'number'
+    definition: @sql {{ #SOURCE.period_sort }};;
+  }
+
+  owner: 'chinh.dm@holistics.io'
+
+  query: @sql
+    select
+      '2026-04' as period_key
+      , 'Last Month (Apr 2026)' as period_label
+      , date '2026-04-01' as period_start_date
+      , date '2026-04-30' as period_end_date
+      , date '2025-07-01' as fy_start_date
+      , date '2025-04-01' as py_start_date
+      , date '2025-04-30' as py_end_date
+      , date '2024-07-01' as pfytd_start_date
+      , date '2025-04-30' as pfytd_end_date
+      , 2026 as fy_number
+      , 1 as period_sort
+    union all
+    select
+      '2026-03'
+      , 'Mar 2026'
+      , date '2026-03-01'
+      , date '2026-03-31'
+      , date '2025-07-01'
+      , date '2025-03-01'
+      , date '2025-03-31'
+      , date '2024-07-01'
+      , date '2025-03-31'
+      , 2026
+      , 2
+    union all
+    select
+      '2025-07'
+      , 'Jul 2025 (FY rollover start)'
+      , date '2025-07-01'
+      , date '2025-07-31'
+      , date '2025-07-01'
+      , date '2024-07-01'
+      , date '2024-07-31'
+      , date '2024-07-01'
+      , date '2024-07-31'
+      , 2026
+      , 3
+    union all
+    select
+      '2025-06'
+      , 'Jun 2025 (FY rollover end)'
+      , date '2025-06-01'
+      , date '2025-06-30'
+      , date '2024-07-01'
+      , date '2024-06-01'
+      , date '2024-06-30'
+      , date '2023-07-01'
+      , date '2024-06-30'
+      , 2025
+      , 4;;
+
+  models: [
+  ]
+}

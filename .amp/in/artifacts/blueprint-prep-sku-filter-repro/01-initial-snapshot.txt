@@ -1,0 +1,186 @@
+- generic
+  - generic
+    - link "Holistics Logo" [ref=e3]
+      - image "Holistics Logo"
+    - link "Reporting" [ref=e19]
+      - StaticText "Reporting"
+    - link "Development" [ref=e20]
+      - StaticText "Development"
+    - link "SQL Editor" [ref=e21]
+      - StaticText "SQL Editor"
+    - generic [ref=e4] clickable [cursor:pointer]
+    - generic [ref=e5] clickable [cursor:pointer]
+    - button "4 years" [ref=e22]
+      - StaticText "4 years"
+    - generic [ref=e6] clickable [cursor:pointer]
+      - generic
+        - textbox [ref=e31]
+        - StaticText "Search"
+        - StaticText "⌘ + K"
+    - generic [ref=e7] clickable [cursor:pointer]
+    - generic [ref=e8] clickable [cursor:pointer]
+    - generic [ref=e23] clickable [cursor:pointer]
+    - generic [ref=e24] clickable [cursor:pointer]
+    - generic
+      - image "Avatar"
+      - generic [ref=e25] clickable [cursor:pointer]
+        - StaticText "Holistics Testing 4.0"
+  - image
+  - generic
+    - generic
+      - generic
+        - StaticText "Production"
+      - generic [ref=e9] clickable [cursor:pointer]
+        - generic [ref=e26] clickable [cursor:pointer, tabindex]
+          - switch [checked=true, ref=e32]
+      - generic
+        - StaticText "Development"
+      - generic [ref=e10] clickable [cursor:pointer]
+      - generic [ref=e11] clickable [cursor:pointer, tabindex]
+        - generic
+          - StaticText "chinh-dm-dev"
+          - textbox [ref=e45]
+        - button [ref=e27]
+      - button "Pull from Production (131)" [disabled, ref=e28]
+        - StaticText "Pull from Production (131)"
+      - button "AI Copilot" [ref=e12]
+        - generic
+          - StaticText "AI Copilot"
+      - button "Commit changes (17)" [ref=e13]
+        - StaticText "Commit changes (17)"
+      - generic
+        - button "Create PR" [disabled, ref=e29]
+          - StaticText "Create PR"
+        - button [disabled, ref=e30]
+      - generic
+        - link [ref=e33]
+        - link [ref=e34]
+        - link "17" [ref=e35]
+          - generic
+            - StaticText "17"
+        - link [ref=e36]
+        - link [ref=e37]
+        - generic
+          - StaticText "Explorer"
+          - button "Add" [ref=e46]
+            - StaticText "Add"
+          - button [ref=e47]
+          - generic
+            - textbox "Filter files..." [ref=e63]: blueprint_prep_sku_filter_repro
+              - StaticText "blueprint_prep_sku_filter_repro"
+            - StaticText "1/2"
+            - button [ref=e64]
+            - button [ref=e65]
+            - button [ref=e66]
+          - generic [ref=e55] focusable [tabindex]
+            - generic
+              - generic [ref=e70] clickable [cursor:pointer]
+              - generic [ref=e71] clickable [cursor:pointer]
+              - group
+                - generic [ref=e72] clickable [cursor:pointer]
+              - group
+                - generic [ref=e73] clickable [cursor:pointer]
+              - group
+                - generic [ref=e74] clickable [cursor:pointer]
+              - group
+                - generic [ref=e75] clickable [cursor:pointer]
+              - group
+                - generic [ref=e76] clickable [cursor:pointer]
+              - group
+                - link "blueprint_prep_sku_filter_repro.dataset.aml N" [ref=e77]
+              - group
+                - generic [ref=e78] clickable [cursor:pointer]
+              - group
+                - link "blueprint_prep_sku_filter_repro.page.aml N" [ref=e79]
+              - group
+                - generic [ref=e80] clickable [cursor:pointer]
+              - group
+                - generic [ref=e81] clickable [cursor:pointer]
+              - group
+                - generic [ref=e82] clickable [cursor:pointer]
+              - group
+                - generic [ref=e83] clickable [cursor:pointer]
+              - group
+                - generic [ref=e84] clickable [cursor:pointer]
+              - group
+                - generic [ref=e85] clickable [cursor:pointer]
+              - generic [ref=e86] clickable [cursor:pointer]
+              - link ".gitignore" [ref=e87]
+        - button "blueprint_prep_sku_filter_repro.page.aml" [ref=e38]
+          - StaticText "blueprint_prep_sku_filter_repro.page.aml"
+        - StaticText "Add tag"
+        - radiogroup
+          - radio "Code" [checked=false, ref=e56]
+            - StaticText "Code"
+          - radio "Dual" [checked=false, ref=e57]
+            - StaticText "Dual"
+          - radio "Visual" [checked=true, ref=e58]
+            - StaticText "Visual"
+        - button [ref=e39]
+        - button [disabled, ref=e40]
+        - radiogroup
+          - radio [checked=true, ref=e48]
+          - radio [checked=false, ref=e49]
+        - button "Theme" [ref=e41]
+          - StaticText "Theme"
+        - button "More" [ref=e50]
+        - generic
+          - generic
+            - StaticText "[Repro]BlueprintPrepSKUFilter"
+          - button "Tab1 Actions" [ref=e59]
+            - StaticText "Tab1"
+            - button "Actions" [ref=e67]
+          - button "Tab2 Actions" [ref=e60]
+            - StaticText "Tab2"
+            - button "Actions" [ref=e68]
+          - button [ref=e61]
+          - button "Controls" [ref=e69]
+            - StaticText "Controls"
+          - StaticText "Etc/UTC"
+          - generic
+            - generic
+            - generic [ref=e88] clickable [cursor:pointer]
+            - generic
+              - button "Visualization" [ref=e89]
+              - button "Library" [ref=e94]
+              - button "Text" [ref=e90]
+              - button "Filter" [ref=e91]
+              - button "Controls" [ref=e92]
+              - button "Canvas settings" [ref=e95]
+        - generic
+          - generic
+            - StaticText "AI Copilot"
+            - StaticText "Development"
+          - button [disabled, ref=e42]
+          - button "Open chat history" [ref=e51]
+          - button [ref=e43]
+          - button [ref=e44]
+          - generic
+            - image
+            - heading "What would you like to explore?" [level=1, ref=e62]
+            - paragraph
+          - generic [ref=e52] clickable [cursor:pointer]
+            - StaticText "Explain the current file"
+          - generic [ref=e53] clickable [cursor:pointer]
+            - StaticText "Review this code for issues"
+          - generic [ref=e54] clickable [cursor:pointer]
+            - StaticText "Summarize this dashboard"
+          - generic
+            - StaticText "team-folders/Chinh/blueprint-prep-sku-filter-repro/blueprint_prep_sku_filter_repro.page.aml"
+            - StaticText "[Repro] Blueprint Prep SKU Filter"
+            - button [ref=e93]
+            - generic
+              - generic [ref=e99] editable [tabindex, contenteditable]: 
+
+            - generic
+              - button [ref=e96]
+              - button [ref=e97]
+              - button [disabled, ref=e98]
+      - generic [ref=e14] clickable [cursor:pointer]
+      - generic [ref=e15] clickable [cursor:pointer]
+      - generic [ref=e16] clickable [cursor:pointer]
+      - button "Send Feedback" [ref=e17]
+      - button "ReadDocs" [ref=e18]
+  - StaticText "Choose what search shows: matches only or everything"
+  - button "Skip" [ref=e1]
+  - button "Next" [ref=e2]

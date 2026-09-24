@@ -1,0 +1,10 @@
+component,value
+grain,monthly sales row by sales_month x store_key x product_key
+date_range,2023-07-01 to 2026-04-01 monthly
+sales_amount_formula,product_weight * store_weight * month_seasonality * quarter_seasonality
+month_seasonality,1 + ((month_index % 7) * 0.02)
+quarter_seasonality,1.16 for December; 1.08 for March and April; otherwise 1.00
+gp_amount_formula,sales_amount * 0.36
+promo_sales_amount_formula,sales_amount * 0.22 for P001/P005/P007/P011; otherwise sales_amount * 0.12
+units_formula,floor(sales_amount / 18)
+transactions_formula,floor(sales_amount / 42)

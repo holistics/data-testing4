@@ -1,0 +1,137 @@
+Model twc_mock_sales {
+  type: 'query'
+  label: 'TWC Mock Sales'
+  description: 'Generated monthly sales fact, enriched with the measures required by the Christo Rootman overview and buyer-group table.'
+  data_source_name: 'demodb'
+
+  dimension sales_row_key {
+    label: 'Sales Row Key'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.sales_row_key }};;
+  }
+
+  dimension sales_month {
+    label: 'Sales Month'
+    type: 'date'
+    definition: @sql {{ #SOURCE.sales_month }};;
+  }
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'text'
+    definition: @sql {{ #SOURCE.store_key }};;
+  }
+
+  dimension product_key {
+    label: 'Product Key'
+    type: 'text'
+    definition: @sql {{ #SOURCE.product_key }};;
+  }
+
+  dimension sales_amount {
+    label: 'Sales Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.sales_amount }};;
+  }
+
+  dimension gp_amount {
+    label: 'GP Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.gp_amount }};;
+  }
+
+  dimension promo_sales_amount {
+    label: 'Promo Sales Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.promo_sales_amount }};;
+  }
+
+  dimension units {
+    label: 'Units'
+    type: 'number'
+    definition: @sql {{ #SOURCE.units }};;
+  }
+
+  dimension transactions {
+    label: 'Transactions'
+    type: 'number'
+    definition: @sql {{ #SOURCE.transactions }};;
+  }
+
+  measure total_sales_amount {
+    label: 'Sales $'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.sales_amount }});;
+  }
+
+  measure total_gp_amount {
+    label: 'GP $'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.gp_amount }});;
+  }
+
+  measure total_promo_sales_amount {
+    label: 'Promo Sales $'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.promo_sales_amount }});;
+  }
+
+  measure total_units {
+    label: '# Units'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.units }});;
+  }
+
+  measure total_transactions {
+    label: '# Transactions'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.transactions }});;
+  }
+
+  owner: 'chinh.dm@holistics.io'
+
+  query: @sql
+    with months as (
+      select
+        date_trunc('month', month_value)::date as sales_month
+        , row_number() over (order by month_value) as month_index
+      from generate_series(date '2023-07-01', date '2026-04-01', interval '1 month') as month_value
+    )
+    , base_sales as (
+      select
+        concat(to_char(months.sales_month, 'yyyymm'), '-', {{ #twc_mock_store_status.store_key }}, '-', {{ #twc_mock_product.product_key }}) as sales_row_key
+        , months.sales_month
+        , {{ #twc_mock_store_status.store_key }} as store_key
+        , {{ #twc_mock_product.product_key }} as product_key
+        , (
+          {{ #twc_mock_product.product_weight }}
+          * {{ #twc_mock_store_status.store_weight }}
+          * (1 + ((months.month_index % 7) * 0.02))
+          * case
+            when extract(month from months.sales_month) = 12 then 1.16
+            when extract(month from months.sales_month) in (3, 4) then 1.08
+            else 1
+          end
+        )::numeric as sales_amount
+      from months
+      cross join {{ #twc_mock_product }}
+      cross join {{ #twc_mock_store_status }}
+    )
+    select
+      sales_row_key
+      , sales_month
+      , store_key
+      , product_key
+      , round(sales_amount, 2) as sales_amount
+      , round(sales_amount * 0.36, 2) as gp_amount
+      , round(sales_amount * case when product_key in ('P001', 'P005', 'P007', 'P011') then 0.22 else 0.12 end, 2) as promo_sales_amount
+      , floor(sales_amount / 18)::int as units
+      , floor(sales_amount / 42)::int as transactions
+    from base_sales;;
+
+  models: [
+    twc_mock_product,
+    twc_mock_store_status
+  ]
+}

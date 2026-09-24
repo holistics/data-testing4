@@ -1,0 +1,54 @@
+Model blueprint_prep_sku_regex_inventory_v2 {
+  type: 'query'
+  label: 'Blueprint Prep SKU Regex Inventory'
+  description: 'High-cardinality mock SKUs for reproducing Tan Huynh’s regex query-parameter workaround.'
+  data_source_name: 'demo_bigquery'
+  owner: 'chinh.dm@holistics.io'
+
+  dimension sku_id {
+    label: 'SKU ID'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.sku_id }};;
+  }
+
+  dimension sku {
+    label: 'SKU'
+    type: 'text'
+    definition: @sql {{ #SOURCE.sku }};;
+  }
+
+  dimension product_level {
+    label: 'Product Level'
+    type: 'text'
+    definition: @sql {{ #SOURCE.product_level }};;
+  }
+
+  measure sku_count {
+    label: 'SKU Count'
+    type: 'number'
+    definition: @aql count(blueprint_prep_sku_regex_inventory_v2.sku) ;;
+  }
+
+  query: @sql
+    select
+      concat(
+        'AMCAT_PLEVEL'
+        , levels.level_code
+        , '_ITEM'
+        , lpad(cast(sequence_number as string), 5, '0')
+      ) as sku
+      , concat('PLEVEL', levels.level_code) as product_level
+      , (levels.level_number * 100000) + sequence_number as sku_id
+    from unnest([
+      struct('400' as level_code, 400 as level_number)
+      , struct('401' as level_code, 401 as level_number)
+      , struct('1400' as level_code, 1400 as level_number)
+      , struct('1401' as level_code, 1401 as level_number)
+      , struct('500' as level_code, 500 as level_number)
+    ]) as levels
+    cross join unnest(generate_array(1, 25000)) as sequence_number
+  ;;
+
+  models: []
+}

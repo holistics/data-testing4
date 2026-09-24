@@ -1,0 +1,69 @@
+Model blueprint_prep_skus {
+  type: 'query'
+  label: 'Blueprint Prep SKUs'
+  description: 'High-cardinality mock SKUs for reproducing Blueprint Prep text-filter behavior.'
+  data_source_name: 'demodb'
+  owner: 'chinh.dm@holistics.io'
+
+  dimension sku {
+    label: 'SKU'
+    description: 'Unique SKU containing an AMCAT product-level segment.'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.sku }};;
+  }
+
+  dimension product_level {
+    label: 'Product Level'
+    description: 'Low-cardinality product-level segment extracted from the SKU.'
+    type: 'text'
+    definition: @sql {{ #SOURCE.product_level }};;
+  }
+
+  dimension product_level_number {
+    label: 'Product Level Number'
+    type: 'number'
+    hidden: true
+    definition: @sql {{ #SOURCE.product_level_number }};;
+  }
+
+  measure sku_count {
+    label: 'SKU Count'
+    type: 'number'
+    definition: @aql count(blueprint_prep_skus.sku) ;;
+  }
+
+  param variant {
+    label: 'Product Levels (regex)'
+    description: 'Pipe-separated Product Level numbers, for example 400|401|1400|1401.'
+    type: 'text'
+  }
+
+  query: @sql
+    select
+      concat(
+        'AMCAT_PLEVEL'
+        , levels.level_code
+        , '_'
+        , 'ITEM'
+        , chr(65 + ((series.sequence_number - 1) / 17576) % 26)
+        , chr(65 + ((series.sequence_number - 1) / 676) % 26)
+        , chr(65 + ((series.sequence_number - 1) / 26) % 26)
+        , chr(65 + (series.sequence_number - 1) % 26)
+        , lpad(cast(series.sequence_number as text), 6, '0')
+      ) as sku
+      , concat('PLEVEL', levels.level_code) as product_level
+      , levels.level_number as product_level_number
+    from (
+      values
+        ('400', 400)
+        , ('401', 401)
+        , ('1400', 1400)
+        , ('1401', 1401)
+        , ('500', 500)
+    ) as levels(level_code, level_number)
+    cross join generate_series(1, 25000) as series(sequence_number)
+  ;;
+
+  models: []
+}

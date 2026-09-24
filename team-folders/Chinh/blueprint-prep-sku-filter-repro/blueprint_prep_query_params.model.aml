@@ -1,0 +1,19 @@
+Model blueprint_prep_query_params {
+  type: 'query'
+  label: 'Blueprint Prep Query Parameters'
+  description: 'Text parameter used to reproduce pipe-separated regex filtering on the original SKU field.'
+  data_source_name: 'demodb'
+  owner: 'chinh.dm@holistics.io'
+
+  param variant {
+    label: 'Product Levels (regex)'
+    description: 'Pipe-separated Product Level numbers, for example 400|401|1400|1401.'
+    type: 'text'
+  }
+
+  query: @sql
+    select 1 as placeholder
+  ;;
+
+  models: []
+}

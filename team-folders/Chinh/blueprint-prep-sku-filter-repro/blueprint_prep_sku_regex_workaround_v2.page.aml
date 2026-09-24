@@ -1,0 +1,91 @@
+Dashboard blueprint_prep_sku_regex_workaround_v2_dashboard {
+  title: 'Blueprint Prep: SKU Regex Parameter Workaround'
+  description: 'Reproduces Tan Huynh’s workaround: enter pipe-separated Product Levels and apply them as regex alternatives to the original SKU field.'
+  owner: 'chinh.dm@holistics.io'
+
+  block guidance: TextBlock {
+    content: @md
+      ## Regex query-parameter workaround
+
+      Enter Product Levels separated by `|`, for example `400|401|1400|1401`.
+
+      The visualization applies the value to the original high-cardinality SKU field with:
+
+      `regexp_like(SKU, concat('AMCAT_PLEVEL(', parameter, ').*'))`
+
+      This is a workaround for the current UI-control limitation, not a native multi-value **Contains** filter.
+    ;;
+  }
+  block variant: FilterBlock {
+    label: 'Product Levels (pipe-separated)'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: blueprint_prep_sku_regex_workaround_v2
+      field: r(blueprint_prep_regex_query_params_v2.variant)
+    }
+    default {
+      operator: 'is'
+      value: '$H_NIL$'
+    }
+    settings {
+      input_type: 'nullable-single'
+    }
+  }
+
+  block result: VizBlock {
+    label: 'Matching Product Levels'
+
+    viz: DataTable {
+      dataset: blueprint_prep_sku_regex_workaround_v2
+
+      conditions: [
+        'regexp_like(blueprint_prep_sku_regex_inventory_v2.sku, concat(\'AMCAT_PLEVEL(\', blueprint_prep_regex_query_params_v2.variant | first(), \').*\'))'
+      ]
+
+      fields: [
+        VizFieldFull {
+          ref: r(blueprint_prep_sku_regex_inventory_v2.product_level)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(blueprint_prep_sku_regex_inventory_v2.sku_count)
+          format {
+            type: 'number'
+            pattern: '#,##0'
+          }
+        }
+      ]
+
+      settings {
+        row_limit: 50
+        show_row_number: false
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'Workaround'
+    width: 1200
+    height: 720
+
+    block guidance {
+      position: pos(24, 24, 1152, 210)
+    }
+
+    block variant {
+      position: pos(24, 258, 1152, 88)
+    }
+
+    block result {
+      position: pos(24, 370, 1152, 326)
+    }
+  }
+
+  settings {
+    timezone: 'Etc/UTC'
+    autorun_on_open: true
+    autorun_on_changes: true
+  }
+}

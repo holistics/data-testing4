@@ -1,0 +1,155 @@
+Dashboard blueprint_prep_sku_filter_repro_dashboard {
+  title: '[Repro] Blueprint Prep SKU Filter'
+  description: 'Reproduces single-value text filters, overlapping SKU substrings, and high-cardinality exact-value selection.'
+  owner: 'chinh.dm@holistics.io'
+
+  view: CanvasLayout {
+    label: 'Reproduction'
+    width: 1200
+    height: 1040
+    grid_size: 20
+    auto_expand_vertically: true
+    mobile {
+      mode: 'auto'
+    }
+    block t_instructions {
+      position: pos(20, 20, 1160, 180)
+      layer: 1
+    }
+    block f_sku {
+      position: pos(20, 220, 560, 100)
+      layer: 1
+    }
+    block f_product_level {
+      position: pos(600, 220, 580, 100)
+      layer: 1
+    }
+    block v_counts {
+      position: pos(20, 340, 1160, 280)
+      layer: 1
+    }
+    block v_audit {
+      position: pos(20, 640, 1160, 380)
+      layer: 1
+    }
+  }
+
+  theme: H.themes.vanilla
+
+  block t_instructions: TextBlock {
+    content: @md ### Reproduction steps
+
+1. The Raw SKU filter starts with `Contains 400`. The chart should show both `PLEVEL400` and `PLEVEL1400`.
+2. Try to add `401`, `1400`, and `1401` to the same `Contains` condition. The filter accepts one text value only.
+3. Change Raw SKU to `Starts With` and enter `AMCAT_PLEVEL400_`. Only `PLEVEL400` should remain, but the filter still accepts one prefix only.
+4. Change Raw SKU to `Is` and open its value list. Record how long the 125,000-value field takes to load.
+5. Clear Raw SKU. Use Product Level with `Is` to select `PLEVEL400`, `PLEVEL401`, `PLEVEL1400`, and `PLEVEL1401`. The result should contain 100,000 SKUs.;;
+  }
+
+  block f_sku: FilterBlock {
+    label: 'Raw SKU'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: blueprint_prep_sku_filter_repro
+      field: r(blueprint_prep_sku_inventory.sku)
+    }
+    default {
+      operator: 'contains'
+      value: '400'
+    }
+  }
+
+  block f_product_level: FilterBlock {
+    label: 'Product Level'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: blueprint_prep_sku_filter_repro
+      field: r(blueprint_prep_sku_inventory.product_level)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+
+  block v_counts: VizBlock {
+    label: 'SKU Count by Product Level'
+    viz: ColumnChart {
+      dataset: blueprint_prep_sku_filter_repro
+      x_axis: VizFieldFull {
+        label: 'Product Level'
+        ref: r(blueprint_prep_sku_inventory.product_level)
+        format {
+          type: 'text'
+        }
+        uname: 'blueprint_prep_sku_inventory_product_level_1'
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            label: 'SKU Count'
+            ref: r(blueprint_prep_sku_inventory.sku_count)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+        settings {
+          show_data_label_by: 'value'
+        }
+      }
+      settings {
+        sort: LineFamilySort {
+          type: 'xaxis'
+          direction: 'asc'
+        }
+      }
+    }
+  }
+
+  block v_audit: VizBlock {
+    label: 'Sample SKUs'
+    viz: DataTable {
+      dataset: blueprint_prep_sku_filter_repro
+      fields: [
+        VizFieldFull {
+          ref: r(blueprint_prep_sku_inventory.sku)
+          label: 'SKU'
+          format {
+            type: 'text'
+          }
+          uname: 'sku'
+        },
+        VizFieldFull {
+          ref: r(blueprint_prep_sku_inventory.product_level)
+          label: 'Product Level'
+          format {
+            type: 'text'
+          }
+          uname: 'product_level'
+        }
+      ]
+      settings {
+        pagination_size: 100
+        show_row_number: true
+        row_limit: 100
+        single_cell_display: 'normal'
+        wrap_header_text: false
+        wrap_cell_text: false
+        sorts: [
+          KeyBasedSortSetting {
+            key: 'sku'
+            direction: 'asc'
+          }
+        ]
+      }
+    }
+  }
+
+  settings {
+    timezone: 'Etc/UTC'
+    autorun_on_open: true
+    autorun_on_changes: true
+  }
+}

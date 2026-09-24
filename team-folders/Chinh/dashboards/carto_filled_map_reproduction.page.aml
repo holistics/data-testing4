@@ -1,0 +1,53 @@
+Dashboard carto_filled_map_reproduction {
+  title: 'CARTO Filled Map Reproduction'
+  description: 'Minimal reproduction of the street basemap used by a Holistics Filled Map.'
+  owner: 'chinh.dm@holistics.io'
+
+  block title: TextBlock {
+    content: @md # Filled Map street-background reproduction
+
+This map intentionally uses Holistics' built-in `street` background.;;
+  }
+
+  block country_map: VizBlock {
+    label: 'GMV by Country'
+    viz: FilledMap {
+      dataset: demo_ecommerce_version_2
+      location {
+        field: r(ecommerce_countries.name)
+        location_type: 'country'
+        primary_field: true
+      }
+      value: r(demo_ecommerce_version_2.gmv)
+      settings {
+        map_background: 'street'
+      }
+    }
+  }
+
+  interactions: []
+
+  view: TabLayout {
+    label: 'View 1'
+    tab reproduction: CanvasLayout {
+      label: 'Reproduction'
+      width: 1220
+      height: 720
+      grid_size: 20
+      auto_expand_vertically: true
+      block title {
+        position: pos(20, 20, 1180, 100)
+        layer: 1
+      }
+      block country_map {
+        position: pos(20, 140, 1180, 560)
+        layer: 1
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
+  }
+
+  theme: H.themes.classic
+}

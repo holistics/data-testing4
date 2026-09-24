@@ -1,0 +1,188 @@
+Model twc_mock_sales_periodized {
+  type: 'query'
+  label: 'TWC Mock Sales Periodized'
+  description: 'Sales fact expanded by reporting period and comparison window: selected, PY, FYTD, and PFYTD.'
+  data_source_name: 'demodb'
+
+  dimension periodized_sales_key {
+    label: 'Periodized Sales Key'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.periodized_sales_key }};;
+  }
+
+  dimension period_key {
+    label: 'Period Key'
+    type: 'text'
+    definition: @sql {{ #SOURCE.period_key }};;
+  }
+
+  dimension window_variant {
+    label: 'Window Variant'
+    type: 'text'
+    definition: @sql {{ #SOURCE.window_variant }};;
+  }
+
+  dimension window_label {
+    label: 'Window Label'
+    type: 'text'
+    definition: @sql {{ #SOURCE.window_label }};;
+  }
+
+  dimension window_start_date {
+    label: 'Window Start Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.window_start_date }};;
+  }
+
+  dimension window_end_date {
+    label: 'Window End Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.window_end_date }};;
+  }
+
+  dimension sales_month {
+    label: 'Sales Month'
+    type: 'date'
+    definition: @sql {{ #SOURCE.sales_month }};;
+  }
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'text'
+    definition: @sql {{ #SOURCE.store_key }};;
+  }
+
+  dimension product_key {
+    label: 'Product Key'
+    type: 'text'
+    definition: @sql {{ #SOURCE.product_key }};;
+  }
+
+  dimension sales_amount {
+    label: 'Sales Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.sales_amount }};;
+  }
+
+  dimension gp_amount {
+    label: 'GP Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.gp_amount }};;
+  }
+
+  dimension promo_sales_amount {
+    label: 'Promo Sales Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.promo_sales_amount }};;
+  }
+
+  dimension units {
+    label: 'Units'
+    type: 'number'
+    definition: @sql {{ #SOURCE.units }};;
+  }
+
+  dimension transactions {
+    label: 'Transactions'
+    type: 'number'
+    definition: @sql {{ #SOURCE.transactions }};;
+  }
+
+  measure total_sales_amount {
+    label: 'Sales $'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.sales_amount }});;
+  }
+
+  measure total_gp_amount {
+    label: 'GP $'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.gp_amount }});;
+  }
+
+  measure total_promo_sales_amount {
+    label: 'Promo Sales $'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.promo_sales_amount }});;
+  }
+
+  measure total_units {
+    label: '# Units'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.units }});;
+  }
+
+  measure total_transactions {
+    label: '# Transactions'
+    type: 'number'
+    definition: @sql sum({{ #SOURCE.transactions }});;
+  }
+
+  owner: 'chinh.dm@holistics.io'
+
+  query: @sql
+    with period_windows as (
+      select
+        {{ #twc_mock_reporting_period.period_key }} as period_key
+        , 'selected' as window_variant
+        , 'Selected Date Filter Summary' as window_label
+        , {{ #twc_mock_reporting_period.period_start_date }} as window_start_date
+        , {{ #twc_mock_reporting_period.period_end_date }} as window_end_date
+      from {{ #twc_mock_reporting_period }}
+
+      union all
+
+      select
+        {{ #twc_mock_reporting_period.period_key }}
+        , 'py'
+        , 'Previous Year'
+        , {{ #twc_mock_reporting_period.py_start_date }}
+        , {{ #twc_mock_reporting_period.py_end_date }}
+      from {{ #twc_mock_reporting_period }}
+
+      union all
+
+      select
+        {{ #twc_mock_reporting_period.period_key }}
+        , 'fytd'
+        , 'Financial Year to Date'
+        , {{ #twc_mock_reporting_period.fy_start_date }}
+        , {{ #twc_mock_reporting_period.period_end_date }}
+      from {{ #twc_mock_reporting_period }}
+
+      union all
+
+      select
+        {{ #twc_mock_reporting_period.period_key }}
+        , 'pfytd'
+        , 'Previous Financial Year to Date'
+        , {{ #twc_mock_reporting_period.pfytd_start_date }}
+        , {{ #twc_mock_reporting_period.pfytd_end_date }}
+      from {{ #twc_mock_reporting_period }}
+    )
+    select
+      concat(period_windows.period_key, '-', period_windows.window_variant, '-', {{ #twc_mock_sales.sales_row_key }}) as periodized_sales_key
+      , period_windows.period_key
+      , period_windows.window_variant
+      , period_windows.window_label
+      , period_windows.window_start_date
+      , period_windows.window_end_date
+      , {{ #twc_mock_sales.sales_month }} as sales_month
+      , {{ #twc_mock_sales.store_key }} as store_key
+      , {{ #twc_mock_sales.product_key }} as product_key
+      , {{ #twc_mock_sales.sales_amount }} as sales_amount
+      , {{ #twc_mock_sales.gp_amount }} as gp_amount
+      , {{ #twc_mock_sales.promo_sales_amount }} as promo_sales_amount
+      , {{ #twc_mock_sales.units }} as units
+      , {{ #twc_mock_sales.transactions }} as transactions
+    from {{ #twc_mock_sales }}
+    inner join period_windows
+      on {{ #twc_mock_sales.sales_month }} >= period_windows.window_start_date
+      and {{ #twc_mock_sales.sales_month }} <= period_windows.window_end_date;;
+
+  models: [
+    twc_mock_reporting_period,
+    twc_mock_sales
+  ]
+}

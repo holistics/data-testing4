@@ -1,0 +1,138 @@
+Dataset twc_dynamic_financial_date {
+  label: 'TWC Dynamic Financial Date'
+  description: 'Reproduction dataset for the Christo Rootman single-date-filter report: selected period, PY, FYTD, and PFYTD windows from one reporting period.'
+  data_source_name: 'demodb'
+
+  models: [
+    twc_mock_reporting_period,
+    twc_mock_product,
+    twc_mock_store_status,
+    twc_mock_sales_periodized
+  ]
+
+  relationships: [
+    relationship(twc_mock_sales_periodized.period_key > twc_mock_reporting_period.period_key, true, 'one_way', nullable=false),
+    relationship(twc_mock_sales_periodized.product_key > twc_mock_product.product_key, true, 'one_way', nullable=false),
+    relationship(twc_mock_sales_periodized.store_key > twc_mock_store_status.store_key, true, 'one_way', nullable=false)
+  ]
+
+  metric sales_amount {
+    label: 'Sales $'
+    type: 'number'
+    definition: @aql twc_mock_sales_periodized.total_sales_amount ;;
+  }
+
+  metric gp_amount {
+    label: 'GP $'
+    type: 'number'
+    definition: @aql twc_mock_sales_periodized.total_gp_amount ;;
+  }
+
+  metric promo_sales_amount {
+    label: 'Promo Sales $'
+    type: 'number'
+    definition: @aql twc_mock_sales_periodized.total_promo_sales_amount ;;
+  }
+
+  metric units {
+    label: '# Units'
+    type: 'number'
+    definition: @aql twc_mock_sales_periodized.total_units ;;
+  }
+
+  metric transactions {
+    label: '# Transactions'
+    type: 'number'
+    definition: @aql twc_mock_sales_periodized.total_transactions ;;
+  }
+
+  metric selected_sales_amount {
+    label: 'Sales $ (Selected)'
+    type: 'number'
+    definition: @aql sales_amount | where(twc_mock_sales_periodized.window_variant is 'selected') ;;
+  }
+
+  metric py_sales_amount {
+    label: 'Sales $ (PY)'
+    type: 'number'
+    definition: @aql sales_amount | where(twc_mock_sales_periodized.window_variant is 'py') ;;
+  }
+
+  metric fytd_sales_amount {
+    label: 'Sales $ (FYTD)'
+    type: 'number'
+    definition: @aql sales_amount | where(twc_mock_sales_periodized.window_variant is 'fytd') ;;
+  }
+
+  metric pfytd_sales_amount {
+    label: 'Sales $ (PFYTD)'
+    type: 'number'
+    definition: @aql sales_amount | where(twc_mock_sales_periodized.window_variant is 'pfytd') ;;
+  }
+
+  metric selected_sales_amount_diff {
+    label: 'Sales $ Diff'
+    type: 'number'
+    definition: @aql selected_sales_amount - py_sales_amount ;;
+  }
+
+  metric selected_sales_amount_var_perc {
+    label: 'Sales $ Var %'
+    type: 'number'
+    definition: @aql safe_divide(selected_sales_amount_diff, py_sales_amount) ;;
+  }
+
+  metric selected_sales_amount_completed_perc {
+    label: 'Sales $ Completed %'
+    type: 'number'
+    definition: @aql safe_divide(selected_sales_amount, py_sales_amount) ;;
+  }
+
+  metric fytd_sales_amount_diff {
+    label: 'Sales $ Diff (FYTD)'
+    type: 'number'
+    definition: @aql fytd_sales_amount - pfytd_sales_amount ;;
+  }
+
+  metric fytd_sales_amount_var_perc {
+    label: 'Sales $ Var % (FYTD)'
+    type: 'number'
+    definition: @aql safe_divide(fytd_sales_amount_diff, pfytd_sales_amount) ;;
+  }
+
+  metric selected_gp_amount {
+    label: 'GP $ (Selected)'
+    type: 'number'
+    definition: @aql gp_amount | where(twc_mock_sales_periodized.window_variant is 'selected') ;;
+  }
+
+  metric py_gp_amount {
+    label: 'GP $ (PY)'
+    type: 'number'
+    definition: @aql gp_amount | where(twc_mock_sales_periodized.window_variant is 'py') ;;
+  }
+
+  metric fytd_gp_amount {
+    label: 'GP $ (FYTD)'
+    type: 'number'
+    definition: @aql gp_amount | where(twc_mock_sales_periodized.window_variant is 'fytd') ;;
+  }
+
+  metric pfytd_gp_amount {
+    label: 'GP $ (PFYTD)'
+    type: 'number'
+    definition: @aql gp_amount | where(twc_mock_sales_periodized.window_variant is 'pfytd') ;;
+  }
+
+  metric selected_gp_amount_var_perc {
+    label: 'GP $ Var %'
+    type: 'number'
+    definition: @aql safe_divide(selected_gp_amount - py_gp_amount, py_gp_amount) ;;
+  }
+
+  metric fytd_gp_amount_var_perc {
+    label: 'GP $ Var % (FYTD)'
+    type: 'number'
+    definition: @aql safe_divide(fytd_gp_amount - pfytd_gp_amount, pfytd_gp_amount) ;;
+  }
+}
