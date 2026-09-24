@@ -27,22 +27,29 @@ Dataset bhx_demo_ecommerce {
   // relationship(bhx_ecommerce_orders_dim_dates, true),
   ]
 
-  // view {
-  //   model bhx_ecommerce_orders {
+  view {
+    model bhx_ecommerce_orders {
 
-  //   }
+    }
 
 
 
-  //   model bhx_ecommerce_users {
-  //     // field id
-  //     field users_signed_up_count
-  //   }
+    // model bhx_ecommerce_users {
+    //   // field id
+    //   field users_signed_up_count
 
-  //   group transaction_abc {
-  //     metric total_users
-  //   }
-  // }
+
+    // }
+
+    group folder_01 {
+      metric total_users
+
+      model bhx_ecommerce_users {
+        // field id
+        field users_signed_up_count
+      }
+    }
+  }
 
   dimension cohort_month {
     model: bhx_ecommerce_users

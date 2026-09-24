@@ -1,0 +1,69 @@
+Model orders_param_1 {
+  type: 'query'
+  label: 'Orders Param 1'
+  description: ''
+  data_source_name: 'demodb'
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+    primary_key: true
+  }
+  dimension status {
+    label: 'Status'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.status }};;
+  }
+  dimension created_at {
+    label: 'Created At'
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+  dimension user_id {
+    label: 'User Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.user_id }};;
+  }
+  dimension discount {
+    label: 'Discount'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.discount }};;
+  }
+  dimension delivery_attempts {
+    label: 'Delivery Attempts'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.delivery_attempts }};;
+  }
+  dimension created_date {
+    label: 'Created Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_date }};;
+  }
+  dimension order_month {
+    label: 'Order Month'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_month }};;
+  }
+
+  param order_date_param {
+    label: 'Order Created At Param'
+    type: 'datetime'
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql
+    select {{ #o.* }}
+    from {{ #ecommerce_orders o }}
+    where {% filter(order_date_param) %} {{ #o.created_date }} {% end %};;
+  models: [
+    ecommerce_orders
+  ]
+}

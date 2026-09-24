@@ -1,0 +1,9 @@
+Dataset country_buttons {
+  label: 'Country Buttons'
+  description: 'Standalone dataset for the country card h-drill selector'
+  data_source_name: 'data_staging'
+  models: [
+    country
+  ]
+  relationships: []
+}

@@ -124,7 +124,7 @@ const squad_dark_pro_max = squad_dark.extend(
     background: transparent !important;
   }
   [data-ci*="controls-panel"] .hui-btn:hover,
-  [data-ci*="controls-panel"] button:hover {
+  [data-ci*="controls-panel"] button:not(:where(.h-controls-accordion *)):hover {
     background: ${dark_active_background_color} !important;
   }
  

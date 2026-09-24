@@ -18,6 +18,42 @@ Model ecommerce_countries {
     type: 'text'
   }
 
+  dimension flag {
+    label: 'Country Flag'
+    type: 'text'
+    definition: @sql case
+  when {{ name }} = 'India' then '🇮🇳'
+  when {{ name }} = 'South Korea' then '🇰🇷'
+  when {{ name }} = 'United States' then '🇺🇸'
+  when {{ name }} = 'Australia' then '🇦🇺'
+  when {{ name }} = 'France' then '🇫🇷'
+  when {{ name }} = 'Indonesia' then '🇮🇩'
+  when {{ name }} = 'Singapore' then '🇸🇬'
+  when {{ name }} = 'Germany' then '🇩🇪'
+  when {{ name }} = 'United Kingdom' then '🇬🇧'
+  when {{ name }} = 'Vietnam' then '🇻🇳'
+  else '🌍'
+end;;
+  }
+
+  dimension key_city {
+    label: 'Key City'
+    type: 'text'
+    definition: @sql case
+  when {{ name }} = 'India' then 'Mumbai'
+  when {{ name }} = 'South Korea' then 'Seoul'
+  when {{ name }} = 'United States' then 'New York'
+  when {{ name }} = 'Australia' then 'Sydney'
+  when {{ name }} = 'France' then 'Paris'
+  when {{ name }} = 'Indonesia' then 'Jakarta'
+  when {{ name }} = 'Singapore' then 'Singapore'
+  when {{ name }} = 'Germany' then 'Berlin'
+  when {{ name }} = 'United Kingdom' then 'London'
+  when {{ name }} = 'Vietnam' then 'Ho Chi Minh City'
+  else 'N/A'
+end;;
+  }
+
   dimension origin {
     label: "Origin"
     type: "text"

@@ -1,0 +1,342 @@
+Dashboard wheel_of_names {
+  title: 'wheel_of_names'
+  description: ''
+  owner: 'thong.do@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+
+  view: HTMLLayout  {
+    content: @html
+<!--
+  Name Wheel — self-contained, embeddable widget.
+  All styles are scoped under .nw-wheel and all ids/classes are prefixed "nw-"
+  so this can be dropped into an existing page without leaking or colliding
+  with the host app's styles. No JavaScript.
+-->
+<div class="nw-wheel">
+
+  <style>
+    /* Everything below is scoped with the .nw-wheel ancestor selector.
+       No body/html/:root/* rules — nothing escapes this wrapper. */
+
+    .nw-wheel {
+      --nw-ink: #f5f0e6;
+      --nw-bg: #1b1f2a;
+      --nw-panel: #232838;
+      --nw-gold: #e8b64c;
+      --nw-gold-dim: #b3893a;
+
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      padding: 32px 24px;
+      background: radial-gradient(circle at 50% 20%, #262c3d 0%, var(--nw-bg) 70%);
+      border-radius: 20px;
+      font-family: Georgia, 'Iowan Old Style', serif;
+      color: var(--nw-ink);
+      box-sizing: border-box;
+    }
+
+    .nw-wheel *,
+    .nw-wheel *::before,
+    .nw-wheel *::after {
+      box-sizing: border-box;
+    }
+
+    .nw-wheel h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--nw-gold);
+      font-weight: normal;
+    }
+
+    .nw-wheel .nw-state { display: none; }
+
+    .nw-wheel .nw-stage {
+      position: relative;
+      width: 360px;
+      height: 360px;
+    }
+
+    .nw-wheel .nw-pointer {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-top: 26px solid var(--nw-gold);
+      z-index: 3;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4));
+    }
+
+    .nw-wheel .nw-rim {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--nw-panel);
+      padding: 10px;
+      box-shadow: 0 0 0 4px var(--nw-gold-dim), 0 12px 30px rgba(0,0,0,0.5);
+    }
+
+    .nw-wheel .nw-disc {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        #c1443c 0deg 22.5deg,
+        #d98a2b 22.5deg 45deg,
+        #3f7d5c 45deg 67.5deg,
+        #2f6b8f 67.5deg 90deg,
+        #6a4c93 90deg 112.5deg,
+        #b5426e 112.5deg 135deg,
+        #7c8b3f 135deg 157.5deg,
+        #b8862f 157.5deg 180deg,
+        #c1443c 180deg 202.5deg,
+        #d98a2b 202.5deg 225deg,
+        #3f7d5c 225deg 247.5deg,
+        #2f6b8f 247.5deg 270deg,
+        #6a4c93 270deg 292.5deg,
+        #b5426e 292.5deg 315deg,
+        #7c8b3f 315deg 337.5deg,
+        #b8862f 337.5deg 360deg
+      );
+      transform: rotate(0deg);
+      transition: none;
+    }
+
+    .nw-wheel .nw-name {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+    }
+
+    .nw-wheel .nw-name span {
+      position: absolute;
+      display: block;
+      left: -55px;
+      top: -150px;
+      width: 110px;
+      text-align: center;
+      font-size: 0.68rem;
+      line-height: 1.15;
+      font-weight: bold;
+      color: #fff8ec;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    .nw-wheel .nw-n0  { transform: rotate(11.25deg); }
+    .nw-wheel .nw-n1  { transform: rotate(33.75deg); }
+    .nw-wheel .nw-n2  { transform: rotate(56.25deg); }
+    .nw-wheel .nw-n3  { transform: rotate(78.75deg); }
+    .nw-wheel .nw-n4  { transform: rotate(101.25deg); }
+    .nw-wheel .nw-n5  { transform: rotate(123.75deg); }
+    .nw-wheel .nw-n6  { transform: rotate(146.25deg); }
+    .nw-wheel .nw-n7  { transform: rotate(168.75deg); }
+    .nw-wheel .nw-n8  { transform: rotate(191.25deg); }
+    .nw-wheel .nw-n9  { transform: rotate(213.75deg); }
+    .nw-wheel .nw-n10 { transform: rotate(236.25deg); }
+    .nw-wheel .nw-n11 { transform: rotate(258.75deg); }
+    .nw-wheel .nw-n12 { transform: rotate(281.25deg); }
+    .nw-wheel .nw-n13 { transform: rotate(303.75deg); }
+    .nw-wheel .nw-n14 { transform: rotate(326.25deg); }
+    .nw-wheel .nw-n15 { transform: rotate(348.75deg); }
+
+    .nw-wheel .nw-hub {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 64px;
+      height: 64px;
+      transform: translate(-50%, -50%);
+      background: var(--nw-bg);
+      border: 3px solid var(--nw-gold);
+      border-radius: 50%;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--nw-gold);
+    }
+
+    .nw-wheel #nw-s1:checked  ~ .nw-stage .nw-disc { transform: rotate(1991.25deg); }
+    .nw-wheel #nw-s2:checked  ~ .nw-stage .nw-disc { transform: rotate(3903.75deg); }
+    .nw-wheel #nw-s3:checked  ~ .nw-stage .nw-disc { transform: rotate(5456.25deg); }
+    .nw-wheel #nw-s4:checked  ~ .nw-stage .nw-disc { transform: rotate(7548.75deg); }
+    .nw-wheel #nw-s5:checked  ~ .nw-stage .nw-disc { transform: rotate(9123.75deg); }
+    .nw-wheel #nw-s6:checked  ~ .nw-stage .nw-disc { transform: rotate(11058.75deg); }
+    .nw-wheel #nw-s7:checked  ~ .nw-stage .nw-disc { transform: rotate(12611.25deg); }
+    .nw-wheel #nw-s8:checked  ~ .nw-stage .nw-disc { transform: rotate(14546.25deg); }
+    .nw-wheel #nw-s9:checked  ~ .nw-stage .nw-disc { transform: rotate(16481.25deg); }
+    .nw-wheel #nw-s10:checked ~ .nw-stage .nw-disc { transform: rotate(18078.75deg); }
+    .nw-wheel #nw-s11:checked ~ .nw-stage .nw-disc { transform: rotate(20013.75deg); }
+    .nw-wheel #nw-s12:checked ~ .nw-stage .nw-disc { transform: rotate(21633.75deg); }
+
+    .nw-wheel #nw-s1:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s2:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s3:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s4:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s5:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s6:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s7:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s8:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s9:checked  ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s10:checked ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s11:checked ~ .nw-stage .nw-disc,
+    .nw-wheel #nw-s12:checked ~ .nw-stage .nw-disc {
+      transition: transform 4s cubic-bezier(.15,.7,.25,1);
+    }
+
+    .nw-wheel .nw-controls { min-height: 52px; }
+
+    .nw-wheel .nw-spin-btn {
+      display: none;
+      padding: 12px 30px;
+      background: var(--nw-gold);
+      color: #1b1f2a;
+      border-radius: 999px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 14px rgba(232,182,76,0.35);
+    }
+
+    .nw-wheel .nw-spin-btn:hover { background: #f2c364; }
+
+    .nw-wheel #nw-s0:checked  ~ .nw-controls label[for="nw-s1"]  { display: inline-block; }
+    .nw-wheel #nw-s1:checked  ~ .nw-controls label[for="nw-s2"]  { display: inline-block; }
+    .nw-wheel #nw-s2:checked  ~ .nw-controls label[for="nw-s3"]  { display: inline-block; }
+    .nw-wheel #nw-s3:checked  ~ .nw-controls label[for="nw-s4"]  { display: inline-block; }
+    .nw-wheel #nw-s4:checked  ~ .nw-controls label[for="nw-s5"]  { display: inline-block; }
+    .nw-wheel #nw-s5:checked  ~ .nw-controls label[for="nw-s6"]  { display: inline-block; }
+    .nw-wheel #nw-s6:checked  ~ .nw-controls label[for="nw-s7"]  { display: inline-block; }
+    .nw-wheel #nw-s7:checked  ~ .nw-controls label[for="nw-s8"]  { display: inline-block; }
+    .nw-wheel #nw-s8:checked  ~ .nw-controls label[for="nw-s9"]  { display: inline-block; }
+    .nw-wheel #nw-s9:checked  ~ .nw-controls label[for="nw-s10"] { display: inline-block; }
+    .nw-wheel #nw-s10:checked ~ .nw-controls label[for="nw-s11"] { display: inline-block; }
+    .nw-wheel #nw-s11:checked ~ .nw-controls label[for="nw-s12"] { display: inline-block; }
+
+    .nw-wheel .nw-done-msg {
+      display: none;
+      font-size: 0.8rem;
+      color: #9aa0b4;
+      font-style: italic;
+    }
+    .nw-wheel #nw-s12:checked ~ .nw-controls .nw-done-msg { display: block; }
+
+    .nw-wheel .nw-result { min-height: 30px; font-size: 1.1rem; text-align: center; }
+    .nw-wheel .nw-result p { display: none; margin: 0; }
+    .nw-wheel #nw-s0:checked ~ .nw-result .nw-r0 {
+      display: block; color: #9aa0b4; font-size: 0.9rem; font-style: italic;
+    }
+    .nw-wheel #nw-s1:checked  ~ .nw-result .nw-r1,
+    .nw-wheel #nw-s2:checked  ~ .nw-result .nw-r2,
+    .nw-wheel #nw-s3:checked  ~ .nw-result .nw-r3,
+    .nw-wheel #nw-s4:checked  ~ .nw-result .nw-r4,
+    .nw-wheel #nw-s5:checked  ~ .nw-result .nw-r5,
+    .nw-wheel #nw-s6:checked  ~ .nw-result .nw-r6,
+    .nw-wheel #nw-s7:checked  ~ .nw-result .nw-r7,
+    .nw-wheel #nw-s8:checked  ~ .nw-result .nw-r8,
+    .nw-wheel #nw-s9:checked  ~ .nw-result .nw-r9,
+    .nw-wheel #nw-s10:checked ~ .nw-result .nw-r10,
+    .nw-wheel #nw-s11:checked ~ .nw-result .nw-r11,
+    .nw-wheel #nw-s12:checked ~ .nw-result .nw-r12 {
+      display: block; color: var(--nw-gold); font-weight: bold;
+    }
+  </style>
+
+  <h1>Spin the Wheel</h1>
+
+  <input type="radio" name="nw-spin" id="nw-s0" class="nw-state" checked>
+  <input type="radio" name="nw-spin" id="nw-s1" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s2" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s3" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s4" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s5" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s6" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s7" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s8" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s9" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s10" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s11" class="nw-state">
+  <input type="radio" name="nw-spin" id="nw-s12" class="nw-state">
+
+  <div class="nw-stage">
+    <div class="nw-pointer"></div>
+    <div class="nw-rim">
+      <div class="nw-disc">
+        <div class="nw-name nw-n0"><span>Anthony Thong Do</span></div>
+        <div class="nw-name nw-n1"><span>Giang Nguyen Van</span></div>
+        <div class="nw-name nw-n2"><span>My Nguyen</span></div>
+        <div class="nw-name nw-n3"><span>Bao Ngoc</span></div>
+        <div class="nw-name nw-n4"><span>Nhi Tran Y</span></div>
+        <div class="nw-name nw-n5"><span>Thang Le Kim</span></div>
+        <div class="nw-name nw-n6"><span>Hung Do Duy</span></div>
+        <div class="nw-name nw-n7"><span>Son Hoang</span></div>
+        <div class="nw-name nw-n8"><span>Di Hoang</span></div>
+        <div class="nw-name nw-n9"><span>Hien Nguyen (Amyra)</span></div>
+        <div class="nw-name nw-n10"><span>Khai To</span></div>
+        <div class="nw-name nw-n11"><span>Phuong Nguyen</span></div>
+        <div class="nw-name nw-n12"><span>Tai Nguyen</span></div>
+        <div class="nw-name nw-n13"><span>Tri Duong</span></div>
+        <div class="nw-name nw-n14"><span>Vy Huynh</span></div>
+        <div class="nw-name nw-n15"><span>Khue Pham Minh</span></div>
+      </div>
+    </div>
+    <div class="nw-hub">SPIN</div>
+  </div>
+
+  <div class="nw-result">
+    <p class="nw-r0">Click spin to pick a name</p>
+    <p class="nw-r1">🎉 Son Hoang</p>
+    <p class="nw-r2">🎉 My Nguyen</p>
+    <p class="nw-r3">🎉 Tri Duong</p>
+    <p class="nw-r4">🎉 Anthony Thong Do</p>
+    <p class="nw-r5">🎉 Khai To</p>
+    <p class="nw-r6">🎉 Nhi Tran Y</p>
+    <p class="nw-r7">🎉 Khue Pham Minh</p>
+    <p class="nw-r8">🎉 Hien Nguyen (Amyra)</p>
+    <p class="nw-r9">🎉 Bao Ngoc</p>
+    <p class="nw-r10">🎉 Tai Nguyen</p>
+    <p class="nw-r11">🎉 Hung Do Duy</p>
+    <p class="nw-r12">🎉 Vy Huynh</p>
+  </div>
+
+  <div class="nw-controls">
+    <label for="nw-s1" class="nw-spin-btn">Spin</label>
+    <label for="nw-s2" class="nw-spin-btn">Spin</label>
+    <label for="nw-s3" class="nw-spin-btn">Spin</label>
+    <label for="nw-s4" class="nw-spin-btn">Spin</label>
+    <label for="nw-s5" class="nw-spin-btn">Spin</label>
+    <label for="nw-s6" class="nw-spin-btn">Spin</label>
+    <label for="nw-s7" class="nw-spin-btn">Spin</label>
+    <label for="nw-s8" class="nw-spin-btn">Spin</label>
+    <label for="nw-s9" class="nw-spin-btn">Spin</label>
+    <label for="nw-s10" class="nw-spin-btn">Spin</label>
+    <label for="nw-s11" class="nw-spin-btn">Spin</label>
+    <label for="nw-s12" class="nw-spin-btn">Spin</label>
+    <p class="nw-done-msg">Out of spins — refresh the page to reset.</p>
+  </div>
+
+</div>
+
+     ;;
+  }
+
+  theme: H.themes.vanilla
+
+}

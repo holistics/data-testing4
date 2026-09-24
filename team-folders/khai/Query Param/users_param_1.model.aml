@@ -1,0 +1,38 @@
+Model users_param_1 {
+  type: 'query'
+  label: 'Users Param 1'
+  description: ''
+  data_source_name: 'demodb'
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension full_name {
+    label: 'Full Name'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.full_name }};;
+  }
+  dimension sign_up_date {
+    label: 'Sign Up Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.sign_up_date }};;
+  }
+
+  param users_date_param {
+    label: 'Users Created Param'
+    type: 'datetime'
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql
+    SELECT {{ #u.id }}, {{ #u.full_name }}, {{ #u.sign_up_date }}
+    from {{ #ecommerce_users u }}
+    where {% filter(users_date_param) %} {{ #u.sign_up_date }} {% end %};;
+  models: [
+    ecommerce_users
+  ]
+}
