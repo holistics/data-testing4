@@ -2168,8 +2168,8 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
     }
   }
   block v_huwn: VizBlock {
-    label: 'Count of [Demo] Raw Orders (events st... by month '
-    viz: PivotTable {
+    label: 'month  and Count of [Demo] Raw Orders (events st...'
+    viz: DataTable {
       dataset: bhx_demo_cross_model_date_filter
       calculation month {
         label: 'month '
@@ -2184,16 +2184,14 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
         calc_type: 'measure'
         data_type: 'number'
       }
-      rows: [
+      fields: [
         VizFieldFull {
           ref: ref('bhx_demo_raw_orders', 'month')
           format {
             type: 'date'
             pattern: 'LLL dd'
           }
-        }
-      ]
-      values: [
+        },
         VizFieldFull {
           ref: 'count_of_demo_raw_orders_events_stand_in_orde'
           format {
@@ -2203,8 +2201,7 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
         }
       ]
       settings {
-        show_row_total: true
-        show_column_total: true
+        show_row_number: true
         row_limit: 5000
         aggregate_awareness {
           enabled: true
