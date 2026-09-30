@@ -158,6 +158,10 @@ Dashboard tri_test {
         position: pos(20, 380, 620, 420)
         layer: 13
       }
+      block v_3i3x {
+        position: pos(130, 290, 620, 420)
+        layer: 13
+      }
       mobile {
         mode: 'auto'
       }
@@ -2210,6 +2214,50 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       }
     }
   }
+  block v_3i3x: VizBlock {
+    label: 'month  and Count of [Demo] Raw Orders (events st... copy'
+    viz: DataTable {
+      dataset: bhx_demo_cross_model_date_filter
+      calculation month {
+        label: 'month '
+        formula: @aql bhx_demo_raw_orders.created_at | month();;
+        calc_type: 'dimension'
+        data_type: 'datetime'
+        model: bhx_demo_raw_orders
+      }
+      calculation count_of_demo_raw_orders_events_stand_in_orde {
+        label: 'Count of [Demo] Raw Orders (events stand-in) Order Id'
+        formula: @aql count(bhx_demo_raw_orders.order_id);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      fields: [
+        VizFieldFull {
+          ref: r(bhx_demo_raw_orders.created_at)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+        },
+        VizFieldFull {
+          ref: 'count_of_demo_raw_orders_events_stand_in_orde'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   settings {
     autorun_on_open: true
   }
@@ -3060,7 +3108,8 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       to: [
         'v_5891',
         'v_uzeq',
-        'v_huwn'
+        'v_huwn',
+        'v_3i3x'
       ]
     },
     FilterInteraction {
@@ -3068,7 +3117,8 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       to: [
         'v_7a8t',
         'v_uzeq',
-        'v_huwn'
+        'v_huwn',
+        'v_3i3x'
       ]
     },
     FilterInteraction {
@@ -3076,7 +3126,8 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       to: [
         'v_7a8t',
         'v_5891',
-        'v_huwn'
+        'v_huwn',
+        'v_3i3x'
       ]
     },
     FilterInteraction {
@@ -3084,7 +3135,17 @@ Set the same date on both filters. Joined viz needs two filters (1 param per wid
       to: [
         'v_7a8t',
         'v_5891',
-        'v_uzeq'
+        'v_uzeq',
+        'v_3i3x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_3i3x'
+      to: [
+        'v_7a8t',
+        'v_5891',
+        'v_uzeq',
+        'v_huwn'
       ]
     }
   ]
