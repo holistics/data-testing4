@@ -404,6 +404,54 @@ Dashboard _0_ecommerce_dashboard_30 {
       }
     }
   }
+  block v8: VizBlock {
+    label: 'Cumulative Buyers Count (dup)'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      filter {
+        field: ref('ecommerce_users', 'sign_up_date')
+        operator: 'matches'
+        value: 'beginning until yesterday'
+      }
+      x_axis: VizFieldFull {
+        ref: ref('ecommerce_users', 'sign_up_date')
+        transformation: 'datetrunc year'
+        format {
+          type: 'date'
+          pattern: 'dd LL yyyy'
+          separator: '/'
+        }
+      }
+      legend: VizFieldFull {
+        ref: ref('ecommerce_users', 'gender')
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          stack_series_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Users'
+            ref: ref('ecommerce_orders', 'id')
+            aggregation: 'count'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   interactions: [
     FilterInteraction {
       from: 'date'
@@ -644,6 +692,10 @@ Dashboard _0_ecommerce_dashboard_30 {
       }
       block user_sign_up_date {
         position: pos(920, 140, 280, 100)
+        layer: 1
+      }
+      block v8 {
+        position: pos(670, 430, 580, 280)
         layer: 1
       }
     }

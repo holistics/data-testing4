@@ -1,4 +1,4 @@
-Model cities {
+Model dim_cities {
   type: 'table'
   label: 'Cities'
   description: ''
@@ -22,6 +22,6 @@ Model cities {
     definition: @sql {{ #SOURCE.country_code }};;
   }
 
-  owner: 'khai.to+demo4@holistics.io'
+  owner: 'khai.to+staging+test@holistics.io'
   table_name: '"ecommerce"."cities"'
 }

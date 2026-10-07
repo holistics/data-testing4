@@ -17,14 +17,12 @@ Model dbt_dev_analytics_order_stats {
     hidden: false
     definition: @sql {{ #SOURCE.user_id }};;
   }
-  
   dimension created_at {
     label: 'Created At'
     type: 'datetime'
     hidden: false
-    definition: @sql {{ #SOURCE.created_at }} - interval '1 hour';;
+    definition: @sql {{ #SOURCE.created_at }};;
   }
-  
   dimension order_status {
     label: 'Order Status'
     type: 'text'

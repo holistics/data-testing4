@@ -103,12 +103,6 @@ PageTheme ticketing_concert_theme {
 }
 
 PageTheme fashion {
-  custom_css: @css
-    /* Change heatmap cell background color */
-    .dac-retention-heatmap-cell {
-      background-color: #FFA500 !important;
-    }
-  ;;
   background {
     bg_color: "#FFE8D1"  // Light pink
     bg_image: ""  // You'd need to replace this with an actual image URL
@@ -303,92 +297,6 @@ PageTheme robinhood {
           font_weight: 'light';
           font_color: '#CCFF00'; 
         } 
-    }
-  }
-}
-
-PageTheme excel_style {
-  background {
-    bg_color: "#F0F0F0"
-    bg_image: ""
-    bg_repeat: false
-    bg_size: "cover"
-  }
-  canvas {
-    border {
-      border_radius: 0
-      border_width: 1
-      border_color: '#D4D4D4'
-      border_style: "solid"
-    }
-    background {
-      bg_color: '#FFFFFF'
-      bg_repeat: false
-      bg_size: "cover"
-    }
-    shadow: "none"
-    opacity: 1
-  }
-  block {
-    label {
-      font_family: "Calibri, Arial, sans-serif"
-      font_size: 14
-      font_color: "#333333"
-      font_weight: "bold"
-      font_style: "normal"
-    }
-    text {
-      font_family: "Calibri, Arial, sans-serif"
-      font_size: 11
-      font_color: "#000000"
-      font_weight: "normal"
-      font_style: "normal"
-    }
-    border {
-      border_width: 0
-      border_radius: 0
-      border_color: '#D4D4D4'
-      border_style: "solid"
-    }
-    background {
-      bg_color: "#FFFFFF"
-      bg_repeat: false
-      bg_size: "cover"
-    }
-    padding: 4
-    shadow: "none"
-    opacity: 1
-  }
-  viz {
-    table {
-      general {
-        bg_color: '#FFFFFF';
-        banding_color: '#F2F2F2';
-        hover_color: '#D6E4F0';
-        font_size: '11px';
-        border_color: '#D4D4D4';
-        grid_color: '#D4D4D4';
-      }
-      header {
-        bg_color: '#D9E1F2';
-        font_size: '11px';
-        font_weight: 'bold';
-        font_color: '#000000';
-      }
-      row_header {
-        font_size: '11px';
-        font_weight: 'normal';
-      }
-      column_header {
-        bg_color: '#D9E1F2';
-        font_size: '11px';
-        font_weight: 'bold';
-        font_color: '#000000';
-      }
-      sub_title {
-        font_size: '11px';
-        font_weight: 'normal';
-      }
     }
   }
 }

@@ -76,10 +76,7 @@ Model order_master {
   dimension date_html {
     label: "Date Html"
     type: "text"
-    description: ""
-    hidden: false
-    definition: @sql CONCAT({{ order_created_at }});;
-    primary_key: false
+    definition: @sql CONCAT('<p style="background-color:tomato;">',{{ order_created_at }}, '</p>');;
   }
 
   dimension delivery_attempts {
@@ -106,23 +103,12 @@ Model order_master {
     hidden: false
     definition: @sql {{ #SOURCE.product_id }};;
   }
-dimension price {
-  label: 'Price'
-  type: 'number'
-  hidden: false
-  description: '''
-    The standard unit price breakdown.
-
-    | Tier Name | Min Price | Max Price | Discount % | Support Level |
-    | :--- | :---: | :---: | :---: | :--- |
-    | **Basic** | $0 | $50 | 0% | Email Only |
-    | **Pro** | $51 | $200 | 5% | Priority Email |
-    | **Team** | $201 | $500 | 10% | Chat + Email |
-    | **Corp** | $501 | $1000 | 15% | Dedicated Rep |
-    | **Ent.** | $1001+ | N/A | Negotiable | 24/7 Phone |
-  '''
-  definition: @sql {{ #SOURCE.price }};;
-}
+  dimension price {
+    label: 'Price'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.price }};;
+  }
   dimension merchant_id {
     label: 'Merchant Id'
     type: 'number'
@@ -159,7 +145,7 @@ dimension price {
     label: 'Final Item Value'
     type: 'number'
     hidden: false
-    definition: @sql CAST({{ #SOURCE.price }} * (1 - {{ #SOURCE.discount }}) AS NUMERIC) ;;
+    definition: @sql {{ #SOURCE.price }} * (1 - {{ #SOURCE.discount }}) ;;
   }
   dimension order_is_delivered {
     label: 'Order Is Delivered'
@@ -199,28 +185,6 @@ dimension price {
     type: "number"
     definition: @sql {{ quantity }} * {{ price }} * (1 - {{ discount }});;
     format: "[\$\$]#,###"
-  }
-
-  // // Dynamic dimension that changes based on the selected parameter value
-  // dimension breakdown_dim {
-  //   label: 'Dynamic Breakdown Dimension'
-  //   type: 'text'
-  //   definition: @aql case(
-  //     when: 'Countries' in dynamic_model.dim_choice
-  //     , then: dynamic_model.country_name
-
-  //     , when: 'Cities' in dynamic_model.dim_choice
-  //     , then: dynamic_model.city_name
-
-  //     , when: 'Gender' in dynamic_model.dim_choice
-  //     , then: dynamic_model.gender
-  //   ) ;;
-  // } 
-
-  dimension customer_lifetime_value {
-    label: "CLV"
-    type: "number"
-    definition: @aql sum(order_master.amount) | dimensionalize(ecommerce_users.id) ;;
   }
 
   // Custom measures
@@ -317,60 +281,6 @@ dimension price {
     description: "P x Q"
     format: "[$$]#,###0"
   }
-  measure revenue_usd {
-    label: "Revenue In USD"
-    type: "number"
-    definition: @aql order_master.revenue * 2 ;;
-    description: "P x Q"
-    format: '[$$]#,###'
-  }
-  measure revenue_eur {
-    label: "Revenue In EUR"
-    type: "number"
-    definition: @aql order_master.revenue / 2 ;;
-    description: "P x Q"
-    format: '[$€]#,###'
-  }
-  measure selected_revenue {
-    label: "Selected Revenue"
-    type: "number"
-    definition: @aql case(
-      when: order_master.merchant_id > 100
-      , then: order_master.revenue_usd
-      , else: order_master.revenue_eur
-    ) ;;
-    description: "P x Q"
-  }
-  measure selected_revenue_02 {
-    label: "Selected Revenue 02"
-    type: "number"
-    definition: @sql  CASE
-    WHEN {{ #SOURCE.merchant_id }} > 100
-      THEN concat('$', regexp_replace(cast(round({{ revenue }} * 2) AS varchar), '(\\d)(?=(\\d{3})+(?!\\d))', '\\1.'))
-    ELSE concat('€', regexp_replace(cast(round({{ revenue }} / 2) AS varchar), '(\\d)(?=(\\d{3})+(?!\\d))', '\\1,'))
-  END ;;
-  }
-  measure selected_revenue_03 {
-    label: "Selected Revenue 03"
-    type: "text"
-    definition: @aql
-    case(
-      when: order_master.merchant_id > 100
-      , then: concat(
-          '$',
-          regexp_replace(
-            cast(round(order_master.revenue * 2), 'text'),
-            '(\\d)(?=(\\d{3})+(?!\\d))',
-            '\\1,'
-          )
-        )
-      , else: regexp_replace(
-          cast(round(order_master.revenue / 2), 'text'),
-          '(\\d)(?=(\\d{3})+(?!\\d))',
-          '\\1,'
-        )
-    ) ;;
-  }
   measure revenue_delivered {
     label: "Revenue Delivered"
     type: "number"
@@ -384,14 +294,32 @@ dimension price {
     definition: @sql count(distinct {{ #SOURCE.user_id }});;
   }
 
-  // Parameter to allow users to choose which dimension to use dynamically
+   // Parameter to allow users to choose which dimension to use dynamically
   param dim_selector {
     label: 'Dimension Selector'
     type: 'text'
-    allowed_values: [
-      'Countries',
-      'Cities',
-      'Gender'
-    ]
+    allowed_values: ['Countries', 'Cities', 'Gender']
+  }
+
+  // // Dynamic dimension that changes based on the selected parameter value
+  // dimension breakdown_dim {
+  //   label: 'Dynamic Breakdown Dimension'
+  //   type: 'text'
+  //   definition: @aql case(
+  //     when: 'Countries' in dynamic_model.dim_choice
+  //     , then: dynamic_model.country_name
+
+  //     , when: 'Cities' in dynamic_model.dim_choice
+  //     , then: dynamic_model.city_name
+
+  //     , when: 'Gender' in dynamic_model.dim_choice
+  //     , then: dynamic_model.gender
+  //   ) ;;
+  // } 
+
+  dimension customer_lifetime_value {
+    label: "CLV"
+    type: "number"
+    definition: @aql sum(order_master.amount) | dimensionalize(ecommerce_users.id) ;;
   }
 }
