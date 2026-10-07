@@ -18,6 +18,8 @@ ${
 
     ## Core Principles
 
+    **always reply in ${H.current_user.language}**
+
     **Be Trustworthy**
     - Acknowledge uncertainty explicitly when you don't have enough information
     - Never fabricate metrics, data points, or analysis results

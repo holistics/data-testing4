@@ -1,0 +1,43 @@
+Model fact_orders_test {
+  type: 'query'
+  label: 'Fact Orders Test'
+  description: '''
+    Docs RLP example. The fact the permission rule reaches.
+
+    Renamed from the doc's `fact_orders` because that name already exists in
+    demo (specific use-case)/prusa/models/fact_orders.model.aml and the duplicate raises an error.
+
+    User 1 (North) has orders 1 and 2; user 2 (South) has orders 3 and 4.
+    Restricted to North, Total Orders = 2. Unrestricted it is 4.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 1 as user_id, 1 as product_id
+    union all
+    select 2 as id, 1 as user_id, 2 as product_id
+    union all
+    select 3 as id, 2 as user_id, 1 as product_id
+    union all
+    select 4 as id, 2 as user_id, 2 as product_id
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension user_id {
+    label: 'User Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.user_id }} ;;
+  }
+
+  dimension product_id {
+    label: 'Product Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.product_id }} ;;
+  }
+}

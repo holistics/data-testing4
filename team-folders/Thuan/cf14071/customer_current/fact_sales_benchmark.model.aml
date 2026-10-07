@@ -1,0 +1,57 @@
+Model fact_sales_benchmark {
+  type: 'query'
+  label: 'Fact Sales (Benchmark)'
+  description: '''
+    CF-14071. The "Fact Sales (Benchmark)" box. Cohort-grain fact that must NOT be store-restricted.
+
+    Has NO store key at all - it never joins Dim Store. That is the diagram's "No Path" arrow, and this is
+    one of the three boxes marked "Error as this path can't be resolved through RLS via Dim Store".
+
+    Joins Dim Date (shared) and Dim Region (Benchmark).
+
+    Cohort values are deliberately much larger than the core fact, so it is obvious in a report if the
+    benchmark has been wrongly narrowed to the permitted store(s).
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 'NSW' as region_key, 20260101 as date_key, 5000 as amount
+    union all
+    select 2 as id, 'NSW' as region_key, 20260102 as date_key, 7000 as amount
+    union all
+    select 3 as id, 'VIC' as region_key, 20260102 as date_key, 6000 as amount
+    union all
+    select 4 as id, 'QLD' as region_key, 20260101 as date_key, 2500 as amount
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension region_key {
+    label: 'Region Key (Benchmark)'
+    type: 'text'
+    definition: @sql {{ #SOURCE.region_key }} ;;
+  }
+
+  dimension date_key {
+    label: 'Date Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.date_key }} ;;
+  }
+
+  dimension amount {
+    label: 'Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.amount }} ;;
+  }
+
+  measure bench_sales_amount {
+    label: 'Benchmark Sales $'
+    type: 'number'
+    definition: @aql sum(fact_sales_benchmark.amount) ;;
+  }
+}

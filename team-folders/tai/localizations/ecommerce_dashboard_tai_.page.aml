@@ -1,0 +1,51 @@
+Dashboard ecommerce_dashboard_tai_copy {
+  title: dict('dashboard_title')('eng')
+  owner: 'hien.nt@holistics.io'
+  block t_gtay: TextBlock {
+    content: @md <h1 style =" font-size:40px; color: #022658;padding-bottom:24px;border-bottom: 1px solid #022658" id="overview">Hello</h1>;;
+  }
+  block v_mfqq: VizBlock {
+    label: 'Chiffre d\'affaires total'
+    viz: DataTable {
+      dataset: demo_ecommerce_internal_training
+      fields: [
+        VizFieldFull {
+          ref: r(order_master.revenue)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  view: CanvasLayout {
+    label: 'Canvas Layout'
+    width: 1220
+    height: 2720
+    grid_size: 20
+    auto_expand_vertically: true
+    block t_gtay {
+      position: pos(20, 20, 1180, 80)
+      layer: 1
+    }
+    block v_mfqq {
+      position: pos(80, 140, 480, 180)
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: H.themes.vanilla
+  settings {
+    cache_duration: 1440
+  }
+}

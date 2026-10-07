@@ -1,0 +1,25 @@
+Model dim_date {
+  type: 'query'
+  label: 'Dim Date'
+  description: 'CF-14071. The "Dim Date" box. Shared: joins Fact Sales and Fact Sales (Benchmark). Neither SOH fact joins it.'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 20260101 as date_key, date '2026-01-01' as date_value
+    union all
+    select 20260102 as date_key, date '2026-01-02' as date_value
+  ;;
+
+  dimension date_key {
+    label: 'Date Key'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.date_key }} ;;
+  }
+
+  dimension date_value {
+    label: 'Date'
+    type: 'date'
+    definition: @sql {{ #SOURCE.date_value }} ;;
+  }
+}

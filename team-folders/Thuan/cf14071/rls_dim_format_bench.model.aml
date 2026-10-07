@@ -1,0 +1,23 @@
+Model rls_dim_format_bench {
+  type: 'query'
+  label: 'RLS Dim Store Format (Benchmark)'
+  description: '''
+    CF-14071 repro. Benchmark cohort dimension, joined ONLY to the benchmark fact - this is how the customer
+    keeps benchmark filters off the core facts. Must stay complete (never narrowed by the store entitlement),
+    because the cohort spans stores the user cannot see individually.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 'Max' as store_format
+    union all
+    select 'Express' as store_format
+  ;;
+
+  dimension store_format {
+    label: 'Store Format (Benchmark)'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.store_format }} ;;
+  }
+}

@@ -1,0 +1,47 @@
+Model fact_soh_benchmark {
+  type: 'query'
+  label: 'Fact SOH (Benchmark)'
+  description: '''
+    CF-14071. The "Fact SOH (Benchmark)" box. Cohort-grain inventory fact, not store-restricted.
+
+    No store key and no date key - it joins ONLY Dim Region (Benchmark), exactly as drawn. The third of the
+    three boxes marked "Error as this path can't be resolved through RLS via Dim Store", and the one with no
+    shared-dimension bridge of any kind back to Dim Store.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 'NSW' as region_key, 900 as soh_units
+    union all
+    select 2 as id, 'NSW' as region_key, 800 as soh_units
+    union all
+    select 3 as id, 'VIC' as region_key, 700 as soh_units
+    union all
+    select 4 as id, 'QLD' as region_key, 400 as soh_units
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension region_key {
+    label: 'Region Key (Benchmark)'
+    type: 'text'
+    definition: @sql {{ #SOURCE.region_key }} ;;
+  }
+
+  dimension soh_units {
+    label: 'SOH Units'
+    type: 'number'
+    definition: @sql {{ #SOURCE.soh_units }} ;;
+  }
+
+  measure bench_soh_qty {
+    label: 'Benchmark SOH Qty'
+    type: 'number'
+    definition: @aql sum(fact_soh_benchmark.soh_units) ;;
+  }
+}

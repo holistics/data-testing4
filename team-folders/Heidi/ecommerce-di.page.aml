@@ -78,8 +78,10 @@ Dashboard ecommerce_di {
       fields: [
         VizFieldFull {
           ref: r(ecommerce_orders.created_date)
+          transformation: 'datetrunc month'
           format {
             type: 'date'
+            pattern: 'LLL yyyy'
           }
         },
         VizFieldFull {

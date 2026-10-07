@@ -39,6 +39,32 @@ Model ecommerce_dim_products {
     hidden: false
     definition: @sql {{ #SOURCE.created_at }};;
   }
+  dimension fr_name {
+    label: "Test FR Name"
+    type: "text"
+    description: ""
+    hidden: false
+    definition: @aql concat(ecommerce_dim_products.name, " ", "test FR");;
+  }
+  dimension localized_name {
+    label: "Localized Name"
+    type: "text"
+    description: ""
+    hidden: false
+    definition: @aql case(
+    when: in('fr', H.current_user.language),
+      then: ecommerce_dim_products.fr_name,
+      else: ecommerce_dim_products.name
+    ) ;;
+  }
+
+  dimension current_language {
+    label: "Current Language"
+    type: "text"
+    description: ""
+    hidden: false
+    definition: @aql H.current_user.language ;;
+  }
 
   owner: 'tai.nguyen@holistics.io'
   table_name: '"ecommerce"."dim_products"'

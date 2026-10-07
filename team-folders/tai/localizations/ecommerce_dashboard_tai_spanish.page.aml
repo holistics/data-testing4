@@ -7,6 +7,10 @@ Dashboard ecommerce_dashboard_tai_spanish= ecommerce_dashboard_tai.extend({
     viz: MetricKpi {
       value: VizFieldFull {
         label: dict('gmv_field_label')('spa')
+        format {
+          type: 'number'
+          pattern: '#.### [$€]'
+        }
       }
     }
   }

@@ -1,0 +1,68 @@
+Dataset rlp_ascode_check {
+  label: 'RLP as-code check (dataset-level dimension)'
+  description: '''
+    RLP as-code with a CROSS-MODEL dimension defined at DATASET level.
+
+    has_access is true when dim_b.role OR dim_c.role matches the current user's h_role.
+
+    Note on syntax: the permission must reference the dataset-level field with ref('fact_a', 'has_access').
+    The r(fact_a.has_access) form does NOT resolve dataset-level fields and fails to compile with
+    "Cannot find field 'has_access' in model 'fact_a'".
+
+    HOW TO CHECK (RLP as-code is not enforced in the dev workspace, and admins bypass RLP - so this must be
+    published to production and checked while impersonating a non-admin):
+
+    1. Publish this dataset to production.
+    2. Top-right menu -> View and Edit as -> pick an Explorer / Viewer user.
+    3. Set that user's h_role attribute, then explore fact_a and check which rows come back.
+
+    fact_a data and expected rows:
+
+      id | dim_b.role | dim_c.role | has_access(admin) | has_access(analyst)
+      ---+------------+------------+-------------------+--------------------
+       1 | admin      | admin      | true              | false
+       2 | admin      | analyst    | true              | true
+       3 | analyst    | admin      | true              | true
+       4 | analyst    | analyst    | false             | true
+
+    So: h_role = admin   -> rows 1, 2, 3
+        h_role = analyst -> rows 2, 3, 4
+
+    has_access is left visible (not hidden) on purpose so it can be put on screen next to dim_b.role and
+    dim_c.role while checking.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    fact_a,
+    dim_b,
+    dim_c,
+  ]
+
+  relationships: [
+    relationship(fact_a.b_id > dim_b.id, true),
+    relationship(fact_a.c_id > dim_c.id, true),
+  ]
+
+  dimension has_access {
+    model: fact_a
+    label: 'Has Access'
+    type: 'truefalse'
+    definition: @aql or(
+      dim_b.role == H.current_user.h_role,
+      dim_c.role == H.current_user.h_role
+    ) ;;
+  }
+
+  permission fact_a_access {
+    field: ref('fact_a', 'has_access')
+    operator: 'is'
+    value: true
+  }
+
+  view {
+    model fact_a {}
+    model dim_b {}
+    model dim_c {}
+  }
+}

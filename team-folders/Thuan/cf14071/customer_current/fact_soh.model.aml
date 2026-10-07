@@ -1,0 +1,55 @@
+Model fact_soh {
+  type: 'query'
+  label: 'Fact SOH'
+  description: '''
+    CF-14071. The "Fact SOH" box. Core inventory snapshot fact. Joins Dim Store and Dim Region.
+
+    NO date_key column, so it cannot join Dim Date - matching the diagram, where Fact SOH has no line to
+    Dim Date (the customer's concern #3).
+
+    Also only carries stores 1, 2 and 3 while Dim Store has 1-5 (concern #2: partial store coverage on a
+    propagation path).
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 1 as store_key, 'VIC' as region_key, 10 as soh_units
+    union all
+    select 2 as id, 2 as store_key, 'VIC' as region_key, 20 as soh_units
+    union all
+    select 3 as id, 3 as store_key, 'NSW' as region_key, 30 as soh_units
+    union all
+    select 4 as id, 3 as store_key, 'NSW' as region_key, 40 as soh_units
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.store_key }} ;;
+  }
+
+  dimension region_key {
+    label: 'Region Key'
+    type: 'text'
+    definition: @sql {{ #SOURCE.region_key }} ;;
+  }
+
+  dimension soh_units {
+    label: 'SOH Units'
+    type: 'number'
+    definition: @sql {{ #SOURCE.soh_units }} ;;
+  }
+
+  measure soh_qty {
+    label: 'SOH Qty'
+    type: 'number'
+    definition: @aql sum(fact_soh.soh_units) ;;
+  }
+}
