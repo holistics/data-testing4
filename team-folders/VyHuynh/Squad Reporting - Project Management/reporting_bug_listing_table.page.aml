@@ -125,6 +125,7 @@ Dashboard untitled_8_3 {
           format {
             type: 'text'
           }
+          uname: 'reporting_issues_identifier_1'
         },
         VizFieldFull {
           ref: r(reporting_issues.title)
@@ -135,6 +136,12 @@ Dashboard untitled_8_3 {
       ]
       settings {
         show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'reporting_issues_identifier_1'
+            direction: 'asc'
+          }
+        ]
         row_limit: 5000
         aggregate_awareness {
           enabled: true
