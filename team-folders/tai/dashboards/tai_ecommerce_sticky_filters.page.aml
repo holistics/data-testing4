@@ -1,0 +1,619 @@
+Dashboard tai_ecommerce_sticky_filters {
+  title: 'eCommerce Dashboard - Sticky Filters (HTML Layout)'
+  description: 'Demo: common filters stick to the top while scrolling; report-specific filters sit next to their report.'
+
+  view: HTMLLayout {
+    content: @html
+<div class="sf">
+  <style>
+    .sf {
+      --sf-navy: #0B325B;
+      --sf-green: #6CD4A1;
+      --sf-border: #E1E3EA;
+      --sf-muted: #6B7280;
+      --sf-bg: #F5F7FA;
+      background: var(--sf-bg);
+      padding: 0 24px 40px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .sf *, .sf *::before, .sf *::after { box-sizing: border-box; }
+
+    /* Header (scrolls away) */
+    .sf-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--sf-navy); color: #fff;
+      margin: 0 -24px; padding: 20px 32px;
+    }
+    .sf-header h1 { margin: 0; font-size: 24px; color: #fff; }
+    .sf-header p { margin: 4px 0 0; font-size: 13px; color: #C7D2E0; }
+    .sf-header img { height: 28px; }
+
+    /* Sticky common-filter bar */
+    .sf-sticky {
+      position: sticky; top: 0; z-index: 50;
+      margin: 0 -24px 20px; padding: 10px 32px;
+      background: #fff;
+      border-bottom: 3px solid var(--sf-green);
+      box-shadow: 0 6px 16px rgba(11, 50, 91, 0.10);
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .sf-sticky-label {
+      display: flex; flex-direction: column; justify-content: center;
+      min-width: 130px; padding-right: 16px;
+      border-right: 1px solid var(--sf-border);
+    }
+    .sf-sticky-label strong { font-size: 13px; color: var(--sf-navy); text-transform: uppercase; letter-spacing: .04em; }
+    .sf-sticky-label span { font-size: 12px; color: var(--sf-muted); }
+    .sf-filter { width: 240px; height: 76px; }
+
+    /* KPI row */
+    .sf-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .sf-kpi { height: 130px; }
+
+    /* Report sections */
+    .sf-section {
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 10px;
+      padding: 16px; margin-bottom: 24px;
+    }
+    .sf-section-title { margin: 0 0 12px; font-size: 16px; font-weight: 600; color: var(--sf-navy); }
+    .sf-row { display: flex; gap: 16px; align-items: stretch; }
+
+    /* Report-specific filter rail, on the left of its report */
+    .sf-rail {
+      flex: 0 0 240px;
+      background: #F0FAF5; border-left: 4px solid var(--sf-green); border-radius: 6px;
+      padding: 10px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .sf-rail-tag { font-size: 11px; font-weight: 600; color: #1F7A52; text-transform: uppercase; letter-spacing: .04em; }
+    .sf-rail-note { font-size: 12px; color: var(--sf-muted); }
+    .sf-rail-filter { height: 76px; }
+
+    .sf-report { flex: 1 1 auto; min-width: 0; height: 400px; }
+    .sf-report-tall { height: 480px; }
+    .sf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  </style>
+
+  <div class="sf-header">
+    <div>
+      <h1>eCommerce Dashboard</h1>
+      <p>Scroll down, and the common filters stay pinned to the top.</p>
+    </div>
+    <img src="https://cdn.holistics.io/logos/holistics-logo-white.svg" alt="Holistics" />
+  </div>
+
+  <!-- Common filters: sticky -->
+  <div class="sf-sticky">
+    <div class="sf-sticky-label">
+      <strong>Common filters</strong>
+      <span>Apply to all reports</span>
+    </div>
+    <div class="sf-filter"><h-block name="f1" /></div>
+    <div class="sf-filter"><h-block name="f2" /></div>
+    <div class="sf-filter"><h-block name="f3" /></div>
+  </div>
+
+  <div class="sf-kpis">
+    <div class="sf-kpi"><h-block name="v1" /></div>
+    <div class="sf-kpi"><h-block name="v2" /></div>
+    <div class="sf-kpi"><h-block name="v3" /></div>
+    <div class="sf-kpi"><h-block name="v4" /></div>
+  </div>
+
+  <!-- Report 1 + its specific control -->
+  <div class="sf-section">
+    <h3 class="sf-section-title">Monthly NMV</h3>
+    <div class="sf-row">
+      <div class="sf-rail">
+        <span class="sf-rail-tag">This report only</span>
+        <div class="sf-rail-filter"><h-block name="d1" /></div>
+        <span class="sf-rail-note">Changes the time granularity of Monthly NMV.</span>
+      </div>
+      <div class="sf-report"><h-block name="v5" /></div>
+    </div>
+  </div>
+
+  <!-- Reports without specific filters -->
+  <div class="sf-section">
+    <h3 class="sf-section-title">Order &amp; user trends</h3>
+    <div class="sf-grid-2">
+      <div class="sf-report"><h-block name="v6" /></div>
+      <div class="sf-report"><h-block name="v7" /></div>
+    </div>
+  </div>
+
+  <!-- Report 2 + its specific filter -->
+  <div class="sf-section">
+    <h3 class="sf-section-title">User Retention</h3>
+    <div class="sf-row">
+      <div class="sf-rail">
+        <span class="sf-rail-tag">This report only</span>
+        <div class="sf-rail-filter"><h-block name="f4" /></div>
+        <span class="sf-rail-note">Filters User Retention by gender.</span>
+      </div>
+      <div class="sf-report"><h-block name="v8" /></div>
+    </div>
+  </div>
+
+  <div class="sf-section">
+    <h3 class="sf-section-title">Top selling product categories</h3>
+    <div class="sf-report sf-report-tall"><h-block name="v9" /></div>
+  </div>
+</div>
+    ;;
+  }
+
+  block v1: VizBlock {
+    label: 'Gross Merchandise Value'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        label: 'Gross Merchandise Value'
+        ref: ref('order_master', 'gmv')
+        format {
+          type: 'number'
+          pattern: '[$$]#,###0.00,,"M"'
+          group_separator: ','
+          decimal_separator: '.'
+        }
+      }
+      compare_value: VizPopSettings {
+        field: ref('order_master', 'order_created_at')
+        duration: 3
+        granularity: 'month'
+      }
+    }
+  }
+  block v2: VizBlock {
+    label: 'Net Merchandise Value'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        label: 'Net Merchandise Value'
+        ref: ref('order_master', 'nmv')
+        format {
+          type: 'number'
+          pattern: '[$$]#,###0.00,,"M"'
+          group_separator: ','
+          decimal_separator: '.'
+        }
+      }
+      compare_value: VizPopSettings {
+        field: ref('order_master', 'order_created_at')
+        duration: 3
+        granularity: 'month'
+      }
+    }
+  }
+  block v3: VizBlock {
+    label: 'Average Order Value'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        label: 'Average Order Value'
+        ref: ref('order_master', 'aov')
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      compare_value: VizPopSettings {
+        field: ref('order_master', 'order_created_at')
+        duration: 3
+        granularity: 'month'
+      }
+    }
+  }
+  block v4: VizBlock {
+    label: 'Registered Users'
+    viz: MetricKpi {
+      dataset: demo_ecommerce
+      value: VizFieldFull {
+        label: 'Registered Users'
+        ref: ref('order_master', 'count_distinct_users')
+        format {
+          type: 'number'
+          pattern: '#,###'
+        }
+      }
+      compare_value: VizPopSettings {
+        field: ref('ecommerce_users', 'sign_up_date')
+        duration: 3
+        granularity: 'month'
+      }
+    }
+  }
+  block v5: VizBlock {
+    label: 'Monthly NMV'
+    viz: CombinationChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: ref('order_master', 'order_created_at')
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          mark_type: 'column'
+          field {
+            label: 'Net Merchandise Value'
+            ref: ref('order_master', 'nmv')
+            format {
+              type: 'number'
+              pattern: '[$$]#,###0.00,"K"'
+              group_separator: ','
+              decimal_separator: '.'
+            }
+          }
+          settings {
+            color: '#255DD4'
+          }
+        }
+      }
+      y_axis {
+        settings {
+          alignment: 'right'
+          axis_min: 0
+        }
+        series {
+          mark_type: 'line'
+          field {
+            label: 'Growth Rate'
+            ref: ref('order_master', 'cancelled_order_ratio')
+            format {
+              type: 'number'
+              pattern: '#,###%'
+            }
+          }
+          settings {
+            color: '#3BDDAAFF'
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        legend_label: 'right'
+      }
+    }
+  }
+  block v6: VizBlock {
+    label: 'AOV Trend'
+    viz: AreaChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: ref('order_master', 'order_created_at')
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        settings {
+          scale: 'logarithmic'
+        }
+        series {
+          field {
+            ref: ref('order_master', 'aov')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#255DD4'
+            line_interpolation: 'step'
+          }
+        }
+      }
+      tooltips: [
+        VizTooltip {
+          field {
+            ref: ref('order_master', 'gmv')
+            format {
+              type: 'number'
+              pattern: '#,###0.00,"K"'
+            }
+          }
+        },
+        VizTooltip {
+          field {
+            ref: ref('order_master', 'nmv')
+            format {
+              type: 'number'
+              pattern: '#,###0.00,"K"'
+            }
+          }
+        }
+      ]
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        pop {
+          field: ref('order_master', 'order_created_at')
+          duration: 3
+          granularity: 'month'
+          show_growth_rate: true
+        }
+      }
+    }
+  }
+  block v7: VizBlock {
+    label: 'Monthly Sign up Trend'
+    viz: CombinationChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        ref: ref('ecommerce_users', 'sign_up_date')
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          mark_type: 'area'
+          field {
+            ref: ref('ecommerce_users', 'users_signed_up_count')
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#255DD4'
+            line_interpolation: 'smooth'
+          }
+        }
+        series {
+          mark_type: 'area'
+          field {
+            label: 'Users Purchased'
+            ref: ref('order_master', 'user_id')
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color: '#3CDD92FF'
+            line_interpolation: 'smooth'
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'top'
+      }
+    }
+  }
+  block v8: VizBlock {
+    label: 'User Retention'
+    viz: ScatterChart {
+      dataset: demo_ecommerce_users
+      x_col: VizFieldFull {
+        label: 'NMV'
+        ref: ref('user_facts_aggr', 'nmv')
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      y_col: VizFieldFull {
+        ref: ref('user_facts_aggr', 'days_from_last_order')
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      group_col: VizFieldFull {
+        ref: ref('ecommerce_users', 'age_group')
+        format {
+          type: 'text'
+        }
+      }
+      label_col: VizFieldFull {
+        ref: ref('ecommerce_countries', 'continent_name')
+        format {
+          type: 'text'
+        }
+      }
+      settings {
+        row_limit: 5000
+      }
+    }
+  }
+  block v9: VizBlock {
+    label: 'Top selling product categories'
+    viz: PivotTable {
+      dataset: demo_ecommerce
+      rows: [
+        VizFieldFull {
+          ref: ref('map_categories', 'category')
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      columns: [
+        VizFieldFull {
+          label: 'Year'
+          ref: ref('order_master', 'order_created_at')
+          transformation: 'datetrunc quarter'
+          format {
+            type: 'date'
+            pattern: 'yyyy Qq'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          label: ' '
+          ref: ref('order_master', 'nmv')
+          format {
+            type: 'number'
+            pattern: '[$$]#,###0.00,"K"'
+            group_separator: ','
+            decimal_separator: '.'
+          }
+        }
+      ]
+      settings {
+        row_height: 'multiple_lines'
+        pagination_size: 100
+        show_row_with_no_data: true
+        conditional_formats: [
+          ConditionalFormat {
+            ref: ref('order_master', 'nmv')
+            aggregation: 'custom'
+            format: ScaleFormat {
+              min {
+                value: 0
+                color: '#E8F6F5'
+              }
+              mid {
+                value: 160000
+                color: '#74C9C5'
+              }
+              max {
+                value: 320000
+                color: '#18A59E'
+              }
+            }
+          }
+        ]
+        sorts: [
+          SortSetting {
+            field_index: 0
+            direction: 'desc'
+          }
+        ]
+      }
+    }
+  }
+
+  // Common filters (sticky bar)
+  block f1: FilterBlock {
+    label: 'Date Range'
+    type: 'date'
+    default {
+      operator: 'matches'
+      value: '2023 to 2024'
+    }
+  }
+  block f2: FilterBlock {
+    label: 'Country'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: ref('ecommerce_countries', 'name')
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block f3: FilterBlock {
+    label: 'Region'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: r(ecommerce_countries.continent_name)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+
+  // Report-specific controls (left rail of each report)
+  block d1: DateDrillBlock {
+    label: 'Time Period'
+    default: 'month'
+  }
+  block f4: FilterBlock {
+    label: 'Gender'
+    description: 'View User Retention by Gender'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce_users
+      field: ref('ecommerce_users', 'gender')
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+    settings {
+      input_type: 'nullable-single'
+    }
+  }
+
+  interactions: [
+    FilterInteraction {
+      from: 'f2'
+      to: [
+        CustomMapping {
+          block: 'f3'
+          disabled: true
+        }
+      ]
+    },
+    DateDrillInteraction {
+      from: 'd1'
+      to: [
+        CustomMapping {
+          block: 'v5'
+          field: ref('order_master', 'order_created_at')
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f3'
+      to: [
+        CustomMapping {
+          block: 'v8'
+          field: ref('ecommerce_countries', 'continent_name')
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f2'
+      to: [
+        CustomMapping {
+          block: 'v8'
+          field: ref('ecommerce_countries', 'name')
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f1'
+      to: [
+        CustomMapping {
+          block: [
+            'v1',
+            'v2',
+            'v3',
+            'v5',
+            'v6',
+            'v9'
+          ]
+          field: ref('order_master', 'order_created_at')
+        },
+        CustomMapping {
+          block: [
+            'v7',
+            'v4',
+            'v8'
+          ]
+          field: ref('ecommerce_users', 'sign_up_date')
+        }
+      ]
+    }
+  ]
+}

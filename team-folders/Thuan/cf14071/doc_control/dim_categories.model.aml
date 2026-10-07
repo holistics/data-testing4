@@ -1,4 +1,4 @@
-Model dim_categories {
+Model dim_categories_thuan {
   type: 'query'
   label: 'Dim Categories'
   description: 'Docs RLP example, verbatim.'

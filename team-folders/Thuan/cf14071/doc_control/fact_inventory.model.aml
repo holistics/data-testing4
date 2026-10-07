@@ -1,4 +1,4 @@
-Model fact_inventory {
+Model fact_inventory_thuan {
   type: 'query'
   label: 'Fact Inventory'
   description: '''

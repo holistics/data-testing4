@@ -1,4 +1,4 @@
-Model dim_cities {
+Model dim_cities_thuan {
   type: 'query'
   label: 'Dim Cities'
   description: 'Docs RLP example, verbatim. Carries the permission rule.'

@@ -41,21 +41,21 @@ Dataset ecommerce_rlp_oneway {
   data_source_name: 'demodb'
 
   models: [
-    dim_users, dim_products_test, dim_cities,
-    dim_merchants, dim_categories,
-    fact_orders_test, fact_inventory
+    dim_users_thuan, dim_products_test, dim_cities_thuan,
+    dim_merchants_thuan, dim_categories_thuan,
+    fact_orders_test, fact_inventory_thuan
   ]
 
   relationships: [
-    relationship(fact_orders_test.user_id > dim_users.id, true, 'one_way'),
+    relationship(fact_orders_test.user_id > dim_users_thuan.id, true, 'one_way'),
 
     // The doc's "blocking relationship", with RLP propagation forced one_way.
     relationship(fact_orders_test.product_id > dim_products_test.id, true, 'one_way', rlp_propagation='one_way'),
 
-    relationship(fact_inventory.product_id > dim_products_test.id, true, 'one_way'),
-    relationship(dim_users.city_id > dim_cities.id, true, 'one_way'),
-    relationship(dim_products_test.merchant_id > dim_merchants.id, true, 'one_way'),
-    relationship(dim_products_test.category_id > dim_categories.id, true, 'one_way')
+    relationship(fact_inventory_thuan.product_id > dim_products_test.id, true, 'one_way'),
+    relationship(dim_users_thuan.city_id > dim_cities_thuan.id, true, 'one_way'),
+    relationship(dim_products_test.merchant_id > dim_merchants_thuan.id, true, 'one_way'),
+    relationship(dim_products_test.category_id > dim_categories_thuan.id, true, 'one_way')
   ]
 
   metric total_orders {
@@ -65,7 +65,7 @@ Dataset ecommerce_rlp_oneway {
   }
 
   permission regional_access {
-    field: r(dim_cities.region)
+    field: r(dim_cities_thuan.region)
     operator: 'matches_user_attribute'
     value: 'region' // user attribute
   }
