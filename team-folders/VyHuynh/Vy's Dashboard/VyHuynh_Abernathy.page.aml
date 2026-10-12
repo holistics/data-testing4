@@ -15,7 +15,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      height: 1160
+      height: 1560
       grid_size: 20
       block v3 {
         position: pos(20, 280, 1160, 420)
@@ -88,6 +88,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       block v_0725 {
         position: pos(600, 720, 580, 400)
         layer: 17
+      }
+      block v_5fgl {
+        position: pos(20, 1140, 580, 400)
+        layer: 18
       }
       mobile {
         mode: 'auto'
@@ -4244,6 +4248,58 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block v_5fgl: VizBlock {
+    label: 'Month Order Created Date, Date and 4 more'
+    viz: MetricSheet {
+      dataset: demo_ecommerce
+      calculation gmv_2024 {
+        label: '2024'
+        formula: @aql order_master.gmv | where(order_master.order_created_at is @2024);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation gmv_2023 {
+        label: '2023'
+        formula: @aql order_master.gmv | where(order_master.order_created_at is @2023);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      date_field: VizFieldFull {
+        ref: r(order_master.order_created_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      rows: [
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(demo_ecommerce.total_orders)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      ]
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   settings {
     timezone: 'Etc/UTC'
     cache_duration: 1440
@@ -4358,6 +4414,27 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v3'
       ]
       field: r(vyht_ecommerce_orders_1.created_at)
+    },
+    FilterInteraction {
+      from: 'f1'
+      to: [
+        'v_5fgl'
+      ]
+      field: r(ecommerce_countries.name)
+    },
+    FilterInteraction {
+      from: 'f2'
+      to: [
+        'v_5fgl'
+      ]
+      field: r(ecommerce_cities.name)
+    },
+    FilterInteraction {
+      from: 'f_zwa4'
+      to: [
+        'v_5fgl'
+      ]
+      field: r(order_master.order_created_at)
     },
     DateDrillInteraction {
       from: 'd_date_drill'
