@@ -75,6 +75,7 @@ Dashboard sale_overview_copy {
       block f_product_category
       block v_category_gmv
     }
+    default_zoom: 'fit_to_width'
   }
   settings {
     timezone: 'Etc/GMT+12'
