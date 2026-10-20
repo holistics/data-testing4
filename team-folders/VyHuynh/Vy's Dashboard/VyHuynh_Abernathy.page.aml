@@ -384,6 +384,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         row_limit: 100
         x_axis_label: 'Order Month'
         x_axis_show_null_datetime: false
+        pop {
+          field: r(vyht_ecommerce_orders_1.created_at)
+          value: RelativePopValue {
+            duration: 1
+            granularity: 'year'
+          }
+          show_growth_rate: true
+        }
         aggregate_awareness {
           enabled: true
           debug_comments: true
@@ -2676,6 +2684,22 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
               type: 'number'
               pattern: 'inherited'
             }
+          }
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Trend line of Revenue Won'
+            ref: r(vy_pbi_dts.revenue_won)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+            analytic: RegressionLine {
+              type: 'linear'
+            }
+          }
+          settings {
+            line_style: 'dashed'
           }
         }
       }
@@ -5234,7 +5258,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
     },
     FilterInteraction {
-      from: 'v_od3a'
+      from: 'v_wxn2_conflict_copy'
       to: [
         'v5',
         'v_711g',

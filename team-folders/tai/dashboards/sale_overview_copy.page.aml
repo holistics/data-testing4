@@ -1,6 +1,5 @@
 Dashboard sale_overview_copy {
   title: '[Demo] Sales Overview'
-
   block f_product_category: FilterBlock {
     label: 'Category Keyword Search'
     type: 'field'
@@ -9,11 +8,13 @@ Dashboard sale_overview_copy {
       field: r(param_model_tai.category_keywords)
     }
     default {
-      operator: 'is'
+      operator: 'contains'
       value: '$H_NIL$'
     }
+    settings {
+      input_type: 'multiple'
+    }
   }
-
   block v_category_gmv: VizBlock {
     label: 'GMV by Product Category'
     viz: CombinationChart {
@@ -47,7 +48,6 @@ Dashboard sale_overview_copy {
       }
     }
   }
-
   explicit_interactions: [
     FilterInteraction {
       from: 'f_product_category'
@@ -57,7 +57,6 @@ Dashboard sale_overview_copy {
       field: r(param_model_tai.category_keywords)
     }
   ]
-
   view: CanvasLayout {
     label: 'GMV by Category'
     width: 1230
@@ -67,22 +66,22 @@ Dashboard sale_overview_copy {
       position: pos(30, 30, 320, 80)
       layer: 1
     }
-
     block v_category_gmv {
       position: pos(30, 130, 1170, 460)
       layer: 1
     }
-
     mobile {
       mode: 'auto'
       block f_product_category
       block v_category_gmv
     }
+    default_zoom: 'fit_to_width'
   }
-
   settings {
     timezone: 'Etc/GMT+12'
     cache_duration: 1440
+    autorun_on_open: true
+    autorun_on_changes: true
   }
   theme: H.themes.classic
 }
