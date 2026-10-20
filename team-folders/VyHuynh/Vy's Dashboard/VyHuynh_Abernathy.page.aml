@@ -15,10 +15,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      height: 1160
+      height: 1560
       grid_size: 20
       block v3 {
-        position: pos(20, 300, 1160, 420)
+        position: pos(20, 280, 1160, 420)
         layer: 3
       }
       block t3 {
@@ -78,7 +78,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 4
       }
       block v_m2xo {
-        position: pos(20, 740, 560, 400)
+        position: pos(20, 720, 560, 400)
         layer: 16
       }
       block d_date_drill {
@@ -86,11 +86,12 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 1
       }
       block v_0725 {
-        position: pos(600, 740, 580, 400)
+        position: pos(600, 720, 580, 400)
         layer: 17
       }
-      block p_period_comparison_766n {
-        position: pos(340, 200, 300, 80)
+      block v_5fgl {
+        position: pos(20, 1140, 1160, 400)
+        layer: 18
       }
       mobile {
         mode: 'auto'
@@ -190,11 +191,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 1
       }
       block v_qnug {
-        position: pos(20, 1220, 1160, 400)
-        layer: 1
-      }
-      block v_tq6d {
-        position: pos(580, 800, 600, 400)
+        position: pos(20, 1220, 1140, 400)
         layer: 1
       }
       block t_hcv3 {
@@ -234,7 +231,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 1
       }
       block v_vk4x {
-        position: pos(580, 360, 540, 420)
+        position: pos(580, 360, 580, 420)
         layer: 1
       }
       block v_ufmq {
@@ -243,6 +240,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
       block v_t8f9 {
         position: pos(600, 4740, 580, 560)
+        layer: 1
+      }
+      block v_w3yv {
+        position: pos(580, 800, 580, 400)
         layer: 1
       }
       mobile {
@@ -328,11 +329,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'Total Revenue and Number of Order by Month'
     viz: CombinationChart {
       dataset: vyhuynh_ecommerce_dataset
-      filter {
-        field: r(vyht_ecommerce_orders_1.created_at)
-        operator: 'matches'
-        value: '2024'
-      }
       x_axis: VizFieldFull {
         label: 'Order Month'
         ref: r(vyht_ecommerce_orders_1.created_at)
@@ -404,59 +400,60 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v5: VizBlock {
-    label: 'GMV by Continent New Palette (2024)'
+    label: 'GMV by Continent'
     description: 'This is description of the block'
     viz: ColumnChart {
       dataset: demo_ecommerce
-      calculation adhoc_dim {
-        label: 'My adhoc dim'
-        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
-        calc_type: 'dimension'
-        data_type: 'text'
-        model: order_master
+      calculation gmv_2024 {
+        label: '2024'
+        formula: @aql order_master.gmv | where(order_master.order_created_at is @2024);;
+        calc_type: 'measure'
+        data_type: 'number'
       }
-      filter {
-        field: r(order_master.order_created_at)
-        operator: 'matches'
-        value: '2024'
+      calculation gmv_2023 {
+        label: '2023'
+        formula: @aql order_master.gmv | where(order_master.order_created_at is @2023);;
+        calc_type: 'measure'
+        data_type: 'number'
       }
       x_axis: VizFieldFull {
+        label: 'Continent'
         ref: r(ecommerce_countries.continent_name)
-        format {
-          type: 'text'
-        }
-      }
-      legend: VizFieldFull {
-        ref: r(ecommerce_users.gender)
-        format {
-          type: 'text'
-        }
       }
       y_axis {
+        label: 'GMV by Continent: 2024 vs 2023'
         settings {
           show_data_label_by: 'value'
         }
         series {
           field: VizFieldFull {
-            label: 'GMV'
-            ref: r(order_master.gmv)
+            label: '2024'
+            ref: 'gmv_2024'
             format {
               type: 'number'
-              pattern: '#,###'
+              pattern: '#,###0.00'
             }
           }
-          settings {
-            color_palette: H.color_palettes.pastel_1
+        }
+        series {
+          field: VizFieldFull {
+            label: '2023'
+            ref: 'gmv_2023'
+            format {
+              type: 'number'
+              pattern: '#,###0.00'
+            }
           }
         }
       }
       settings {
-        row_limit: 5000
-        x_axis_show_null_datetime: false
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'xaxis'
         }
+        legend_label: 'top'
+        x_axis_label: 'Continent'
       }
     }
   }
@@ -1486,70 +1483,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block v_tq6d: VizBlock {
-    label: 'GMV by Continent (2024) - Show % change copy'
-    description: 'This is description of the block'
-    viz: ColumnChart {
-      dataset: demo_ecommerce
-      calculation adhoc_dim {
-        label: 'My adhoc dim'
-        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
-        calc_type: 'dimension'
-        data_type: 'text'
-        model: order_master
-      }
-      calculation metric_f0aed54 {
-        label: '% Delta LY - GMV '
-        formula: @aql safe_divide(order_master.gmv, order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true)) - 1;;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation metric_a9389ef {
-        label: ' LY - GMV'
-        formula: @aql order_master.gmv | relative_period(order_master.order_created_at, interval(-1 year), strict: true);;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      filter {
-        field: r(order_master.order_created_at)
-        operator: 'matches'
-        value: '2024'
-      }
-      theme {
-      }
-      x_axis: VizFieldFull {
-        ref: r(ecommerce_countries.continent_name)
-        format {
-          type: 'text'
-        }
-      }
-      y_axis {
-        settings {
-          show_data_label_by: 'value'
-        }
-        series {
-          field: VizFieldFull {
-            ref: 'metric_f0aed54'
-            format {
-              type: 'number'
-              pattern: '#,###%'
-            }
-          }
-          settings {
-            color: '#18A59E'
-          }
-        }
-      }
-      settings {
-        row_limit: 5000
-        x_axis_show_null_datetime: false
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-      }
-    }
-  }
   block v_wwiv: VizBlock {
     label: 'GMV by Continent over time - With Trendline'
     description: 'This is description of the block'
@@ -1920,7 +1853,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     }
   }
   block v_vk4x: VizBlock {
-    label: 'GMV by Country (2024)'
+    label: 'GMV by Country'
     description: 'This is description of the block'
     viz: ColumnChart {
       dataset: demo_ecommerce
@@ -1930,13 +1863,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         calc_type: 'dimension'
         data_type: 'text'
         model: order_master
-      }
-      filter {
-        field: r(order_master.order_created_at)
-        operator: 'matches'
-        value: '2024'
-      }
-      theme {
       }
       x_axis: VizFieldFull {
         ref: r(ecommerce_countries.name)
@@ -4299,12 +4225,103 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block p_period_comparison_766n: PopBlock {
-    label: 'Period Comparison'
-    default {
-      type: 'relative'
-      duration: 1
-      granularity: 'year'
+  block v_w3yv: VizBlock {
+    label: 'GMV by Country (2024)'
+    description: 'This is description of the block'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      calculation adhoc_dim {
+        label: 'My adhoc dim'
+        formula: @aql concat(cast(total_orders, 'text'), " ", ecommerce_countries.continent_name);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: order_master
+      }
+      filter {
+        field: r(ecommerce_orders.created_date)
+        operator: 'matches'
+        value: '2024'
+      }
+      x_axis: VizFieldFull {
+        ref: r(ecommerce_countries.name)
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: '#,###'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_5fgl: VizBlock {
+    label: 'Month Order Created Date, Date and 4 more'
+    viz: MetricSheet {
+      dataset: demo_ecommerce
+      calculation gmv_2024 {
+        label: '2024'
+        formula: @aql order_master.gmv | where(order_master.order_created_at is @2024);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation gmv_2023 {
+        label: '2023'
+        formula: @aql order_master.gmv | where(order_master.order_created_at is @2023);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      date_field: VizFieldFull {
+        ref: r(order_master.order_created_date)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      rows: [
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        },
+        MetricSeries {
+          field: VizFieldFull {
+            ref: r(demo_ecommerce.total_orders)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      ]
+      settings {
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
     }
   }
   settings {
@@ -4399,7 +4416,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_5dpt',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_ji80',
@@ -4411,7 +4427,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_t8f9',
         'v_oa26',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
       field: r(ecommerce_countries.continent_name)
     },
@@ -4422,19 +4439,26 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
       field: r(vyht_ecommerce_orders_1.created_at)
     },
-    PopInteraction {
-      from: 'p_period_comparison_766n'
+    FilterInteraction {
+      from: 'f1'
       to: [
-        'v3'
+        'v_5fgl'
       ]
-      field: ref('vyht_ecommerce_orders_1', 'created_at')
+      field: r(ecommerce_countries.name)
     },
-    PopInteraction {
-      from: 'p_period_comparison_766n'
+    FilterInteraction {
+      from: 'f2'
       to: [
-        'v_0725'
+        'v_5fgl'
       ]
-      field: ref('vy_opportunity_calendar_csv', 'year_month')
+      field: r(ecommerce_cities.name)
+    },
+    FilterInteraction {
+      from: 'f_zwa4'
+      to: [
+        'v_5fgl'
+      ]
+      field: r(order_master.order_created_at)
     },
     DateDrillInteraction {
       from: 'd_date_drill'
@@ -4459,7 +4483,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_856v',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_7vcf',
@@ -4467,7 +4490,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_vk4x',
         'v_ufmq',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4486,7 +4510,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_5dpt',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_ji80',
@@ -4498,7 +4521,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_t8f9',
         'v_oa26',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4515,7 +4539,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_5dpt',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_ji80',
@@ -4526,7 +4549,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_ufmq',
         'v_t8f9',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4572,7 +4596,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_5dpt',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_7vcf',
@@ -4580,7 +4603,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_vk4x',
         'v_ufmq',
         'v_t8f9',
-        'v_cohort_vy'
+        'v_cohort_vy',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4672,7 +4696,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_nyr1',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_ji80',
@@ -4683,7 +4706,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_ufmq',
         'v_t8f9',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4702,7 +4726,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_hk4u',
         'v_856v',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_7vcf',
@@ -4710,7 +4733,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_vk4x',
         'v_ufmq',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4722,7 +4746,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_hk4u',
         'v_856v',
         'v_350o',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_7vcf',
@@ -4730,27 +4753,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_vk4x',
         'v_ufmq',
         'v_cohort_vy',
-        'v_od3a'
-      ]
-    },
-    FilterInteraction {
-      from: 'v_tq6d'
-      to: [
-        'v5',
-        'v_711g',
-        'v_ztqi',
-        'v_hk4u',
-        'v_856v',
-        'v_350o',
-        'v_qnug',
-        'v_wwiv',
-        'v_6o9d',
-        'v_7vcf',
-        'v_jpzg',
-        'v_vk4x',
-        'v_ufmq',
-        'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4763,14 +4767,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_856v',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_6o9d',
         'v_7vcf',
         'v_jpzg',
         'v_vk4x',
         'v_ufmq',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4783,14 +4787,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_856v',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_7vcf',
         'v_jpzg',
         'v_vk4x',
         'v_ufmq',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4812,14 +4816,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_856v',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_jpzg',
         'v_vk4x',
         'v_ufmq',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4841,14 +4845,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_856v',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_7vcf',
         'v_vk4x',
         'v_ufmq',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4861,14 +4865,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_856v',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_7vcf',
         'v_jpzg',
         'v_ufmq',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -4881,14 +4885,14 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_856v',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_7vcf',
         'v_jpzg',
         'v_vk4x',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -5208,7 +5212,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_5dpt',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_ji80',
@@ -5219,7 +5222,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_ufmq',
         'v_t8f9',
         'v_cohort_vy',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
@@ -5239,7 +5243,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_5dpt',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_ji80',
@@ -5250,11 +5253,12 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_ufmq',
         'v_t8f9',
         'v_oa26',
-        'v_od3a'
+        'v_od3a',
+        'v_w3yv'
       ]
     },
     FilterInteraction {
-      from: 'v_od3a'
+      from: 'v_wxn2_conflict_copy'
       to: [
         'v5',
         'v_711g',
@@ -5268,7 +5272,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_5dpt',
         'v_350o',
         'v_qnug',
-        'v_tq6d',
         'v_wwiv',
         'v_6o9d',
         'v_ji80',
@@ -5278,7 +5281,28 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_vk4x',
         'v_ufmq',
         'v_t8f9',
-        'v_cohort_vy'
+        'v_cohort_vy',
+        'v_w3yv'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_w3yv'
+      to: [
+        'v5',
+        'v_711g',
+        'v_ztqi',
+        'v_hk4u',
+        'v_856v',
+        'v_350o',
+        'v_qnug',
+        'v_wwiv',
+        'v_6o9d',
+        'v_7vcf',
+        'v_jpzg',
+        'v_ufmq',
+        'v_cohort_vy',
+        'v_od3a',
+        'v_vk4x'
       ]
     }
   ]
