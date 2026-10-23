@@ -2645,11 +2645,8 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       y_axis {
         series {
           field: VizFieldFull {
+            label: 'Close %'
             ref: r(vy_pbi_dts.close_percent)
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
           }
         }
       }
@@ -2678,29 +2675,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
       y_axis {
         series {
-          field: VizFieldFull {
-            ref: r(vy_pbi_dts.revenue_won)
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
-          }
-        }
-        series {
-          field: VizFieldFull {
-            label: 'Trend line of Revenue Won'
-            ref: r(vy_pbi_dts.revenue_won)
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
-            analytic: RegressionLine {
-              type: 'linear'
-            }
-          }
-          settings {
-            line_style: 'dashed'
-          }
+          field: r(vy_pbi_dts.revenue_won)
         }
       }
       settings {
