@@ -1,0 +1,9 @@
+Dataset tai_cohort {
+  label: 'tai_cohort',
+  description: ''
+  data_source_name: 'demo_public'
+  models: [
+    ecommerce_analytics_user_cohort_retention
+  ]
+  relationships: []
+}

@@ -1,0 +1,37 @@
+// BigQuery `keboola.order_items_properties_mapping` with data-quality filter:
+// exclude `item_type = 'undefined'` (matches PBI report-level filter).
+Model dim_order_items_properties {
+  type: 'query'
+  label: 'Order item properties'
+  data_source_name: 'data_staging'
+  query: @sql
+SELECT
+  order_items_properties_hashed,
+  item_type,
+  is_pre_order,
+  is_gift
+FROM `keboola.order_items_properties_mapping`
+WHERE IFNULL(TRIM(item_type), '') != 'undefined'
+;;
+  dimension order_items_properties_hashed {
+    label: 'Order Item Properties Hash'
+    type: 'text'
+    primary_key: true
+    hidden: true
+  }
+
+  dimension item_type {
+    label: 'Item type'
+    type: 'text'
+  }
+
+  dimension is_pre_order {
+    label: 'Is pre-order'
+    type: 'text'
+  }
+
+  dimension is_gift {
+    label: 'Is gift'
+    type: 'text'
+  }
+}

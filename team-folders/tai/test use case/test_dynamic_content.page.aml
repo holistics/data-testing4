@@ -1,0 +1,365 @@
+Dashboard test_dynamic_content {
+  title: 'test dynamic content'
+  description: ''
+  owner: 'tai.nguyen@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block v_oufh: VizBlock {
+    label: 'Sum of Active Users Count and Sum of Retention Rate by Month, Cohort Size, and Month Number'
+    viz: MarkdownViz {
+      dataset: tai_cohort
+      rows: [
+        VizFieldFull {
+          label: 'Month'
+          ref: r(ecommerce_analytics_user_cohort_retention.cohort_month)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_analytics_user_cohort_retention.cohort_size)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      columns: [
+        VizFieldFull {
+          ref: r(ecommerce_analytics_user_cohort_retention.month_number)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: r(ecommerce_analytics_user_cohort_retention.active_users_count)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_analytics_user_cohort_retention.retention_rate)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      content: @md <style>
+  .cohort-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    overflow-x: auto;
+    padding: 1rem;
+
+    /* Centralized color scale settings — change these to customize */
+    --hue: 201;
+    --saturation: 96%;
+  }
+
+  .cohort-table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 900px;
+  }
+
+  .cohort-table th,
+  .cohort-table td {
+    padding: 8px 12px;
+    text-align: center;
+    border: 1px solid #E5E7EB;
+    white-space: nowrap;
+  }
+
+  .cohort-table thead th {
+    background-color: #F9FAFB;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .cohort-table th.month-header {
+    min-width: 55px;
+  }
+
+  .cohort-table th.cohort-header {
+    text-align: left;
+    min-width: 120px;
+  }
+
+  .cohort-table th.size-header {
+    text-align: right;
+    min-width: 120px;
+  }
+
+  .cohort-table td.cohort-cell {
+    text-align: left;
+    font-weight: 500;
+    color: #111827;
+    background-color: #FFFFFF;
+  }
+
+  .cohort-table td.size-cell {
+    text-align: right;
+    color: #6B7280;
+    background-color: #FFFFFF;
+  }
+
+  /* Dynamic color scale for percentage cells */
+  .cohort-table td.percentage-cell {
+    --percentage: 0;
+    --bg-lightness: calc(95 - var(--percentage) * 50);
+    --text-lightness: calc(25 + (1 - var(--percentage)) * 30);
+
+    font-weight: 500;
+    min-width: 55px;
+    background-color: hsl(var(--hue) var(--saturation) calc(var(--bg-lightness) * 1%));
+    color: hsl(var(--hue) var(--saturation) calc(var(--text-lightness) * 1%));
+  }
+
+  .month-group-header {
+    text-align: center;
+    font-weight: 600;
+    color: #374151;
+  }
+</style>
+
+<div class="cohort-container">
+<table class="cohort-table">
+  <thead>
+    <tr>
+      <th class="cohort-header" rowspan="2">Cohort Month</th>
+      <th class="size-header" rowspan="2">Cohort Size</th>
+      <th class="month-group-header" colspan="13">Month Number</th>
+    </tr>
+    <tr>
+{% map(columns) %}
+  <th class="month-header">{{ `Month Number` }}</th>
+{% end %}
+
+  </tr>
+  </thead>
+<tbody>
+{% map(rows) %}
+<tr>
+<td class="cohort-cell">{{ `Month` }}</td>
+<td class="size-cell">{{ `Cohort Size` }}</td>
+{% map(values) %}
+<td class="percentage-cell" style="--percentage: {{ value.`Sum of Retention Rate`.raw }};">
+{{ value.`Sum of Active Users Count` }}
+</td>
+{% end %}
+</tr>
+{% end %}
+</tbody>
+</table>
+</div>  ;;
+      settings {
+        show_row_total: true
+        show_column_total: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_9ni2: VizBlock {
+    label: 'Sum of Active Users Count and Sum of Retention Rate by Month, Cohort Size, and Month Number copy'
+    viz: MarkdownViz {
+      dataset: tai_cohort
+      rows: [
+        VizFieldFull {
+          label: 'Month'
+          ref: r(ecommerce_analytics_user_cohort_retention.cohort_month)
+          transformation: 'datetrunc month'
+          format {
+            type: 'date'
+            pattern: 'LLL yyyy'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_analytics_user_cohort_retention.cohort_size)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      columns: [
+        VizFieldFull {
+          ref: r(ecommerce_analytics_user_cohort_retention.month_number)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: r(ecommerce_analytics_user_cohort_retention.active_users_count)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_analytics_user_cohort_retention.retention_rate)
+          aggregation: 'sum'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      content: @md <style>
+  .cohort-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    overflow-x: auto;
+    padding: 1rem;
+
+    /* Centralized color scale settings — change these to customize */
+    --hue: 201;
+    --saturation: 96%;
+  }
+
+  .cohort-table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 900px;
+  }
+
+  .cohort-table th,
+  .cohort-table td {
+    padding: 8px 12px;
+    text-align: center;
+    border: 1px solid #E5E7EB;
+    white-space: nowrap;
+  }
+
+  .cohort-table thead th {
+    background-color: #F9FAFB;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .cohort-table th.month-header {
+    min-width: 55px;
+  }
+
+  .cohort-table th.cohort-header {
+    text-align: left;
+    min-width: 120px;
+  }
+
+  .cohort-table th.size-header {
+    text-align: right;
+    min-width: 120px;
+  }
+
+  .cohort-table td.cohort-cell {
+    text-align: left;
+    font-weight: 500;
+    color: #111827;
+    background-color: #FFFFFF;
+  }
+
+  .cohort-table td.size-cell {
+    text-align: right;
+    color: #6B7280;
+    background-color: #FFFFFF;
+  }
+
+  /* Dynamic color scale for percentage cells */
+  .cohort-table td.percentage-cell {
+    --percentage: 0;
+    --bg-lightness: calc(95 - var(--percentage) * 50);
+    --text-lightness: calc(25 + (1 - var(--percentage)) * 30);
+
+    font-weight: 500;
+    min-width: 55px;
+    background-color: hsl(var(--hue) var(--saturation) calc(var(--bg-lightness) * 1%));
+    color: hsl(var(--hue) var(--saturation) calc(var(--text-lightness) * 1%));
+  }
+
+  .month-group-header {
+    text-align: center;
+    font-weight: 600;
+    color: #374151;
+  }
+</style>
+
+<div class="cohort-container">
+<table class="cohort-table">
+  <thead>
+    <tr>
+      <th class="cohort-header" rowspan="2">Cohort Month</th>
+      <th class="size-header" rowspan="2">Cohort Size</th>
+      <th class="month-group-header" colspan="13">Month Number</th>
+    </tr>
+    <tr>
+      {% map(columns) %}
+        <th class="month-header">{{ `Month Number` }}</th>
+      {% end %}
+  </tr>
+  </thead>
+<tbody>
+  {% map(rows) %}
+  <tr>
+    <td class="cohort-cell">{{ `Month` }}</td>
+    <td class="size-cell">{{ `Cohort Size` }}</td>
+    {% map(values) %}
+      <td class="percentage-cell" style="--percentage: {{ value.`Sum of Retention Rate`.raw }};">
+      {{ value.`Sum of Active Users Count` }}
+      </td>
+    {% end %}
+  </tr>
+  {% end %}
+</tbody>
+</table>
+</div>  ;;
+      settings {
+        show_row_total: true
+        show_column_total: true
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 800
+    grid_size: 20
+    auto_expand_vertically: true
+    block title {
+      position: pos(20, 20, 1260, 60)
+    }
+    block v_oufh {
+      position: pos(20, 100, 620, 420)
+      layer: 1
+    }
+    block v_9ni2 {
+      position: pos(660, 100, 620, 420)
+      layer: 1
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+
+  theme: H.themes.vanilla
+}

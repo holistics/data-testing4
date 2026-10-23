@@ -1,0 +1,120 @@
+Dataset date_filter_shift_test {
+  label: 'date_filter_shift_test'
+  description: ''
+  data_source_name: 'demodb'
+
+  models: [
+    dim_date_test_shift_tm,
+    fact_sales_test_shift_tm
+  ]
+
+  relationships: [
+    relationship(fact_sales_test_shift_tm.date > dim_date_test_shift_tm.date, true, 'one_way', nullable=false)
+  ]
+
+  // working
+  metric fact_sales_total_sales_amount {
+    label: "Sales \$"
+    type: "number"
+    definition: @aql
+      fact_sales_test_shift_tm.fact_sales_total_sales_amount
+    ;;
+  }
+  metric fact_sales_total_sales_amount_ly {
+    label: "Sales \$ (LY)"
+    type: "number"
+    definition: @aql
+      fact_sales_total_sales_amount
+      | relative_period(dim_date_test_shift_tm.date, interval(-1 year))
+    ;;
+  }
+
+  // non-working 1
+  metric fact_sales_total_sales_amount_param_filtered_date_dim {
+    label: "Sales \$ (Parameter Filtered | Date Dim)"
+    type: "number"
+    definition: @aql
+      fact_sales_total_sales_amount
+      | where(dim_date_test_shift_tm.date matches first(dim_date_test_shift_tm.dim_date_filter_param))
+    ;;
+  }
+  metric fact_sales_total_sales_amount_param_filtered_date_dim_ly {
+    label: "Sales \$ (LY) (Parameter Filtered | Date Dim)"
+    type: "number"
+    definition: @aql
+      fact_sales_total_sales_amount_param_filtered_date_dim
+      | relative_period(dim_date_test_shift_tm.date, interval(-1 year))
+    ;;
+  }
+
+  // non-working 2
+  metric fact_sales_total_sales_amount_param_filtered_date_fact {
+    label: "Sales \$ (Parameter Filtered | Date Fact)"
+    type: "number"
+    definition: @aql
+      fact_sales_total_sales_amount
+      | where(fact_sales_test_shift_tm.date matches first(dim_date_test_shift_tm.dim_date_filter_param))
+    ;;
+  }
+  metric fact_sales_total_sales_amount_param_filtered_date_fact_ly {
+    label: "Sales \$ (LY) (Parameter Filtered | Date Fact)"
+    type: "number"
+    definition: @aql
+      fact_sales_total_sales_amount_param_filtered_date_fact
+      | relative_period(fact_sales_test_shift_tm.date, interval(-1 year))
+    ;;
+  }
+
+
+  // ----- Phase 2: hidden anchor helpers for FY rollover-proof metrics -----
+  metric _anchor_date {
+    label: "_anchor_date"
+    type: "date"
+    hidden: true
+    definition: @aql max(dim_date_test_shift_tm.date) ;;
+  }
+
+  metric _anchor_fy {
+    label: "_anchor_fy"
+    type: "number"
+    hidden: true
+    definition: @aql max(dim_date_test_shift_tm.fy_number) ;;
+  }
+
+  metric _anchor_fy_start {
+    label: "_anchor_fy_start"
+    type: "date"
+    hidden: true
+    definition: @aql max(dim_date_test_shift_tm.fy_start_date) ;;
+  }
+
+  metric _anchor_day_of_fy {
+    label: "_anchor_day_of_fy"
+    description: "Day of FY for the latest date in active filter context"
+    type: "number"
+    hidden: true
+    definition: @aql date_diff('day', max(dim_date_test_shift_tm.fy_start_date), max(dim_date_test_shift_tm.date)) + 1 ;;
+  }
+
+  // ----- Phase 3: v2 comparison metrics (FY rollover-proof) -----
+  metric fact_sales_total_sales_amount_fytd_v2 {
+    label: "Sales \$ (FYTD v2)"
+    type: "number"
+    definition: @aql
+      fact_sales_total_sales_amount
+      | where(dim_date_test_shift_tm.fy_number >= _anchor_fy)
+      | where(dim_date_test_shift_tm.date <= _anchor_date)
+    ;;
+  }
+
+  metric fact_sales_total_sales_amount_pfytd_v2 {
+    label: "Sales \$ (PFYTD v2)"
+    type: "number"
+    definition: @aql
+      fact_sales_total_sales_amount
+      | where(dim_date_test_shift_tm.fy_number >= _anchor_fy - 1)
+      | where(dim_date_test_shift_tm.fy_number <= _anchor_fy - 1)
+      | where(dim_date_test_shift_tm.day_of_fy <= _anchor_day_of_fy)
+    ;;
+  }
+}

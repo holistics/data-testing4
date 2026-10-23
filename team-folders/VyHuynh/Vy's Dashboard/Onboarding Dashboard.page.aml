@@ -1,0 +1,107 @@
+Dashboard onboarding_dashboard {
+  title: 'Onboarding Dashboard'
+  owner: 'vy@holistics.io'
+  description: ''
+  block title: TextBlock {
+    content: @md # Order by Month Dashboard ;;
+  }
+  block v1: VizBlock {
+    label: 'Day Created At and Full Name'
+    viz: DataTable {
+      dataset: vyhuynh_ecommerce_dataset
+      fields: [
+        VizFieldFull {
+          ref: ref('vyht_ecommerce_orders_1', 'created_at')
+          transformation: 'datetrunc day'
+          format {
+            type: 'date'
+            pattern: 'LLL dd, yyyy'
+          }
+        },
+        VizFieldFull {
+          ref: ref('vyht_ecommerce_users_1', 'full_name')
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      settings {
+        wrap_header_text: true
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            field_index: 0
+            direction: 'asc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v2: VizBlock {
+    label: 'Order by Month'
+    viz: ColumnChart {
+      dataset: vyhuynh_ecommerce_dataset
+      x_axis: VizFieldFull {
+        ref: ref('vyht_ecommerce_orders_1', 'created_at')
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        label: 'Number of Order'
+        settings {
+          show_data_label_by: 'value'
+        }
+        series {
+          field: VizFieldFull {
+            label: 'Number of Orders'
+            ref: ref('vyht_ecommerce_orders_1', 'id')
+            aggregation: 'count distinct'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        legend_label: 'hidden'
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'View 1'
+    height: 840
+    grid_size: 20
+    block title {
+      position: pos(20, 20, 1160, 60)
+    }
+    block v1 {
+      position: pos(20, 100, 760, 260)
+      layer: 1
+    }
+    block v2 {
+      position: pos(20, 380, 760, 300)
+      layer: 2
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+
+  theme: H.themes.vanilla
+}

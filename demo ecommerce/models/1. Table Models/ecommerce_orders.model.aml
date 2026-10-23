@@ -22,7 +22,7 @@ Model ecommerce_orders {
   dimension created_at {
     label: 'Created At'
     type: 'datetime'
-    hidden: false
+    hidden: true
     definition: @sql {{ #SOURCE.created_at }};;
   }
   dimension user_id {

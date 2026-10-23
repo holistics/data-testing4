@@ -1,0 +1,30 @@
+Model holidays {
+  type: 'query'
+  label: 'Holidays'
+  description: ''
+  data_source_name: 'movies_lens'
+  dimension date {
+    label: 'Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date }};;
+  }
+
+  owner: 'hieu.nht@holistics.io'
+  query: @sql
+    SELECT DATE '2025-01-06' AS date
+    UNION ALL SELECT DATE '2025-01-19'
+    UNION ALL SELECT DATE '2025-01-30'
+    UNION ALL SELECT DATE '2025-02-08'
+    UNION ALL SELECT DATE '2025-02-24';;
+  models: [
+  ]
+  measure measure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720e {
+    label: "Count of Holidays Date measure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720emeasure_54d720e"
+    type: "number"
+    description: "This toggle calculates a single trend line based on all the segmented data points in the chart, similar to a scatter plot. This option is ideal if, after breaking down the total values, you wish to see the trend line among those segmented values."
+    hidden: false
+    definition: @aql count(holidays.date)+count(holidays.date)+count(holidays.date)+count(holidays.date)+count(holidays.date)+count(holidays.date)+count(holidays.date)+count(holidays.date)+count(holidays.date);;
+    aggregation_type: "custom"
+  }
+}

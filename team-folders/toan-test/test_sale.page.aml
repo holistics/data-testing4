@@ -1,0 +1,9 @@
+Dashboard repro_pop_relative {
+  title: '[Repro] PoP Relative'
+
+  view: CanvasLayout {
+    label: 'View 1'
+    height: 500
+    grid_size: 10
+  }
+}

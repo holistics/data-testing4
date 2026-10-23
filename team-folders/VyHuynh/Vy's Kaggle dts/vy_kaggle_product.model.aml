@@ -1,0 +1,89 @@
+Model vy_kaggle_product {
+  type: 'table'
+  label: 'Product'
+  description: ''
+  data_source_name: 'demodb'
+  dimension product_id {
+    label: 'Product'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_id }};;
+  }
+  dimension product_category_name {
+    label: 'Product category name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_category_name }};;
+  }
+  dimension product_name_lenght {
+    label: 'Product name lenght'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_name_lenght }};;
+  }
+  dimension product_description_lenght {
+    label: 'Product description lenght'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_description_lenght }};;
+  }
+  dimension product_photos_qty {
+    label: 'Product photos qty'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_photos_qty }};;
+  }
+  dimension product_weight_g {
+    label: 'Product weight g'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_weight_g }};;
+  }
+  dimension product_length_cm {
+    label: 'Product length cm'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_length_cm }};;
+  }
+  dimension product_height_cm {
+    label: 'Product height cm'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_height_cm }};;
+  }
+  dimension product_width_cm {
+    label: 'Product width cm'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_width_cm }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'olist_products_dataset.csv'
+    uploaded_at: '2026-04-15 08:13:10'
+    hash: '3e6569628a17fbc75fd206ee357b59e20364b9afa90f5b6cd5b4d624c58aa9cc'
+    column_configs: [
+      H.imports.column_config("product_id", "product_id", "text"),
+      H.imports.column_config("product_category_name", "product_category_name", "text"),
+      H.imports.column_config("product_name_lenght", "product_name_lenght", "number"),
+      H.imports.column_config("product_description_lenght", "product_description_lenght", "number"),
+      H.imports.column_config("product_photos_qty", "product_photos_qty", "number"),
+      H.imports.column_config("product_weight_g", "product_weight_g", "number"),
+      H.imports.column_config("product_length_cm", "product_length_cm", "number"),
+      H.imports.column_config("product_height_cm", "product_height_cm", "number"),
+      H.imports.column_config("product_width_cm", "product_width_cm", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_pro_d55a6_202604150813"'
+}

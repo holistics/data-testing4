@@ -337,9 +337,19 @@ Dashboard sale_overview {
     }
     default {
       operator: 'matches'
-      value: 'this year'
+      value: '$H_NIL$'
     }
   }
+
+  block f12: FilterBlock {
+    label: 'Date Range'
+    type: 'date'
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+  }
+
   block f2: FilterBlock {
     label: 'Product Category'
     type: 'field'

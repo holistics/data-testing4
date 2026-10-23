@@ -1,0 +1,102 @@
+Dashboard chinh_dynamic_dashboard {
+  title: 'Chinh Dynamic Dashboard'
+  description: ''
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 740
+    grid_size: 20
+    auto_expand_vertically: true
+    mobile {
+      mode: 'auto'
+    }
+    block v_ufsz {
+      position: pos(20, 100, 1260, 600)
+      layer: 1
+    }
+    block f_ahqz {
+      position: pos(20, 20, 300, 80)
+      layer: 2
+    }
+  }
+
+  theme: H.themes.vanilla
+  block v_ufsz: VizBlock {
+    label: 'Table'
+    viz: DataTable {
+      dataset: chinh_dynamic_dataset
+      conditions: [
+        'chinh_dynamic_dim_model.order_created_at >= filter_input - interval(1 month)'
+      ]
+      fields: [
+        VizFieldFull {
+          ref: r(chinh_dynamic_dim_model.order_id)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          label: 'Created Date'
+          ref: r(chinh_dynamic_dim_model.order_created_at)
+          transformation: 'datetrunc day'
+          format {
+            type: 'date'
+            pattern: 'LLL dd, yyyy'
+          }
+          uname: 'datetrunc_day_order_created_at_1'
+        },
+        VizFieldFull {
+          label: 'Billing Date'
+          ref: r(chinh_dynamic_dim_model.order_billing_at)
+          transformation: 'datetrunc day'
+          format {
+            type: 'date'
+            pattern: 'LLL dd, yyyy'
+          }
+        },
+        VizFieldFull {
+          ref: r(chinh_dynamic_dim_model.quantity)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(chinh_dynamic_dim_model.price)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'datetrunc_day_order_created_at_1'
+            direction: 'asc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f_ahqz: FilterBlock {
+    label: "Filter's Input"
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: chinh_dynamic_dataset
+      field: r(chinh_dynamic_dim_model.param_filter_input)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+  }
+}

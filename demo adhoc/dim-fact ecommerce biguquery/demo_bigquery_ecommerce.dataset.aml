@@ -1,23 +1,31 @@
-Model bq_dim_product_cities = bq_dim_cities.extend({
-  label: 'Product Cities'
-})
-Model bq_dim_product_countries = bq_dim_countries.extend({
-  label: 'Product Countries'
-})
+Model bq_dim_product_cities = bq_dim_cities.extend(
+  {
+    label: 'Product Cities'
+  }
+)
+Model bq_dim_product_countries = bq_dim_countries.extend(
+  {
+    label: 'Product Countries'
+  }
+)
 
-Model bq_dim_user_cities = bq_dim_cities.extend({
-  label: 'User Cities'
-})
-Model bq_dim_user_countries = bq_dim_countries.extend({
-  label: 'User Countries'
-})
+Model bq_dim_user_cities = bq_dim_cities.extend(
+  {
+    label: 'User Cities'
+  }
+)
+Model bq_dim_user_countries = bq_dim_countries.extend(
+  {
+    label: 'User Countries'
+  }
+)
 
 
 Dataset demo_bigquery_ecommerce {
   label: 'Demo Bigquery Ecommerce'
   description: 'Ecommerce dataset in BigQuery. ERD can be found [here](https://dbdiagram.io/e/658b9f1289dea62799972ec8/665fedfcb65d933879884fa8)'
   data_source_name: 'data_staging'
-  
+
   models: [
     bq_fct_order_items,
     bq_fct_orders,
@@ -26,31 +34,31 @@ Dataset demo_bigquery_ecommerce {
     bq_dim_users,
     bq_dim_categories,
     bq_dim_merchants,
-    
+
 
     bq_dim_product_cities,
     bq_dim_product_countries,
     bq_dim_user_cities,
     bq_dim_user_countries,
     bq_dim_dates,
-    
+
   ]
   relationships: [
     relationship(bq_fct_order_items.product_id > bq_dim_products.id, true),
-    relationship(bq_fct_order_items.category_id >  bq_dim_categories.id, true),
-    
-    relationship(bq_fct_order_items.merchant_id >  bq_dim_merchants.id, true),
-    relationship(bq_fct_order_items.merchant_city_id >  bq_dim_product_cities.id, true),
-    relationship(bq_fct_order_items.merchant_country_code >  bq_dim_product_countries.code, true),
-    relationship(bq_fct_order_items.user_id >  bq_dim_users.id, true),
-    relationship(bq_fct_order_items.created_date >  bq_dim_dates.date_key, true),
-    relationship(bq_fct_order_items.order_id >  bq_fct_orders.id, false),
+    relationship(bq_fct_order_items.category_id > bq_dim_categories.id, true),
+
+    relationship(bq_fct_order_items.merchant_id > bq_dim_merchants.id, true),
+    relationship(bq_fct_order_items.merchant_city_id > bq_dim_product_cities.id, true),
+    relationship(bq_fct_order_items.merchant_country_code > bq_dim_product_countries.code, true),
+    relationship(bq_fct_order_items.user_id > bq_dim_users.id, true),
+    relationship(bq_fct_order_items.created_date > bq_dim_dates.date_key, true),
+    relationship(bq_fct_order_items.order_id > bq_fct_orders.id, false),
 
 
-    relationship(bq_fct_orders.user_city_id >  bq_dim_user_cities.id, true),
-    relationship(bq_fct_orders.user_country_code >  bq_dim_user_countries.code, true),
-    relationship(bq_fct_orders.created_date >  bq_dim_dates.date_key, true),
-    relationship(bq_fct_orders.user_id >  bq_dim_users.id, false),
+    relationship(bq_fct_orders.user_city_id > bq_dim_user_cities.id, true),
+    relationship(bq_fct_orders.user_country_code > bq_dim_user_countries.code, true),
+    relationship(bq_fct_orders.created_date > bq_dim_dates.date_key, true),
+    relationship(bq_fct_orders.user_id > bq_dim_users.id, false),
 
   ]
 
@@ -90,6 +98,28 @@ Dataset demo_bigquery_ecommerce {
     label: "AOV - Average Order Value"
     type: 'number'
     definition: @aql gmv/count_orders;;
+  }
+  metric metric_034647b {
+    label: "Median of Order Items Value"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql median(bq_fct_order_items.value);;
+  }
+  metric count_user_group {
+    label: "Count User Group"
+    type: "text"
+    hidden: false
+    description: ""
+    definition: @aql case(
+  when: count_users < 750,
+  then: "Less than 750",
+  when: and(count_users < 1500, count_users > 749),
+  then: "From 750 - 1500",
+  when: count_users > 1499,
+  then: "Greater than 1500",
+  else: "Other"
+);;
   }
 
   owner: 'triet.lq@holistics.io'

@@ -1,0 +1,444 @@
+Dashboard vy_test_filter {
+  title: 'Vy - Test filter'
+  block v_y0de: VizBlock {
+    label: 'Viz 1'
+    viz: DataTable {
+      dataset: simple_dataset
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce_orders.created_date)
+          format {
+            type: 'date'
+          }
+          uname: 'ecommerce_orders_created_date_1'
+        },
+        VizFieldFull {
+          ref: r(simple_dataset.count_orders)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'ecommerce_orders_created_date_1'
+            direction: 'desc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block v_46u5: VizBlock {
+    label: 'Viz 2'
+    viz: DataTable {
+      dataset: simple_dataset
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce_orders.created_date)
+          format {
+            type: 'date'
+          }
+          uname: 'ecommerce_orders_created_date_1'
+        },
+        VizFieldFull {
+          ref: r(ecommerce_users.email_user)
+          aggregation: 'count distinct'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'ecommerce_orders_created_date_1'
+            direction: 'desc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f_9fvy: FilterBlock {
+    label: 'Filter 1'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: simple_dataset
+      field: r(ecommerce_users.total_users)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block f_mgwx: FilterBlock {
+    label: 'Filter 1b'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: simple_dataset
+      field: r(ecommerce_orders.created_date)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+  }
+  block f_ogrm: FilterBlock {
+    label: 'Filter 2'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: simple_dataset
+      field: r(ecommerce_orders.created_date)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+  }
+  block v_u49b: VizBlock {
+    label: 'Created Date and Total Orders Count'
+    viz: DataTable {
+      dataset: simple_dataset
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce_orders.created_date)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_orders.total_orders_count)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f_hjo7: FilterBlock {
+    label: 'Filter 3'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: simple_dataset
+      field: r(ecommerce_orders.created_date)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+  }
+  block f_ljyd: FilterBlock {
+    label: 'Filter all'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: simple_dataset
+      field: r(ecommerce_orders.created_date)
+    }
+    default {
+      operator: 'matches'
+      value: '$H_NIL$'
+    }
+  }
+  block v_az3q: VizBlock {
+    label: 'Created Date, Name, and Delivered Orders Count'
+    viz: DataTable {
+      dataset: simple_dataset
+      fields: [
+        VizFieldFull {
+          ref: r(ecommerce_orders.created_date)
+          format {
+            type: 'date'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_categories.name)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(ecommerce_orders.delivered_orders_count)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f_co5t: FilterBlock {
+    label: 'Filter 4'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: simple_dataset
+      field: r(ecommerce_categories.name)
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  view: TabLayout {
+    label: 'View 1'
+    tab tab1: CanvasLayout {
+      label: 'Tab 1'
+      width: 1300
+      height: 980
+      grid_size: 20
+      auto_expand_vertically: true
+      block v_y0de {
+        position: pos(20, 100, 380, 380)
+        layer: 1
+      }
+      block v_46u5 {
+        position: pos(20, 580, 380, 380)
+        layer: 1
+      }
+      block f_9fvy {
+        position: pos(20, 20, 300, 80)
+        layer: 2
+      }
+      block f_mgwx {
+        position: pos(340, 20, 300, 80)
+        layer: 2
+      }
+      block f_ogrm {
+        position: pos(20, 500, 300, 80)
+        layer: 2
+      }
+      block f_ljyd {
+        position: pos(860, 20, 300, 80)
+        layer: 2
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
+    tab tab2: CanvasLayout {
+      label: 'Tab 2'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      block v_u49b {
+        position: pos(20, 120, 620, 420)
+        layer: 1
+      }
+      block f_hjo7 {
+        position: pos(20, 20, 300, 80)
+        layer: 2
+      }
+    }
+    tab tab_dwh1: CanvasLayout {
+      label: 'Tab 3'
+      width: 1300
+      height: 800
+      grid_size: 20
+      auto_expand_vertically: true
+      mobile {
+        mode: 'auto'
+      }
+      block v_az3q {
+        position: pos(20, 120, 620, 420)
+        layer: 1
+      }
+      block f_co5t {
+        position: pos(20, 20, 300, 80)
+        layer: 2
+      }
+    }
+  }
+  theme: H.themes.vanilla
+  interactions: [
+    FilterInteraction {
+      from: 'v_y0de'
+      to: [
+        CustomMapping {
+          block: [
+            'v_u49b',
+            'v_az3q'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_46u5'
+      to: [
+        CustomMapping {
+          block: [
+            'v_u49b',
+            'v_az3q'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_9fvy'
+      to: [
+        CustomMapping {
+          block: [
+            'v_46u5',
+            'v_u49b',
+            'v_az3q',
+            'f_mgwx',
+            'f_ogrm',
+            'f_hjo7',
+            'f_ljyd',
+            'f_co5t'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_mgwx'
+      to: [
+        CustomMapping {
+          block: [
+            'v_46u5',
+            'v_u49b',
+            'v_az3q',
+            'f_9fvy',
+            'f_ogrm',
+            'f_hjo7',
+            'f_ljyd',
+            'f_co5t'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_ogrm'
+      to: [
+        CustomMapping {
+          block: [
+            'v_y0de',
+            'v_u49b',
+            'v_az3q',
+            'f_9fvy',
+            'f_mgwx',
+            'f_hjo7',
+            'f_ljyd',
+            'f_co5t'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_u49b'
+      to: [
+        CustomMapping {
+          block: [
+            'v_y0de',
+            'v_46u5',
+            'v_az3q'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_hjo7'
+      to: [
+        CustomMapping {
+          block: [
+            'v_y0de',
+            'v_46u5',
+            'v_az3q',
+            'f_9fvy',
+            'f_mgwx',
+            'f_ogrm',
+            'f_ljyd',
+            'f_co5t'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_ljyd'
+      to: [
+        CustomMapping {
+          block: [
+            'v_az3q',
+            'f_9fvy',
+            'f_mgwx',
+            'f_ogrm',
+            'f_hjo7',
+            'f_co5t'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'v_az3q'
+      to: [
+        CustomMapping {
+          block: [
+            'v_y0de',
+            'v_46u5',
+            'v_u49b'
+          ]
+          disabled: true
+        }
+      ]
+    },
+    FilterInteraction {
+      from: 'f_co5t'
+      to: [
+        CustomMapping {
+          block: [
+            'v_y0de',
+            'v_46u5',
+            'v_u49b',
+            'f_9fvy',
+            'f_mgwx',
+            'f_ogrm',
+            'f_hjo7',
+            'f_ljyd'
+          ]
+          disabled: true
+        }
+      ]
+    }
+  ]
+}

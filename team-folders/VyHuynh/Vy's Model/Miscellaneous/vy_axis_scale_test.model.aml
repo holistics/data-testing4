@@ -1,0 +1,33 @@
+Model test_data_axis_scale_csv {
+  type: 'table'
+  label: 'Test data axis scale csv'
+  description: ''
+  data_source_name: 'demodb'
+  dimension date {
+    label: 'Date'
+    description: ''
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date }};;
+  }
+  dimension sales {
+    label: 'Sales'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'test_data_-_axis_scale_(1).csv'
+    uploaded_at: '2025-10-30 10:04:06'
+    hash: 'ddc5b6399a1e4c303b0a045101df16c8d55b55683d3924db7a259416e9bd42ba'
+    column_configs: [
+      H.imports.column_config("date", "date", "date"),
+      H.imports.column_config("sales", "sales", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"public"."holistics_test_data_axi_8214c_202510300958"'
+}

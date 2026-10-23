@@ -1,0 +1,95 @@
+Model dim_students {
+  type: 'query'
+  label: 'Dim Students'
+  description: ''
+  data_source_name: 'demodb'
+  dimension student_number {
+    label: 'Student Number'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.student_number }};;
+  }
+  dimension student_name {
+    label: 'Student Name'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.student_name }};;
+  }
+  dimension date_of_birth {
+    label: 'Date Of Birth'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date_of_birth }};;
+  }
+  dimension gender {
+    label: 'Gender'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.gender }};;
+  }
+  dimension ethnicity {
+    label: 'Ethnicity'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.ethnicity }};;
+  }
+  dimension grade_level {
+    label: 'Grade Level'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.grade_level }};;
+  }
+  dimension enrollment_start_date {
+    label: 'Enrollment Start Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.enrollment_start_date }};;
+  }
+  dimension enrollment_end_date {
+    label: 'Enrollment End Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.enrollment_end_date }};;
+  }
+  dimension membership_value {
+    label: 'Membership Value'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.membership_value }};;
+  }
+
+  param date_selected {
+    label: 'Date Selected'
+    type: 'date'
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql
+    SELECT *
+    FROM (VALUES
+      (1001, 'Alice Johnson',    '2009-03-12'::date, 'F', 'White',              9,  '2023-08-15'::date, '2024-06-10'::date, 1),
+      (1002, 'Brian Lee',        '2008-11-25'::date, 'M', 'Asian',             10,  '2023-08-15'::date, '2024-06-10'::date, 1),
+      (1003, 'Carmen Rivera',    '2010-06-03'::date, 'F', 'Hispanic/Latino',    8,  '2023-09-01'::date, '2024-06-10'::date, 1),
+      (1004, 'David Nguyen',     '2009-01-18'::date, 'M', 'Asian',              9,  '2023-08-15'::date, '2024-01-20'::date, 0),
+      (1005, 'Emily Chen',       '2010-09-07'::date, 'F', 'Asian',              8,  '2024-01-10'::date, '2024-06-10'::date, 1),
+      (1006, 'Frank Okafor',     '2008-04-22'::date, 'M', 'Black',             10,  '2023-08-15'::date, '2024-06-10'::date, 1),
+      (1007, 'Grace Kim',        '2009-07-30'::date, 'F', 'Asian',              9,  '2023-08-15'::date, '2023-12-15'::date, 0),
+      (1007, 'Grace Kim',        '2009-07-30'::date, 'F', 'Asian',              9,  '2024-01-08'::date, '2024-06-10'::date, 1),
+      (1008, 'Henry Martinez',   '2011-02-14'::date, 'M', 'Hispanic/Latino',    7,  '2024-02-01'::date, '2024-06-10'::date, 1),
+      (1009, 'Isla Thompson',    '2009-12-01'::date, 'F', 'White',              9,  '2023-08-15'::date, '2024-06-10'::date, 1),
+      (1010, 'James Wright',     '2010-05-19'::date, 'M', 'Black',              8,  '2023-09-01'::date, '2024-03-15'::date, 0),
+      (1011, 'Keiko Tanaka',     '2008-08-08'::date, 'F', 'Asian',             10,  '2023-08-15'::date, '2024-06-10'::date, 1),
+      (1012, 'Liam Patel',       '2009-10-11'::date, 'M', 'Asian',              9,  '2023-08-15'::date, '2023-11-30'::date, 0),
+      (1012, 'Liam Patel',       '2009-10-11'::date, 'M', 'Asian',              9,  '2024-03-01'::date, '2024-06-10'::date, 1),
+      (1013, 'Maya Singh',       '2011-04-27'::date, 'F', 'Asian',              7,  '2024-01-10'::date, '2024-06-10'::date, 1),
+      (1014, 'Noah Brown',       '2010-01-05'::date, 'M', 'White',              8,  '2023-08-15'::date, '2024-06-10'::date, 1),
+      (1015, 'Olivia Davis',     '2009-06-16'::date, 'F', 'Black',              9,  '2023-09-15'::date, '2024-02-28'::date, 0),
+      (1016, 'Pedro Gomez',      '2008-12-09'::date, 'M', 'Hispanic/Latino',   10,  '2023-08-15'::date, '2024-06-10'::date, 1),
+      (1017, 'Quinn Murphy',     '2010-03-21'::date, 'M', 'White',              8,  '2024-01-10'::date, '2024-06-10'::date, 1),
+      (1018, 'Rosa Fernandez',   '2011-08-13'::date, 'F', 'Hispanic/Latino',    7,  '2023-08-15'::date, '2024-06-10'::date, 1),
+      (1019, 'Sam Wilson',       '2009-11-02'::date, 'M', 'Two or More Races',  9,  '2023-10-01'::date, '2024-04-30'::date, 0),
+      (1020, 'Tara Reeves',      '2010-07-24'::date, 'F', 'White',              8,  '2023-08-15'::date, '2024-06-10'::date, 1)
+    ) AS dim_students(student_number, student_name, date_of_birth, gender, ethnicity, grade_level, enrollment_start_date, enrollment_end_date, membership_value);;
+  models: [
+  ]
+}

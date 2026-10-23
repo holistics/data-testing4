@@ -1,0 +1,43 @@
+Dataset galaxy_schema {
+  __engine__: 'aql'
+  label: 'Galaxy Schema'
+  data_source_name: 'demodb'
+  models: [
+    //fact models
+    fct_orders,
+    fct_inventory,
+
+    //dim models
+    dim_users,
+    dim_dates,
+    dim_cities,
+    dim_products,
+    dim_categories,
+    dim_merchants,
+    map_categories
+  ]
+
+  relationships: [
+    relationship(dim_users.city_id > dim_cities.id, true, direction:'one_way'),
+    relationship(fct_orders.user_id > dim_users.id, true, direction:'one_way'),
+    relationship(fct_orders.product_id > dim_products.id, true, direction:'one_way'),
+    relationship(fct_inventory.product_id > dim_products.id, true, direction:'one_way'),
+    relationship(fct_inventory.created_at > dim_dates.date_key, true, direction:'one_way'),
+    relationship(fct_orders.created_date > dim_dates.date_key, true, direction:'one_way'),
+    relationship(dim_products.category_id > dim_categories.id, true, direction:'one_way'),
+    relationship(dim_products.merchant_id > dim_merchants.id, true, direction:'one_way')
+  ]
+
+  permission city_name_permission {
+    field: r(dim_cities.name)
+    operator: 'matches_user_attribute'
+    value: 'city_name_attribute'
+  }
+  metric count_of_users_id {
+    label: "Count of Users Id"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql count(dim_users.id);;
+  }
+}

@@ -1,0 +1,49 @@
+Model revenue_by_country_csv {
+  type: 'table'
+  label: 'Revenue by country csv'
+  description: ''
+  data_source_name: 'demodb'
+  dimension country {
+    label: 'Country'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.country }};;
+  }
+  dimension product_category {
+    label: 'Product category'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_category }};;
+  }
+  dimension revenue {
+    label: 'Revenue'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.revenue }};;
+  }
+  dimension order_count {
+    label: 'Order count'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_count }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'revenue_by_country.csv'
+    uploaded_at: '2026-02-17 10:03:14'
+    hash: '5cb27d4dff167a12c4632f03a316eb7510c96d62144687bdd90036f822f8ca84'
+    column_configs: [
+      H.imports.column_config("country", "country", "text"),
+      H.imports.column_config("product_category", "product_category", "text"),
+      H.imports.column_config("revenue", "revenue", "number"),
+      H.imports.column_config("order_count", "order_count", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"dbt_khai"."holistics_revenue_by_co_a9648_202602171003"'
+}

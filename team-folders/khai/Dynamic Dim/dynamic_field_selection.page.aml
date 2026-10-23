@@ -14,6 +14,10 @@ Dashboard dynamic_field_selection {
       position: pos(760, 20, 200, 100)
       layer: 2
     }
+    block v_nq5f {
+      position: pos(20, 400, 980, 400)
+      layer: 1
+    }
     width: 1020
   }
 
@@ -60,6 +64,62 @@ Dashboard dynamic_field_selection {
     }
     settings {
       input_type: 'single'
+    }
+  }
+  block v_nq5f: VizBlock {
+    label: 'Metrics by Country copy'
+    viz: ColumnChart {
+      dataset: khai_ecommerce
+      calculation test {
+        label: 'Test'
+        formula: @aql case(
+  when: (param_model.metric_selection | first()) == 'Revenue'
+  , then: 'Revenue'
+  , when: (param_model.metric_selection | first()) == 'Total Orders'
+  , then: 'Total Orders'
+  , when: (param_model.metric_selection | first()) == 'Total Users'
+  , then: 'Total Users'
+);;
+        calc_type: 'dimension'
+        data_type: 'text'
+        model: countries
+      }
+      x_axis: VizFieldFull {
+        ref: r(countries.name)
+        format {
+          type: 'text'
+        }
+      }
+      legend: VizFieldFull {
+        ref: ref('countries', 'test')
+        format {
+          type: 'number'
+          pattern: 'inherited'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            label: ' '
+            ref: r(khai_ecommerce.dynamic_metric)
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            color_palette: 0
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
     }
   }
 }

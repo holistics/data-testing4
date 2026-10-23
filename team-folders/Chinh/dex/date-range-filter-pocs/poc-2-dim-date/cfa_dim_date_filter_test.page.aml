@@ -1,0 +1,147 @@
+Dashboard cfa_dim_date_filter_test_dashboard {
+  title: 'CFA Dim Date Filter Test'
+  description: 'Tests one dashboard date filter on a dim_date model to derive selected start/end bounds.'
+  owner: 'chinh.dm@holistics.io'
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 900
+    height: 800
+    grid_size: 20
+    auto_expand_vertically: true
+    mobile {
+      mode: 'auto'
+    }
+    block f_cfa_period {
+      position: pos(20, 20, 320, 80)
+      layer: 1
+    }
+    block v_total_cfa {
+      position: pos(20, 120, 860, 220)
+      layer: 1
+    }
+    block v_audit_table {
+      position: pos(20, 360, 860, 380)
+      layer: 1
+    }
+  }
+
+  theme: H.themes.vanilla
+
+  block f_cfa_period: FilterBlock {
+    label: 'CFA Period'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: cfa_dim_date_filter_test
+      field: r(cfa_dim_date.date_day)
+    }
+    default {
+      operator: 'matches'
+      value: '2026-01'
+    }
+  }
+
+  block v_total_cfa: VizBlock {
+    label: 'Total CFA Amount'
+    viz: DataTable {
+      dataset: cfa_dim_date_filter_test
+      fields: [
+        VizFieldFull {
+          ref: r(cfa_dim_date_filter_test.total_cfa_amount_dim_date_period)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: false
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  block v_audit_table: VizBlock {
+    label: 'Audit rows included in Total CFA Amount'
+    viz: DataTable {
+      dataset: cfa_dim_date_filter_test
+      fields: [
+        VizFieldFull {
+          ref: r(cfa_model.cfa_id)
+          format {
+            type: 'text'
+          }
+          uname: 'cfa_model_cfa_id'
+        },
+        VizFieldFull {
+          ref: r(cfa_model.field_a_start_date)
+          format {
+            type: 'date'
+          }
+          uname: 'cfa_model_field_a_start_date'
+        },
+        VizFieldFull {
+          ref: r(cfa_model.field_b_end_date)
+          format {
+            type: 'date'
+          }
+          uname: 'cfa_model_field_b_end_date'
+        },
+        VizFieldFull {
+          ref: r(cfa_model.customer_name)
+          format {
+            type: 'text'
+          }
+          uname: 'cfa_model_customer_name'
+        },
+        VizFieldFull {
+          ref: r(cfa_model.region)
+          format {
+            type: 'text'
+          }
+          uname: 'cfa_model_region'
+        },
+        VizFieldFull {
+          ref: r(cfa_model.cfa_type)
+          format {
+            type: 'text'
+          }
+          uname: 'cfa_model_cfa_type'
+        },
+        VizFieldFull {
+          ref: r(cfa_model.expected_for_jan_2026)
+          format {
+            type: 'text'
+          }
+          uname: 'cfa_model_expected_for_jan_2026'
+        },
+        VizFieldFull {
+          ref: r(cfa_dim_date_filter_test.total_cfa_amount_dim_date_period)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'included_cfa_amount'
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'cfa_model_cfa_id'
+            direction: 'asc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+// Source of truth: BigQuery `keboola.product_categories` (verified via
+// Holistics MCP). Column names with mixed case from Keboola (`Product_Line`,
+// `KIT_UPG_Assembled`, …) are quoted to be safe.
+Model dim_product_categories {
+  type: 'table'
+  label: 'Product Categories'
+  data_source_name: 'data_staging'
+  table_name: 'keboola.product_categories'
+
+  dimension product_id {
+    label: 'Product ID'
+    type: 'text'
+    primary_key: true
+  }
+
+  dimension category_1 {
+    label: 'Category 1'
+    type: 'text'
+  }
+
+  dimension category_2 {
+    label: 'Category 2'
+    type: 'text'
+  }
+
+  dimension mkt_product_category {
+    label: 'Marketing Product Category'
+    type: 'text'
+  }
+
+  dimension mkt_product_master_group {
+    label: 'Marketing Product Master Group'
+    type: 'text'
+  }
+
+  dimension kit_upg_assembled {
+    label: 'KIT / UPG / Assembled'
+    type: 'text'
+    definition: @sql {{#SOURCE.`KIT_UPG_Assembled`}};;
+  }
+
+  dimension product_line {
+    label: 'Product Line'
+    type: 'text'
+    definition: @sql {{#SOURCE.`Product_Line`}};;
+  }
+
+  dimension product_group {
+    label: 'Product Group'
+    type: 'text'
+    definition: @sql {{#SOURCE.`Product_Group`}};;
+  }
+
+  dimension product {
+    label: 'Product'
+    type: 'text'
+    definition: @sql {{#SOURCE.`Product`}};;
+  }
+
+  dimension cena_naklady {
+    label: 'Cena nakladu'
+    type: 'text'
+    definition: @sql {{#SOURCE.`Cena_naklady`}};;
+  }
+}

@@ -1,0 +1,18 @@
+// Demo dataset for Looker-style cross-model date filter pushdown.
+// Cannot share one param across models — each query model owns its own param.
+// For a joined viz, use TWO dashboard filters (one per param). One filter cannot map to two params on the same widget.
+Dataset bhx_demo_cross_model_date_filter {
+  label: '[Tri-Demo] Cross-model date filter'
+  description: 'Demo: raw orders + first order state, each with its own order_date_param. Use two filters for the joined explore.'
+  data_source_name: 'demodb'
+  owner: 'tri.dvm@holistics.io'
+
+  models: [
+    bhx_demo_raw_orders,
+    bhx_demo_first_order_state
+  ]
+
+  relationships: [
+    relationship(bhx_demo_raw_orders.user_id > bhx_demo_first_order_state.user_id, true)
+  ]
+}

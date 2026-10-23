@@ -234,7 +234,7 @@ Dashboard mou_olga_tmp {
       <svg aria-hidden="true" style="width: 24px; height: 24px;">
         <use href="#icon-info"></use>
       </svg>
-      <span class="dw-tooltiptext">This dashboard contains an overview of DW`s monthly online usage. This includes
+      <span class="dw-tooltiptext"> \. This dashboard contains an overview of DW`s monthly online usage. This includes
         views on all DW own websites and social media accounts as well as on all website and social media cooperations.
       </span>
     </span>

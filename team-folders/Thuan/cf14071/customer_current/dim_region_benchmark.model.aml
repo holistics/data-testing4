@@ -1,0 +1,33 @@
+Model dim_region_benchmark {
+  type: 'query'
+  label: 'Dim Region (Benchmark)'
+  description: '''
+    CF-14071. The "Dim Region (Benchmark)" box - the separate benchmark copy of the region dimension.
+    Benchmark side only: joins Fact Sales (Benchmark) and Fact SOH (Benchmark).
+
+    This is one of the three boxes the diagram marks with "Error as this path can't be resolved through RLS
+    via Dim Store".
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 'VIC' as region_key, 'Victoria' as region_name
+    union all
+    select 'NSW' as region_key, 'New South Wales' as region_name
+    union all
+    select 'QLD' as region_key, 'Queensland' as region_name
+  ;;
+
+  dimension region_key {
+    label: 'Region Key (Benchmark)'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.region_key }} ;;
+  }
+
+  dimension region_name {
+    label: 'Region (Benchmark)'
+    type: 'text'
+    definition: @sql {{ #SOURCE.region_name }} ;;
+  }
+}

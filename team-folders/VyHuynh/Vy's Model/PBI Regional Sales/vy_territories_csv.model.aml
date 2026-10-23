@@ -1,0 +1,57 @@
+Model vy_territories_csv {
+  type: 'table'
+  label: 'Territories'
+  description: ''
+  data_source_name: 'demodb'
+  dimension region {
+    label: 'Region'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.region }};;
+  }
+  dimension territory {
+    label: 'Territory'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.territory }};;
+  }
+  dimension country {
+    label: 'Country'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.country }};;
+  }
+  dimension territory_seq {
+    label: 'Territory seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.territory_seq }};;
+  }
+  dimension state_or_province {
+    label: 'State or province'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.state_or_province }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'territories.csv'
+    uploaded_at: '2026-05-05 15:31:08'
+    hash: '209a4667c44de27c81dcb5c76695c2092712fc0ba1ee1f493cfb9ebefa5aaec8'
+    column_configs: [
+      H.imports.column_config("region", "region", "text"),
+      H.imports.column_config("territory", "territory", "text"),
+      H.imports.column_config("country", "country", "text"),
+      H.imports.column_config("territory_seq", "territory_seq", "number"),
+      H.imports.column_config("state_or_province", "state_or_province", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_territorie_32f57_202605051531"'
+}

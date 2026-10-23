@@ -9,33 +9,78 @@ Dashboard demo_column_based_access_control {
       dataset: demo_ecommerce
       fields: [
         VizFieldFull {
-          ref: ref('ecommerce_users', 'full_name')
+          ref: r(ecommerce_countries.name)
           format {
             type: 'text'
           }
         },
         VizFieldFull {
-          ref: ref('ecommerce_users', 'email_pii')
+          ref: r(ecommerce_users.id)
+          aggregation: 'count'
           format {
-            type: 'text'
+            type: 'number'
+            pattern: 'inherited'
           }
-        },
-        VizFieldFull {
-          ref: ref('ecommerce_countries', 'name')
-          format {
-            type: 'text'
-          }
-        },
-        VizFieldFull {
-          ref: ref('ecommerce_cities', 'name')
-          format {
-            type: 'text'
-          }
+          uname: 'count_id'
         }
       ]
       settings {
         show_row_number: true
+        conditional_formats: [
+          ConditionalFormat {
+            key: 'count_id'
+            aggregation: 'count'
+            format: SingleFormat {
+              condition {
+                operator: 'greater_than'
+                value: 600
+              }
+              text_color: '#9C5C1C'
+              background_color: '#F0CFAD'
+            }
+          },
+          ConditionalFormat {
+            key: 'count_id'
+            aggregation: 'count'
+            format: SingleFormat {
+              condition {
+                operator: 'less_than_equal'
+                value: 1100
+              }
+              text_color: '#9C5C1C'
+              background_color: '#F0CFAD'
+            }
+          },
+          ConditionalFormat {
+            key: 'count_id'
+            aggregation: 'count'
+            format: SingleFormat {
+              condition {
+                operator: 'greater_than'
+                value: 1100
+              }
+              text_color: '#328159'
+              background_color: '#B5E3CD'
+            }
+          },
+          ConditionalFormat {
+            key: 'count_id'
+            aggregation: 'count'
+            format: SingleFormat {
+              condition {
+                operator: 'less_than'
+                value: 600
+              }
+              text_color: '#BF0E08'
+              background_color: '#FAD2D1'
+            }
+          }
+        ]
         row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
       }
     }
   }

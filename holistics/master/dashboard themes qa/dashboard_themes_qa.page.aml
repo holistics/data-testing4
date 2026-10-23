@@ -208,11 +208,18 @@ Normal text;;
     }
   }
   block f2: FilterBlock {
-    label: 'Text'
-    type: 'text'
+    label: 'Status'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: r(order_master.status)
+    }
     default {
       operator: 'is'
-      value: 'value'
+      value: 'refunded'
+    }
+    settings {
+      input_type: 'single'
     }
   }
   block f3: FilterBlock {

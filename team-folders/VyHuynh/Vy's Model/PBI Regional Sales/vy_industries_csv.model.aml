@@ -1,0 +1,33 @@
+Model vy_industries_csv {
+  type: 'table'
+  label: 'Industries'
+  description: ''
+  data_source_name: 'demodb'
+  dimension industry {
+    label: 'Industry'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.industry }};;
+  }
+  dimension industry_seq {
+    label: 'Industry seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.industry_seq }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'industries.csv'
+    uploaded_at: '2026-05-05 15:28:18'
+    hash: 'ec7eb9fbd68559604f15e7594266bb83b6eccbbfa46fe436de1cc123039a66b0'
+    column_configs: [
+      H.imports.column_config("industry", "industry", "text"),
+      H.imports.column_config("industry_seq", "industry_seq", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_industries_a3fd0_202605051528"'
+}

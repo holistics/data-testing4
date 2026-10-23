@@ -1,0 +1,11 @@
+Dataset studen_teacher_classover {
+  label: 'Studen Teacher Classover'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    teacher_student
+  ]
+  relationships: [
+  ]
+  owner: 'khai.to@holistics.io'
+}

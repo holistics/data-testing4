@@ -1,0 +1,123 @@
+// ============================================================
+// FILE: themes/obsidian_navy.aml
+// Obsidian Navy — Linear-inspired, electric blue accent
+// Block #060c16 → Canvas #0f1724 → Page #1a2332
+// ============================================================
+
+const ob_page      = '#1a2332'
+const ob_canvas    = '#0f1724'
+const ob_surface   = '#060c16'
+const ob_border    = '#1f2d42'
+const ob_hover     = '#0a1220'
+const ob_banding   = '#080e1a'
+const ob_text      = '#f0f2f5'
+const ob_muted     = '#7589a6'
+const ob_dim       = '#3e506a'
+const ob_accent    = '#3b82f6'
+const ob_green     = '#10b981'
+const ob_red       = '#ef4444'
+const ob_amber     = '#f59e0b'
+const ob_font      = 'Inter'
+
+PageTheme obsidian_navy {
+  background {
+    bg_color: ob_page
+  }
+
+  canvas {
+    background {
+      bg_color: ob_canvas
+    }
+    border {
+      border_width: 0
+      border_radius: 0
+      border_color: ob_border
+      border_style: 'none'
+    }
+    shadow: 'none'
+    opacity: 1
+  }
+
+  block {
+    label {
+      font_family: ob_font
+      font_size: 14
+      font_color: ob_text
+      font_weight: 'semibold'
+      font_style: 'normal'
+    }
+    text {
+      font_family: ob_font
+      font_size: 12
+      font_color: ob_muted
+      font_weight: 'normal'
+      font_style: 'normal'
+    }
+    border {
+      border_width: 1
+      border_radius: 12
+      border_color: ob_border
+      border_style: 'solid'
+    }
+    background {
+      bg_color: ob_surface
+    }
+    padding: 16
+    shadow: 'none'
+    opacity: 1
+  }
+
+  viz {
+    table {
+      general {
+        bg_color: ob_surface
+        hover_color: ob_hover
+        banding_color: ob_banding
+        font_size: 12
+        font_color: ob_muted
+        font_family: ob_font
+        border_color: ob_border
+        border_width: 1
+        grid_color: '#172030'
+      }
+      header {
+        bg_color: ob_hover
+        font_size: 12
+        font_color: ob_text
+        font_weight: 'semibold'
+      }
+      sub_header {
+        bg_color: ob_hover
+        font_size: 11
+        font_color: ob_muted
+        font_weight: 'medium'
+      }
+      sub_title {
+        font_size: 11
+        font_color: ob_muted
+        font_weight: 'medium'
+      }
+    }
+  }
+
+  custom_css: @css
+    /* ---- Obsidian Navy ---- */
+
+    .tab-bar { background: #0f1724 !important; border-bottom: 1px solid #1f2d42 !important; }
+    .tab-bar .tab-item { color: #7589a6 !important; font-family: 'Inter', sans-serif !important; font-size: 13px !important; }
+    .tab-bar .tab-item.active { color: #3b82f6 !important; border-bottom: 2px solid #3b82f6 !important; }
+
+    .metric-sheet .metric-value { font-family: 'JetBrains Mono', monospace !important; font-size: 28px !important; font-weight: 700 !important; color: #f0f2f5 !important; }
+    .metric-sheet .metric-label { font-family: 'Inter', sans-serif !important; font-size: 11px !important; color: #7589a6 !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; }
+
+    .recharts-cartesian-axis-tick-value { fill: #7589a6 !important; font-size: 10px !important; }
+    .recharts-legend-item-text { color: #7589a6 !important; font-size: 11px !important; }
+    .recharts-cartesian-grid line { stroke: #1f2d42 !important; }
+
+    .recharts-tooltip-wrapper .recharts-default-tooltip { background: #060c16 !important; border: 1px solid #1f2d42 !important; border-radius: 8px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important; }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #0f1724; }
+    ::-webkit-scrollbar-thumb { background: #1f2d42; border-radius: 3px; }
+  ;;
+}

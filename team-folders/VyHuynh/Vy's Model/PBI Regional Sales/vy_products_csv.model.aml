@@ -1,0 +1,41 @@
+Model vy_products_csv {
+  type: 'table'
+  label: 'Products'
+  description: ''
+  data_source_name: 'demodb'
+  dimension product {
+    label: 'Product'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product }};;
+  }
+  dimension product_seq {
+    label: 'Product seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_seq }};;
+  }
+  dimension product_category {
+    label: 'Product category'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_category }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'products.csv'
+    uploaded_at: '2026-05-05 15:29:56'
+    hash: '0653037efc30bb71c871a828025da0468f7dce0aba591a86c73ebbe8cb996df2'
+    column_configs: [
+      H.imports.column_config("product", "product", "text"),
+      H.imports.column_config("product_seq", "product_seq", "number"),
+      H.imports.column_config("product_category", "product_category", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_products_c_b1dc5_202605051529"'
+}

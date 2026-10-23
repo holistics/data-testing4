@@ -1,0 +1,43 @@
+Model dim_products_test {
+  type: 'query'
+  label: 'Dim Products Test'
+  description: '''
+    Docs RLP example. THE UNREACHABLE DIMENSION - grouping total_orders by this model's `name` is the query
+    the docs say must error.
+
+    Renamed from the doc's `dim_products` for the same reason as fact_orders_test: that name already exists
+    in demo (specific use-case)/prusa/models/dim_products.model.aml.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 'Widget' as name, 1 as merchant_id, 1 as category_id
+    union all
+    select 2 as id, 'Gadget' as name, 1 as merchant_id, 2 as category_id
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension name {
+    label: 'Name'
+    type: 'text'
+    definition: @sql {{ #SOURCE.name }} ;;
+  }
+
+  dimension merchant_id {
+    label: 'Merchant Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.merchant_id }} ;;
+  }
+
+  dimension category_id {
+    label: 'Category Id'
+    type: 'number'
+    definition: @sql {{ #SOURCE.category_id }} ;;
+  }
+}

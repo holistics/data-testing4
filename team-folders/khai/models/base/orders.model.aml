@@ -1,11 +1,12 @@
 Model orders {
   type: 'table'
   label: 'Orders'
-  description: ''
+  description: 'test description'
   data_source_name: 'demodb'
   dimension id {
     label: 'Id'
     type: 'number'
+    primary_key: true
     hidden: false
     definition: @sql {{ #SOURCE.id }};;
   }
@@ -50,8 +51,7 @@ Model orders {
   measure total_orders {
     label: 'Total Orders'
     type: 'number'
-    definition: @sql {{id}} ;;
-    aggregation_type: 'count'
+    definition: @aql count(orders.id) ;;
   }
 
   owner: 'khai.to+demo4@holistics.io'

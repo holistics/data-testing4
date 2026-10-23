@@ -1,0 +1,57 @@
+Model vy_kaggle_geolocation_dataset {
+  type: 'table'
+  label: 'Geolocation'
+  description: ''
+  data_source_name: 'demodb'
+  dimension geolocation_zip_code_prefix {
+    label: 'Geolocation zip code prefix'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.geolocation_zip_code_prefix }};;
+  }
+  dimension geolocation_lat {
+    label: 'Geolocation lat'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.geolocation_lat }};;
+  }
+  dimension geolocation_lng {
+    label: 'Geolocation lng'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.geolocation_lng }};;
+  }
+  dimension geolocation_city {
+    label: 'Geolocation city'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.geolocation_city }};;
+  }
+  dimension geolocation_state {
+    label: 'Geolocation state'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.geolocation_state }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'olist_geolocation_dataset.csv'
+    uploaded_at: '2026-04-15 08:05:37'
+    hash: 'b514f6fc991b9566aeba02aa5d67e2c3630f034b60a0e05aa0d082a3b66d88d6'
+    column_configs: [
+      H.imports.column_config("geolocation_zip_code_prefix", "geolocation_zip_code_prefix", "number"),
+      H.imports.column_config("geolocation_lat", "geolocation_lat", "number"),
+      H.imports.column_config("geolocation_lng", "geolocation_lng", "number"),
+      H.imports.column_config("geolocation_city", "geolocation_city", "text"),
+      H.imports.column_config("geolocation_state", "geolocation_state", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_geo_d3408_202604150805"'
+}

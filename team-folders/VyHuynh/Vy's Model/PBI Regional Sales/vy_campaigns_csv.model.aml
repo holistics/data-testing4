@@ -1,0 +1,41 @@
+Model vy_campaigns_csv {
+  type: 'table'
+  label: 'Campaigns'
+  description: ''
+  data_source_name: 'demodb'
+  dimension campaign_seq {
+    label: 'Campaign seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.campaign_seq }};;
+  }
+  dimension campaign_type {
+    label: 'Campaign type'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.campaign_type }};;
+  }
+  dimension campaign {
+    label: 'Campaign'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.campaign }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'campaigns.csv'
+    uploaded_at: '2026-05-05 15:27:36'
+    hash: '4aeb2527651d6a31c8c0f369b1caf8840aa9a1255fc93446e58205dbfaa021be'
+    column_configs: [
+      H.imports.column_config("campaign_seq", "campaign_seq", "number"),
+      H.imports.column_config("campaign_type", "campaign_type", "text"),
+      H.imports.column_config("campaign", "campaign", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_campaigns__360d0_202605051527"'
+}

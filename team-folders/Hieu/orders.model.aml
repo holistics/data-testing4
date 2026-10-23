@@ -1,0 +1,45 @@
+Model orderskk {
+  type: 'query'
+  label: 'Orders'
+  description: ''
+  data_source_name: 'movies_lens'
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension user_id {
+    label: 'User Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.user_id }};;
+  }
+  dimension tenant_id {
+    label: 'tenant_id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.tenant_id }};;
+  }
+
+  param param_tenant_id {
+    label: 'param tenant_id'
+    type: 'number'
+  }
+
+  owner: 'hieu.nht@holistics.io'
+  query: @sql
+    with haha as(
+      SELECT 1 as id, 1 as user_id, 1 as tenant_id
+      UNION
+      select 2 as id, null as user_id, 1 as tenant_id
+      UNION
+      select 3 as id, 3 as user_id, 2 as tenant_id
+    )
+    select *
+    from haha
+    where  	{% filter(param_tenant_id) %} tenant_id {% end %}
+    ;;
+  models: [
+  ]
+}

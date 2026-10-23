@@ -1,0 +1,132 @@
+// ============================================================
+// FILE: themes/squad_command.aml
+// Squad Command Center — matching the reference design
+// Floating blocks on deep navy
+// Page #0b0d13 → Canvas #0b0d13 → Block #151a26
+// ============================================================
+
+const sc_page      = '#182030'
+const sc_canvas    = '#0b0d13'
+const sc_surface   = '#151a26'
+const sc_border    = '#1e2535'
+const sc_hover     = '#1a2030'
+const sc_banding   = '#181d28'
+const sc_text      = '#e8ecf2'
+const sc_muted     = '#6b7590'
+const sc_dim       = '#3a4460'
+const sc_accent    = '#3b82f6'
+const sc_green     = '#34d399'
+const sc_red       = '#ef4444'
+const sc_amber     = '#fbbf24'
+const sc_purple    = '#a78bfa'
+const sc_cyan      = '#22d3ee'
+const sc_pink      = '#f472b6'
+const sc_font      = 'Inter'
+
+PageTheme squad_dark {
+  background {
+    bg_color: sc_page
+  }
+
+  canvas {
+    background {
+      bg_color: sc_canvas
+    }
+    border {
+      border_width: 0
+      border_radius: 0
+      border_color: sc_border
+      border_style: 'none'
+    }
+    shadow: 'none'
+    opacity: 1
+  }
+
+  block {
+    label {
+      font_family: sc_font
+      font_size: 14
+      font_color: sc_text
+      font_weight: 'semibold'
+      font_style: 'normal'
+    }
+    text {
+      font_family: sc_font
+      font_size: 12
+      font_color: sc_muted
+      font_weight: 'normal'
+      font_style: 'normal'
+    }
+    border {
+      border_width: 1
+      border_radius: 14
+      border_color: sc_border
+      border_style: 'solid'
+    }
+    background {
+      bg_color: sc_surface
+    }
+    padding: 16
+    shadow: 'none'
+    opacity: 1
+  }
+
+  viz {
+    table {
+      general {
+        bg_color: sc_surface
+        hover_color: sc_hover
+        banding_color: sc_banding
+        font_size: 12
+        font_color: sc_muted
+        font_family: sc_font
+        border_color: sc_border
+        border_width: 1
+        grid_color: '#1a2030'
+      }
+      header {
+        bg_color: sc_hover
+        font_size: 12
+        font_color: sc_text
+        font_weight: 'semibold'
+      }
+      sub_header {
+        bg_color: sc_hover
+        font_size: 11
+        font_color: sc_muted
+        font_weight: 'medium'
+      }
+      sub_title {
+        font_size: 11
+        font_color: sc_muted
+        font_weight: 'medium'
+      }
+    }
+  }
+
+  custom_css: @css
+    /* ---- Squad Command Center ---- */
+
+    /* Tab bar */
+    .tab-bar { background: #0b0d13 !important; border-bottom: 1px solid #1e2535 !important; }
+    .tab-bar .tab-item { color: #6b7590 !important; font-family: 'Inter', sans-serif !important; font-size: 13px !important; }
+    .tab-bar .tab-item.active { color: #3b82f6 !important; border-bottom: 2px solid #3b82f6 !important; }
+
+    /* Metric sheet — large monospace numbers */
+    .metric-sheet .metric-value { font-family: 'JetBrains Mono', monospace !important; font-size: 28px !important; font-weight: 700 !important; color: #e8ecf2 !important; }
+    .metric-sheet .metric-label { font-family: 'Inter', sans-serif !important; font-size: 11px !important; color: #6b7590 !important; text-transform: uppercase !important; letter-spacing: 0.06em !important; }
+
+    /* Chart axis and legend */
+    .recharts-cartesian-axis-tick-value { fill: #6b7590 !important; font-size: 10px !important; font-family: 'Inter', sans-serif !important; }
+    .recharts-legend-item-text { color: #6b7590 !important; font-size: 11px !important; }
+    .recharts-cartesian-grid line { stroke: #1e2535 !important; }
+
+    /* Tooltip */
+    .recharts-tooltip-wrapper .recharts-default-tooltip { background: #151a26 !important; border: 1px solid #1e2535 !important; border-radius: 10px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #0b0d13; }
+    ::-webkit-scrollbar-thumb { background: #1e2535; border-radius: 3px; }
+  ;;
+}

@@ -1,0 +1,42 @@
+Dataset chinh_dynamic_dataset {
+  label: 'chinh_dynamic_dataset',
+  description: ''
+  data_source_name: 'demodb'
+  owner: 'chinh.dm@holistics.io'
+
+  models: [
+    chinh_dynamic_dim_model,
+    param_model,
+  ]
+
+  metric filter_input {
+    label: 'Fiter Input (Metric)'
+    type: 'date'
+    definition: @aql
+      coalesce(
+        chinh_dynamic_dim_model.param_filter_input | first(),
+        chinh_dynamic_dim_model.order_billing_at | day()
+      )
+    ;;
+  }
+
+  metric total_value {
+    label: 'Total Value'
+    type: 'number'
+    definition: @aql sum(chinh_dynamic_dim_model.quantity * chinh_dynamic_dim_model.price) ;;
+  }
+
+  metric running_total_value {
+    label: 'Running Total Value'
+    type: 'number'
+    definition: @aql total_value | running_total(chinh_dynamic_dim_model.order_billing_at | day()) ;;
+  }
+
+  // metric end_created_date {
+  //   label: 'End Date Extracted From Param'
+  //   type: 'date'
+  //   definition: @aql chinh_dynamic_dim_model.filter_input | first() | max() ;;
+  // }
+
+  relationships: []
+}

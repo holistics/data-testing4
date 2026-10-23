@@ -1,0 +1,15 @@
+Dataset order_users_param_1 {
+  label: 'order_users_param_1'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    orders_param_1,
+    users_param_1,
+    param_model
+    ,
+    khai_date_d
+  ]
+  relationships: [
+    relationship(orders_param_1.user_id > users_param_1.id, true)
+  ]
+}

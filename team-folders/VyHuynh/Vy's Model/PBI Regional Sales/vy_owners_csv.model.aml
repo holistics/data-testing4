@@ -1,0 +1,49 @@
+Model vy_owners_csv {
+  type: 'table'
+  label: 'Owners'
+  description: ''
+  data_source_name: 'demodb'
+  dimension owner {
+    label: 'Owner'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.owner }};;
+  }
+  dimension manager {
+    label: 'Manager'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.manager }};;
+  }
+  dimension system_user_seq {
+    label: 'System user seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.system_user_seq }};;
+  }
+  dimension systemuserid {
+    label: 'Systemuserid'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.systemuserid }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'owners.csv'
+    uploaded_at: '2026-05-05 15:29:36'
+    hash: 'c82c9623f555d1408f289f75b124f59ab5418d255dcd1c6b48f9170b9f4808d6'
+    column_configs: [
+      H.imports.column_config("owner", "owner", "text"),
+      H.imports.column_config("manager", "manager", "text"),
+      H.imports.column_config("system_user_seq", "system_user_seq", "number"),
+      H.imports.column_config("systemuserid", "systemuserid", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_owners_csv_51eae_202605051529"'
+}

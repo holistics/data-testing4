@@ -1,0 +1,102 @@
+Dashboard time_comparison {
+  title: 'time_comparison'
+  description: ''
+  owner: 'khai.to@holistics.io'
+  block v_2i3x: VizBlock {
+    label: 'GMV (time compare), NMV (time compare) and 5 more by Time Type'
+    viz: PivotTable {
+      dataset: khai_ecommerce
+      columns: [
+        VizFieldFull {
+          ref: r(time_type.time_type)
+          format {
+            type: 'text'
+          }
+        }
+      ]
+      values: [
+        VizFieldFull {
+          ref: r(khai_ecommerce.gmv_time_compare)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce.nmv_time_compare)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce.aov_time_compare)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce.total_orders_compare)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce.total_delivered_orders_time_compare)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce.total_cancelled_orders_time_compare)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        },
+        VizFieldFull {
+          ref: r(khai_ecommerce.cancelled_order_ratio_time_compare)
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+        value_labels_position {
+          placement: 'rows'
+        }
+        column_styles: [
+          ColumnStyle {
+            key: 'h__row_value_label_placeholder'
+            width: 255.68179321289062
+          }
+        ]
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1220
+    height: 340
+    grid_size: 20
+    auto_expand_vertically: true
+    block v_2i3x {
+      position: pos(20, 20, 1180, 300)
+      layer: 1
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: excel_style
+}

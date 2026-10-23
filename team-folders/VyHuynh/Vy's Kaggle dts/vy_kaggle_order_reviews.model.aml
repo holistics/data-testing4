@@ -1,0 +1,73 @@
+Model vy_kaggle_order_reviews {
+  type: 'table'
+  label: 'Order reviews'
+  description: ''
+  data_source_name: 'demodb'
+  dimension review_id {
+    label: 'Review'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.review_id }};;
+  }
+  dimension order_id {
+    label: 'Order'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_id }};;
+  }
+  dimension review_score {
+    label: 'Review score'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.review_score }};;
+  }
+  dimension review_comment_title {
+    label: 'Review comment title'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.review_comment_title }};;
+  }
+  dimension review_comment_message {
+    label: 'Review comment message'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.review_comment_message }};;
+  }
+  dimension review_creation_date {
+    label: 'Review creation date'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.review_creation_date }};;
+  }
+  dimension review_answer_timestamp {
+    label: 'Review answer timestamp'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.review_answer_timestamp }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'olist_order_reviews_dataset.csv'
+    uploaded_at: '2026-04-15 08:11:45'
+    hash: '012b61c7593e34f51fa614efdf802b9c7056ce6aae5307ddb93236e7cfc797d7'
+    column_configs: [
+      H.imports.column_config("review_id", "review_id", "text"),
+      H.imports.column_config("order_id", "order_id", "text"),
+      H.imports.column_config("review_score", "review_score", "number"),
+      H.imports.column_config("review_comment_title", "review_comment_title", "text"),
+      H.imports.column_config("review_comment_message", "review_comment_message", "text"),
+      H.imports.column_config("review_creation_date", "review_creation_date", "text"),
+      H.imports.column_config("review_answer_timestamp", "review_answer_timestamp", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_ord_e9fa2_202604150811"'
+}

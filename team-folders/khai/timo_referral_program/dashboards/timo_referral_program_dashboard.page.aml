@@ -1,0 +1,114 @@
+Dashboard timo_referral_program_dashboard {
+  title: 'Timo Referral Program Dashboard'
+  description: ''
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+  block v_3yn5: VizBlock {
+    label: 'Invitees, Fund Id and 5 more'
+    viz: DataTable {
+      dataset: timo_referral_program
+      calculation total_invitees {
+        label: 'Total Invitees'
+        formula: @aql count(timo_invitees.user_id) | keep_grains(timo_invitees, timo_fund_info);;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      filter {
+        field: r(timo_invitees.fund_master)
+        operator: 'is'
+        value: true
+      }
+      filter {
+        field: r(timo_inviters.fund_master)
+        operator: 'is'
+        value: false
+      }
+      fields: [
+        VizFieldFull {
+          label: 'Invitees'
+          ref: r(timo_invitees.user_id)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(timo_fund_info.fund_id)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          ref: r(timo_fund_info.fund_type)
+          format {
+            type: 'text'
+          }
+        },
+        VizFieldFull {
+          label: 'Fund Created At'
+          ref: r(timo_fund_info.created_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(timo_invitees.checking_created_at)
+          format {
+            type: 'datetime'
+          }
+        },
+        VizFieldFull {
+          ref: r(timo_inviters.user_id)
+          aggregation: 'count'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          uname: 'count_user_id_1'
+        },
+        VizFieldFull {
+          ref: 'total_invitees'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+          hidden: true
+        }
+      ]
+      settings {
+        show_row_number: true
+        sorts: [
+          SortSetting {
+            key: 'count_user_id_1'
+            direction: 'desc'
+          }
+        ]
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 560
+    grid_size: 20
+    auto_expand_vertically: true
+    block title {
+      position: pos(20, 20, 1260, 60)
+    }
+    block v_3yn5 {
+      position: pos(20, 80, 1260, 460)
+      layer: 1
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+
+  theme: H.themes.vanilla
+}

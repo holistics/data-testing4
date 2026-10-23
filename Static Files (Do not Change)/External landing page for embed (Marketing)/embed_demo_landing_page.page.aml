@@ -33,7 +33,6 @@ Dashboard embed_demo_landing_page {
       hide_label: true
     }
   }
-
   block override_css: TextBlock {
     content: @md <style>
       .dac-text-block {
@@ -349,7 +348,7 @@ ecommerce_users.sign_up_date
     type: 'date'
     default {
       operator: 'matches'
-      value: 'last 2 years'
+      value: '$H_NIL$'
     }
   }
   block t5: TextBlock {
@@ -515,10 +514,10 @@ ecommerce_users.sign_up_date
     width: 1440
     height: 1080
     block v1 {
-      position: pos(238, 16, 302, 60)
+      position: pos(251, 16, 300, 60)
     }
     block override_css {
-      position: pos(-490, 100, 465, 160)
+      position: pos(-490, 101, 465, 160)
     }
     block f1 {
       position: pos(-320, 10, 300, 80)
@@ -560,10 +559,10 @@ ecommerce_users.sign_up_date
       position: pos(40, 390, 650, 370)
     }
     block f2 {
-      position: pos(1110, 10, 310, 80)
+      position: pos(1110, 17, 310, 80)
     }
     block t5 {
-      position: pos(27, 23, 190, 50)
+      position: pos(21, 15, 190, 50)
     }
     block t9 {
       position: pos(40, 350, 650, 40)
@@ -590,10 +589,10 @@ ecommerce_users.sign_up_date
       position: pos(840, 120, 40, 190)
     }
     block t15 {
-      position: pos(149, 29, 169, 53)
+      position: pos(145, 28, 169, 53)
     }
     block f3 {
-      position: pos(800, 10, 300, 80)
+      position: pos(800, 17, 300, 80)
     }
     block t16 {
       position: pos(-20, 90, 1480, 20)
@@ -639,4 +638,10 @@ ecommerce_users.sign_up_date
       ]
     }
   ]
+  settings {
+    timezone: 'Etc/UTC'
+    cache_duration: 1440
+    autorun_on_open: true
+    autorun_on_changes: true
+  }
 }

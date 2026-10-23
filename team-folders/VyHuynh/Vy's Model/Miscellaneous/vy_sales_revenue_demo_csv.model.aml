@@ -1,0 +1,41 @@
+Model vy_sales_revenue_demo_csv {
+  type: 'table'
+  label: 'Sales & revenue demo'
+  description: ''
+  data_source_name: 'demodb'
+  dimension sales_rep {
+    label: 'Sales rep'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales_rep }};;
+  }
+  dimension region {
+    label: 'Region'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.region }};;
+  }
+  dimension revenue_usd {
+    label: 'Revenue usd'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.revenue_usd }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'sales_revenue_demo.csv'
+    uploaded_at: '2025-11-03 08:00:14'
+    hash: '786602023e3730da52eb3beaffad199c1c728386dfc2fc69628011c8cb4b6108'
+    column_configs: [
+      H.imports.column_config("sales_rep", "sales_rep", "text"),
+      H.imports.column_config("region", "region", "text"),
+      H.imports.column_config("revenue_usd", "revenue_usd", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"public"."holistics_vy_sales_reve_53344_202511030800"'
+}

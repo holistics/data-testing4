@@ -1,0 +1,12 @@
+Dataset students_attendance {
+  label: 'students_attendance'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    dim_students,
+    fct_attendance
+  ]
+  relationships: [
+    relationship(fct_attendance.student_number > dim_students.student_number, true)
+  ]
+}

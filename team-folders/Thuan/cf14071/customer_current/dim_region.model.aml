@@ -1,0 +1,27 @@
+Model dim_region {
+  type: 'query'
+  label: 'Dim Region'
+  description: 'CF-14071. The "Dim Region" box. Core side only: joins Fact Sales and Fact SOH.'
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 'VIC' as region_key, 'Victoria' as region_name
+    union all
+    select 'NSW' as region_key, 'New South Wales' as region_name
+    union all
+    select 'QLD' as region_key, 'Queensland' as region_name
+  ;;
+
+  dimension region_key {
+    label: 'Region Key'
+    type: 'text'
+    primary_key: true
+    definition: @sql {{ #SOURCE.region_key }} ;;
+  }
+
+  dimension region_name {
+    label: 'Region'
+    type: 'text'
+    definition: @sql {{ #SOURCE.region_name }} ;;
+  }
+}

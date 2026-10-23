@@ -1,0 +1,70 @@
+Model timo_application_db {
+  type: 'query'
+  label: 'Timo Application Db'
+  description: ''
+  data_source_name: 'demodb'
+  dimension user_id_deid {
+    label: 'User Id Deid'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.user_id_deid }};;
+  }
+  dimension fund_id {
+    label: 'Fund Id'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.fund_id }};;
+  }
+  dimension fund_type {
+    label: 'Fund Type'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.fund_type }};;
+  }
+  dimension master {
+    label: 'Master'
+    type: 'truefalse'
+    hidden: false
+    definition: @sql {{ #SOURCE.master }};;
+  }
+  dimension created_at {
+    label: 'Created At'
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  owner: 'khai.to@holistics.io'
+  query: @sql -- timo_application_db.social_joint_fund
+SELECT * FROM (VALUES
+    ('USER_001', 'FUND_A', 'FAMILY', true, '2024-01-15 10:00:00'::timestamp),
+    ('USER_100', 'FUND_A', 'FAMILY', false, '2024-01-20 14:30:00'::timestamp),
+    ('USER_002', 'FUND_B', 'FRIENDS', true, '2024-02-01 09:15:00'::timestamp),
+    ('USER_101', 'FUND_B', 'FRIENDS', false, '2024-02-05 16:45:00'::timestamp),
+    ('USER_003', 'FUND_C', 'COUPLE', true, '2024-03-01 11:30:00'::timestamp),
+    ('USER_004', 'FUND_D', 'FAMILY', false, '2024-04-01 12:00:00'::timestamp),
+    ('USER_103', 'FUND_E', 'INVESTMENT', false, '2024-04-03 13:30:00'::timestamp),
+    ('USER_115', 'FUND_E', 'INVESTMENT', true, '2024-04-02 10:00:00'::timestamp),
+    ('USER_105', 'FUND_F', 'FRIENDS', false, '2024-05-25 10:00:00'::timestamp),
+    ('USER_006', 'FUND_F', 'FRIENDS', true, '2024-06-01 15:00:00'::timestamp),
+    ('USER_116', 'FUND_F', 'FRIENDS', true, '2024-05-20 09:00:00'::timestamp),
+    ('USER_007', 'FUND_G', 'FAMILY', true, '2024-07-01 09:00:00'::timestamp),
+    ('USER_106', 'FUND_G', 'FAMILY', false, '2024-07-05 11:30:00'::timestamp),
+    ('USER_107', 'FUND_G', 'FAMILY', false, '2024-07-08 14:15:00'::timestamp),
+    ('USER_008', 'FUND_H', 'EMERGENCY', true, '2024-08-01 08:00:00'::timestamp),
+    ('USER_108', 'FUND_H', 'EMERGENCY', false, '2024-08-03 17:00:00'::timestamp),
+    ('USER_010', 'FUND_I', 'INVESTMENT', true, '2024-09-01 13:00:00'::timestamp),
+    ('USER_110', 'FUND_I', 'INVESTMENT', false, '2024-09-10 10:30:00'::timestamp),
+    ('USER_011', 'FUND_J', 'SAVINGS', true, '2024-10-01 14:00:00'::timestamp),
+    ('USER_111', 'FUND_J', 'SAVINGS', false, '2024-10-01 09:00:00'::timestamp),
+    ('USER_012', 'FUND_K1', 'FAMILY', true, '2024-11-01 10:00:00'::timestamp),
+    ('USER_012', 'FUND_K2', 'INVESTMENT', true, '2024-11-05 11:00:00'::timestamp),
+    ('USER_112', 'FUND_K1', 'FAMILY', false, '2024-11-10 15:00:00'::timestamp),
+    ('USER_013', 'FUND_L', 'VACATION', true, '2024-06-01 12:00:00'::timestamp),
+    ('USER_113', 'FUND_M', 'VACATION', false, '2024-09-15 16:30:00'::timestamp),
+    ('USER_014', 'FUND_M', 'EMERGENCY', true, '2024-12-01 09:30:00'::timestamp),
+    ('USER_114', 'FUND_M', 'EMERGENCY', false, '2024-12-02 14:15:00'::timestamp)
+) AS social_joint_fund(user_id_deid, fund_id, fund_type, master, created_at);;
+  models: [
+  ]
+}

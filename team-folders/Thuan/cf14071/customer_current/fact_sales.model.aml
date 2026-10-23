@@ -1,0 +1,59 @@
+Model fact_sales {
+  type: 'query'
+  label: 'Fact Sales'
+  description: '''
+    CF-14071. The "Fact Sales" box. Core fact, store-restricted. Joins Dim Store, Dim Region and Dim Date.
+
+    Stands in for the customer's ~500M row table.
+  '''
+  data_source_name: 'demodb'
+
+  query: @sql
+    select 1 as id, 3 as store_key, 'NSW' as region_key, 20260101 as date_key, 100 as amount
+    union all
+    select 2 as id, 4 as store_key, 'NSW' as region_key, 20260101 as date_key, 200 as amount
+    union all
+    select 3 as id, 1 as store_key, 'VIC' as region_key, 20260102 as date_key, 300 as amount
+    union all
+    select 4 as id, 3 as store_key, 'NSW' as region_key, 20260102 as date_key, 400 as amount
+    union all
+    select 5 as id, 5 as store_key, 'QLD' as region_key, 20260101 as date_key, 150 as amount
+  ;;
+
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    primary_key: true
+    definition: @sql {{ #SOURCE.id }} ;;
+  }
+
+  dimension store_key {
+    label: 'Store Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.store_key }} ;;
+  }
+
+  dimension region_key {
+    label: 'Region Key'
+    type: 'text'
+    definition: @sql {{ #SOURCE.region_key }} ;;
+  }
+
+  dimension date_key {
+    label: 'Date Key'
+    type: 'number'
+    definition: @sql {{ #SOURCE.date_key }} ;;
+  }
+
+  dimension amount {
+    label: 'Amount'
+    type: 'number'
+    definition: @sql {{ #SOURCE.amount }} ;;
+  }
+
+  measure sales_amount {
+    label: 'Sales $'
+    type: 'number'
+    definition: @aql sum(fact_sales.amount) ;;
+  }
+}

@@ -1,0 +1,86 @@
+Dataset cf14071_repro {
+  label: 'CF-14071 repro (customer diagram)'
+  description: '''
+    The customer's diagram, box for box and line for line. 8 models, 8 relationships, nothing else.
+
+      Dim Store            -> Fact Sales, Fact SOH
+      Dim Region           -> Fact Sales, Fact SOH
+      Dim Date             -> Fact Sales, Fact Sales (Benchmark)
+      Dim Region (Benchmark) -> Fact Sales (Benchmark), Fact SOH (Benchmark)
+
+    The RLS rule is on Dim Store. There is deliberately NO relationship from Dim Store to either benchmark
+    fact - the diagram's "No Path" arrow.
+
+    EVERY RELATIONSHIP IS 'one_way' on filter_direction, with rlp_propagation left UNSET. This is the
+    standard galaxy-schema setting: users filter/group facts by dimensions (dim -> fact) but cannot combine
+    benchmark metrics with core store dimensions.
+
+    THIS DATASET DOES NOT RAISE THE CUSTOMER'S ERROR, and that turns out to be correct behaviour.
+
+    Per Khai (2026-09-04), the docs are wrong and he is updating them: when rlp_propagation is OMITTED it is
+    'two_way' by DEFAULT - it does NOT inherit filter_direction. The reachability error is only raised when
+    rlp_propagation is explicitly forced to 'one_way'. See cf14071_repro_rlp_oneway for that variant.
+
+    So here RLP propagation is two_way, every model is reachable from the rule, and there is nothing to
+    complain about. Do not read the absence of an error as a bug.
+
+    OBSERVED, in production as an Explorer with vendor_id = 1:
+      dim_store lookup           -> only store 1, so the rule binds and RLP is enforced
+      Benchmark Sales $          -> 20500, the FULL cohort, unfiltered, no error
+      Sales $ + Benchmark Sales $ together -> no error
+
+    That is exactly the behaviour the customer asked for: core restricted, benchmark whole, both in one
+    report. No synthetic -1 member and no out-of-scope marker required.
+
+    ONE LOOSE END worth raising internally. If RLP propagation really is two_way by default, the store
+    filter should have travelled Dim Store -> Fact Sales -> UP into Dim Date -> DOWN into Fact Sales
+    (Benchmark), narrowing the benchmark to store 1's only date (20260102) and giving 13000 (7000 + 6000).
+    It returned 20500 instead. So either RLP does not traverse through an intermediate FACT table, or
+    two_way propagation governs reachability without applying the filter along that path.
+
+    Fixtures. Stores 1-5 (Store A-E); Fact SOH only carries stores 1-3.
+    With vendor_id = 1 (Store A): Sales $ = 300, SOH Qty = 10, Benchmark Sales $ = 20500.
+
+    RLP as-code is production-only - not enforced in the dev workspace at all - and Admins plus Analysts
+    with data-source access bypass it. Publish and test as an Explorer or Viewer.
+  '''
+  data_source_name: 'demodb'
+
+  models: [
+    dim_store,
+    dim_region,
+    dim_date,
+    dim_region_benchmark,
+    fact_sales,
+    fact_soh,
+    fact_sales_benchmark,
+    fact_soh_benchmark,
+  ]
+
+  relationships: [
+    // Dim Store -> core facts. The RLS rule enters here and can go no further:
+    // one_way means RLP flows dim -> fact only, so it cannot climb back out of these facts.
+    relationship(fact_sales.store_key > dim_store.store_key, true, 'one_way'),
+    relationship(fact_soh.store_key > dim_store.store_key, true, 'one_way'),
+
+    // Dim Region -> core facts.
+    relationship(fact_sales.region_key > dim_region.region_key, true, 'one_way'),
+    relationship(fact_soh.region_key > dim_region.region_key, true, 'one_way'),
+
+    // Dim Date -> Fact Sales and Fact Sales (Benchmark). Neither SOH fact connects.
+    // This is the edge that would bridge core -> benchmark if it were two_way. It is not.
+    relationship(fact_sales.date_key > dim_date.date_key, true, 'one_way'),
+    relationship(fact_sales_benchmark.date_key > dim_date.date_key, true, 'one_way'),
+
+    // Dim Region (Benchmark) -> benchmark facts. Nothing here leads back to Dim Store.
+    relationship(fact_sales_benchmark.region_key > dim_region_benchmark.region_key, true, 'one_way'),
+    relationship(fact_soh_benchmark.region_key > dim_region_benchmark.region_key, true, 'one_way'),
+  ]
+
+  // vendor_id stands in for the customer's ga_sr_storeid, which does not exist in this workspace.
+  permission store_reporting_proprietor_permissions {
+    field: r(dim_store.store_key)
+    operator: 'matches_user_attribute'
+    value: 'vendor_id'
+  }
+}

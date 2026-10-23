@@ -1,0 +1,22 @@
+cfa_id,customer_name,region,cfa_type,field_a_start_date,field_b_end_date,cfa_amount,status,expected_for_jan_2026
+CFA-001,Acme Retail,North,Renewal,2026-01-01,2026-01-31,12000,closed,yes
+CFA-002,Bright Foods,South,New,2026-01-05,2026-01-20,8500,closed,yes
+CFA-003,Core Logistics,East,Expansion,2026-01-15,2026-01-31,6200,open,yes
+CFA-004,Delta Health,West,New,2025-12-25,2026-01-20,9100,closed,no_start_before_filter
+CFA-005,Evergreen Finance,North,Renewal,2026-01-05,2026-02-05,7400,open,no_end_after_filter
+CFA-006,Falcon Manufacturing,South,Expansion,2025-12-20,2026-02-10,13300,closed,no_both_outside
+CFA-007,Greenfield Energy,East,New,2026-01-31,2026-01-31,4200,closed,yes
+CFA-008,Horizon Media,West,Renewal,2026-01-01,2026-01-01,5600,open,yes
+CFA-009,Ironwood Bank,North,Expansion,2025-12-31,2026-01-01,3900,closed,no_start_before_filter
+CFA-010,Juniper Travel,South,New,2026-01-31,2026-02-01,4800,open,no_end_after_filter
+CFA-011,Keystone Pharma,East,Renewal,2026-02-01,2026-02-28,11200,closed,no_outside_jan
+CFA-012,Lumen Software,West,Expansion,2025-12-01,2025-12-31,7700,closed,no_outside_jan
+CFA-013,Metro Supply,North,New,2026-03-01,2026-03-31,6900,open,no_outside_jan
+CFA-014,Nova Education,South,Renewal,2026-01-10,2026-01-10,2500,closed,yes
+CFA-015,Orchid Hospitality,East,Expansion,2026-01-20,2026-01-25,9800,closed,yes
+CFA-016,Palmer Utilities,North,Correction,2026-01-10,2025-12-28,3100,closed,yes
+CFA-017,Quantum Labs,South,Backdated,2026-02-05,2026-01-20,6600,open,yes
+CFA-018,Riverstone Legal,East,Correction,2026-02-10,2026-02-01,7300,closed,no_end_after_filter
+CFA-019,Silverline Auto,West,Backdated,2025-12-20,2025-12-10,2900,open,no_start_before_filter
+CFA-020,Terrace Telecom,North,Correction,2026-01-31,2026-01-15,5100,closed,yes
+CFA-021,Unity Apparel,South,Backdated,2026-03-10,2026-01-31,8800,open,yes

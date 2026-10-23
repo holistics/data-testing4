@@ -1,0 +1,57 @@
+Model vy_kaggle_order_payment {
+  type: 'table'
+  label: 'Order payment'
+  description: ''
+  data_source_name: 'demodb'
+  dimension order_id {
+    label: 'Order'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_id }};;
+  }
+  dimension payment_sequential {
+    label: 'Payment sequential'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.payment_sequential }};;
+  }
+  dimension payment_type {
+    label: 'Payment type'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.payment_type }};;
+  }
+  dimension payment_installments {
+    label: 'Payment installments'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.payment_installments }};;
+  }
+  dimension payment_value {
+    label: 'Payment value'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.payment_value }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'olist_order_payments_dataset.csv'
+    uploaded_at: '2026-04-15 08:11:09'
+    hash: '4f713964f2815dbbaa40b9488268c55aac3627bfce5aa96cf58d1f3616de3cc0'
+    column_configs: [
+      H.imports.column_config("order_id", "order_id", "text"),
+      H.imports.column_config("payment_sequential", "payment_sequential", "number"),
+      H.imports.column_config("payment_type", "payment_type", "text"),
+      H.imports.column_config("payment_installments", "payment_installments", "number"),
+      H.imports.column_config("payment_value", "payment_value", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_ord_04ba4_202604150811"'
+}

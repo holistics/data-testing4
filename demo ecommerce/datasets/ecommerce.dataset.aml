@@ -1,6 +1,6 @@
 Dataset simple_dataset {
   __engine__: 'aql'
-  label: '[Demo] Ecommerce (Official)'
+  label: '[Demo] Ecommerce (Official) Test'
   description: "Official dataset for demoing E-commerce use cases test"
   owner: 'ha.pham+demo4@holistics.io'
   data_source_name: 'demodb'

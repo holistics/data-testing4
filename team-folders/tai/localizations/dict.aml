@@ -1,0 +1,22 @@
+const dict = {
+  dashboard_title: { 
+    eng: 'Ecommerce Dashboard - Tai', 
+    spa: 'Panel de control de comercio electrónico - Tai' 
+  },
+  gmv_block_label: { 
+    eng: 'Gross Merchandise Value', 
+    spa: 'Valor bruto de la mercancía' 
+  },
+  gmv_field_label: { 
+    eng: 'GMV - Gross Merchandise Value', 
+    spa: 'GMV - Valor bruto de la mercancía' 
+  },
+  total_users_label: { 
+    eng: 'Total Users', 
+    spa: 'Total de usuarios' 
+  },
+  target_users_calculation: { 
+    eng: 'Target Users', 
+    spa: 'Usuarios objetivo' 
+  }
+}

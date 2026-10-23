@@ -1,5 +1,5 @@
 Dashboard _2_category_breakdown {
-  title: '2. Category Breakdown'
+  title: '2. Category'
   block category: FilterBlock {
     label: 'Category'
     type: 'field'

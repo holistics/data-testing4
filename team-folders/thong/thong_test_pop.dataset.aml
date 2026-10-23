@@ -1,0 +1,11 @@
+Dataset thong_test_pop_ds {
+  label: 'Thong Test Pop'
+  description: ''
+  data_source_name: 'demo_bigquery'
+  models: [
+    thong_test_pop
+  ]
+  relationships: [
+  ]
+  owner: 'thong.do@holistics.io'
+}

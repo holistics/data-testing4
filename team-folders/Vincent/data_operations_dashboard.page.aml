@@ -180,39 +180,48 @@ Dashboard untitled_6 {
   block t1: TextBlock {
     content: @md <hr>;;
   }
+  block t_nojx: TextBlock {
+    content: @md <div class="brand-header"><div class='brand-header-left'><img src='https://cdn.holistics.io/marketing/landing-page/landing-page-og-image-20250408-744.png' alt='Holistics' class='brand-header-logo'></div><div class='brand-header-right'><p class='brand-header-tagline'>Self-service analytics, with DevOps best practices</p></div></div>
+;;
+  }
 
   view: CanvasLayout {
     label: 'View 1'
-    height: 1340
+    height: 1500
     grid_size: 20
     block v2 {
-      position: pos(20, 380, 1160, 400)
+      position: pos(20, 540, 1160, 400)
       layer: 2
     }
     block v4 {
-      position: pos(20, 20, 680, 260)
+      position: pos(20, 180, 680, 260)
     }
     block p1 {
-      position: pos(720, 180, 300, 100)
+      position: pos(720, 320, 460, 120)
       layer: 3
     }
     block v5 {
-      position: pos(20, 800, 1160, 520)
+      position: pos(20, 960, 1160, 520)
     }
     block f1 {
-      position: pos(720, 20, 300, 100)
+      position: pos(720, 180, 440, 120)
       layer: 4
     }
     block t1 {
-      position: pos(20, 300, 1160, 60)
+      position: pos(20, 460, 1160, 60)
       layer: 5
+    }
+    block t_nojx {
+      position: pos(20, 20, 1160, 140)
+      layer: 6
     }
     mobile {
       mode: 'auto'
     }
+    width: 1220
   }
 
-  theme: H.themes.classic
+  theme: abc
   interactions: [
     PopInteraction {
       from: 'p1'

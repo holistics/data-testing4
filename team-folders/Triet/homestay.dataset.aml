@@ -1,0 +1,21 @@
+Dataset homestay {
+  label: 'Homestay'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    homestay_bookings,
+    homestay_calendar,
+    homestay_hosts,
+    homestay_listing_amenities,
+    homestay_listings,
+    homestay_neighbourhoods
+  ]
+  relationships: [
+    relationship(homestay_listings.id - homestay_calendar.listing_id, true),
+    relationship(homestay_listing_amenities.listing_id > homestay_listings.id, true),
+    relationship(homestay_listings.host_id > homestay_hosts.id, true),
+    relationship(homestay_listings.neighbourhood_id - homestay_neighbourhoods.id, true),
+    relationship(homestay_bookings.listing_id > homestay_listings.id, true)
+  ]
+  owner: 'triet.pham@holistics.io'
+}

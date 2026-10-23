@@ -1,0 +1,71 @@
+Model ecommerce_dim_products {
+  type: 'table'
+  label: 'Dim Products'
+  description: ''
+  data_source_name: 'demodb'
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+  dimension category_id {
+    label: 'Category Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.category_id }};;
+  }
+  dimension name {
+    label: 'Name'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.name }};;
+  }
+  dimension merchant_id {
+    label: 'Merchant Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.merchant_id }};;
+  }
+  dimension price {
+    label: 'Price'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.price }};;
+  }
+  dimension created_at {
+    label: 'Created At'
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+  dimension fr_name {
+    label: "Test FR Name"
+    type: "text"
+    description: ""
+    hidden: false
+    definition: @aql concat(ecommerce_dim_products.name, " ", "test FR");;
+  }
+  dimension localized_name {
+    label: "Localized Name"
+    type: "text"
+    description: ""
+    hidden: false
+    definition: @aql case(
+    when: in('fr', H.current_user.language),
+      then: ecommerce_dim_products.fr_name,
+      else: ecommerce_dim_products.name
+    ) ;;
+  }
+
+  dimension current_language {
+    label: "Current Language"
+    type: "text"
+    description: ""
+    hidden: false
+    definition: @aql H.current_user.language ;;
+  }
+
+  owner: 'tai.nguyen@holistics.io'
+  table_name: '"ecommerce"."dim_products"'
+}

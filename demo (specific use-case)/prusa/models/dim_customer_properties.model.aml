@@ -1,0 +1,118 @@
+// BigQuery `keboola.customer_properties_mapping` — keyed by `customer_properties_hashed`.
+// Join from `dim_customers.customer_properties_hashed` (not directly on orders).
+Model dim_customer_properties {
+  type: 'query'
+  label: 'Customer properties'
+  data_source_name: 'data_staging'
+  query: @sql
+SELECT
+  `customer_properties_hashed`,
+  `pricing_group`,
+  `employee`,
+  `staff`,
+  `Filament` AS filament,
+  `Spare_parts` AS spare_parts,
+  `3D_printers` AS printers_3d,
+  `Accessories` AS accessories,
+  `Merchandise` AS merchandise,
+  `Resin` AS resin,
+  `Upgrades` AS upgrades,
+  `Prusa_Academy` AS prusa_academy,
+  `TRILAB_accessories` AS trilab_accessories,
+  `printables_account_type`,
+  `printables_is_teacher`,
+  `platforms`,
+  CASE
+    WHEN `pricing_group` IN ('Amazon', 'Printed Solid') THEN 'true'
+    ELSE 'false'
+  END AS is_reseller
+FROM `keboola.customer_properties_mapping`
+;;
+  dimension customer_properties_hashed {
+    label: 'Customer Properties Hash'
+    type: 'text'
+    primary_key: true
+    hidden: true
+  }
+
+  dimension pricing_group {
+    label: 'Pricing group'
+    type: 'text'
+  }
+
+  dimension employee {
+    label: 'Employee'
+    type: 'text'
+  }
+
+  dimension staff {
+    label: 'Staff'
+    type: 'text'
+  }
+
+  dimension filament {
+    label: 'Filament'
+    type: 'text'
+  }
+
+  dimension spare_parts {
+    label: 'Spare parts'
+    type: 'text'
+  }
+
+  dimension printers_3d {
+    label: '3D printers'
+    type: 'text'
+  }
+
+  dimension accessories {
+    label: 'Accessories'
+    type: 'text'
+  }
+
+  dimension merchandise {
+    label: 'Merchandise'
+    type: 'text'
+  }
+
+  dimension resin {
+    label: 'Resin'
+    type: 'text'
+  }
+
+  dimension upgrades {
+    label: 'Upgrades'
+    type: 'text'
+  }
+
+  dimension prusa_academy {
+    label: 'Prusa Academy'
+    type: 'text'
+  }
+
+  dimension trilab_accessories {
+    label: 'TRILAB accessories'
+    type: 'text'
+  }
+
+  dimension printables_account_type {
+    label: 'Printables account type'
+    type: 'text'
+  }
+
+  dimension printables_is_teacher {
+    label: 'Printables is teacher'
+    type: 'text'
+  }
+
+  dimension platforms {
+    label: 'Platforms'
+    type: 'text'
+  }
+
+  dimension is_reseller {
+    label: 'Is reseller (Amazon / Printed Solid)'
+    type: 'text'
+    description: 'Derived: true when pricing_group is Amazon or Printed Solid.'
+  }
+}

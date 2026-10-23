@@ -1,0 +1,87 @@
+Dashboard sale_overview_copy {
+  title: '[Demo] Sales Overview'
+  block f_product_category: FilterBlock {
+    label: 'Category Keyword Search'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce_tai
+      field: r(param_model_tai.category_keywords)
+    }
+    default {
+      operator: 'contains'
+      value: '$H_NIL$'
+    }
+    settings {
+      input_type: 'multiple'
+    }
+  }
+  block v_category_gmv: VizBlock {
+    label: 'GMV by Product Category'
+    viz: CombinationChart {
+      dataset: demo_ecommerce_tai
+      conditions: [
+        "or(and(coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 1)), '') is '', coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 2)), '') is '', coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 3)), '') is '', coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 4)), '') is '', coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 5)), '') is ''), and(coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 1)), '') is not '', map_categories.category ilike concat('%', trim(split_part(param_model_tai.category_keywords | first(), ',', 1)), '%')), and(coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 2)), '') is not '', map_categories.category ilike concat('%', trim(split_part(param_model_tai.category_keywords | first(), ',', 2)), '%')), and(coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 3)), '') is not '', map_categories.category ilike concat('%', trim(split_part(param_model_tai.category_keywords | first(), ',', 3)), '%')), and(coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 4)), '') is not '', map_categories.category ilike concat('%', trim(split_part(param_model_tai.category_keywords | first(), ',', 4)), '%')), and(coalesce(trim(split_part(param_model_tai.category_keywords | first(), ',', 5)), '') is not '', map_categories.category ilike concat('%', trim(split_part(param_model_tai.category_keywords | first(), ',', 5)), '%')))",
+      ]
+      x_axis: VizFieldFull {
+        ref: r(map_categories.category)
+        label: 'Product Category'
+      }
+      y_axis {
+        series {
+          mark_type: 'bar'
+          field: VizFieldFull {
+            ref: r(order_master.gmv)
+            label: 'GMV'
+            format {
+              type: 'number'
+              pattern: '[$$]#,###0'
+            }
+          }
+        }
+      }
+      settings {
+        sort: LineFamilySort {
+          type: 'yaxis'
+          field_index: 0
+          direction: 'desc'
+        }
+      }
+    }
+  }
+  explicit_interactions: [
+    FilterInteraction {
+      from: 'f_product_category'
+      to: [
+        'v_category_gmv'
+      ]
+      field: r(param_model_tai.category_keywords)
+    }
+  ]
+  view: CanvasLayout {
+    label: 'GMV by Category'
+    width: 1230
+    height: 620
+    grid_size: 5
+    block f_product_category {
+      position: pos(30, 30, 320, 80)
+      layer: 1
+    }
+    block v_category_gmv {
+      position: pos(30, 130, 1170, 460)
+      layer: 1
+    }
+    mobile {
+      mode: 'auto'
+      block f_product_category
+      block v_category_gmv
+    }
+    default_zoom: 'fit_to_width'
+  }
+  settings {
+    timezone: 'Etc/GMT+12'
+    cache_duration: 1440
+    autorun_on_open: true
+    autorun_on_changes: true
+  }
+  theme: H.themes.classic
+}

@@ -1,0 +1,45 @@
+Model cfa_date_bridge {
+  type: 'query'
+  label: 'CFA Date Bridge'
+  description: 'One row per CFA per date between Field A and Field B, used to connect CFA rows to the date filter context.'
+  data_source_name: 'data_staging'
+  owner: 'chinh.dm@holistics.io'
+
+  dimension bridge_key {
+    label: 'Bridge Key'
+    type: 'text'
+    hidden: true
+    primary_key: true
+    definition: @sql {{ #SOURCE.bridge_key }};;
+  }
+
+  dimension cfa_id {
+    label: 'Cfa'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.cfa_id }};;
+  }
+
+  dimension date_day {
+    label: 'Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date_day }};;
+  }
+
+  query: @sql
+    select
+      concat({{ #c.cfa_id }}, '_', cast(date_day as string)) as bridge_key
+      , {{ #c.cfa_id }} as cfa_id
+      , date_day
+    from {{ #cfa_model AS c }}
+    cross join unnest(generate_date_array(
+      least({{ #c.field_a_start_date }}, {{ #c.field_b_end_date }}),
+      greatest({{ #c.field_a_start_date }}, {{ #c.field_b_end_date }})
+    )) as date_day
+  ;;
+
+  models: [
+    cfa_model
+  ]
+}

@@ -1,0 +1,11 @@
+Dataset holistics_ai_poc {
+  label: 'Holistics Ai Poc'
+  description: ''
+  data_source_name: 'demodb'
+  models: [
+    common_payment_transfer
+  ]
+  relationships: [
+  ]
+  owner: 'chinh.dm@holistics.io'
+}

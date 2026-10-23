@@ -1,0 +1,57 @@
+Model vy_kaggle_customers_dataset {
+  type: 'table'
+  label: 'Customers'
+  description: ''
+  data_source_name: 'demodb'
+  dimension customer_id {
+    label: 'Customer'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.customer_id }};;
+  }
+  dimension customer_unique_id {
+    label: 'Customer unique'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.customer_unique_id }};;
+  }
+  dimension customer_zip_code_prefix {
+    label: 'Customer zip code prefix'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.customer_zip_code_prefix }};;
+  }
+  dimension customer_city {
+    label: 'Customer city'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.customer_city }};;
+  }
+  dimension customer_state {
+    label: 'Customer state'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.customer_state }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'olist_customers_dataset.csv'
+    uploaded_at: '2026-04-15 07:57:18'
+    hash: '983a422239e1712ded753b3bf9ecf47dc73f144d306029dcfa99e70a226883d2'
+    column_configs: [
+      H.imports.column_config("customer_id", "customer_id", "text"),
+      H.imports.column_config("customer_unique_id", "customer_unique_id", "text"),
+      H.imports.column_config("customer_zip_code_prefix", "customer_zip_code_prefix", "number"),
+      H.imports.column_config("customer_city", "customer_city", "text"),
+      H.imports.column_config("customer_state", "customer_state", "text")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_vy_kaggle_cus_7503d_202604150757"'
+}

@@ -1,0 +1,22 @@
+Model tenants {
+  type: 'query'
+  label: 'Tenants'
+  description: ''
+  data_source_name: 'movies_lens'
+  dimension id {
+    label: 'Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.id }};;
+  }
+
+  owner: 'hieu.nht@holistics.io'
+  query: @sql
+    select 1 as id
+    UNION
+    select 2 as id 
+    union 
+    select 3 as id;;
+  models: [
+  ]
+}

@@ -14,7 +14,7 @@ const heightPosPieRevenue = 950
 const heightPosBarRevenue = 1350
 
 const count_orders = ref('ecommerce_orders', 'total_orders_count')
-const revenue = ref('order_master', 'revenue')
+const revenue_this = ref('order_master', 'revenue')
 
 
 Func get_bar(metric: FieldRef, country: String, y_axis_label: String) {
@@ -206,17 +206,17 @@ Dashboard demo_func_ecommerce {
   block v9: get_bar(count_orders, 'India', '# of Orders')
   block v10: get_bar(count_orders, 'Singapore', '# of Orders')
 
-  block v11: get_pie(revenue, 'Vietnam')
-  block v12: get_pie(revenue, 'Germany')
-  block v13: get_pie(revenue, 'France')
-  block v14: get_pie(revenue, 'India')
-  block v15: get_pie(revenue, 'Singapore')
+  block v11: get_pie(revenue_this, 'Vietnam')
+  block v12: get_pie(revenue_this, 'Germany')
+  block v13: get_pie(revenue_this, 'France')
+  block v14: get_pie(revenue_this, 'India')
+  block v15: get_pie(revenue_this, 'Singapore')
 
-  block v16: get_bar(revenue, 'Vietnam', 'Revenue $')
-  block v17: get_bar(revenue, 'Germany', 'Revenue $')
-  block v18: get_bar(revenue, 'France', 'Revenue $')
-  block v19: get_bar(revenue, 'India', 'Revenue $')
-  block v20: get_bar(revenue, 'Singapore', 'Revenue $')
+  block v16: get_bar(revenue_this, 'Vietnam', 'Revenue $')
+  block v17: get_bar(revenue_this, 'Germany', 'Revenue $')
+  block v18: get_bar(revenue_this, 'France', 'Revenue $')
+  block v19: get_bar(revenue_this, 'India', 'Revenue $')
+  block v20: get_bar(revenue_this, 'Singapore', 'Revenue $')
   settings {
     timezone: 'America/Los_Angeles'
     cache_duration: 1440

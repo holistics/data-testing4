@@ -1,0 +1,61 @@
+Model chinh_dim_product {
+  type: 'query'
+  label: 'Chinh Dim Product'
+  description: ''
+  data_source_name: 'demodb'
+  dimension product_id {
+    label: 'Product Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_id }};;
+  }
+  dimension product_name {
+    label: 'Product Name'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_name }};;
+  }
+  dimension sku {
+    label: 'Sku'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.sku }};;
+  }
+  dimension category_id {
+    label: 'Category Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.category_id }};;
+  }
+  dimension created_at {
+    label: 'Created At'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  owner: 'chinh.dm@holistics.io'
+  query: @sql
+    SELECT *
+    FROM (
+      VALUES
+        (101, 'Beef Pho'             , 'SKU-PHO-BEEF'   , 1, DATE '2023-02-10'),
+        (102, 'Chicken Pho'          , 'SKU-PHO-CHK'    , 1, DATE '2023-02-10'),
+        (103, 'Banh Mi (Pork)'       , 'SKU-BM-PORK'    , 1, DATE '2023-03-01'),
+
+        (201, 'Fresh Spring Rolls'   , 'SKU-ROLL-FRESH' , 2, DATE '2023-03-05'),
+        (202, 'Fried Spring Rolls'   , 'SKU-ROLL-FRIED' , 2, DATE '2023-03-05'),
+
+        (301, 'Vietnamese Iced Coffee','SKU-DRIP-ICE'   , 3, DATE '2023-04-01'),
+        (302, 'Lime Soda'            , 'SKU-LIME-SODA'  , 3, DATE '2023-04-10'),
+
+        (401, 'Coconut Jelly'        , 'SKU-COCO-JEL'   , 4, DATE '2023-05-01'),
+        (402, 'Mango Sticky Rice'    , 'SKU-MANGO-RICE' , 4, DATE '2023-05-15'),
+
+        (501, 'Pumpkin Soup (Seasonal)','SKU-SPEC-PUMP' , 5, DATE '2025-09-20')
+    ) AS p(product_id, product_name, sku, category_id, created_at)
+
+    ORDER BY product_id;;
+  models: [
+  ]
+}

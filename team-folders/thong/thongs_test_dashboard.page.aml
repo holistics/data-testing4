@@ -1,0 +1,178 @@
+Dashboard thongs_test_dashboard {
+  title: "Thong's Test Dashboard"
+  block title: TextBlock {
+    content: @md # My awesome dashboard;;
+  }
+  block v1: VizBlock {
+    label: 'Count orders by status'
+    viz: ColumnChart {
+      dataset: demo_ecommerce
+      filter {
+        field: ref('order_master', 'order_created_at')
+        operator: 'matches'
+        value: 'last 12 months'
+      }
+      x_axis: VizFieldFull {
+        ref: ref('order_master', 'order_created_at')
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      legend: VizFieldFull {
+        ref: ref('order_master', 'status')
+        format {
+          type: 'text'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            ref: 'total_orders'
+            format {
+              type: 'number'
+              pattern: 'inherited'
+            }
+          }
+          settings {
+            point {
+              value: 'refunded'
+              color: '#07326C'
+            }
+            point {
+              value: 'cancelled'
+              color: '#A50E43'
+            }
+            point {
+              value: 'delivered'
+              color: '#255DD4'
+            }
+          }
+        }
+      }
+      settings {
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block f1: FilterBlock {
+    label: 'Order status'
+    type: 'field'
+    source: FieldFilterSource {
+      dataset: demo_ecommerce
+      field: ref('order_master', 'status')
+    }
+    default {
+      operator: 'is'
+      value: []
+    }
+  }
+  block t2: TextBlock {
+    content: @md 
+<style>
+  .collapser { display:none; }
+  .toggle     { cursor:pointer; font-weight:bold; }
+  .content    { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+
+  /* when the hidden checkbox ➜ checked, reveal the content */
+  .collapser:checked + .toggle + .content { max-height:999px; }
+ul.content { padding-left: 1.2em; }
+
+
+</style>
+
+<input type="checkbox" id="faq1" class="collapser" checked>
+<label for="faq1" class="toggle">🔽 Dashboard Bookmarks</label>
+<ul class="content">
+<li><a href="https://testing4.holistics.io/dashboards/v4/100219-thong-s-test-dashboard?f1=cancelled">Cancelled Orders</a></li>
+<li><a href="https://testing4.holistics.io/dashboards/v4/100219-thong-s-test-dashboard?f1=delivered">Delivered Orders</a></li>
+<li><a href="https://testing4.holistics.io/dashboards/v4/100219-thong-s-test-dashboard?f1=refunded">Refunded Orders</a></li>
+</ul>;;
+  }
+  block t3: TextBlock {
+    content: @md <div style="border-right: 1px solid #dddddd; display: block; width: 100%; height: 100%"></div>;;
+  }
+  block t4: TextBlock {
+    content: @md <p>The current URL is: <span id="url"></span></p>
+
+  <script>
+    const currentUrl = window.location.href;
+    document.getElementById('url').textContent = currentUrl;
+  </script>;;
+  }
+  block v_wbk2: VizBlock {
+    label: 'Untitled Report'
+    viz: DataTable {
+      dataset: demo_ecommerce
+      calculation metric_551b3ff {
+        label: 'Total Orders + Total Orders + Total Orders + Total Orders'
+        formula: @aql metric_44862fa + metric_44862fa;;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      theme {
+
+      }
+      fields: [
+        VizFieldFull {
+          ref: 'metric_551b3ff'
+          format {
+            type: 'number'
+            pattern: 'inherited'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  view: CanvasLayout {
+    label: 'View 1'
+    height: 860
+    grid_size: 20
+    block v1 {
+      position: pos(280, 160, 600, 380)
+      layer: 1
+    }
+    block title {
+      position: pos(280, 20, 600, 40)
+    }
+    block f1 {
+      position: pos(280, 80, 240, 80)
+      layer: 2
+    }
+    block t2 {
+      position: pos(20, 20, 380, 180)
+      layer: 1
+    }
+    block t3 {
+      position: pos(-20, 0, 280, 600)
+    }
+    block t4 {
+      position: pos(60, 240, 460, 180)
+      layer: 3
+    }
+    block v_wbk2 {
+      position: pos(280, 560, 420, 280)
+      layer: 4
+    }
+    mobile {
+      mode: 'auto'
+    }
+    width: 900
+  }
+  theme: H.themes.vanilla
+  interactions: []
+}

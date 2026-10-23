@@ -1,0 +1,27 @@
+Dashboard dashboard_test_2 {
+  title: 'Dashboard test 2'
+  description: ''
+  owner: 'khue.pm@holistics.io'
+  block title: TextBlock {
+    content: @md # Your title goes here ;;
+  }
+
+  view: CanvasLayout {
+    label: 'View 1'
+    width: 1300
+    height: 800
+    grid_size: 20
+    auto_expand_vertically: true
+    block title {
+      position: pos(20, 20, 1260, 60)
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+
+  theme: DynamicPageTheme {
+    light: H.themes.vanilla
+    dark: H.themes.charcoal
+  }
+}

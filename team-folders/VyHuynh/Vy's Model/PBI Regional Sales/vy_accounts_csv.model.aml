@@ -1,0 +1,89 @@
+Model accounts_csv {
+  type: 'table'
+  label: 'Accounts'
+  description: ''
+  data_source_name: 'demodb'
+  dimension account_name {
+    label: 'Account name'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.account_name }};;
+  }
+  dimension state_or_province {
+    label: 'State or province'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.state_or_province }};;
+  }
+  dimension country {
+    label: 'Country'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.country }};;
+  }
+  dimension account_id {
+    label: 'Account'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.account_id }};;
+  }
+  dimension account_seq {
+    label: 'Account seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.account_seq }};;
+  }
+  dimension industry_seq {
+    label: 'Industry seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.industry_seq }};;
+  }
+  dimension account_owner_seq {
+    label: 'Account owner seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.account_owner_seq }};;
+  }
+  dimension account_number {
+    label: 'Account number'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.account_number }};;
+  }
+  dimension territory_seq {
+    label: 'Territory seq'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.territory_seq }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'accounts.csv'
+    uploaded_at: '2026-05-05 15:26:32'
+    hash: '0d758ddb6084f99e4a2e4eba24e689ee46346e6c9759d7e227ea778390467bf4'
+    column_configs: [
+      H.imports.column_config("account_name", "account_name", "text"),
+      H.imports.column_config("state_or_province", "state_or_province", "text"),
+      H.imports.column_config("country", "country", "text"),
+      H.imports.column_config("account_id", "account_id", "text"),
+      H.imports.column_config("account_seq", "account_seq", "number"),
+      H.imports.column_config("industry_seq", "industry_seq", "number"),
+      H.imports.column_config("account_owner_seq", "account_owner_seq", "number"),
+      H.imports.column_config("account_number", "account_number", "text"),
+      H.imports.column_config("territory_seq", "territory_seq", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_accounts_csv_cb2d8_202605051526"'
+}

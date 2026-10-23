@@ -1,0 +1,85 @@
+Model chinh_fact_sales {
+  type: 'query'
+  label: 'Chinh Fact Sales'
+  description: ''
+  data_source_name: 'demodb'
+  dimension sale_id {
+    label: 'Sale Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.sale_id }};;
+  }
+  dimension date_id {
+    label: 'Date Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.date_id }};;
+  }
+  dimension product_id {
+    label: 'Product Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_id }};;
+  }
+  dimension quantity {
+    label: 'Quantity'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.quantity }};;
+  }
+  dimension unit_price {
+    label: 'Unit Price'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.unit_price }};;
+  }
+  dimension sales_amount {
+    label: 'Sales Amount'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales_amount }};;
+  }
+  dimension currency_code {
+    label: 'Currency Code'
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.currency_code }};;
+  }
+  dimension created_at {
+    label: 'Created At'
+    type: 'datetime'
+    hidden: false
+    definition: @sql {{ #SOURCE.created_at }};;
+  }
+
+  owner: 'chinh.dm@holistics.io'
+  query: @sql
+    -- Sample fact_sales rows (VALUES)
+    -- Dates span the dim_date sample range and include the new "Specials" category
+    SELECT *
+    FROM (
+      VALUES
+        -- 2025-09-27
+        (10009, 20250927, 101, 1.0,  6.50,  6.50, 'USD', TIMESTAMP '2025-09-27 19:10:00'),
+        (10010, 20250927, 301, 2.0,  3.00,  6.00, 'USD', TIMESTAMP '2025-09-27 19:12:00'),
+
+        -- 2025-09-28
+        (10011, 20250928, 102, 2.0,  6.00, 12.00, 'USD', TIMESTAMP '2025-09-28 12:15:00'),
+        (10012, 20250928, 402, 1.0,  4.50,  4.50, 'USD', TIMESTAMP '2025-09-28 12:20:00'),
+        (10013, 20250928, 302, 1.0,  2.50,  2.50, 'USD', TIMESTAMP '2025-09-28 12:22:00'),
+
+        -- 2025-09-30
+        (10014, 20250930, 103, 3.0,  5.00, 15.00, 'USD', TIMESTAMP '2025-09-30 18:40:00'),
+        (10015, 20250930, 201, 2.0,  4.00,  8.00, 'USD', TIMESTAMP '2025-09-30 18:45:00'),
+
+        -- 2022-06-06
+        (10019, 20221031, 501, 2.0,  5.50, 11.00, 'USD', TIMESTAMP '2022-10-31 19:00:00'),
+        (10020, 20221031, 501, 1.0,  6.00,  6.00, 'USD', TIMESTAMP '2022-10-31 19:02:00'),
+        (10021, 20221031, 501, 1.0,  2.50,  2.50, 'USD', TIMESTAMP '2022-10-31 19:05:00')
+    ) AS f(
+      sale_id, date_id, product_id, quantity, unit_price, sales_amount, currency_code, created_at
+    )
+    ORDER BY sale_id;;
+  models: [
+  ]
+}

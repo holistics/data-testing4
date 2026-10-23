@@ -1,0 +1,57 @@
+Model sales_rep_uc_3_outlier_csv {
+  type: 'table'
+  label: 'Sales rep uc 3 outlier csv'
+  description: ''
+  data_source_name: 'demodb'
+  dimension sales_rep {
+    label: 'Sales rep'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.sales_rep }};;
+  }
+  dimension region {
+    label: 'Region'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.region }};;
+  }
+  dimension product_category {
+    label: 'Product category'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.product_category }};;
+  }
+  dimension revenue {
+    label: 'Revenue'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.revenue }};;
+  }
+  dimension order_count {
+    label: 'Order count'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.order_count }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'sales_rep_uc3_outlier.csv'
+    uploaded_at: '2026-02-17 10:42:05'
+    hash: 'f2fc8b91af7dc27517db797b49254582a48e71ab19104737f2a2fa350f6ec7e8'
+    column_configs: [
+      H.imports.column_config("sales_rep", "sales_rep", "text"),
+      H.imports.column_config("region", "region", "text"),
+      H.imports.column_config("product_category", "product_category", "text"),
+      H.imports.column_config("revenue", "revenue", "number"),
+      H.imports.column_config("order_count", "order_count", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"dbt_khai"."holistics_sales_rep_uc__fbb5c_202602171042"'
+}

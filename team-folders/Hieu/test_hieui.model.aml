@@ -1,0 +1,61 @@
+Model test_hieui {
+  type: 'query'
+  label: 'Test Hieui'
+  description: ''
+  data_source_name: 'movies_lens'
+  dimension user_id {
+    label: 'User Id'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.user_id }};;
+  }
+  dimension on_date {
+    label: 'On Date'
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.on_date }};;
+  }
+  dimension balance {
+    label: 'Balance'
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.balance }};;
+  }
+  dimension d1 {
+    label: "D 1"
+    type: "number"
+    description: ""
+    hidden: false
+    definition: @aql max(test_hieui.balance) | dimensionalize(test_hieui.user_id, test_hieui.on_date);;
+    primary_key: false
+  }
+
+  owner: 'hieu.nht@holistics.io'
+  query: @sql
+    select 1 as user_id, cast('2025-01-01' as date) as on_date, 10 as balance
+    union all
+    select 1 as user_id, cast('2025-01-02' as date) as on_date, 20 as balance
+    union all
+    select 2 as user_id, cast('2025-01-01' as date) as on_date, 5 as balance
+    union all
+    select 2 as user_id, cast('2025-01-02' as date) as on_date, 10 as balance;;
+  models: [
+  ]
+  measure metric_5f8d711 {
+    label: "Untitled Metric"
+    type: "number"
+    description: ""
+    definition: @aql sum(test_hieui.d1);;
+    aggregation_type: "custom"
+  }
+  measure metric_43f0da2 {
+    label: "Untitled Metric"
+    type: "number"
+    description: ""
+    definition: @aql test_hieui
+| group(test_hieui.user_id, test_hieui.on_date)
+| select(test_hieui.user_id, test_hieui.on_date, c: max(test_hieui.balance))
+| sum(c);;
+    aggregation_type: "custom"
+  }
+}

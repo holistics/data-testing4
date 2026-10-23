@@ -1,0 +1,41 @@
+Model publift_test_data_csv {
+  type: 'table'
+  label: 'Publift test data csv'
+  description: ''
+  data_source_name: 'demodb'
+  dimension date {
+    label: 'Date'
+    description: ''
+    type: 'date'
+    hidden: false
+    definition: @sql {{ #SOURCE.date }};;
+  }
+  dimension currency {
+    label: 'Currency'
+    description: ''
+    type: 'text'
+    hidden: false
+    definition: @sql {{ #SOURCE.currency }};;
+  }
+  dimension earning {
+    label: 'Earning'
+    description: ''
+    type: 'number'
+    hidden: false
+    definition: @sql {{ #SOURCE.earning }};;
+  }
+
+  import_source: ImportSource {
+    type: 'csv'
+    original_file_name: 'publift_test_data.csv'
+    uploaded_at: '2026-05-18 09:46:13'
+    hash: '45d2f599a4fef844b908eb2daa5cd67a14bc9bcac0891970a707881dfc425116'
+    column_configs: [
+      H.imports.column_config("date", "date", "date"),
+      H.imports.column_config("currency", "currency", "text"),
+      H.imports.column_config("earning", "earning", "number")
+    ]
+  }
+  owner: 'vy.ht@holistics.io'
+  table_name: '"persisted_models"."holistics_publift_test__b7094_202605180946"'
+}
