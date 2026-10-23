@@ -56,6 +56,10 @@ Dashboard dynamic_dim_ecommerce_dashboard {
       position: pos(1240, 1060, 740, 460)
       layer: 5
     }
+    block ai_wzyj {
+      position: pos(640, 1580, 580, 380)
+      layer: 6
+    }
     width: 2020
   }
   theme: H.themes.classic
@@ -609,6 +613,10 @@ case(
         }
       }
     }
+  }
+  block ai_wzyj: AiBlock {
+    label: '📊 E-commerce dashboard insights'
+    prompt: @md give me key insights from @VizBlock:dynamic_dim_ecommerce_dashboard.v_dbfr ;;
   }
   interactions: [
     FilterInteraction {
