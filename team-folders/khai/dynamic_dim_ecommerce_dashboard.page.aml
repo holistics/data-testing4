@@ -56,6 +56,14 @@ Dashboard dynamic_dim_ecommerce_dashboard {
       position: pos(1240, 1060, 740, 460)
       layer: 5
     }
+    block ai_wzyj {
+      position: pos(640, 1580, 580, 380)
+      layer: 6
+    }
+    block v_0kl4 {
+      position: pos(1280, 1560, 400, 420)
+      layer: 6
+    }
     width: 2020
   }
   theme: H.themes.classic
@@ -602,6 +610,34 @@ case(
         }
       }
       settings {
+        row_limit: 5000
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
+  block ai_wzyj: AiBlock {
+    label: '📊 E-commerce dashboard insights'
+    prompt: @md give me key insights from @VizBlock:dynamic_dim_ecommerce_dashboard.v_dbfr ;;
+  }
+  block v_0kl4: VizBlock {
+    label: 'Id, Listing Id, and Check In Date'
+    viz: DataTable {
+      dataset: homestay
+      fields: [
+        r(homestay_bookings.id),
+        r(homestay_bookings.listing_id),
+        VizFieldFull {
+          ref: r(homestay_bookings.check_in_date)
+          format {
+            type: 'date'
+          }
+        }
+      ]
+      settings {
+        show_row_number: true
         row_limit: 5000
         aggregate_awareness {
           enabled: true
