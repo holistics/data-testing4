@@ -69,7 +69,7 @@ Dataset bhx_demo_ecommerce {
     model: bhx_ecommerce_orders
     label: 'Cohort Size'
     type: 'number'
-    definition: @aql count_distinct(order_master.user_id) | exact_grains(order_master.cohort_month) ;;
+    definition: @aql count_distinct(bhx_ecommerce_orders.user_id) | exact_grains(bhx_ecommerce_users.cohort_month) ;;
   }
 
   dimension total_orders_all_time {
@@ -121,13 +121,13 @@ Dataset bhx_demo_ecommerce {
     type: 'text'
     model: bhx_ecommerce_orders
     definition: @aql case(
-        when: 'Country Names' in param_model_demo.dim_selections
+        when: 'Country Names' in bhx_param_model_demo.dim_selections
         , then: bhx_ecommerce_countries.name
 
-        , when: 'Age Demographic' in param_model_demo.dim_selections
+        , when: 'Age Demographic' in bhx_param_model_demo.dim_selections
         , then: bhx_ecommerce_users.age_group
 
-        , when: 'Order Status' in param_model_demo.dim_selections
+        , when: 'Order Status' in bhx_param_model_demo.dim_selections
         , then: bhx_ecommerce_orders.status
 
         , else: bhx_ecommerce_countries.name
@@ -142,22 +142,22 @@ Dataset bhx_demo_ecommerce {
     format: ""
   }
 
-  // metric total_orders {
-  //   label: "Total Orders"
-  //   type: "number"
-  //   hidden: false
-  //   description: ""
-  //   definition: @aql count(bhx_ecommerce_orders.id);;
-  // }
+  metric total_orders {
+    label: "Total Orders"
+    type: "number"
+    hidden: false
+    description: ""
+    definition: @aql count(bhx_ecommerce_orders.id);;
+  }
 
-  // metric gmv {
-  //   label: "GMV - Gross Merchandise Value"
-  //   type: "number"
-  //   hidden: false
-  //   description: "GMV - Gross Merchandise Value: Total value of all orders before discount."
-  //   definition: @aql bhx_ecommerce_order_items | sum(bhx_ecommerce_order_items.quantity * bhx_ecommerce_products.price);;
-  //   format: "[\$\$]#,###0"
-  // }
+  metric gmv {
+    label: "GMV - Gross Merchandise Value"
+    type: "number"
+    hidden: false
+    description: "GMV - Gross Merchandise Value: Total value of all orders before discount."
+    definition: @aql bhx_ecommerce_order_items | sum(bhx_ecommerce_order_items.quantity * bhx_ecommerce_products.price);;
+    format: "[\$\$]#,###0"
+  }
 
   // metric total_discount {
   //   label: "Total Discount"
@@ -186,14 +186,14 @@ Dataset bhx_demo_ecommerce {
   //   format: "[\$\$]#,###0"
   // }
 
-  // metric aov {
-  //   label: "AOV - Average Order Value"
-  //   type: "number"
-  //   description: "AOV - Average Order Value: Average value per order (GMV / number of orders)."
-  //   hidden: false
-  //   definition: @aql gmv / total_orders;;
-  //   format: "[\$\$]#,###0"
-  // }
+  metric aov {
+    label: "AOV - Average Order Value"
+    type: "number"
+    description: "AOV - Average Order Value: Average value per order (GMV / number of orders)."
+    hidden: false
+    definition: @aql gmv / total_orders;;
+    format: "[\$\$]#,###0"
+  }
 
   // metric total_orders_across_all {
   //   label: "Total Orders Across All"

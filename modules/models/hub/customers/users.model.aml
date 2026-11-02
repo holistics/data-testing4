@@ -74,7 +74,7 @@ Model users {
       case(
         when:
           in('some_email@test.com', H.current_user.h_email),
-        then: users.email,
+        then: models.users.email,
         else: '(redacted)'
       )
     ;;

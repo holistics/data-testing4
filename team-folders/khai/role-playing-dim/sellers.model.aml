@@ -4,4 +4,18 @@ Model sellers = users.extend({
     label: 'User Name'
     description: 'Contains name of both Buyers & Sellers'
   }
+
+  dimension email_pii {
+    definition: @aql
+      case(
+        when:
+          in('some_email@test.com', H.current_user.h_email),
+        then: sellers.email,
+        else: '(redacted)'
+      )
+    ;;
+  }
+  measure total_users {
+    definition: @aql count(sellers.id) ;;
+  }
 })

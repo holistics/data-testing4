@@ -48,7 +48,7 @@ Model bhx_ecommerce_users {
     label: 'linkedin_search'
     type: 'text'
     definition: @aql concat(
-      'https://www.linkedin.com/search/results/all/?keywords=',bhx_ecommerce_countries.full_name
+      'https://www.linkedin.com/search/results/all/?keywords=',bhx_ecommerce_users.full_name
     );;
   }
 

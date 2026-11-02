@@ -102,17 +102,17 @@ Model dim_date_hieu {
 
   dimension time_grain_selector {
     label: 'Time Grain Selector'
-    type: 'date'
+    type: 'text'
 
     definition: @aql case(
-      when: 'Day' in dim_dates.time_grain_choice
-      , then: dim_dates.day_of_year
+      when: 'Day' in dim_date_hieu.time_grain_choice
+      , then: dim_date_hieu.day_of_year
 
-      , when: 'Week' in dim_dates.time_grain_choice
-      , then: dim_dates.year_week_iso
+      , when: 'Week' in dim_date_hieu.time_grain_choice
+      , then: dim_date_hieu.year_week_iso
 
-      , when: 'Quarter' in dim_dates.time_grain_choice
-      , then: dim_dates.year_quarter
+      , when: 'Quarter' in dim_date_hieu.time_grain_choice
+      , then: dim_date_hieu.year_quarter
     ) ;;
   }
 
@@ -141,7 +141,7 @@ Model dim_date_hieu {
 
   param time_grain_choice {
     label: 'Time Grain Choice'
-    type: 'date'
+    type: 'text'
     allowed_values: [
       'Day',
       'Week',

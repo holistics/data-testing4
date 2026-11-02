@@ -112,7 +112,7 @@ ul.content { padding-left: 1.2em; }
       dataset: demo_ecommerce
       calculation metric_551b3ff {
         label: 'Total Orders + Total Orders + Total Orders + Total Orders'
-        formula: @aql metric_44862fa + metric_44862fa;;
+        formula: @aql total_orders + total_orders + total_orders + total_orders;;
         calc_type: 'measure'
         data_type: 'number'
       }

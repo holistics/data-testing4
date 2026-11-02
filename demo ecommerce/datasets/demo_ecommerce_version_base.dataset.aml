@@ -12,7 +12,8 @@ Dataset demo_ecommerce_version_base {
     ecommerce_cities,
     map_categories,
     param_model_demo,
-    dim_dates  
+    dim_dates,
+    ecommerce_product_images
   ]
   relationships: [
     relationship(ecommerce_order_items.order_id > ecommerce_orders.id, true),
@@ -20,7 +21,7 @@ Dataset demo_ecommerce_version_base {
     relationship(ecommerce_users.city_id > ecommerce_cities.id, true),
     relationship(ecommerce_cities.country_code > ecommerce_countries.code, true),
     relationship(ecommerce_order_items.product_id > ecommerce_products.id, true),
-    // relationship(ecommerce_products.id - ecommerce_product_images.product_id, true),
+    relationship(ecommerce_products.id - ecommerce_product_images.product_id, true),
     relationship(ecommerce_products.merchant_id > ecommerce_merchants.id, true),
     relationship(ecommerce_products_map_categories, true),
     relationship(ecommerce_orders_dim_dates, true),
@@ -66,42 +67,6 @@ Dataset demo_ecommerce_version_base {
     label: 'Cohort Size'
     type: 'number'
     definition: @aql count_distinct(ecommerce_orders.user_id) | exact_grains(ecommerce_users.cohort_month) ;;
-  }
-
-  dimension total_orders_all_time {
-    model: ecommerce_users
-    label: 'Total Orders (Users)'
-    type: 'number'
-    definition: @aql total_orders | dimensionalize(ecommerce_users.id);;
-  }
-
-  dimension is_buyer {
-    model: ecommerce_users
-    label: 'Is Buyer'
-    type: 'truefalse'
-    definition: @aql ecommerce_users.total_orders_all_time > 0;;
-  }
-
-  dimension is_repeated_buyer {
-    model: ecommerce_users
-    label: 'Is Repeated Buyer'
-    type: 'truefalse'
-    definition: @aql ecommerce_users.total_orders_all_time > 1;;
-  }
-
-  dimension product_performance_analysis {
-    model: ecommerce_products
-    label: 'Product Performance Analysis'
-    type: 'text'
-    definition: @aql concat(
-      'https://claude.ai/new?q=write+an_analysis+for+',
-      ecommerce_products.name,
-      '.+The+GMV+for+this+product+is+',
-      cast(gmv, 'text'),
-      '+and+the+AOV+for+this+product+is+',
-      cast(aov, 'text'),
-      )
-     ;;
   }
 
   dimension product_image {

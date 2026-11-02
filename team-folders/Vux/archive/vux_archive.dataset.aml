@@ -338,7 +338,7 @@ pre_aggregates: {
         , v: order_master.amount
         | window_avg(-5..0, order: order_master.order_created_at, null_if_incomplete: false)
       )
-      filter(
+      | filter(
         order_master.order_created_at == window_max(max(order_master.order_created_at), ..)
       )
       | min(v)

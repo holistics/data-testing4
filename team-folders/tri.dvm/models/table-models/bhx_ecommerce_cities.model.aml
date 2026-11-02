@@ -29,7 +29,7 @@ Model bhx_ecommerce_cities {
     label: 'Map Search'
     type: 'text'
     definition: @aql concat(
-      'https://www.google.com/maps/search/',ecommerce_cities.name
+      'https://www.google.com/maps/search/',bhx_ecommerce_cities.name
     );;
   }
 }

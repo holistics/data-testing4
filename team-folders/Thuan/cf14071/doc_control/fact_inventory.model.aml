@@ -35,6 +35,6 @@ Model fact_inventory_thuan {
   measure total_qty {
     label: 'Total Qty'
     type: 'number'
-    definition: @aql sum(fact_inventory.qty) ;;
+    definition: @aql sum(fact_inventory_thuan.qty) ;;
   }
 }
