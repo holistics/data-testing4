@@ -1,0 +1,9 @@
+ProjectSettings project_settings {
+  
+  data_import {
+    // DEFAULT WRITE SCHEMA FOR ALL DB
+    // Only specifies the default option. Users can still change schema when importing.
+    default_write_schema: 'persisted_models'
+  }
+
+}

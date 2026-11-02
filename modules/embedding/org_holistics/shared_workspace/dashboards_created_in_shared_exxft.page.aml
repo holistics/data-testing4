@@ -1,0 +1,19 @@
+Dashboard dashboards_created_in_shared_exxft {
+  title: 'Dashboards (created in shared)'
+  block title: TextBlock {
+    content: @md New Dashboard new ;;
+  }
+  interactions: []
+  view: CanvasLayout {
+    label: 'View 1'
+    height: 840
+    grid_size: 20
+    block title {
+      position: pos(20, 20, 1160, 60)
+    }
+    mobile {
+      mode: 'auto'
+    }
+  }
+  theme: H.themes.vanilla
+}

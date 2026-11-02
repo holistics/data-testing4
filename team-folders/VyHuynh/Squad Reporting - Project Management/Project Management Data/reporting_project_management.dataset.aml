@@ -46,7 +46,7 @@ Dataset reporting_project_management {
     type: "number"
     hidden: false
     description: "Percentage change in average PR review duration, in hours, versus the prior month using completed date."
-    definition: @aql safe_divide(avg(reporting_issue_duration, reporting_issue_duration.duration_hours), avg(reporting_issue_duration, reporting_issue_duration.duration_hours) | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
+    definition: @aql safe_divide(avg(reporting_stage_duration, reporting_stage_duration.duration_hours) | where(reporting_stage_duration.stage == "In PR Review"), avg(reporting_stage_duration, reporting_stage_duration.duration_hours) | where(reporting_stage_duration.stage == "In PR Review") | relative_period(reporting_issues.completed_at, interval(-1 month), strict: true)) - 1;;
   }
 
   metric percent_completion {

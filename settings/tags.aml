@@ -1,0 +1,109 @@
+// #############################################################
+// 📘 TAGGING SYSTEM OVERVIEW
+//
+// This section defines a reusable tagging system to simulate how BI teams manage:
+// - ✅ Trust: What is recommended?
+// - 📊 Status: Is it up to date and ready to use?
+// - 🚨 Issues: What are the known issue?
+// - 🧑‍💼 Owner: Who is responsible for this content?
+//
+// 🎯 PURPOSE:
+// Tags help BI teams communicate quality, lifecycle, and audience directly inside the reporting tool.
+// It's part of a best practice for dashboard governance.
+//
+// 🛠️ SETUP INSTRUCTIONS:
+// You can selectively uncomment relevant Tag blocks below to include in your demo or project.
+// For more information, visit our public docs:
+// - https://docs.holistics.io/docs/find-organize/tags
+// - https://docs.holistics.io/docs/find-organize/content-endorsement
+// - https://docs.holistics.io/docs/find-organize/archive
+//
+// #############################################################
+
+// ---------------------
+// ✅ TRUST TAGS
+// Signal how trustworthy or recommended this content is
+// ---------------------
+Tag {
+  name: 'Trust/Endorsed'
+  description: 'The item is highly recommended. a'
+  color: '#00ff00'
+}
+
+// ---------------------
+// 📊 STATUS TAGS
+// Communicate lifecycle state of the content
+// ---------------------
+Tag {
+  name: 'Status/Active'
+  color: '#00ff00'
+  description: 'The item is ready to use.'
+}
+
+Tag {
+  name: 'Status/Archived'
+  color: '#808080'
+  description: 'The item is no longer maintained and only preserved for historical or reference purposes.'
+}
+
+Tag {
+  name: 'Status/Deprecated'
+  color: '#808080'
+  description: 'The item is outdated and will eventually be removed.'
+}
+
+Tag {
+  name: 'Status/In Development'
+  color: '#ffa500'
+  description: 'The item is still being developed and not ready to use.'
+}
+
+// ---------------------
+// 🚨 ISSUE TAGS
+// Call out known issues in the dataset or dashboard
+// ---------------------
+Tag {
+  name: 'Issue/Stale Data'
+  description: 'This item is temporarily outdated.'
+  color: '#ff0000'
+}
+
+Tag {
+  name: 'Issue/Missing Context'
+  description: 'This item lacks documentation, explanation, or dimensions.'
+  color: '#ff0000'
+}
+
+Tag {
+  name: 'Issue/Data Mismatch'
+  description: 'Values are inconsistent or conflict with other sources.'
+  color: '#ff0000'
+}
+
+// ---------------------
+// 🧑‍💼 OWNER TAGS
+// Indicates which team or department owns and maintains this content
+// ---------------------
+Tag {
+  name: 'Owner/Marketing'
+  description: 'Maintained by the Marketing team. Related to campaigns, channels, or brand efforts.'
+  color: '#800080'
+}
+
+Tag {
+  name: 'Owner/Sales'
+  description: 'Maintained by the Sales team. Related to sales performance or operations.'
+  color: '#800080'
+}
+
+Tag {
+  name: 'Owner/Finance'
+  description: 'Maintained by the Finance team. Related to revenue, costs, budgets, and forecasts.'
+  color: '#800080'
+}
+
+Tag {
+  name: 'Owner/Product'
+  description: 'Maintained by the Product team. Related to product analytics, feature usage, and insights.'
+  color: '#800080'
+}
