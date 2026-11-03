@@ -91,6 +91,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(20, 180, 280, 60)
         layer: 10
       }
+      block p_period_comparison {
+        position: pos(320, 180, 280, 60)
+        layer: 10
+      }
       mobile {
         mode: 'auto'
       }
@@ -244,6 +248,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(820, 20, 340, 60)
         layer: 5
       }
+      block p_yoy_regional {
+        position: pos(480, 20, 320, 60)
+        layer: 5
+      }
       mobile {
         mode: 'auto'
       }
@@ -319,6 +327,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
       block d_drill_key_driver {
         position: pos(660, 20, 300, 40)
+        layer: 3
+      }
+      block p_yoy_key_driver {
+        position: pos(980, 20, 300, 40)
         layer: 3
       }
     }
@@ -3693,7 +3705,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   }
   block d_drill_revenue: DateDrillBlock {
     label: 'Time Grain'
-    default: 'month'
+    default: 'quarter'
   }
   block d_drill_regional: DateDrillBlock {
     label: 'Time Grain'
@@ -3702,6 +3714,24 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
   block d_drill_key_driver: DateDrillBlock {
     label: 'Time Grain'
     default: 'quarter'
+  }
+  block p_yoy_regional: PopBlock {
+    label: 'Compare to Last Year'
+    default {
+      type: 'relative'
+      duration: 1
+      granularity: 'year'
+      show_growth_rate: true
+    }
+  }
+  block p_yoy_key_driver: PopBlock {
+    label: 'Compare to Last Year'
+    default {
+      type: 'relative'
+      duration: 1
+      granularity: 'year'
+      show_growth_rate: true
+    }
   }
   settings {
     timezone: 'Etc/UTC'
@@ -3819,6 +3849,67 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v3'
       ]
       field: r(vyht_ecommerce_orders_1.created_at)
+    },
+    PopInteraction {
+      from: 'p_period_comparison'
+      to: [
+        'v3'
+      ]
+      field: r(vyht_ecommerce_orders_1.created_at)
+    },
+    PopInteraction {
+      from: 'p_period_comparison'
+      to: [
+        'v_0725'
+      ]
+      field: r(vy_opportunity_calendar_csv.year_month)
+    },
+    PopInteraction {
+      from: 'p_period_comparison'
+      to: [
+        'v_5fgl'
+      ]
+      field: r(order_master.order_created_date)
+    },
+    PopInteraction {
+      from: 'p_yoy_regional'
+      to: [
+        'v_qctn',
+        'v_5dpt',
+        'v_qnug',
+        'v_wwiv',
+        'v_6o9d',
+        'v_jpzg',
+        'v_t8f9'
+      ]
+      field: r(order_master.order_created_at)
+    },
+    PopInteraction {
+      from: 'p_yoy_key_driver'
+      to: [
+        'v_bj6j',
+        'v_segi',
+        'v_c1ru',
+        'v_3pqe',
+        'v_p9dt'
+      ]
+      field: r(vy_kaggle_orders.order_purchase_timestamp)
+    },
+    PopInteraction {
+      from: 'p_yoy_key_driver'
+      to: [
+        'v_d9k9',
+        'v_zspi'
+      ]
+      field: r(reporting_issues.completed_at)
+    },
+    PopInteraction {
+      from: 'p_yoy_key_driver'
+      to: [
+        'v_j070',
+        'v_qpsb'
+      ]
+      field: r(vy_opportunity_calendar_csv.year_month)
     },
     DateDrillInteraction {
       from: 'd_drill_revenue'
