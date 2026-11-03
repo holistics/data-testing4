@@ -87,9 +87,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(20, 1180, 1160, 400)
         layer: 18
       }
-      block d_date_drill_4fgr {
-        position: pos(20, 180, 300, 80)
-      }
       mobile {
         mode: 'auto'
       }
@@ -3682,9 +3679,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
-  block d_date_drill_4fgr: DateDrillBlock {
-    label: 'Date Drill'
-  }
   settings {
     timezone: 'Etc/UTC'
     cache_duration: 1440
@@ -3802,69 +3796,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v3'
       ]
       field: r(vyht_ecommerce_orders_1.created_at)
-    },
-    DateDrillInteraction {
-      from: 'd_date_drill_4fgr'
-      to: [
-        'v3'
-      ]
-      field: ref('vyht_ecommerce_orders_1', 'created_at')
-    },
-    DateDrillInteraction {
-      from: 'd_date_drill_4fgr'
-      to: [
-        'v_0725',
-        'v_j070',
-        'v_qpsb'
-      ]
-      field: ref('vy_opportunity_calendar_csv', 'year_month')
-    },
-    DateDrillInteraction {
-      from: 'd_date_drill_4fgr'
-      to: [
-        'v_856v'
-      ]
-      field: ref('order_master', 'order_created_month')
-    },
-    DateDrillInteraction {
-      from: 'd_date_drill_4fgr'
-      to: [
-        'v_od3a',
-        'v_ztqi',
-        'v_5dpt',
-        'v_6o9d',
-        'v_jpzg',
-        'v_qctn',
-        'v_qnug',
-        'v_wwiv'
-      ]
-      field: ref('order_master', 'order_created_at')
-    },
-    DateDrillInteraction {
-      from: 'd_date_drill_4fgr'
-      to: [
-        'v_cohort_vy'
-      ]
-      field: ref('order_master', 'cohort_month_c')
-    },
-    DateDrillInteraction {
-      from: 'd_date_drill_4fgr'
-      to: [
-        'v_3pqe',
-        'v_bj6j',
-        'v_c1ru',
-        'v_p9dt',
-        'v_segi'
-      ]
-      field: ref('vy_kaggle_orders', 'order_purchase_timestamp')
-    },
-    DateDrillInteraction {
-      from: 'd_date_drill_4fgr'
-      to: [
-        'v_d9k9',
-        'v_zspi'
-      ]
-      field: ref('reporting_issues', 'completed_at')
     },
     FilterInteraction {
       from: 'v5'
