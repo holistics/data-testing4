@@ -17,10 +17,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'View 1'
     tab tab2: CanvasLayout {
       label: 'Revenue Overview'
-      height: 1740
+      height: 1600
       grid_size: 20
       block v3 {
-        position: pos(20, 460, 1160, 420)
+        position: pos(20, 320, 1160, 420)
         layer: 3
       }
       block t3 {
@@ -56,7 +56,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 7
       }
       block t9 {
-        position: pos(20, 180, 1160, 20)
+        position: pos(20, 280, 1160, 20)
         layer: 9
       }
       block t_4ttu {
@@ -76,20 +76,19 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 4
       }
       block v_m2xo {
-        position: pos(20, 900, 560, 400)
+        position: pos(20, 760, 560, 400)
         layer: 16
       }
       block v_0725 {
-        position: pos(600, 900, 580, 400)
+        position: pos(600, 760, 580, 400)
         layer: 17
       }
       block v_5fgl {
-        position: pos(20, 1320, 1160, 400)
+        position: pos(20, 1180, 1160, 400)
         layer: 18
       }
-      block v_revenue_kpi {
-        position: pos(20, 220, 380, 160)
-        layer: 10
+      block d_date_drill_4fgr {
+        position: pos(20, 180, 300, 80)
       }
       mobile {
         mode: 'auto'
@@ -388,50 +387,6 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
           enabled: true
           debug_comments: true
         }
-      }
-    }
-  }
-  block v_revenue_kpi: VizBlock {
-    label: 'Revenue'
-    settings {
-      hide_label: true
-    }
-    viz: MetricKpi {
-      dataset: demo_ecommerce
-      theme {
-        metric_kpi {
-          trend {
-            positive {
-              text {
-                font_color: "#16A34A"
-              }
-            }
-            negative {
-              text {
-                font_color: "#DC2626"
-              }
-            }
-          }
-        }
-      }
-      value: VizFieldFull {
-        ref: r(order_master.revenue)
-        format {
-          type: 'number'
-          pattern: '[$$]#,###0'
-        }
-      }
-      compare_value: VizPopSettings {
-        field: r(order_master.order_created_at)
-        value: RelativePopValue {
-          duration: 1
-          granularity: 'year'
-        }
-        show_growth_rate: true
-      }
-      settings {
-        display_mode: 'compare_by_percent'
-        alignment: 'left'
       }
     }
   }
@@ -3727,6 +3682,9 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block d_date_drill_4fgr: DateDrillBlock {
+    label: 'Date Drill'
+  }
   settings {
     timezone: 'Etc/UTC'
     cache_duration: 1440
@@ -3780,7 +3738,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_t8f9',
         'v_oa26',
         'v_cohort_vy',
-        'v_revenue_kpi'
+        'v_5fgl'
       ]
       field: r(ecommerce_countries.name)
     },
@@ -3790,7 +3748,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_711g',
         'v_oa26',
         'v_cohort_vy',
-        'v_revenue_kpi'
+        'v_5fgl'
       ]
       field: r(ecommerce_cities.name)
     },
@@ -3801,7 +3759,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_hk4u',
         'v_wsww',
         'v_oa26',
-        'v_revenue_kpi'
+        'v_5fgl'
       ]
       field: r(order_master.order_created_at)
     },
@@ -3834,8 +3792,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_oa26',
         'v_cohort_vy',
         'v_od3a',
-        'v_w3yv',
-        'v_revenue_kpi'
+        'v_w3yv'
       ]
       field: r(ecommerce_countries.continent_name)
     },
@@ -3846,26 +3803,68 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       ]
       field: r(vyht_ecommerce_orders_1.created_at)
     },
-    FilterInteraction {
-      from: 'f1'
+    DateDrillInteraction {
+      from: 'd_date_drill_4fgr'
       to: [
-        'v_5fgl'
+        'v3'
       ]
-      field: r(ecommerce_countries.name)
+      field: ref('vyht_ecommerce_orders_1', 'created_at')
     },
-    FilterInteraction {
-      from: 'f2'
+    DateDrillInteraction {
+      from: 'd_date_drill_4fgr'
       to: [
-        'v_5fgl'
+        'v_0725',
+        'v_j070',
+        'v_qpsb'
       ]
-      field: r(ecommerce_cities.name)
+      field: ref('vy_opportunity_calendar_csv', 'year_month')
     },
-    FilterInteraction {
-      from: 'f_zwa4'
+    DateDrillInteraction {
+      from: 'd_date_drill_4fgr'
       to: [
-        'v_5fgl'
+        'v_856v'
       ]
-      field: r(order_master.order_created_at)
+      field: ref('order_master', 'order_created_month')
+    },
+    DateDrillInteraction {
+      from: 'd_date_drill_4fgr'
+      to: [
+        'v_od3a',
+        'v_ztqi',
+        'v_5dpt',
+        'v_6o9d',
+        'v_jpzg',
+        'v_qctn',
+        'v_qnug',
+        'v_wwiv'
+      ]
+      field: ref('order_master', 'order_created_at')
+    },
+    DateDrillInteraction {
+      from: 'd_date_drill_4fgr'
+      to: [
+        'v_cohort_vy'
+      ]
+      field: ref('order_master', 'cohort_month_c')
+    },
+    DateDrillInteraction {
+      from: 'd_date_drill_4fgr'
+      to: [
+        'v_3pqe',
+        'v_bj6j',
+        'v_c1ru',
+        'v_p9dt',
+        'v_segi'
+      ]
+      field: ref('vy_kaggle_orders', 'order_purchase_timestamp')
+    },
+    DateDrillInteraction {
+      from: 'd_date_drill_4fgr'
+      to: [
+        'v_d9k9',
+        'v_zspi'
+      ]
+      field: ref('reporting_issues', 'completed_at')
     },
     FilterInteraction {
       from: 'v5'
