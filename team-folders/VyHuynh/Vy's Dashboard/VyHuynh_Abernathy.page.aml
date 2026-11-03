@@ -20,7 +20,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       height: 1600
       grid_size: 20
       block v3 {
-        position: pos(20, 320, 1160, 420)
+        position: pos(20, 280, 1160, 420)
         layer: 3
       }
       block t3 {
@@ -56,7 +56,7 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 7
       }
       block t9 {
-        position: pos(20, 280, 1160, 20)
+        position: pos(20, 240, 1160, 20)
         layer: 9
       }
       block t_4ttu {
@@ -76,16 +76,20 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 4
       }
       block v_m2xo {
-        position: pos(20, 760, 560, 400)
+        position: pos(20, 720, 560, 400)
         layer: 16
       }
       block v_0725 {
-        position: pos(600, 760, 580, 400)
+        position: pos(600, 720, 580, 400)
         layer: 17
       }
       block v_5fgl {
-        position: pos(20, 1180, 1160, 400)
+        position: pos(20, 1140, 1160, 400)
         layer: 18
+      }
+      block d_drill_revenue {
+        position: pos(20, 180, 280, 60)
+        layer: 10
       }
       mobile {
         mode: 'auto'
@@ -236,6 +240,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         position: pos(580, 800, 580, 400)
         layer: 1
       }
+      block d_drill_regional {
+        position: pos(820, 20, 340, 60)
+        layer: 5
+      }
       mobile {
         mode: 'auto'
       }
@@ -308,6 +316,10 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       block v_qpsb {
         position: pos(20, 80, 600, 400)
         layer: 1
+      }
+      block d_drill_key_driver {
+        position: pos(660, 20, 300, 40)
+        layer: 3
       }
     }
   }
@@ -3679,6 +3691,18 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
     }
   }
+  block d_drill_revenue: DateDrillBlock {
+    label: 'Time Grain'
+    default: 'quarter'
+  }
+  block d_drill_regional: DateDrillBlock {
+    label: 'Time Grain'
+    default: 'quarter'
+  }
+  block d_drill_key_driver: DateDrillBlock {
+    label: 'Time Grain'
+    default: 'quarter'
+  }
   settings {
     timezone: 'Etc/UTC'
     cache_duration: 1440
@@ -3796,6 +3820,67 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v3'
       ]
       field: r(vyht_ecommerce_orders_1.created_at)
+    },
+    DateDrillInteraction {
+      from: 'd_drill_revenue'
+      to: [
+        'v3'
+      ]
+      field: r(vyht_ecommerce_orders_1.created_at)
+    },
+    DateDrillInteraction {
+      from: 'd_drill_revenue'
+      to: [
+        'v_0725'
+      ]
+      field: r(vy_opportunity_calendar_csv.year_month)
+    },
+    DateDrillInteraction {
+      from: 'd_drill_revenue'
+      to: [
+        'v_5fgl'
+      ]
+      field: r(order_master.order_created_date)
+    },
+    DateDrillInteraction {
+      from: 'd_drill_regional'
+      to: [
+        'v_qctn',
+        'v_5dpt',
+        'v_qnug',
+        'v_wwiv',
+        'v_6o9d',
+        'v_jpzg',
+        'v_t8f9'
+      ]
+      field: r(order_master.order_created_at)
+    },
+    DateDrillInteraction {
+      from: 'd_drill_key_driver'
+      to: [
+        'v_bj6j',
+        'v_segi',
+        'v_c1ru',
+        'v_3pqe',
+        'v_p9dt'
+      ]
+      field: r(vy_kaggle_orders.order_purchase_timestamp)
+    },
+    DateDrillInteraction {
+      from: 'd_drill_key_driver'
+      to: [
+        'v_d9k9',
+        'v_zspi'
+      ]
+      field: r(reporting_issues.completed_at)
+    },
+    DateDrillInteraction {
+      from: 'd_drill_key_driver'
+      to: [
+        'v_j070',
+        'v_qpsb'
+      ]
+      field: r(vy_opportunity_calendar_csv.year_month)
     },
     FilterInteraction {
       from: 'v5'
