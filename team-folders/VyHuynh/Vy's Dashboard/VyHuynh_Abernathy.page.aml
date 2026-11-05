@@ -334,6 +334,25 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         layer: 3
       }
     }
+    tab tab_xtbc: CanvasLayout {
+      label: 'PoP'
+      width: 1300
+      height: 1040
+      grid_size: 20
+      auto_expand_vertically: true
+      block v_vxn3 {
+        position: pos(20, 620, 1260, 400)
+      }
+      block v_pop_gmv_trend {
+        position: pos(20, 100, 1260, 500)
+      }
+      block p_compare_to_last_year_copy {
+        position: pos(20, 20, 320, 60)
+      }
+      mobile {
+        mode: 'auto'
+      }
+    }
   }
   theme: H.themes.vanilla
 
@@ -3733,6 +3752,78 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       show_growth_rate: true
     }
   }
+  block p_compare_to_last_year_copy: PopBlock {
+    label: 'Compare to Last Year copy'
+    default {
+      type: 'relative'
+      duration: 1
+      granularity: 'year'
+      show_growth_rate: true
+    }
+  }
+  block v_pop_gmv_trend: VizBlock {
+    label: 'GMV over time'
+    viz: CombinationChart {
+      dataset: demo_ecommerce
+      x_axis: VizFieldFull {
+        label: 'Month'
+        ref: r(order_master.order_created_at)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          mark_type: 'line'
+          field: VizFieldFull {
+            label: 'GMV'
+            ref: r(order_master.gmv)
+          }
+        }
+      }
+      settings {
+        sort {
+          field_index: 0
+          direction: 'asc'
+          type: 'xaxis'
+        }
+        x_axis_label: 'Month'
+      }
+    }
+  }
+  block v_vxn3: VizBlock {
+    label: 'Close % by month copy'
+    viz: LineChart {
+      dataset: vy_pbi_dts
+      x_axis: VizFieldFull {
+        ref: r(vy_opportunity_calendar_csv.year_month)
+        transformation: 'datetrunc month'
+        format {
+          type: 'date'
+          pattern: 'LLL yyyy'
+        }
+      }
+      y_axis {
+        series {
+          field: VizFieldFull {
+            label: 'Close %'
+            ref: r(vy_pbi_dts.close_percent)
+          }
+        }
+      }
+      settings {
+        show_data_points: true
+        row_limit: 5000
+        x_axis_show_null_datetime: false
+        aggregate_awareness {
+          enabled: true
+          debug_comments: true
+        }
+      }
+    }
+  }
   settings {
     timezone: 'Etc/UTC'
     cache_duration: 1440
@@ -3910,6 +4001,13 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
         'v_qpsb'
       ]
       field: r(vy_opportunity_calendar_csv.year_month)
+    },
+    PopInteraction {
+      from: 'p_compare_to_last_year_copy'
+      to: [
+        'v_pop_gmv_trend'
+      ]
+      field: r(order_master.order_created_at)
     },
     DateDrillInteraction {
       from: 'd_drill_revenue'
