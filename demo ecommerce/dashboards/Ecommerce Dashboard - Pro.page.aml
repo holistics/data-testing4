@@ -25,97 +25,6 @@ This dashboard tracks the KPIs of all managers for their respective teams. This 
 
 </div>;;
   }
-  block v1: VizBlock {
-    label: ' KPI Overview'
-    viz: PivotTable {
-      dataset: demo_ecommerce
-      filter {
-        field: ref('dim_dates', 'date_key')
-        operator: 'matches'
-        value: 'last 1 years to today'
-      }
-      columns: [
-        VizFieldFull {
-          ref: ref('dim_dates', 'date_key')
-          transformation: 'datetrunc year'
-          format {
-            type: 'date'
-            pattern: 'yyyy'
-          }
-        }
-      ]
-      values: [
-        VizFieldFull {
-          ref: ref('ecommerce_orders', 'total_orders_count')
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-          uname: 'custom_total_orders_count'
-        },
-        VizFieldFull {
-          ref: ref('ecommerce_orders', 'cancelled_orders_count')
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-        },
-        VizFieldFull {
-          ref: ref('ecommerce_orders', 'refunded_orders_count')
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-        },
-        VizFieldFull {
-          ref: ref('ecommerce_orders', 'delivered_orders_count')
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-        },
-        VizFieldFull {
-          ref: ref('order_master', 'nmv')
-          format {
-            type: 'number'
-            pattern: '[$$]#,###0.00'
-          }
-        },
-        VizFieldFull {
-          ref: ref('order_master', 'gmv')
-          format {
-            type: 'number'
-            pattern: '[$$]#,###0.00'
-          }
-        },
-        VizFieldFull {
-          ref: ref('order_master', 'aov')
-          format {
-            type: 'number'
-            pattern: 'inherited'
-          }
-        }
-      ]
-      settings {
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-        value_labels_position {
-          placement: 'rows'
-        }
-        column_styles: [
-          ColumnStyle {
-            key: 'custom_total_orders_count'
-            width: 278
-          }
-        ]
-      }
-    }
-    settings {
-      hide_label: true
-    }
-  }
   block v2: VizBlock {
     label: 'GMV'
     viz: MetricKpi {
@@ -1083,65 +992,6 @@ abc;;
   block p1: PopBlock {
     label: 'Compare with Period'
   }
-  block v19: VizBlock {
-    label: 'Total Users and Total Users by Age Demographic and Gender'
-    viz: ColumnChart {
-      dataset: demo_ecommerce
-      theme {
-      }
-      x_axis: VizFieldFull {
-        ref: ref('ecommerce_users', 'age_group')
-        format {
-          type: 'text'
-        }
-      }
-      legend: VizFieldFull {
-        ref: ref('ecommerce_users', 'gender')
-        format {
-          type: 'text'
-        }
-      }
-      y_axis {
-        series {
-          field: VizFieldFull {
-            ref: ref('ecommerce_users', 'total_users')
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
-          }
-          settings {
-            color: '#07326C'
-            point {
-              value: 'Male'
-              color: '#FB8761'
-            }
-            point {
-              value: 'Female'
-              color: '#64628c'
-            }
-          }
-        }
-        series {
-          field: VizFieldFull {
-            ref: ref('ecommerce_users', 'total_users')
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
-            break_by_legend: false
-          }
-        }
-      }
-      settings {
-        x_axis_show_null_datetime: true
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-      }
-    }
-  }
   block v20: VizBlock {
     label: ' KPI Overview'
     viz: PivotTable {
@@ -1226,378 +1076,6 @@ abc;;
           ColumnStyle {
             key: 'custom_total_orders_count'
             width: 322
-          }
-        ]
-      }
-    }
-    settings {
-      hide_label: true
-    }
-  }
-  block v21: VizBlock {
-    label: ' KPI Overview'
-    viz: PivotTable {
-      dataset: demo_ecommerce
-      filter {
-        field: ref('dim_dates', 'date_key')
-        operator: 'matches'
-        value: 'last 1 years to today'
-      }
-      columns: [
-        VizFieldFull {
-          ref: ref('dim_dates', 'date_key')
-          transformation: 'datetrunc year'
-          format {
-            type: 'date'
-            pattern: 'yyyy'
-          }
-        }
-      ]
-      values: [
-        VizFieldFull {
-          label: '%∆ Total Orders Count (prev. 1y)'
-          ref: ref('ecommerce_orders', 'total_orders_count')
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-          analytic: PeriodOverPeriodComparison {
-            time_dimension: ref('dim_dates', 'date_key')
-            display: 'percent_change'
-            comparison_period: 'relative to previous 1 year'
-          }
-          uname: 'custom_total_orders_count'
-        },
-        VizFieldFull {
-          label: '%∆ Cancelled Orders Count (prev. 1y)'
-          ref: ref('ecommerce_orders', 'cancelled_orders_count')
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-          analytic: PeriodOverPeriodComparison {
-            time_dimension: ref('dim_dates', 'date_key')
-            display: 'percent_change'
-            comparison_period: 'relative to previous 1 year'
-          }
-          uname: 'custom_cancelled_orders_count'
-        },
-        VizFieldFull {
-          label: '%∆ Refunded Orders Count (prev. 1y)'
-          ref: ref('ecommerce_orders', 'refunded_orders_count')
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-          analytic: PeriodOverPeriodComparison {
-            time_dimension: ref('dim_dates', 'date_key')
-            display: 'percent_change'
-            comparison_period: 'relative to previous 1 year'
-          }
-          uname: 'custom_refunded_orders_count'
-        },
-        VizFieldFull {
-          label: '%∆ Delivered Orders Count (prev. 1y)'
-          ref: ref('ecommerce_orders', 'delivered_orders_count')
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-          analytic: PeriodOverPeriodComparison {
-            time_dimension: ref('dim_dates', 'date_key')
-            display: 'percent_change'
-            comparison_period: 'relative to previous 1 year'
-          }
-          uname: 'custom_delivered_orders_count'
-        },
-        VizFieldFull {
-          label: '%∆ Nmv (prev. 1y)'
-          ref: ref('order_master', 'nmv')
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-          analytic: PeriodOverPeriodComparison {
-            time_dimension: ref('dim_dates', 'date_key')
-            display: 'percent_change'
-            comparison_period: 'relative to previous 1 year'
-          }
-          uname: 'custom_nmv'
-        },
-        VizFieldFull {
-          label: '%∆ Gmv (prev. 1y)'
-          ref: ref('order_master', 'gmv')
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-          analytic: PeriodOverPeriodComparison {
-            time_dimension: ref('dim_dates', 'date_key')
-            display: 'percent_change'
-            comparison_period: 'relative to previous 1 year'
-          }
-          uname: 'custom_gmv'
-        },
-        VizFieldFull {
-          label: '%∆ Aov (prev. 1y)'
-          ref: ref('order_master', 'aov')
-          format {
-            type: 'number'
-            pattern: '#,###%'
-          }
-          analytic: PeriodOverPeriodComparison {
-            time_dimension: ref('dim_dates', 'date_key')
-            display: 'percent_change'
-            comparison_period: 'relative to previous 1 year'
-          }
-          uname: 'custom_aov'
-        }
-      ]
-      settings {
-        conditional_formats: [
-          ConditionalFormat {
-            key: 'custom_total_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than'
-                value: 0
-              }
-              text_color: '#399367'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_total_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'is'
-                value: 0
-              }
-              text_color: '#B16920'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_total_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'less_than'
-                value: 0
-              }
-              text_color: '#BF0E08'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_cancelled_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than'
-                value: 0
-              }
-              text_color: '#399367'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_cancelled_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'is'
-                value: 0
-              }
-              text_color: '#B16920'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_cancelled_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'less_than'
-                value: 0
-              }
-              text_color: '#BF0E08'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_refunded_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than'
-                value: 0
-              }
-              text_color: '#399367'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_refunded_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'is'
-                value: 0
-              }
-              text_color: '#B16920'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_refunded_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'less_than'
-                value: 0
-              }
-              text_color: '#BF0E08'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_delivered_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than'
-                value: 0
-              }
-              text_color: '#399367'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_delivered_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'is'
-                value: 0
-              }
-              text_color: '#B16920'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_delivered_orders_count'
-            format: SingleFormat {
-              condition {
-                operator: 'less_than'
-                value: 0
-              }
-              text_color: '#BF0E08'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_nmv'
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than'
-                value: 0
-              }
-              text_color: '#399367'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_nmv'
-            format: SingleFormat {
-              condition {
-                operator: 'is'
-                value: 0
-              }
-              text_color: '#B16920'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_nmv'
-            format: SingleFormat {
-              condition {
-                operator: 'less_than'
-                value: 0
-              }
-              text_color: '#BF0E08'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_gmv'
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than'
-                value: 0
-              }
-              text_color: '#399367'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_gmv'
-            format: SingleFormat {
-              condition {
-                operator: 'is'
-                value: 0
-              }
-              text_color: '#B16920'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_gmv'
-            format: SingleFormat {
-              condition {
-                operator: 'less_than'
-                value: 0
-              }
-              text_color: '#BF0E08'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_aov'
-            format: SingleFormat {
-              condition {
-                operator: 'greater_than'
-                value: 0
-              }
-              text_color: '#399367'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_aov'
-            format: SingleFormat {
-              condition {
-                operator: 'is'
-                value: 0
-              }
-              text_color: '#B16920'
-              background_color: '#00000000'
-            }
-          },
-          ConditionalFormat {
-            key: 'custom_aov'
-            format: SingleFormat {
-              condition {
-                operator: 'less_than'
-                value: 0
-              }
-              text_color: '#BF0E08'
-              background_color: '#00000000'
-            }
-          }
-        ]
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
-        value_labels_position {
-          placement: 'rows'
-        }
-        column_styles: [
-          ColumnStyle {
-            key: 'custom_total_orders_count'
-            width: 328
           }
         ]
       }
@@ -2501,19 +1979,19 @@ abc;;
     tab view_1: CanvasLayout {
       label: 'Tab 1'
       width: 1540
-      height: 4460
+      height: 4210
       grid_size: 20
       block f1 {
-        position: pos(80, 2920, 260, 40)
+        position: pos(80, 2800, 260, 40)
       }
       block f2 {
-        position: pos(80, 3200, 260, 40)
+        position: pos(80, 3080, 260, 40)
       }
       block f3 {
-        position: pos(80, 3060, 260, 40)
+        position: pos(80, 2940, 260, 40)
       }
       block p1 {
-        position: pos(1300, 2860, 220, 60)
+        position: pos(1300, 2740, 220, 60)
         layer: 2
       }
       block t2 {
@@ -2523,28 +2001,25 @@ abc;;
         position: pos(40, 220, 1460, 80)
       }
       block t6 {
-        position: pos(40, 1190, 1460, 80)
+        position: pos(40, 1070, 1460, 80)
       }
       block t8 {
-        position: pos(60, 2760, 1460, 80)
+        position: pos(60, 2640, 1460, 80)
       }
       block t9 {
-        position: pos(80, 2880, 260, 40)
-      }
-      block v1 {
-        position: pos(60, 700, 760, 380)
+        position: pos(80, 2760, 260, 40)
       }
       block v2 {
         position: pos(80, 360, 300, 140)
       }
       block v6 {
-        position: pos(840, 2200, 680, 500)
+        position: pos(840, 2080, 680, 500)
       }
       block v7 {
-        position: pos(60, 3280, 1440, 430)
+        position: pos(60, 3160, 1440, 260)
       }
       block v8 {
-        position: pos(380, 2860, 560, 400)
+        position: pos(380, 2740, 560, 400)
       }
       block hd1 {
         position: pos(1320, 20, 180, 50)
@@ -2566,36 +2041,36 @@ abc;;
         position: pos(1320, 100, 180, 50)
       }
       block t26 {
-        position: pos(60, 2860, 300, 120)
+        position: pos(60, 2740, 300, 120)
         layer: -2
       }
       block t28 {
-        position: pos(80, 3160, 260, 40)
+        position: pos(80, 3040, 260, 40)
       }
       block t32 {
-        position: pos(80, 3020, 260, 40)
+        position: pos(80, 2900, 260, 40)
         layer: 1
       }
       block t38 {
-        position: pos(0, 4300, 1540, 170)
+        position: pos(0, 4020, 1540, 170)
         layer: -1
       }
       block t39 {
-        position: pos(60, 3760, 200, 70)
+        position: pos(60, 3480, 200, 70)
       }
       block t40 {
-        position: pos(1120, 4340, 400, 110)
+        position: pos(1120, 4060, 400, 110)
       }
       block t47 {
-        position: pos(1420, 1140, 80, 100)
+        position: pos(1420, 1020, 80, 100)
         layer: 1
       }
       block t49 {
-        position: pos(40, 660, 1460, 420)
+        position: pos(40, 680, 1460, 320)
         layer: -4
       }
       block t51 {
-        position: pos(1440, 2720, 80, 100)
+        position: pos(1440, 2600, 80, 100)
         layer: 1
       }
       block t52 {
@@ -2607,14 +2082,14 @@ abc;;
         layer: -2
       }
       block t54 {
-        position: pos(60, 2200, 360, 500)
+        position: pos(60, 2080, 360, 500)
       }
       block t55 {
-        position: pos(60, 3000, 300, 120)
+        position: pos(60, 2880, 300, 120)
         layer: -1
       }
       block t56 {
-        position: pos(60, 3140, 300, 120)
+        position: pos(60, 3020, 300, 120)
         layer: -1
       }
       block v10 {
@@ -2625,79 +2100,26 @@ abc;;
         layer: -1
       }
       block v13 {
-        position: pos(40, 1280, 720, 460)
+        position: pos(40, 1160, 720, 460)
       }
       block v15 {
-        position: pos(960, 2860, 560, 400)
+        position: pos(960, 2740, 560, 400)
       }
       block v16 {
-        position: pos(780, 1280, 720, 460)
+        position: pos(780, 1160, 720, 460)
       }
       block v17 {
-        position: pos(40, 1760, 1480, 420)
+        position: pos(40, 1640, 1480, 420)
       }
       block v18 {
-        position: pos(60, 3720, 1480, 500)
-      }
-      block v19 {
-        position: pos(20, 4490, 400, 300)
-        layer: 3
+        position: pos(60, 3440, 1480, 500)
       }
       block v20 {
-        position: pos(280, 700, 1180, 380)
+        position: pos(60, 700, 1420, 280)
         layer: -3
-      }
-      block v21 {
-        position: pos(280, 700, 860, 260)
-        layer: -1
       }
       block v2_dup_dup {
-        position: pos(440, 2200, 380, 500)
-      }
-      block v_aa3r {
-        position: pos(110, 750, 760, 380)
-      }
-      block v_mwff {
-        position: pos(130, 410, 300, 140)
-      }
-      block v_mzmq {
-        position: pos(130, 550, 320, 140)
-      }
-      block v_pho6 {
-        position: pos(530, 390, 1000, 300)
-        layer: -1
-      }
-      block t_iy6i {
-        position: pos(90, 270, 1460, 80)
-      }
-      block t_oq1u {
-        position: pos(90, 710, 1460, 420)
-        layer: -4
-      }
-      block t_5848 {
-        position: pos(510, 370, 1040, 340)
-        layer: -2
-      }
-      block t_kilo {
-        position: pos(90, 370, 400, 340)
-        layer: -2
-      }
-      block v_hlu7 {
-        position: pos(330, 750, 1180, 380)
-        layer: -3
-      }
-      block v_lltu {
-        position: pos(330, 750, 860, 260)
-        layer: -1
-      }
-      block v_m5d8 {
-        position: pos(490, 2250, 380, 500)
-      }
-      block v_dria {
-        position: pos(270, 2490, 380, 500)
-      }
-      block v_9o4x {
-        position: pos(320, 2540, 380, 500)
+        position: pos(440, 2080, 380, 500)
       }
       mobile {
         mode: 'auto'
@@ -2708,14 +2130,642 @@ abc;;
     timezone: 'America/Los_Angeles'
     cache_duration: 10
   }
-  interactions: [
+  explicit_interactions: [
+    FilterInteraction {
+      from: 'f1'
+      to: [
+        'f2',
+        'f3'
+      ]
+      field: r(ecommerce_countries.name)
+    },
+    FilterInteraction {
+      from: 'f2'
+      to: [
+        'f1',
+        'f3'
+      ]
+      field: r(ecommerce_users.age_group)
+    },
+    FilterInteraction {
+      from: 'f3'
+      to: [
+        'f1',
+        'f2'
+      ]
+      field: r(ecommerce_cities.name)
+    },
+    FilterInteraction {
+      from: 'f1'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+      field: r(ecommerce_countries.name)
+    },
+    FilterInteraction {
+      from: 'f2'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+      field: r(ecommerce_users.age_group)
+    },
+    FilterInteraction {
+      from: 'f3'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+      field: r(ecommerce_cities.name)
+    },
     PopInteraction {
       from: 'p1'
       to: [
-        CustomMapping {
-          block: 'v15'
-          field: r(order_master.order_created_at)
-        }
+        'v15'
+      ]
+      field: r(order_master.order_created_at)
+    },
+    FilterInteraction {
+      from: 'v2'
+      to: [
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v2_dup_dup'
+      to: [
+        'v2',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v6'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v7'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v8'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v10'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v12'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v13'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v15'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v17'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v18'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v20'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_aa3r'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_mwff'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_mzmq'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_pho6'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_hlu7'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_lltu'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_m5d8',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_m5d8'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_dria',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_dria'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_9o4x'
+      ]
+    },
+    FilterInteraction {
+      from: 'v_9o4x'
+      to: [
+        'v2',
+        'v2_dup_dup',
+        'v6',
+        'v7',
+        'v8',
+        'v10',
+        'v12',
+        'v13',
+        'v15',
+        'v17',
+        'v18',
+        'v20',
+        'v_aa3r',
+        'v_mwff',
+        'v_mzmq',
+        'v_pho6',
+        'v_hlu7',
+        'v_lltu',
+        'v_m5d8',
+        'v_dria'
       ]
     }
   ]
