@@ -1,6 +1,6 @@
 Dashboard testing_reuse_block {
   title: 'Testing Reuse Block QA TC-05'
-  description: 'QA BUG-004 repaired'
+  description: 'QA TC-10 local'
 
   view: CanvasLayout {
     label: 'View 1'
