@@ -1,6 +1,6 @@
 Dashboard testing_reuse_block {
   title: 'Testing Reuse Block'
-  description: ''
+  description: 'Testing Reuse Block QA TC-03b'
 
   view: CanvasLayout {
     label: 'View 1'
