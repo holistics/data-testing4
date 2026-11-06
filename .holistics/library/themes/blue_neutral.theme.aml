@@ -1,0 +1,198 @@
+const blue_neutral_brand = {
+  primary: "oklch(0.23 0.07 258)"
+  secondary: "oklch(0.54 0.10 40)"
+  font_body: "Inter"
+  font_display: "Georgia"
+  corner_style: "rounded"
+  density: "comfortable"
+  elevation: "hairline"
+
+  background_light: "oklch(0.94 0.02 65)"
+  background_dark: "oklch(0.16 0.03 258)"
+  canvas_bg_light: "oklch(0.97 0.01 65)"
+  canvas_bg_dark: "oklch(0.20 0.035 258)"
+  block_bg_light: "oklch(0.99 0.005 65)"
+  block_bg_dark: "oklch(0.24 0.035 258)"
+  text_primary_light: "oklch(0.20 0.05 258)"
+  text_primary_dark: "oklch(0.94 0.02 65)"
+  text_muted_light: "oklch(0.42 0.035 258)"
+  text_muted_dark: "oklch(0.78 0.025 65)"
+  text_subtle_light: "oklch(0.56 0.025 258)"
+  text_subtle_dark: "oklch(0.65 0.025 65)"
+  border_light: "oklch(0.86 0.025 65)"
+  border_dark: "oklch(0.34 0.035 258)"
+  focus_ring_light: "oklch(0.52 0.13 250)"
+  focus_ring_dark: "oklch(0.67 0.12 250)"
+  semantic_success_light: "oklch(0.52 0.13 150)"
+  semantic_success_dark: "oklch(0.72 0.13 150)"
+  semantic_warning_light: "oklch(0.63 0.14 75)"
+  semantic_warning_dark: "oklch(0.78 0.13 75)"
+  semantic_danger_light: "oklch(0.55 0.16 25)"
+  semantic_danger_dark: "oklch(0.70 0.15 25)"
+}
+
+ColorPalette blue_neutral_light_palette {
+  title: "Blue Neutral — Light"
+  categorical {
+    colors: [
+      "oklch(0.60 0.14 250)",
+      "oklch(0.61 0.13 40)",
+      "oklch(0.62 0.14 150)",
+      "oklch(0.60 0.15 310)",
+      "oklch(0.63 0.13 75)",
+      "oklch(0.60 0.14 190)",
+      "oklch(0.61 0.14 20)",
+      "oklch(0.59 0.14 285)"
+    ]
+  }
+}
+
+PageTheme blue_neutral_light_theme {
+  title: "Blue Neutral — Light"
+  color { data: blue_neutral_light_palette }
+  background { bg_color: blue_neutral_brand("background_light") }
+  canvas {
+    background { bg_color: blue_neutral_brand("canvas_bg_light") }
+    border { border_width: 0 border_radius: 12 border_color: blue_neutral_brand("border_light") border_style: "none" }
+    shadow: "none"
+    opacity: 1
+  }
+  block {
+    background { bg_color: blue_neutral_brand("block_bg_light") }
+    border { border_width: 1 border_style: "solid" border_radius: 12 border_color: blue_neutral_brand("border_light") }
+    shadow: "none"
+    padding: 16
+    opacity: 1
+    label { font_family: blue_neutral_brand("font_display") font_size: 14 font_color: blue_neutral_brand("text_primary_light") font_weight: "semibold" font_style: "normal" letter_spacing: 0 }
+    text { font_family: blue_neutral_brand("font_body") font_size: 13 font_color: blue_neutral_brand("text_muted_light") font_weight: "normal" font_style: "normal" }
+  }
+  viz {
+    table {
+      general {
+        bg_color: blue_neutral_brand("block_bg_light")
+        font_color: blue_neutral_brand("text_muted_light")
+        font_family: blue_neutral_brand("font_body")
+        font_size: 13
+        border_color: blue_neutral_brand("border_light")
+        grid_color: blue_neutral_brand("border_light")
+        border_width: 1
+        hover_color: "oklch(0.96 0.02 65)"
+        banding_color: "oklch(0.98 0.01 65)"
+      }
+      header { bg_color: blue_neutral_brand("background_light") font_color: blue_neutral_brand("text_primary_light") font_size: 13 font_weight: "semibold" }
+      sub_header { bg_color: "oklch(0.98 0.01 65)" font_color: blue_neutral_brand("text_muted_light") font_size: 13 font_weight: "medium" }
+      sub_title { font_color: blue_neutral_brand("text_subtle_light") font_size: 12 font_weight: "medium" }
+      sparkline { line { color: blue_neutral_brand("primary") } column { color: blue_neutral_brand("primary") } }
+    }
+    metric_kpi {
+      alignment: "left"
+      label { font_family: blue_neutral_brand("font_body") font_size: 20 font_color: blue_neutral_brand("text_muted_light") }
+      value { font_family: blue_neutral_brand("font_display") font_size: 48 font_color: blue_neutral_brand("text_primary_light") }
+      progress { indicator { bg_color: blue_neutral_brand("primary") } track { bg_color: blue_neutral_brand("border_light") } text { font_color: blue_neutral_brand("text_muted_light") } }
+      trend {
+        positive { text { font_color: blue_neutral_brand("semantic_success_light") font_weight: "medium" } background { bg_color: "oklch(0.93 0.04 150)" } }
+        negative { text { font_color: blue_neutral_brand("semantic_danger_light") font_weight: "medium" } background { bg_color: "oklch(0.93 0.04 25)" } }
+        neutral { text { font_color: blue_neutral_brand("text_muted_light") font_weight: "normal" } background { bg_color: "oklch(0.94 0.02 65)" } }
+      }
+    }
+  }
+  custom_css: @css
+    .dac-text-block {
+      font-family: Inter;
+      font-size: 14px;
+      color: oklch(0.42 0.035 258);
+      line-height: 1.6;
+    }
+    .dac-text-block h1, .dac-text-block h2, .dac-text-block h3, .dac-text-block h4, .dac-text-block h5, .dac-text-block h6 {
+      font-family: Georgia;
+      color: oklch(0.20 0.05 258);
+      line-height: 1.3;
+      margin-top: 0;
+      margin-bottom: 0.5em;
+      font-weight: 600;
+    }
+  ;;
+}
+
+ColorPalette blue_neutral_dark_palette {
+  title: "Blue Neutral — Dark"
+  categorical {
+    colors: [
+      "oklch(0.63 0.13 250)",
+      "oklch(0.64 0.12 40)",
+      "oklch(0.63 0.13 150)",
+      "oklch(0.62 0.14 310)",
+      "oklch(0.68 0.12 75)",
+      "oklch(0.63 0.13 190)",
+      "oklch(0.63 0.13 20)",
+      "oklch(0.61 0.13 285)"
+    ]
+  }
+}
+
+PageTheme blue_neutral_dark_theme {
+  title: "Blue Neutral — Dark"
+  color { data: blue_neutral_dark_palette }
+  background { bg_color: blue_neutral_brand("background_dark") }
+  canvas {
+    background { bg_color: blue_neutral_brand("canvas_bg_dark") }
+    border { border_width: 0 border_radius: 12 border_color: blue_neutral_brand("border_dark") border_style: "none" }
+    shadow: "none"
+    opacity: 1
+  }
+  block {
+    background { bg_color: blue_neutral_brand("block_bg_dark") }
+    border { border_width: 1 border_style: "solid" border_radius: 12 border_color: blue_neutral_brand("border_dark") }
+    shadow: "none"
+    padding: 16
+    opacity: 1
+    label { font_family: blue_neutral_brand("font_display") font_size: 14 font_color: blue_neutral_brand("text_primary_dark") font_weight: "semibold" font_style: "normal" letter_spacing: 0 }
+    text { font_family: blue_neutral_brand("font_body") font_size: 13 font_color: blue_neutral_brand("text_muted_dark") font_weight: "normal" font_style: "normal" }
+  }
+  viz {
+    table {
+      general {
+        bg_color: blue_neutral_brand("block_bg_dark")
+        font_color: blue_neutral_brand("text_muted_dark")
+        font_family: blue_neutral_brand("font_body")
+        font_size: 13
+        border_color: blue_neutral_brand("border_dark")
+        grid_color: blue_neutral_brand("border_dark")
+        border_width: 1
+        hover_color: "oklch(0.29 0.035 258)"
+        banding_color: "oklch(0.27 0.035 258)"
+      }
+      header { bg_color: blue_neutral_brand("background_dark") font_color: blue_neutral_brand("text_primary_dark") font_size: 13 font_weight: "semibold" }
+      sub_header { bg_color: "oklch(0.27 0.035 258)" font_color: blue_neutral_brand("text_muted_dark") font_size: 13 font_weight: "medium" }
+      sub_title { font_color: blue_neutral_brand("text_subtle_dark") font_size: 12 font_weight: "medium" }
+      sparkline { line { color: blue_neutral_brand("secondary") } column { color: blue_neutral_brand("secondary") } }
+    }
+    metric_kpi {
+      alignment: "left"
+      label { font_family: blue_neutral_brand("font_body") font_size: 20 font_color: blue_neutral_brand("text_muted_dark") }
+      value { font_family: blue_neutral_brand("font_display") font_size: 48 font_color: blue_neutral_brand("text_primary_dark") }
+      progress { indicator { bg_color: blue_neutral_brand("secondary") } track { bg_color: blue_neutral_brand("border_dark") } text { font_color: blue_neutral_brand("text_muted_dark") } }
+      trend {
+        positive { text { font_color: blue_neutral_brand("semantic_success_dark") font_weight: "medium" } background { bg_color: "oklch(0.40 0.04 150)" } }
+        negative { text { font_color: blue_neutral_brand("semantic_danger_dark") font_weight: "medium" } background { bg_color: "oklch(0.40 0.04 25)" } }
+        neutral { text { font_color: blue_neutral_brand("text_muted_dark") font_weight: "normal" } background { bg_color: "oklch(0.32 0.03 258)" } }
+      }
+    }
+  }
+  custom_css: @css
+    .dac-text-block {
+      font-family: Inter;
+      font-size: 14px;
+      color: oklch(0.78 0.025 65);
+      line-height: 1.6;
+    }
+    .dac-text-block h1, .dac-text-block h2, .dac-text-block h3, .dac-text-block h4, .dac-text-block h5, .dac-text-block h6 {
+      font-family: Georgia;
+      color: oklch(0.94 0.02 65);
+      line-height: 1.3;
+      margin-top: 0;
+      margin-bottom: 0.5em;
+      font-weight: 600;
+    }
+  ;;
+}
