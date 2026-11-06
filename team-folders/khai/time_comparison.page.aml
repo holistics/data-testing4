@@ -1,6 +1,6 @@
 Dashboard time_comparison {
   title: 'time_comparison'
-  description: ''
+  description: 'QA TC-07 cloud'
   owner: 'khai.to@holistics.io'
   block v_2i3x: VizBlock {
     label: 'GMV (time compare), NMV (time compare) and 5 more by Time Type'
