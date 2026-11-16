@@ -2663,6 +2663,26 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
     label: 'Close % by month'
     viz: LineChart {
       dataset: vy_pbi_dts
+      calculation prior_month_close_percent {
+        label: 'Prior Month Close Percent'
+        formula: @aql close_percent
+      | relative_period(vy_opportunity_calendar_csv.year_month, interval(-1 month));;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      calculation close_percent_change {
+        label: 'Close Percent Change'
+        formula: @aql case(
+      when: prior_month_close_percent is null,
+      then: null,
+      else: safe_divide(close_percent, prior_month_close_percent) - 1
+    );;
+        calc_type: 'measure'
+        data_type: 'number'
+      }
+      conditions: [
+        'vy_opportunity_calendar_csv.year_month is @(2019-10 - 2021-11)'
+      ]
       x_axis: VizFieldFull {
         ref: r(vy_opportunity_calendar_csv.year_month)
         transformation: 'datetrunc month'
@@ -2673,12 +2693,20 @@ Morbi rhoncus tellus eget libero tincidunt, sit amet aliquam leo hendrerit. Ut a
       }
       y_axis {
         series {
-          field: VizFieldFull {
-            label: 'Close %'
-            ref: r(vy_pbi_dts.close_percent)
-          }
+          field: r(vy_pbi_dts.close_percent)
         }
       }
+      tooltips: [
+        VizTooltip {
+          field: VizFieldFull {
+            ref: 'close_percent_change'
+            format {
+              type: 'number'
+              pattern: '#,##0.0%'
+            }
+          }
+        }
+      ]
       settings {
         show_data_points: true
         row_limit: 5000
