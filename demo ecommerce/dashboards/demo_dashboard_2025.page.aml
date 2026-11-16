@@ -1077,79 +1077,115 @@ Use the **[Drill Down]** or **[View Underlying Data]** features to explore break
   }
   block v53: VizBlock {
     label: 'Total Orders by Delivery Status'
-    viz: ColumnChart {
-      dataset: demo_ecommerce_version_2
-      calculation order_success_status {
-        label: 'Order Success Status'
-        formula: @aql case(
-  when: ecommerce_orders.status is 'delivered'
-  , then: 'success_order'
-  , else: 'failed_order'
-);;
-        calc_type: 'dimension'
-        data_type: 'text'
-        model: ecommerce_orders
-      }
-      calculation net_orders {
-        label: 'Net Orders'
-        formula: @aql total_orders - total_cancelled_orders - total_refunded_orders;;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation net_order_ratio {
-        label: 'Net Order Ratio'
-        formula: @aql net_orders*1.0/total_orders;;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      calculation undelivered_orders {
-        label: 'Undelivered Orders'
-        formula: @aql total_orders-net_orders;;
-        calc_type: 'measure'
-        data_type: 'number'
-      }
-      theme {
+    viz: CombinationChart {
+  dataset: demo_ecommerce_version_2
 
-      }
-      x_axis: VizFieldFull {
-        ref: ref('ecommerce_orders', 'created_at')
-        transformation: 'datetrunc quarter'
+  calculation order_success_status {
+    label: 'Order Success Status'
+    formula: @aql case(
+      when: ecommerce_orders.status is 'delivered', then: 'success_order',
+      else: 'failed_order'
+    );;
+    calc_type: 'dimension'
+    data_type: 'text'
+    model: ecommerce_orders
+  }
+
+  calculation net_orders {
+    label: 'Net Orders'
+    formula: @aql total_orders - total_cancelled_orders - total_refunded_orders;;
+    calc_type: 'measure'
+    data_type: 'number'
+  }
+
+  calculation net_order_ratio {
+    label: 'Net Order Ratio'
+    formula: @aql net_orders * 1.0 / total_orders;;
+    calc_type: 'measure'
+    data_type: 'number'
+  }
+
+  calculation undelivered_orders {
+    label: 'Undelivered Orders'
+    formula: @aql total_orders - net_orders;;
+    calc_type: 'measure'
+    data_type: 'number'
+  }
+
+  x_axis: VizFieldFull {
+    ref: r(ecommerce_orders.created_at)
+    transformation: 'datetrunc quarter'
+    format {
+      type: 'date'
+      pattern: 'yyyy Qq'
+    }
+  }
+
+  legend: VizFieldFull {
+    ref: ref('ecommerce_orders', 'order_success_status')
+  }
+
+  y_axis {
+    series {
+      mark_type: 'column'
+      field: VizFieldFull {
+        ref: r(demo_ecommerce_version_2.total_orders)
         format {
-          type: 'date'
-          pattern: 'yyyy Qq'
+          type: 'number'
+          pattern: 'inherited'
         }
       }
-      legend: VizFieldFull {
-        ref: ref('ecommerce_orders', 'order_success_status')
+    }
+
+    series {
+      mark_type: 'line'
+      field: VizFieldFull {
+        ref: r(demo_ecommerce_version_2.total_orders)
+        label: 'Trailing 3-Quarter Moving Average'
+        break_by_legend: false
         format {
-          type: 'text'
+          type: 'number'
+          pattern: 'inherited'
         }
-      }
-      y_axis {
-        settings {
-          show_stack_total: true
-          show_data_label_by: 'value'
-          stack_series_by: 'value'
-        }
-        series {
-          field: VizFieldFull {
-            ref: 'total_orders'
-            format {
-              type: 'number'
-              pattern: 'inherited'
-            }
+        analytic: MovingCalculationField {
+          type: 'avg'
+          order: 'row'
+          range {
+            previous: 2
+            next: 0
           }
         }
       }
       settings {
-        row_limit: 5000
-        x_axis_show_null_datetime: false
-        aggregate_awareness {
-          enabled: true
-          debug_comments: true
-        }
+        line_style: 'dashed'
       }
     }
+
+    settings {
+      stack_series_by: 'value'
+      show_stack_total: true
+      show_data_label_by: 'value'
+    }
+  }
+
+  filter {
+    field: r(ecommerce_orders.created_at)
+    operator: 'matches'
+    value: 'last 12 month - today'
+  }
+
+  settings {
+    x_axis_show_null_datetime: false
+    row_limit: 5000
+    aggregate_awareness {
+      enabled: true
+      debug_comments: true
+    }
+  }
+
+  theme {
+  }
+}
   }
   block v58: VizBlock {
     label: 'Cohort Report by Product'
