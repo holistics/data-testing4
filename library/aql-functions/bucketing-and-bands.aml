@@ -78,10 +78,13 @@ AqlFunctionModule Bands {
     }
     return_type: 'text'
     definition: @aql
-      concat(
-        cast(Bin(pValue, pWidth), 'text'),
-        ' - ',
-        cast(Bin(pValue, pWidth) + pWidth, 'text')
+      case(
+        when: pValue is null, then: null,
+        else: concat(
+          cast(Bin(pValue, pWidth), 'text'),
+          ' - ',
+          cast(Bin(pValue, pWidth) + pWidth, 'text')
+        )
       )
     ;;
   }
