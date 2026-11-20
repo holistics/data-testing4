@@ -1,0 +1,46 @@
+AqlFunctionModule TargetVsActual {
+  // Actual as a share of target. 1 = 100%. Empty when the target is 0 or empty.
+  function Attainment {
+    param pActual {
+      type: 'number'
+    }
+    param pTarget {
+      type: 'number'
+    }
+    return_type: 'number'
+    definition: @aql safe_divide(pActual, pTarget) ;;
+  }
+
+  // Actual minus target. Positive = above target. Empty when either value is empty.
+  function Variance {
+    param pActual {
+      type: 'number'
+    }
+    param pTarget {
+      type: 'number'
+    }
+    return_type: 'number'
+    definition: @aql case(when: pActual is not null and pTarget is not null, then: pActual - pTarget) ;;
+  }
+
+  // 'On track' when attainment reaches pThreshold, 'Behind' when it doesn't.
+  // null threshold uses 1 (100%).
+  function Status {
+    param pActual {
+      type: 'number'
+    }
+    param pTarget {
+      type: 'number'
+    }
+    param pThreshold {
+      type: 'number'
+    }
+    return_type: 'text'
+    definition: @aql
+      case(
+        when: Attainment(pActual, pTarget) >= coalesce(pThreshold, 1), then: 'On track',
+        when: Attainment(pActual, pTarget) < coalesce(pThreshold, 1), then: 'Behind'
+      )
+    ;;
+  }
+}

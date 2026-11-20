@@ -428,5 +428,32 @@ Dataset bhx_demo_ecommerce {
   // }
 
 
+  function_module TargetVsActual: TargetVsActual
+
+  metric gmv_target {
+    label: 'GMV Target'
+    type: 'number'
+    definition: @aql (gmv | relative_period(bhx_ecommerce_orders.created_date, interval(-1 year))) * 1.1 ;;
+  }
+
+  metric gmv_attainment {
+    label: 'GMV Attainment'
+    type: 'number'
+    definition: @aql TargetVsActual.Attainment(gmv, gmv_target) ;;
+    format: '#,##0.0%'
+  }
+
+  metric gmv_variance {
+    label: 'GMV Variance'
+    type: 'number'
+    definition: @aql TargetVsActual.Variance(gmv, gmv_target) ;;
+  }
+
+  metric gmv_status {
+    label: 'GMV Status'
+    type: 'text'
+    definition: @aql TargetVsActual.Status(gmv, gmv_target, 1) ;;
+  }
+
   owner: 'tri.dvm@holistics.io'
 }
