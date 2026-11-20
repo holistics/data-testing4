@@ -428,5 +428,28 @@ Dataset bhx_demo_ecommerce {
   // }
 
 
+  function_module FiscalCalendar: FiscalCalendar
+
+  dimension fiscal_year {
+    model: bhx_ecommerce_orders
+    label: 'Fiscal Year'
+    type: 'text'
+    definition: @aql FiscalCalendar.Year(bhx_ecommerce_orders.created_at) ;;
+  }
+
+  dimension fiscal_quarter {
+    model: bhx_ecommerce_orders
+    label: 'Fiscal Quarter'
+    type: 'text'
+    definition: @aql FiscalCalendar.Quarter(bhx_ecommerce_orders.created_at) ;;
+  }
+
+  dimension fiscal_month {
+    model: bhx_ecommerce_orders
+    label: 'Fiscal Month'
+    type: 'number'
+    definition: @aql FiscalCalendar.MonthNum(bhx_ecommerce_orders.created_at) ;;
+  }
+
   owner: 'tri.dvm@holistics.io'
 }

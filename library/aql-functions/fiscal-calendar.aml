@@ -1,0 +1,58 @@
+AqlFunctionModule FiscalCalendar {
+  // First month of the fiscal year: 1 = January, 4 = April, 7 = July.
+  function StartMonth {
+    return_type: 'number'
+    definition: @aql 4 ;;
+  }
+
+  // Fiscal year as a number, named after the calendar year it ends in.
+  // With an April start, Apr 2026 to Mar 2027 is fiscal year 2027.
+  function YearNum {
+    param pDate {
+      type: 'dimension'
+    }
+    return_type: 'number'
+    definition: @aql
+      year_num(pDate) + case(
+        when: StartMonth() > 1 and month_num(pDate) >= StartMonth(), then: 1,
+        else: 0
+      )
+    ;;
+  }
+
+  // Month of the fiscal year, 1 to 12.
+  function MonthNum {
+    param pDate {
+      type: 'dimension'
+    }
+    return_type: 'number'
+    definition: @aql mod(month_num(pDate) - StartMonth() + 12, 12) + 1 ;;
+  }
+
+  // Quarter of the fiscal year, 1 to 4.
+  function QuarterNum {
+    param pDate {
+      type: 'dimension'
+    }
+    return_type: 'number'
+    definition: @aql floor((MonthNum(pDate) - 1) / 3) + 1 ;;
+  }
+
+  // Fiscal year label, such as 'FY27'.
+  function Year {
+    param pDate {
+      type: 'dimension'
+    }
+    return_type: 'text'
+    definition: @aql concat('FY', lpad(cast(mod(YearNum(pDate), 100), 'text'), 2, '0')) ;;
+  }
+
+  // Fiscal quarter label, such as 'FY27 Q1'.
+  function Quarter {
+    param pDate {
+      type: 'dimension'
+    }
+    return_type: 'text'
+    definition: @aql concat(Year(pDate), ' Q', cast(QuarterNum(pDate), 'text')) ;;
+  }
+}
