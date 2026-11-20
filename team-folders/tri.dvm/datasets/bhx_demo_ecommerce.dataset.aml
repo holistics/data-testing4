@@ -429,4 +429,27 @@ Dataset bhx_demo_ecommerce {
 
 
   owner: 'tri.dvm@holistics.io'
+
+  // Period growth template test (udf-template-period-growth)
+  function_module PeriodGrowth: PeriodGrowth
+
+  metric gmv_previous {
+    label: 'GMV Previous Period'
+    type: 'number'
+    definition: @aql PeriodGrowth.Previous(gmv, bhx_ecommerce_orders.created_at) ;;
+  }
+
+  metric gmv_growth {
+    label: 'GMV Growth'
+    type: 'number'
+    definition: @aql PeriodGrowth.Growth(gmv, bhx_ecommerce_orders.created_at) ;;
+    format: '#,###0.00%'
+  }
+
+  metric gmv_yoy {
+    label: 'GMV YoY'
+    type: 'number'
+    definition: @aql PeriodGrowth.Yoy(gmv, bhx_ecommerce_orders.created_at) ;;
+    format: '#,###0.00%'
+  }
 }

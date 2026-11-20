@@ -1,0 +1,51 @@
+AqlFunctionModule PeriodGrowth {
+  // Percent change from pPrevious to pCurrent. null when pPrevious is 0 or null.
+  function PctChange {
+    param pCurrent {
+      type: 'number'
+    }
+    param pPrevious {
+      type: 'number'
+    }
+    return_type: 'number'
+    definition: @aql safe_divide((pCurrent - pPrevious) * 1.0, abs(pPrevious)) ;;
+  }
+
+  // pMeasure in the previous period, at the date grain of the table.
+  function Previous {
+    param pMeasure {
+      type: 'metric'
+    }
+    param pDate {
+      type: 'dimension'
+    }
+    return_type: 'number'
+    definition: @aql pMeasure | relative_period(pDate, -1) ;;
+  }
+
+  // Growth against the previous period: month, quarter or year.
+  function Growth {
+    param pMeasure {
+      type: 'metric'
+    }
+    param pDate {
+      type: 'dimension'
+    }
+    return_type: 'number'
+    definition: @aql PctChange(pMeasure, Previous(pMeasure, pDate)) ;;
+  }
+
+  // Growth against the same period last year.
+  function Yoy {
+    param pMeasure {
+      type: 'metric'
+    }
+    param pDate {
+      type: 'dimension'
+    }
+    return_type: 'number'
+    definition: @aql
+      PctChange(pMeasure, pMeasure | relative_period(pDate, interval(-1 year)))
+    ;;
+  }
+}
