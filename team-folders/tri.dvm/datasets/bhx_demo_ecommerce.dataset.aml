@@ -133,6 +133,52 @@ Dataset bhx_demo_ecommerce {
         , else: bhx_ecommerce_countries.name
       ) ;;
   }
+  // Bucketing and bands UDF template test
+  function_module Bands: Bands
+
+  dimension age_band {
+    model: bhx_ecommerce_users
+    label: 'Age Band'
+    type: 'text'
+    definition: @aql Bands.Name(bhx_ecommerce_users.age, 20, 30, 40, 50, 'Under 20|20-29|30-39|40-49|50+') ;;
+  }
+
+  dimension age_band_order {
+    model: bhx_ecommerce_users
+    label: 'Age Band Order'
+    type: 'number'
+    definition: @aql Bands.Index(bhx_ecommerce_users.age, 20, 30, 40, 50) ;;
+  }
+
+  dimension order_value {
+    model: bhx_ecommerce_orders
+    label: 'Order Value'
+    type: 'number'
+    definition: @aql bhx_ecommerce_order_items | sum(bhx_ecommerce_order_items.quantity * bhx_ecommerce_products.price) | dimensionalize(bhx_ecommerce_orders.id) ;;
+  }
+
+  dimension order_size {
+    model: bhx_ecommerce_orders
+    label: 'Order Size'
+    type: 'text'
+    definition: @aql Bands.Name(bhx_ecommerce_orders.order_value, 100, 500, 1000, null, 'Small|Medium|Large|Very large') ;;
+  }
+
+  dimension order_value_bin {
+    model: bhx_ecommerce_orders
+    label: 'Order Value Bin'
+    type: 'number'
+    definition: @aql Bands.Bin(bhx_ecommerce_orders.order_value, 100) ;;
+  }
+
+  dimension order_value_bin_label {
+    model: bhx_ecommerce_orders
+    label: 'Order Value Bin Label'
+    type: 'text'
+    definition: @aql Bands.BinLabel(bhx_ecommerce_orders.order_value, 100) ;;
+  }
+  // End bucketing and bands test
+
   metric total_users {
     label: 'Total Users'
     type: 'number'

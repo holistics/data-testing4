@@ -1,0 +1,88 @@
+AqlFunctionModule Bands {
+  // Band number, from 1 to 5. Each cut-off is the lowest value of the next band.
+  // A null cut-off ends the list.
+  function Index {
+    param pValue {
+      type: 'number'
+    }
+    param pCut1 {
+      type: 'number'
+    }
+    param pCut2 {
+      type: 'number'
+    }
+    param pCut3 {
+      type: 'number'
+    }
+    param pCut4 {
+      type: 'number'
+    }
+    return_type: 'number'
+    definition: @aql
+      case(
+        when: pValue is null, then: null,
+        when: pCut1 is null or pValue < pCut1, then: 1,
+        when: pCut2 is null or pValue < pCut2, then: 2,
+        when: pCut3 is null or pValue < pCut3, then: 3,
+        when: pCut4 is null or pValue < pCut4, then: 4,
+        else: 5
+      )
+    ;;
+  }
+
+  // Band name: the Index-th name in pNames, names split by '|'.
+  function Name {
+    param pValue {
+      type: 'number'
+    }
+    param pCut1 {
+      type: 'number'
+    }
+    param pCut2 {
+      type: 'number'
+    }
+    param pCut3 {
+      type: 'number'
+    }
+    param pCut4 {
+      type: 'number'
+    }
+    param pNames {
+      type: 'text'
+    }
+    return_type: 'text'
+    definition: @aql
+      split_part(pNames, '|', Index(pValue, pCut1, pCut2, pCut3, pCut4))
+    ;;
+  }
+
+  // Start of the equal-width bin that pValue falls in.
+  function Bin {
+    param pValue {
+      type: 'number'
+    }
+    param pWidth {
+      type: 'number'
+    }
+    return_type: 'number'
+    definition: @aql floor(pValue * 1.0 / pWidth) * pWidth ;;
+  }
+
+  // Bin as text, such as '200 - 300'.
+  function BinLabel {
+    param pValue {
+      type: 'number'
+    }
+    param pWidth {
+      type: 'number'
+    }
+    return_type: 'text'
+    definition: @aql
+      concat(
+        cast(Bin(pValue, pWidth), 'text'),
+        ' - ',
+        cast(Bin(pValue, pWidth) + pWidth, 'text')
+      )
+    ;;
+  }
+}
