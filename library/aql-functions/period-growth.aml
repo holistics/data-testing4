@@ -1,5 +1,5 @@
 AqlFunctionModule PeriodGrowth {
-  // Percent change from pPrevious to pCurrent. null when pPrevious is 0 or null.
+  // Percent change from pPrevious to pCurrent. null when either value is null or pPrevious is 0.
   function PctChange {
     param pCurrent {
       type: 'number'
@@ -8,7 +8,12 @@ AqlFunctionModule PeriodGrowth {
       type: 'number'
     }
     return_type: 'number'
-    definition: @aql safe_divide((pCurrent - pPrevious) * 1.0, abs(pPrevious)) ;;
+    definition: @aql
+      case(
+        when: pCurrent is null, then: null,
+        else: safe_divide((pCurrent - pPrevious) * 1.0, abs(pPrevious))
+      )
+    ;;
   }
 
   // pMeasure in the previous period, at the date grain of the table.
