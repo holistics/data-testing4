@@ -433,7 +433,7 @@ Dataset bhx_demo_ecommerce {
   metric gmv_target {
     label: 'GMV Target'
     type: 'number'
-    definition: @aql (gmv | relative_period(bhx_ecommerce_orders.created_date, interval(-1 year))) * 1.1 ;;
+    definition: @aql 500000 ;;
   }
 
   metric gmv_attainment {
